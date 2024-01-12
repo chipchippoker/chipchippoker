@@ -9,4 +9,4 @@ export const useCounterStore = defineStore('counter', () => {
   }
 
   return { count, doubleCount, increment }
-})
+},{persist:true})
