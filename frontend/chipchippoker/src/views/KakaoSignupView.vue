@@ -3,7 +3,7 @@
     <div class="bg-darkblue">
       <div class="d-flex flex-column justify-content-center align-items-center position-absolute top-50 start-50 translate-middle">
       <div class="d-flex justify-content-center">
-        <img class="big-logo" src="/src/assets/Logo.svg" alt="">
+        <img class="big-logo" src="/src/assets/Logo.png" alt="">
       </div>
       
       <div class="p-3 d-flex flex-column justify-content-center align-items-center bg-lightblue rounded-4">

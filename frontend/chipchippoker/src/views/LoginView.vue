@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex flex-column justify-content-center align-items-center bg-darkblue">
         <div class="d-flex justify-content-center">
-            <img class="big-logo" src="/src/assets/Logo.svg" alt="">
+            <img class="big-logo" src="/src/assets/Logo.png" alt="">
         </div>
         <div class="formstyle">
             <div class="fs-2 fw-bold mb-3 px-0">로그인</div>
