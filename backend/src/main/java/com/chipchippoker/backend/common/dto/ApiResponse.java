@@ -2,16 +2,14 @@ package com.chipchippoker.backend.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.http.HttpStatus;
 
 @Getter
+@ToString
 @JsonPropertyOrder({"code", "message", "data"})
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class ApiResponse<T> {
 
     private final String code;
@@ -20,7 +18,7 @@ public class ApiResponse<T> {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
-    public static ApiResponse<?> success() {
+    public static <T> ApiResponse<T> success() {
         return new ApiResponse<>("성공", HttpStatus.OK.getReasonPhrase());
     }
 
@@ -28,7 +26,7 @@ public class ApiResponse<T> {
         return new ApiResponse<>("성공", HttpStatus.OK.getReasonPhrase(), data);
     }
 
-    public static ApiResponse<?> error(ErrorBase errorBase) {
+    public static <T> ApiResponse<T> error(ErrorBase errorBase) {
         return new ApiResponse<>(errorBase.getCode(), errorBase.getMessage());
     }
 
@@ -38,5 +36,9 @@ public class ApiResponse<T> {
 
     public static <T> ApiResponse<T> error(ErrorBase errorBase, T data) {
         return new ApiResponse<>(errorBase.getCode(), errorBase.getMessage(), data);
+    }
+
+    public static <T> ApiResponse<T> error(ErrorBase errorBase, String message) {
+        return new ApiResponse<>(errorBase.getCode(), message, null);
     }
 }
