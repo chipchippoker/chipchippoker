@@ -1,0 +1,29 @@
+/* 회원가입, 로그인, 카카오회원가입 폼 스타일 */
+.formstyle {
+    border-radius: 20px;
+    background-color: #99a5c1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 로고 사이즈 정리 */
+.big-logo {
+    width: 300px;
+    margin: 20px;
+}
+.middle-logo {
+    width: 250px;
+    margin: 20px;
+}
+.small-logo {
+    width: 150px;
+    margin: 20px;
+}
+
+/* 작게 적히는 안내 글씨 */
+.little-text {
+    font-size: xx-small;
+}

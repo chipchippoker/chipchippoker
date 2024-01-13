@@ -9,7 +9,8 @@ import socket from 'vue3-websocket'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 import "./style.css";
-
+import 'bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 // Vue.use(WebRTC)
 

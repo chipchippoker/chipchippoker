@@ -1,0 +1,67 @@
+/* darkblue #334A82 */
+.bg-darkblue {
+    background-color: #334A82;
+}
+.darkblue {
+    color: #334A82;
+}
+.btn-outline-darkblue {
+    border: 1px solid #334A82;
+    /* border-radius: 20px; */
+}
+.btn-outline-darkblue:hover {
+    background: #334A82;
+}
+
+
+/* lightblue #99a5c1 */
+.bg-lightblue {
+    background-color: #99a5c1;
+}
+.lightblue {
+    color: #99a5c1;
+}
+.btn-outline-lightblue {
+    border: 1px solid #99a5c1    ;
+    /* border-radius: 20px; */
+}
+.btn-outline-lightblue:hover {
+    background: #99a5c1;
+}
+
+
+
+/* yellow #ffc308 */
+.bg-yellow {
+    background-color: #ffc308;
+}
+.yellow {
+    color: #ffc308;
+}
+.btn-outline-yellow {
+    border: 1px solid #ffc308;
+    /* border-radius: 5px; */
+}
+.btn-outline-yellow:hover {
+    background: #ffc308;
+}
+
+
+/* lightyellow #ffde76 */
+.bg-lightyellow {
+    background-color: #ffde76;
+}
+.lightyellow {
+    color: #ffde76;
+}
+.btn-outline-lightyellow {
+    border: 1px solid #ffde76    ;
+    /* border-radius: 20px; */
+}
+
+.btn-outline-lightyellow:hover {
+    background: #ffde76;
+}
+
+
+
