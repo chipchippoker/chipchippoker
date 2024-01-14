@@ -14,18 +14,18 @@ const router = createRouter({
     },
     {
       path: '/login',
-      name: 'login',
+      name: 'logIn',
       component: LoginView
     },
    
     {
       path: '/signup',
-      name: 'signup',
+      name: 'signUp',
       component: SignupView
     },
     {
       path: '/kakaosignup',
-      name: 'kakaosignup',
+      name: 'kakaoSignUp',
       component: KakaoSignupView
     },
    
