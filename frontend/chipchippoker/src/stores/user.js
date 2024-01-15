@@ -269,6 +269,18 @@ export const useUserStore = defineStore('user', () => {
     return true 
   }
 
+
+
+
+
+
+  //  아이콘 변수, 아이콘 가져오기 함수
+  const myIcon = ref('1')
+  const getIconUrl = function(number){
+    return new URL(`/src/assets/profile_icons/icon${number}.jpg`,import.meta.url).href;
+  }
+
+
   return {checkNickName,accessToken, refreshToken, kakaoAccessToken, kakaoSignUp, generalLogIn, simpleLogIn, signUp, checkMemberId,
-    isNickDuplicated, isIdDuplicated, validateId, validatePassword, validateNickName,generalLogIn, simpleLogIn, simpleLogInRequest, validateMemberId}
+    isNickDuplicated, isIdDuplicated, validateId, validatePassword, validateNickName,generalLogIn, simpleLogIn, simpleLogInRequest, validateMemberId,getIconUrl, myIcon}
 },{persist:true})

@@ -9,6 +9,16 @@
     align-items: center;
 }
 
+.mainstyle {
+    border-radius: 20px;
+    background-color: #576fac;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 /* 로고 사이즈 정리 */
 .big-logo {
     width: 300px;
@@ -26,4 +36,37 @@
 /* 작게 적히는 안내 글씨 */
 .little-text {
     font-size: xx-small;
+}
+
+
+
+
+.yb-modal-form {
+    border-radius: 20px;
+    
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.yb-modal-size {
+    width: 400px;
+}
+
+.small-icon {
+    width: 80px;
+    height: 80px;
+    margin: 20px;
+    border-radius: 50%;
+    
+}
+.small-icon:hover {
+    width: 100px;
+    height: 100px;
+    margin: 20px;
+    transition: 0.3s;
+    border-radius: 50%;
+    
 }
