@@ -1,5 +1,38 @@
 <template>
-  <div class="d-flex flex-column justify-content-center align-items-center position-absolute top-50 start-50 translate-middle bg-darkblue" style="width: 100%; height: 100%;">
+
+
+  <div class="d-flex flex-column justify-content-center align-items-center position-absolute top-50 start-50 translate-middle">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       <div class="d-flex justify-content-center">
           <img class="big-logo" src="/src/assets/Logo.png" alt="">
       </div>

@@ -1,6 +1,8 @@
 <template>
+  <div class="d-flex p-0">
+    
   <!-- 나의 정보, 게임 프로필 -->
-  <div class="row" style="background-color: #576FAC;">
+  <div class="row flex-grow-1" style="background-color: #576FAC;">
     <!-- 프로필 사진 -->
     <div class="col-2">
       프사
@@ -37,6 +39,26 @@
       <p>나의 정보</p>
     </div>
   </div>
+
+
+  <div class="tab">
+  <button class="tablinks" onclick="openCity(event, 'London')">London</button>
+  <button class="tablinks" onclick="openCity(event, 'Paris')">Paris</button>
+  
+</div>
+
+<div id="London" class="tabcontent">
+  <h3>London</h3>
+  <p>London is the capital city of England.</p>
+</div>
+
+<div id="Paris" class="tabcontent">
+  <h3>Paris</h3>
+  <p>Paris is the capital of France.</p>
+</div>
+
+
+</div>
 </template>
  
 <script setup>
@@ -82,4 +104,52 @@
     padding: 4px 0px;
 
   }
+
+
+
+  * {box-sizing: border-box}
+
+/* Style the tab */
+.tab {
+  float: left;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  width: 30%;
+  height: 300px;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  display: block;
+  background-color: inherit;
+  color: black;
+  padding: 22px 16px;
+  width: 100%;
+  border: none;
+  outline: none;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current "tab button" class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  float: left;
+  padding: 0px 12px;
+  border: 1px solid #ccc;
+  width: 70%;
+  border-left: none;
+  height: 300px;
+}
+
 </style>

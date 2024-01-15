@@ -27,3 +27,38 @@
 .little-text {
     font-size: xx-small;
 }
+
+
+
+
+
+
+.yb-modal-form {
+    border-radius: 20px;
+    
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.yb-modal-size {
+    width: 400px;
+}
+
+.small-icon {
+    width: 80px;
+    height: 80px;
+    margin: 20px;
+    border-radius: 50%;
+    
+}
+.small-icon:hover {
+    width: 100px;
+    height: 100px;
+    margin: 20px;
+    transition: 0.3s;
+    border-radius: 50%;
+    
+}

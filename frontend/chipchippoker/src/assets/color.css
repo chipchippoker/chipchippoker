@@ -1,6 +1,6 @@
 /* 밤하늘 배경 -> App적용 */
 .bg-gradation-blue {
-    background-image: linear-gradient(to bottom, #152856, #334A82);
+    background-image: linear-gradient(to bottom, #000000, #334A82);
     height: 100vh;
 }
 
@@ -14,7 +14,7 @@
     color: #334A82;
 }
 .btn-outline-darkblue {
-    border: 1px solid #334A82;
+    border: 2px solid #334A82;
     /* border-radius: 20px; */
 }
 .btn-outline-darkblue:hover {
@@ -29,7 +29,7 @@
     color: #99a5c1;
 }
 .btn-outline-lightblue {
-    border: 1px solid #99a5c1;
+    border: 2px solid #99a5c1;
     /* border-radius: 20px; */
 }
 .btn-outline-lightblue:hover {
@@ -46,7 +46,8 @@
     color: #ffc308;
 }
 .btn-outline-yellow {
-    border: 1px solid #ffc308;
+    border: 2px solid #ffc308;
+    background-color: #ffde76;
     /* border-radius: 5px; */
 }
 .btn-outline-yellow:hover {
@@ -62,7 +63,8 @@
     color: #ffde76;
 }
 .btn-outline-lightyellow {
-    border: 1px solid #ffde76    ;
+    border: 2px solid #ffde76;
+    
     /* border-radius: 20px; */
 }
 
@@ -71,4 +73,10 @@
 }
 
 
+
+
+.bg-modal-modal {
+    
+    color: #fff0c0;
+}
 
