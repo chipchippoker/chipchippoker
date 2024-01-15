@@ -8,13 +8,14 @@ export const useUserStore = defineStore('counter', () => {
   
   const accessToken = ref(null)
   const refreshToken = ref(null)
-  const kakaoAccessToken = ref(null)
-  
+  const kakaoAccessToken = ref(null)  
   const isNickDuplicated = ref(null)
   const isIdDuplicated = ref(null)
-  
-  // 닉네임 중복확인
   const checkNickName = function (nickName){
+  const userIcon = ref(null)
+  
+  // 카카오 회원가입 함수
+  const  kakaoSignUp = function(nickName){
     const payload = {
       'nickname':nickName
     }
@@ -25,6 +26,13 @@ export const useUserStore = defineStore('counter', () => {
     })
     .then((res)=>{
       isNickDuplicated.value = res.data.isDuplicated
+      url:`${USER_API}/login/simple/nickname`,
+      data:payload
+    })
+    .then((res)=>{
+      accessToken.value = res.data.access-token
+      refreshToken.value = res.data.refresh-token
+      userIcon.value = res.data.icon
     })
     .catch((err)=>{
       console.log(err)
@@ -164,7 +172,6 @@ const validateNickName = function (nickName) {
   console.log('닉네임 유효성 검사 통과')
   return true
 }
-
 
   return {checkNickName,accessToken, refreshToken, kakaoAccessToken, kakaoSignUp, generalLogIn, simpleLogIn, signUp, checkMemberId,
     isNickDuplicated, isIdDuplicated, validateId, validatePassword, validateNickName }
