@@ -1,7 +1,15 @@
+/* 밤하늘 배경 -> App적용 */
+.bg-gradation-blue {
+    background-image: linear-gradient(to bottom, #152856, #334A82);
+    height: 100vh;
+}
+
 /* darkblue #334A82 */
+
 .bg-darkblue {
     background-color: #334A82;
 }
+
 .darkblue {
     color: #334A82;
 }
