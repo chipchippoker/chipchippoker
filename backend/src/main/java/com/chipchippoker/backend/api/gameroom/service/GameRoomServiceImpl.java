@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.chipchippoker.backend.api.gameroom.model.dto.CreateGameRoomRequest;
 import com.chipchippoker.backend.api.gameroom.model.dto.CreateGameRoomResponse;
+import com.chipchippoker.backend.api.gameroom.model.dto.EnterGameRoomRequest;
 import com.chipchippoker.backend.api.gameroom.repository.GameRoomRepository;
 import com.chipchippoker.backend.api.member.repository.MemberRepository;
 import com.chipchippoker.backend.common.dto.ErrorBase;
@@ -42,4 +43,23 @@ public class GameRoomServiceImpl implements GameRoomService {
 		return CreateGameRoomResponse.createGameRoomResponse(gameRoom);
 	}
 
+	public void enterGameRoom(EnterGameRoomRequest enterGameRoomRequest) {
+		String nickname = "han"; // TODO: 추후 nickname을 access-token에서 받아오기 필요
+		Member member = memberRepository.findByNickname(nickname)
+			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
+
+		GameRoom gameRoom = gameRoomRepository.findByTitle(enterGameRoomRequest.getTitle())
+			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS));
+		// 게임 방 입장 비밀번호가 다른 경우
+		if (gameRoom.getIsPrivate())
+			GameRoomServiceHelper.isCorrectGameRoomPassword(enterGameRoomRequest.getPassword(), gameRoom.getPassword());
+		// 이미 게임이 시작된 경우
+		GameRoomServiceHelper.isStartedGameRoom(gameRoom.getState());
+		// 게임 방 충원 인원이 모두 채워진 경우
+		GameRoomServiceHelper.isFullGameRoom(gameRoom);
+
+		// 입장 가능한 경우
+		member.enterGameRoom(gameRoom);
+		gameRoom.updateMembers(member);
+	}
 }

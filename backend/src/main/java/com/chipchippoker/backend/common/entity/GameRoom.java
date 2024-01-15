@@ -64,4 +64,8 @@ public class GameRoom extends BaseEntity {
 			.members(members)
 			.build();
 	}
+
+	public void updateMembers(Member member) {
+		this.members.add(member);
+	}
 }
