@@ -30,6 +30,9 @@ public enum ErrorBase {
 	 * 403 Forbidden (권한 등의 이유로 허용하지 않는 요청)
 	 */
 	E403_FORBIDDEN(FORBIDDEN, false, "FB000", "허용하지 않는 요청입니다"),
+	E403_INVALID_GAME_ROOM_PASSWORD(FORBIDDEN, false, "FB001", "비밀번호가 틀렸습니다."),
+	E403_ALREADY_FULL_GAME_ROOM(FORBIDDEN, false, "FB002", "인원 수가 초과했습니다."),
+	E403_ALREADY_STARTED_GAME_ROOM(FORBIDDEN, false, "FB003", "진행 중인 게임입니다."),
 
 	/**
 	 * 404 Not Found (존재하지 않는 리소스)
