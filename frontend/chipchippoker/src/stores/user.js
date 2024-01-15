@@ -1,19 +1,87 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { useRoute, useRouter } from 'vue-router'
 
-export const useUserStore = defineStore('counter', () => {
-  
-  const USER_API = 'http://localhost/api/members'
-  
-  const accessToken = ref(null)
-  const refreshToken = ref(null)
-  const kakaoAccessToken = ref(null)  
+export const useUserStore = defineStore('user', () => {
+   
+  const route = useRoute()
+  const router = useRouter()
   const isNickDuplicated = ref(null)
   const isIdDuplicated = ref(null)
-  const checkNickName = function (nickName){
   const userIcon = ref(null)
+ 
+  const accessToken = ref(null)
+  const refreshToken = ref(null)
+  const kakaoAccessToken = ref(null)
+  const USER_API = 'http://localhost/api/members'
+  const KAKAO_API_KEY = import.meta.env.VITE_KAKAO_API_KEY
+  const REDIRECT_URI = 'http://localhost:5173/login'
+  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`
+
+  // 일반 로그인
+  const generalLogIn = function (payload) {
+    axios({
+      method: 'post',
+      url: `${USER_API}/login/general/`,
+      data: payload
+    })
+      .then(res => {
+        console.log('일반 로그인 성공!!')
+        accessToken.value = res.generalLoginResponse.access-token
+        refreshToken.value = res.generalLoginResponse.refresh-token
+        userIcon.value = res.generalLoginResponse.icon
+      })
+      .catch(err => console.log(err))
+  }
+
   
+  // 간편 로그인
+  const simpleLogIn = function () {
+    console.log('카카오 인가코드 받기')
+    Kakao.Auth.login({
+      redirectUri: REDIRECT_URI,
+    })
+  }
+
+  const simpleLogInRequest = function (authorizationCode) {
+    console.log(authorizationCode);
+    // 인가코드로 로그인 요청
+    axios({
+      method: 'post',
+      url: `${USER_API}/login/simple/`,
+      data: {
+        'authorizationCode': authorizationCode
+      }
+    })
+    .then(res => {
+      if (res.code === 200) {
+        console.log("카카오 로그인 성공!!")
+        accessToken.value = res.simpleLoginResponse.access-token
+        refreshToken.value = res.simpleLoginResponse.refresh-token
+        userIcon.value = res.simpleLoginResponse.icon
+      } else if (res.code === 201) {
+        console.log("카카오 로그인 성공2!!")
+        kakaoAccessToken.value = res.kakao-access-token
+        axios({
+          method: 'post',
+          url: `${USER_API}/login/simple/nickname/`,
+          headers: {
+            "kakao-access-token": kakaoAccessToken.value
+          }
+        })
+        .then(res => {
+          accessToken.value = res.simpleLoginResponse.access-token
+          refreshToken.value = res.simpleLoginResponse.refresh-token
+          userIcon.value = res.simpleLoginResponse.icon
+        })
+      }
+    })
+    .catch(err => {
+      console.log('카카오 로그인 실패');
+  })
+  }
+
   
   // 카카오 회원가입
   const  kakaoSignUp = function(nickName){
@@ -36,6 +104,25 @@ export const useUserStore = defineStore('counter', () => {
   }
 
 
+
+  // 닉네임 중복확인
+  const checkNickName = function (nickName){
+    const payload = {
+      'nickname':nickName
+    }
+    axios({
+      method:'post',
+      url: `${USER_API}/duplication/nickname`,
+      data:payload
+    })
+    .then((res)=>{
+      isNickDuplicated.value = res.data.isDuplicated
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  }
+
   // 아이디 중복확인
   const checkMemberId = function (memberId){
     const payload = {
@@ -52,6 +139,36 @@ export const useUserStore = defineStore('counter', () => {
     .catch((err)=>{
       console.log(err)
     })
+  }
+
+
+
+  // 아이디 유효성 검사
+  const validateMemberId = function (memberId) {
+    if (memberId === null) {
+      return true
+    }
+
+    // 아이디가 공백이면 유효하지 않음
+    if (memberId === '') {
+      return false
+    }
+
+    // 아이디가 영어, 숫자만으로 이루어졌는지 확인
+    const regExp = /^[a-zA-Z0-9]+$/
+    if (!regExp.test(memberId)) {
+      return false
+    }
+
+    // 아이디 길이가 6~12자 사이인지 확인
+    const length = memberId.length
+    if (length < 6 || length > 12) {
+      return false
+    }
+    
+    // 아이디가 유효함
+    console.log('아이디 유효성 검사 통과')
+    return true
   }
 
 
@@ -149,12 +266,9 @@ export const useUserStore = defineStore('counter', () => {
       return false
     }
     console.log('닉네임 유효성 검사 통과')
-    return true
-    }
+    return true 
+  }
 
-
-
-}
   return {checkNickName,accessToken, refreshToken, kakaoAccessToken, kakaoSignUp, generalLogIn, simpleLogIn, signUp, checkMemberId,
-    isNickDuplicated, isIdDuplicated, validateId, validatePassword, validateNickName }
+    isNickDuplicated, isIdDuplicated, validateId, validatePassword, validateNickName,generalLogIn, simpleLogIn, simpleLogInRequest, validateMemberId}
 },{persist:true})

@@ -21,7 +21,6 @@
     background: #334A82;
 }
 
-
 /* lightblue #99a5c1 */
 .bg-lightblue {
     background-color: #99a5c1;
@@ -30,7 +29,7 @@
     color: #99a5c1;
 }
 .btn-outline-lightblue {
-    border: 1px solid #99a5c1    ;
+    border: 1px solid #99a5c1;
     /* border-radius: 20px; */
 }
 .btn-outline-lightblue:hover {
