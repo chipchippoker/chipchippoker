@@ -46,13 +46,14 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-        <ModalIconList class=" bg-modal-modal"/>
-      </div>
+            <ModalIconList class=" bg-modal-modal"/>
+          </div>
       
+        </div>
+      </div>   
     </div>
-  </div>
-      
-    </div>
+
+    
   </div>
 
 </template>

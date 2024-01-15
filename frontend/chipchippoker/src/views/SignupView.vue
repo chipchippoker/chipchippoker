@@ -1,41 +1,11 @@
 <template>
 
-
+  <div>
   <div class="d-flex flex-column justify-content-center align-items-center position-absolute top-50 start-50 translate-middle">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      <div class="d-flex justify-content-center">
-          <img class="big-logo" src="/src/assets/Logo.png" alt="">
-      </div>
+    <div class="d-flex justify-content-center">
+      <img class="big-logo" src="/src/assets/Logo.png" alt="">
+    </div>
+    
     <div class="formstyle">
       <div class="h2 fw-bold">회원가입</div>
       <form @submit.prevent="signUp">
@@ -67,18 +37,50 @@
           <input type="password" class="form-control" id="password2" placeholder="password" v-model="password2">
           <div v-if="!isValidPassword2"  id="id" class="fw-lgitighter little-text text-danger">비밀번호가 똑같아야 합니다.</div>
         </div>
+
+
+
+
+        <!-- 아이콘 모달 버튼 -->
+        <div class="d-flex justify-content-center">
+          <img data-bs-toggle="modal" data-bs-target="#IconModal" class="small-icon" :src='userStore.getIconUrl(userStore.myIcon)' :alt="userStore.myIcon">
+        </div>
+
+
+
         <div class="d-grid gap-2 pt-3">
           <button :disabled="!(isValidMemberId && isValidPassword1 && isValidPassword2 && isValidNickname)" type="submit" class="btn btn-outline-yellow">제출하기</button>
         </div>
       </form>
     </div>
+    </div>
+    
+    <!-- 아이콘 모달 팝업 -->
+    <div class="modal fade" id="IconModal" tabindex="-1" aria-labelledby="IconModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="IconModalLabel">아이콘 선택</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <ModalIconList class=" bg-modal-modal"/>
+          </div>
+      
+        </div>
+      </div>   
+    </div>
+
+
   </div>
 </template>
   
   <script setup>
   import { ref, watch } from "vue";
   import { useUserStore } from "@/stores/user";
-  
+  import ModalIconList from "@/components/ModalIconList.vue";
+
+
   const userStore = useUserStore()
   const memberId = ref(null)
   const password1 = ref(null)

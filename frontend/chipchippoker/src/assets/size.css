@@ -9,6 +9,16 @@
     align-items: center;
 }
 
+.mainstyle {
+    border-radius: 20px;
+    background-color: #576fac;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 /* 로고 사이즈 정리 */
 .big-logo {
     width: 300px;
@@ -27,8 +37,6 @@
 .little-text {
     font-size: xx-small;
 }
-
-
 
 
 
