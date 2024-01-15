@@ -1,9 +1,10 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 export const useUserStore = defineStore('user', () => {
+  const route = useRoute()
   const router = useRouter()
   const accessToken = ref(null)
   const refreshToken = ref(null)
@@ -31,35 +32,23 @@ export const useUserStore = defineStore('user', () => {
       .catch(err => console.log(err))
   }
 
+  
   // 간편 로그인
   const simpleLogIn = function () {
-
-    axios.get(KAKAO_AUTH_URL)
-    .then(res => {
-      router.push(res.data.auth_code_url)
-      // 응답 코드가 302이면
-      // if (res.status === 302) {
-      //   // 리다이렉트된 URL에서 인가코드 추출
-      //   const redirectUrl = res.headers.location;
-      //   console.log(redirectUrl);
-      //   authorizationCode.value = redirectUrl.split('?')[1].split('&')[0].split('=')[1];
-      // }
+    console.log('카카오 인가코드 받기')
+    Kakao.Auth.login({
+      redirectUri: REDIRECT_URI,
     })
-    .then(res => {
-      authorizationCode.value = new URL(window.location.href).searchParams.get('code')
-    })
-    .then(res => {
-      console.log(authorizationCode.value);
+  }
 
-    })
-
-
+  const simpleLogInRequest = function (authorizationCode) {
+    console.log(authorizationCode);
     // 인가코드로 로그인 요청
     axios({
       method: 'post',
       url: `${USER_API}/login/simple/`,
       data: {
-        'authorizationCode': authorizationCode.value
+        'authorizationCode': authorizationCode
       }
     })
     .then(res => {
@@ -89,7 +78,8 @@ export const useUserStore = defineStore('user', () => {
       console.log('카카오 로그인 실패');
       console.log(err)
     })
-    }
+  }
+
 
   // 아이디 유효성 검사
   const validateMemberId = function (memberId) {
@@ -175,5 +165,5 @@ export const useUserStore = defineStore('user', () => {
     return true
   }
 
-  return { generalLogIn, simpleLogIn, validateMemberId, validatePassword, validateNickName }
+  return { generalLogIn, simpleLogIn, simpleLogInRequest, validateMemberId, validatePassword, validateNickName }
 },{persist:true})

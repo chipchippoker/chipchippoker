@@ -42,10 +42,14 @@
   <script setup>
   import { computed, ref } from "vue";
   import { useUserStore } from '@/stores/user'
+  import { useRoute } from 'vue-router'
+  import axios from 'axios'
 
+  const route = useRoute()
   const userStore = useUserStore()
   const memberId = ref(null)
   const password = ref(null)
+  const authorizationCode = ref(null)
   const isValidMemberId = computed(() => {
     return userStore.validateMemberId(memberId.value)
   })
@@ -64,11 +68,23 @@
     userStore.generalLogIn(payload)
   }
 
+  console.log(route.query.code)
   // 간편 로그인
   const simpleLogIn = function () {
-    console.log('간편 로그인 요청');
+    console.log('간편 로그인 요청')
     userStore.simpleLogIn()
   }
+  authorizationCode.value = route.query.code
+  console.log(route.query.code)
+  if (authorizationCode.value) {
+    
+    authorizationCode.value = new URL(window.location.href).searchParams.get("code")
+    console.log(authorizationCode.value)
+    userStore.simpleLogInRequest(authorizationCode.value)
+
+  }
+
+
   </script>
   
   <style scoped>
