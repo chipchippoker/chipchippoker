@@ -14,7 +14,8 @@ import { RouterLink, RouterView } from 'vue-router'
   <RouterLink to="signup">회원가입</RouterLink> / 
   <RouterLink to="kakaosignup">카카오 회원가입</RouterLink> /
   <RouterLink to="profile">프로필 나의정보</RouterLink> /
-  <RouterLink to="main">메인페이지</RouterLink> 
+  <RouterLink to="main">메인페이지</RouterLink>  /
+  <RouterLink to="play">플레이페이지</RouterLink> 
   </div>
   <div id="app" class="bg-gradation-blue d-flex justify-content-center">
     <div>
@@ -26,6 +27,7 @@ import { RouterLink, RouterView } from 'vue-router'
 </div>
 </template>
 
-<style scoped>
-@import '@/assets/color.css';
+<style>
+@import "@/assets/color.css";
+@import "@/assets/size.css";
 </style>

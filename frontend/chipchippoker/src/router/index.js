@@ -4,6 +4,7 @@ import LoginView from '../views/LoginView.vue'
 import SignupView from '../views/SignupView.vue'
 import KakaoSignupView from '../views/KakaoSignupView.vue'
 import ProfileView from '../views/ProfileView.vue'
+import PlayView from '@/views/PlayView.vue'
 
 
 const router = createRouter({
@@ -35,6 +36,12 @@ const router = createRouter({
       name: 'profile',
       component: ProfileView
     },
+    {
+      path: '/play',
+      name: 'play',
+      component: PlayView
+    },
+    
    
   ]
 })
