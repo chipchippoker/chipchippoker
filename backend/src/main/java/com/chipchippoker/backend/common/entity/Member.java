@@ -3,6 +3,9 @@ package com.chipchippoker.backend.common.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+
+import com.chipchippoker.backend.api.member.model.dto.SignupRequest;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -71,5 +74,26 @@ public class Member extends BaseEntity {
 
 	public void enterGameRoom(GameRoom gameRoom) {
 		this.gameRoom = gameRoom;
+	}
+
+	//비밀번호 암호화 메소드
+	// public void passwordEncode(PasswordEncoder passwordEncoder) {
+	// 	this.password = passwordEncoder.encode(this.password);
+	// }
+
+	public static Member newMember(SignupRequest signupRequest) {
+		return Member.builder()
+			.kakaoFriendListAgreement(Boolean.FALSE)
+			.kakaoLinkState(Boolean.FALSE)
+			.memberId(signupRequest.getMemberId())
+			.password(signupRequest.getPassword())
+			.nickname(signupRequest.getNickname())
+			.icon(signupRequest.getIcon())
+			.build();
+	}
+
+
+	public void updateRefreshToken(String refreshToken){
+		this.refreshToken = refreshToken;
 	}
 }

@@ -3,8 +3,8 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017
       database: chipchippoker
-#      username: admin
-#      password: password
+  #      username: admin
+  #      password: password
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/chipchippoker
@@ -18,3 +18,13 @@ spring:
         format_sql: true
         default_batch_fetch_size: 100
         show_sql: true
+
+jwt:
+  secretKey: ecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKey
+  access:
+    expiration: 1800000
+    header: access-token
+
+  refresh:
+    expiration: 1209600000
+    header: refresh-token
