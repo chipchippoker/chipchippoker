@@ -74,12 +74,24 @@
     margin: 20px;
     transition: 0.3s;
     border-radius: 50%;
-    
+    /* position: absolute; */
 }
+
+.x-small-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;  
+}
+
 
 
 .profile-outline-darkblue {
     border: 5px solid #334A82;
     border-radius: 20px;
     padding: 20px;
+}
+
+/* 프로필 페이지 오른쪽 위 radius 조절 */
+.profile-box-radius {
+    border-top-right-radius: 0;
 }

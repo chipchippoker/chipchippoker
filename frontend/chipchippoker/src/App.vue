@@ -24,6 +24,8 @@ import { RouterLink, RouterView } from 'vue-router'
 </template>
 
 <style>
+
 @import "@/assets/color.css";
 @import "@/assets/size.css";
+
 </style>

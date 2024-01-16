@@ -31,19 +31,19 @@
 
 
 
-/* lightblue #99a5c1 */
+/* lightblue #8497c7 */
 .bg-lightblue {
-    background-color: #99a5c1;
+    background-color: #8497c7;
 }
 .lightblue {
-    color: #99a5c1;
+    color: #8497c7;
 }
 .btn-outline-lightblue {
-    border: 2px solid #99a5c1;
+    border: 2px solid #8497c7;
     /* border-radius: 20px; */
 }
 .btn-outline-lightblue:hover {
-    background: #99a5c1;
+    background: #8497c7;
 }
 
 
@@ -92,6 +92,7 @@
     background-color: #fff0c0;
 }
 
+
 /* 진한 노랑 버튼 / */
 .btn-outline-weightyellow {
     border: 2px solid #e8b008;
@@ -103,4 +104,25 @@
 }
 .bg-weightyellow {
     background-color: #ffc100;
+
 }
+
+
+/* 빨간 버튼 */
+.btn-lightred {
+    background-color: #ff5d5d;
+}
+.btn-lightred:hover {
+    background-color: #ee1010;
+}
+/* 빨간 버튼 */
+.btn-gray {
+    background-color: #aeaeae;
+}
+.btn-gray:hover {
+    background-color: #797979;
+}
+
+
+.online-color {
+    color: #0DA600;

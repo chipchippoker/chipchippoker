@@ -18,14 +18,15 @@
         <font-awesome-icon icon="user" size="lg" style="color: #ffffff;"  />
       </div>
     </div>
-    <!-- 나의 정보 / 전적 검색 -->
-    <div class="d-flex flex-row-reverse w-75">
+     <!-- 나의 정보 / 전적 검색 -->
+     <div class="d-flex flex-row-reverse w-75">
       <!-- 오른쪽에 수직 탭 -->
       <div class="nav flex-column nav-pills" id="v-pills-tab">
-        <a class="nav-link active" data-bs-toggle="pill" href="#v-pills-my-info">나의 정보</a>
-        <a class="nav-link" data-bs-toggle="pill" href="#v-pills-history">전적 검색</a>
+        <a class="nav-link active" style="border-top-left-radius: 0;
+  border-bottom-left-radius: 0;" data-bs-toggle="pill" href="#v-pills-my-info">나의 정보</a>
+        <a class="nav-link" style="border-top-left-radius: 0;
+  border-bottom-left-radius: 0; " data-bs-toggle="pill" href="#v-pills-history">전적 검색</a>
       </div>
-
       <!-- 탭 내용 -->
       <div class="tab-content flex-grow-1">
         <div class="tab-pane fade show active" id="v-pills-my-info">
@@ -60,4 +61,9 @@
 <style scoped>
   @import "@/assets/color.css";
   @import "@/assets/size.css";
+
+  .button-radius {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
 </style>
