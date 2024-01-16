@@ -6,6 +6,9 @@ import KakaoSignupView from '../views/KakaoSignupView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import PlayView from '@/views/PlayView.vue'
 
+import WaitView from '../views/WaitView.vue'
+
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,8 +44,12 @@ const router = createRouter({
       name: 'play',
       component: PlayView
     },
-    
-   
+    {
+      path: '/wait',
+      name: 'wait',
+      component: WaitView
+    }
+
   ]
 })
 

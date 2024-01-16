@@ -1,6 +1,5 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-// import VueWebRTC from 'vue-webrtc';
 
 </script>
 
@@ -15,16 +14,13 @@ import { RouterLink, RouterView } from 'vue-router'
   <RouterLink to="kakaosignup">카카오 회원가입</RouterLink> /
   <RouterLink to="profile">프로필 나의정보</RouterLink> /
   <RouterLink to="main">메인페이지</RouterLink>  /
-  <RouterLink to="play">플레이페이지</RouterLink> 
+  <RouterLink to="play">플레이페이지</RouterLink> /
+  <RouterLink to="wait">대기페이지</RouterLink>
   </div>
   <div id="app" class="bg-gradation-blue d-flex justify-content-center">
-    <div>
-      <!-- <video ref="localVideo" autoplay></video>
-      <video ref="remoteVideo" autoplay></video> -->
+      <RouterView />
     </div>
-    <RouterView />
   </div>
-</div>
 </template>
 
 <style>
