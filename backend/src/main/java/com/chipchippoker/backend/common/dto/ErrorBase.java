@@ -20,11 +20,14 @@ public enum ErrorBase {
 	E400_MISSING_PATH_VARIABLE(BAD_REQUEST, false, "BR102", "필수 PathVariable이 입력되지 않았습니다."),
 
 	E400_MISSING_AUTH_TOKEN_PARAMETER(BAD_REQUEST, false, "BR105", "인증 토큰을 입력해주세요"),
+	E400_INVALID_TOKEN(BAD_REQUEST, false, "BR106", "유효하지 않은 토큰입니다"),
+	E400_INVALID_PASSWORD(BAD_REQUEST, false, "BR107", "올바르지 않은 비밀번호입니다."),
 
 	/**
 	 * 401 UnAuthorized (인증 실패)
 	 */
 	E401_UNAUTHORIZED(UNAUTHORIZED, false, "UA000", "세션이 만료되었습니다. 다시 로그인 해주세요"),
+	E401_UNAUTHORIZED_ACCESSTOKEN(UNAUTHORIZED, false, "UA001", "access-token을 재발급 하였습니다. 다시 요청해 주세요"),
 
 	/**
 	 * 403 Forbidden (권한 등의 이유로 허용하지 않는 요청)

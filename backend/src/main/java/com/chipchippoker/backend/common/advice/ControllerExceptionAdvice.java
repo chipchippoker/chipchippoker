@@ -2,6 +2,8 @@ package com.chipchippoker.backend.common.advice;
 
 import com.chipchippoker.backend.common.dto.ApiResponse;
 import com.chipchippoker.backend.common.exception.ChipChipPokerBaseException;
+import com.chipchippoker.backend.common.exception.UnAuthorizedException;
+
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -123,5 +125,14 @@ public class ControllerExceptionAdvice extends ResponseEntityExceptionHandler {
 
         return ResponseEntity.status(exception.getErrorBase().getStatus())
                 .body(ApiResponse.error(exception.getErrorBase()));
+    }
+
+    @ExceptionHandler(UnAuthorizedException.class)
+    private ResponseEntity<ApiResponse<Object>> handleException(ChipChipPokerBaseException exception,
+        HttpServletRequest request) {
+        log.error(exception.getMessage(), exception);
+
+        return ResponseEntity.status(exception.getErrorBase().getStatus())
+            .body(ApiResponse.error(exception.getErrorBase(), request.getAttribute("new-token")));
     }
 }
