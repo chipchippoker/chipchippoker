@@ -1,6 +1,6 @@
 <template>
     <!-- 나의 정보, 게임 프로필 -->
-    <div class="formstyle d-flex flex-row" style="background-color: #576FAC;">
+    <div class="mainstyle d-flex flex-row  profile-box-radius" >
       <!-- 프로필 사진 -->
       <div class="" style="width: 200px;">
         프사

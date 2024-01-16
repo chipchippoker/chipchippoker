@@ -78,7 +78,7 @@
   <script setup>
   import { ref, watch } from "vue";
   import { useUserStore } from "@/stores/user";
-  import ModalIconList from "@/components/ModalIconList.vue";
+  import ModalIconList from "@/components/Modal/ModalIconList.vue";
 
 
   const userStore = useUserStore()
