@@ -70,3 +70,10 @@
     border-radius: 50%;
     
 }
+
+
+.profile-outline-darkblue {
+    border: 5px solid #334A82;
+    border-radius: 20px;
+    padding: 20px;
+}
