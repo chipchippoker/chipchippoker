@@ -271,14 +271,14 @@ export const useUserStore = defineStore('user', () => {
 
 
 
-
-
-
   //  아이콘 변수, 아이콘 가져오기 함수
   const myIcon = ref('1')
   const getIconUrl = function(number){
     return new URL(`/src/assets/profile_icons/icon${number}.jpg`,import.meta.url).href;
   }
+
+
+
 
 
   return {checkNickName,accessToken, refreshToken, kakaoAccessToken, kakaoSignUp, generalLogIn, simpleLogIn, signUp, checkMemberId,
