@@ -4,9 +4,16 @@
     height: 100vh;
 }
 
+/* moredarkblue #111D3C */
+
+.bg-moredarkblue {
+    background-color: #111D3C;
+}
+
+
 /* darkblue #334A82 */
 
-.bg-darkblue {
+.bg-darkblue {  
     background-color: #334A82;
 }
 
@@ -79,7 +86,21 @@
 
 
 .bg-modal-modal {
-    
     color: #fff0c0;
 }
+.bg-modal-yello {
+    background-color: #fff0c0;
+}
 
+/* 진한 노랑 버튼 / */
+.btn-outline-weightyellow {
+    border: 2px solid #e8b008;
+    background-color: #ffc308;
+    border-radius: 30px;
+}
+.btn-outline-weightyellow:hover {
+    background: #ffc100;
+}
+.bg-weightyellow {
+    background-color: #ffc100;
+}

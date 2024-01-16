@@ -19,6 +19,12 @@
     align-items: center;
 }
 
+.battingstyle {
+    border-radius: 20px;
+    border: 10px solid #334A82;
+    background-color: #111D3C;
+}
+
 /* 로고 사이즈 정리 */
 .big-logo {
     width: 300px;
