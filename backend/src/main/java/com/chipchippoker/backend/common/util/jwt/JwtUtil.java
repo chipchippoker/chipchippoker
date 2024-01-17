@@ -1,23 +1,23 @@
-package com.chipchippoker.backend.api.jwt.serivce;
+package com.chipchippoker.backend.common.util.jwt;
 
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.chipchippoker.backend.api.jwt.model.dto.TokenResponse;
 import com.chipchippoker.backend.common.dto.ErrorBase;
 import com.chipchippoker.backend.common.exception.InvalidException;
 import com.chipchippoker.backend.common.exception.UnAuthorizedException;
+import com.chipchippoker.backend.common.util.jwt.dto.TokenResponse;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
-@Service
+@Component
 @Slf4j
 public class JwtUtil {
 
@@ -71,12 +71,10 @@ public class JwtUtil {
 	@return int
 	@throws BaseException
 	 */
-	public Long getId() {
+	public Long getId(String accessToken, String refreshToken) {
 		//1. JWT 추출
-		String accessToken = getJwt("access-token");
 		System.out.println("accessToken = " + accessToken);
 		if (accessToken == null || accessToken.isEmpty()) {
-			String refreshToken = getJwt("refresh-token");
 			if (isValidateToken(refreshToken)) {
 				throw new UnAuthorizedException(ErrorBase.E401_UNAUTHORIZED_ACCESSTOKEN);
 			} else {
@@ -89,7 +87,6 @@ public class JwtUtil {
 					.setSigningKey(secretKey)
 					.parseClaimsJws(accessToken).getBody().get("id", Long.class);
 			} else {
-				String refreshToken = getJwt("refresh-token");
 				if (isValidateToken(refreshToken)) {
 					throw new UnAuthorizedException(ErrorBase.E401_UNAUTHORIZED_ACCESSTOKEN);
 				} else {
@@ -99,8 +96,7 @@ public class JwtUtil {
 		}
 	}
 
-	public TokenResponse reissuanceTokens() {
-		String refreshToken = getJwt("refresh-token");
+	public TokenResponse reissuanceTokens(String refreshToken) {
 		Long id = Jwts.parser()
 			.setSigningKey(secretKey)
 			.parseClaimsJws(refreshToken).getBody().get("id", Long.class);
