@@ -40,26 +40,18 @@
 }
 
 /* 작게 적히는 안내 글씨 */
-.little-text {
+.xx-little-text {
     font-size: xx-small;
 }
 
-
-
-
-.yb-modal-form {
-    border-radius: 20px;
-    
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.x-little-text {
+    font-size: x-small;
 }
 
-.yb-modal-size {
-    width: 400px;
+.little-text {
+    font-size: small;
 }
+
 
 .small-icon {
     width: 80px;
@@ -94,4 +86,10 @@
 /* 프로필 페이지 오른쪽 위 radius 조절 */
 .profile-box-radius {
     border-top-right-radius: 0;
+}
+
+.text-overflow{
+    overflow: hidden;  
+    white-space: nowrap; 
+    text-overflow: ellipsis;
 }

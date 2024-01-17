@@ -1,26 +1,26 @@
 <template>
-    <div style="width: 80%;">
+    <div style="width:80%;">
         <!-- 로고와 방목록 -->
-
-        <div class="d-flex align-items-center justify-content-end" style="width: 100%;" >
-            <img class="small-logo" src="/src/assets/Logo.png" alt="">
-            <div class="d-flex gap-3">
-                <button class="btn btn-outline-yellow p-1 rounded-2"><strong>경쟁 모드</strong></button>
-                <button class="btn btn-outline-yellow p-1 rounded-2"><strong>친선 모드</strong></button>
-                <button class="btn btn-outline-yellow p-1 rounded-2"><strong>방 만들기</strong></button>
-                <button class="btn btn-outline-yellow p-1 rounded-2"><strong>친구 찾기</strong></button>
+        <div class="m-3">
+            <div class="d-flex align-items-center justify-content-center gap-5" style="width: 100%;" >
+                <img class="small-logo m-0" src="/src/assets/Logo.png" alt="">
+                <div class="d-flex gap-3">
+                    <div @click="changeType('경쟁전')" class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#FindRoomModal">경쟁 모드</div>
+                    <div @click="changeType('친선전')" class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#FindRoomModal">친선 모드</div>
+                    <div class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#makeRoomModal">방 만들기</div>
+                    <div class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#FindFriendModal">친구 찾기</div>
+                </div>
             </div>
         </div>
-
         
         <div class="d-flex">
             <!-- 랭킹 -->
-            <div style="width:350px">
-                <MainRank class="mainstyle m-1"/>
+            <div>
+                <MainRank class="mainstyle m-3"/>
             </div>
             <!-- 방목록 -->
-            <div style="width:900px">
-                <MainRoom class="mainstyle m-1"/>
+            <div>
+                <MainRoom class="mainstyle m-3 px-2 pt-3 pb-0"/>
             </div>
         </div>
 
@@ -36,7 +36,26 @@
         <div class="offcanvas-body bg-lightyellow">
             <MainFriendList/>
         </div>
+
+    </div>
+    <!-- 모달 -->
+
+        <!-- 빠른방 입장 모달 -->
+        <div class="modal fade" id="FindRoomModal" tabindex="-1" aria-labelledby="makeRoomModalLabel" aria-hidden="true">
+            <ModalFindRoom
+            :type="gameType"
+            />
         </div>
+       
+        <!-- 방만들기 모달 -->
+        <div class="modal fade" id="makeRoomModal" tabindex="-1" aria-labelledby="makeRoomModalLabel" aria-hidden="true">
+            <ModalCreateRoom/>
+        </div>
+        <!-- 친구 찾기 모달 -->
+        <div class="modal fade" id="FindFriendModal" tabindex="-1" aria-labelledby="FindFriendModalLabel" aria-hidden="true">
+            <ModalFindFriend/>
+        </div>
+
     </div>
     
 </template>
@@ -45,11 +64,21 @@
 import MainFriendList from '@/components/Main/Friend/MainFriendList.vue';
 import MainRank from '@/components/Main/Rank/MainRank.vue';
 import MainRoom from '@/components/Main/Room/MainRoom.vue'
+import ModalCreateRoom from '@/components/Modal/ModalCreateRoom.vue';
+import ModalFindFriend from '@/components/Modal/ModalFindFriend.vue';
+import ModalFindRoom from '@/components/Modal/ModalFindRoom.vue';
+import { ref } from 'vue';
+
+const gameType = ref('경쟁전')
+const changeType = function(type){
+    gameType.value = type
+}
 </script>
 
 <style scoped>
 @import "@/assets/color.css";
 @import "@/assets/size.css";
+
 .btn-outline-weightyellow {
     height: 30px;
     display: flex;

@@ -1,7 +1,7 @@
 <template>
     <!-- 각각의 사용자 -->
     <div class="bg-lightyellow">
-        <div class="friend-item d-flex align-items-center bg-light rounded-2 gap-2">
+        <div class="friend-item d-flex align-items-center bg-light rounded-2 mx-3">
             <!-- 아이콘 - 내용 d-flex  -->
             <img class="x-small-icon"  :src='userStore.getIconUrl(1)'>
             <!-- 내정보 , 온오프라인 정보 수직정렬 -->
@@ -9,13 +9,13 @@
                 <div class="container">
                     <!-- 티어, 닉, 카톡 아이콘 -->
                     <div class="row">
-                        <div class="col-4" style="width:100px;">티어</div>
-                        <div class="col-4" style="width:100px; text-overflow: ellipsis;">{{ item?.name }}</div>
-                        <img class="icon" src="@/assets/icons/kakaologo.png" alt="">
+                        <div style="width:60px;">티어</div>
+                        <div class=" text-overflow" style="width:100px;">{{ item?.name }}</div>
+                        <img class="icon text-overflow" src="@/assets/icons/kakaologo.png" alt="">
                     </div>
                 </div>
                 <!-- 온오프라인 표시 -->
-                <div v-if="item?.isOnline" class="online-color little-text">
+                <div v-if="item?.isOnline" class="online-color x-little-text">
                     <div class="d-flex align-items-center gap-2">
                     <font-awesome-icon :icon="['fas', 'circle']" style="color: #4cba0d;" />
                     <div>
@@ -23,7 +23,7 @@
                     </div>
                     </div>
                 </div>
-                <div v-else class="little-text">
+                <div v-else class="x-little-text">
                     <div class="d-flex align-items-center gap-2">
                     <font-awesome-icon :icon="['fas', 'circle']" style="color: #eeeeee;" />
                     <div class="text-secondary">
@@ -51,6 +51,6 @@ defineProps({item:Object})
 }
 .icon {
     width: 50px;
-    
+    height: 100%;
 }
 </style>

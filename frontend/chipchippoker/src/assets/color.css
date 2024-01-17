@@ -2,6 +2,7 @@
 .bg-gradation-blue {
     background-image: linear-gradient(to bottom, #000000, #334A82);
     height: 100vh;
+
 }
 
 /* moredarkblue #111D3C */
@@ -83,16 +84,6 @@
 }
 
 
-
-
-.bg-modal-modal {
-    color: #fff0c0;
-}
-.bg-modal-yello {
-    background-color: #fff0c0;
-}
-
-
 /* 진한 노랑 버튼 / */
 .btn-outline-weightyellow {
     border: 2px solid #e8b008;
@@ -126,4 +117,9 @@
 
 .online-color {
     color: #0DA600;
+}
+
+/* a태그 밑줄 없에기 */
+a{
+text-decoration-line: none;
 }

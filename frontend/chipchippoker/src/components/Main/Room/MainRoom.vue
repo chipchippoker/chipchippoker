@@ -1,35 +1,43 @@
 <template>
-    <div>
-        <div class="d-flex justify-content-between align-items-center w-100">
+    <div class="d-flex flex-column gap-3">
+        <div class="d-flex justify-content-between align-items-center w-100 gap-3">
         <!-- 인원수 필터 선택 -->
         <div class="d-flex">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="two">
-                <label class="form-check-label" for="two">
+            <div class="form-check ">
+                <input class="form-check-input " type="checkbox" value="" id="two">
+                <label class="form-check-label x-little-text" for="two">
                     2인
                 </label>
             </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="three">
-                <label class="form-check-label" for="three">
+            <div class="form-check ">
+                <input class="form-check-input " type="checkbox" value="" id="three">
+                <label class="form-check-label x-little-text" for="three">
                     3인
                 </label>
             </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="four">
-                <label class="form-check-label" for="four">
+            <div class="form-check ">
+                <input class="form-check-input " type="checkbox" value="" id="four">
+                <label class="form-check-label x-little-text" for="four">
                     4인
+                </label>
+            </div>
+            <div class="form-check ">
+                <input class="form-check-input " type="checkbox" value="" id="four">
+                <label class="form-check-label x-little-text" for="four">
+                    빈방
                 </label>
             </div>
         </div>
         
         <!-- 방검색 -->
-        <div>
-            <input type="text" class="form-control" placeholder="방 이름" aria-label="Recipient's username" aria-describedby="button-addon2">
+        <div class="d-flex align-items-center gap-3">
+            <input type="text" class="form-control little-text" placeholder="방 이름" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <font-awesome-icon :icon="['fas', 'magnifying-glass']" style="color: #ffffff;" />
+            <font-awesome-icon :icon="['fas', 'arrows-rotate']" style="color: #ffffff;" />
         </div>
     </div>
     
-    <div>
+    <div >
         <!-- 경쟁전 탭, 친선전 탭 버튼-->
         <ul class="nav nav-tabs nav-justified border-0"  id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -46,6 +54,28 @@
             <div class="tab-pane fade" id="v-pills-friend-tab-pane" role="tabpanel" aria-labelledby="v-pills-friend-tab" tabindex="0">
                 <MainRoomFriendList/></div>
         </div>
+
+        
+    </div>
+    <div>
+        
+        <nav aria-label="Page navigation example ">
+        <ul class="pagination pagination-sm justify-content-center gap-1">
+            <li class="page-item xx-little-text">
+            <a class="btn-outline-yellow rounded-1 px-1 text-black" href="#" aria-label="Previous">
+                <font-awesome-icon icon="backward" style="color: #000000;"/>
+            </a>
+            </li>
+            <li class="page-item xx-little-text"><a class="btn-outline-yellow rounded-1 px-1 text-black" href="#">1</a></li>
+            <li class="page-item xx-little-text"><a class="btn-outline-yellow rounded-1 px-1 text-black" href="#">2</a></li>
+            <li class="page-item xx-little-text"><a class="btn-outline-yellow rounded-1 px-1 text-black" href="#">3</a></li>
+            <li class="page-item xx-little-text">
+            <a class="btn-outline-yellow rounded-1 px-1 text-black" href="#" aria-label="Next">
+                <font-awesome-icon icon="forward" style="color: #000000;" />
+            </a>
+            </li>
+        </ul>
+        </nav>
     </div>
 
 
@@ -79,4 +109,5 @@ const items = [1,2,3]
 .border-0 {
     border: 0px;
 }
+
 </style>

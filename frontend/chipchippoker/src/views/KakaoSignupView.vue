@@ -39,18 +39,7 @@
 
     <!-- 아이콘 모달 팝업 -->
     <div class="modal fade" id="IconModal" tabindex="-1" aria-labelledby="IconModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="IconModalLabel">아이콘 선택</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <ModalIconList class=" bg-modal-modal"/>
-          </div>
-      
-        </div>
-      </div>   
+      <ModalIconList/>
     </div>
 
     
@@ -88,7 +77,7 @@ const signUp = function(){
   console.log('카카오 회원가입 후 메인페이지로 이동')
   // userStore.kakaoSignUp(nickName.value)
   // 메인페이지로 이동
-  // router.push('메인페이지')
+  router.push({name:'main'})
 }
 
 
