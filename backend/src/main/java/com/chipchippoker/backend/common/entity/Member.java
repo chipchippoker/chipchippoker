@@ -3,8 +3,7 @@ package com.chipchippoker.backend.common.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import com.chipchippoker.backend.api.member.model.dto.SignupRequest;
+import com.chipchippoker.backend.api.auth.model.dto.SignupRequest;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -92,8 +91,7 @@ public class Member extends BaseEntity {
 			.build();
 	}
 
-
-	public void updateRefreshToken(String refreshToken){
+	public void updateRefreshToken(String refreshToken) {
 		this.refreshToken = refreshToken;
 	}
 }
