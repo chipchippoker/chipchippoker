@@ -35,7 +35,13 @@
                 </button>
               </div>
           </form>
-          </div>
+        </div>
+        <div class="text-white mt-3">
+          아직 회원이 아니십니까? 
+          <a href="" @click="gotoSignUp" style="color:#70E5FF;">
+            회원가입 ></a>
+        </div>
+
       </div>
   </template>
   
@@ -52,6 +58,8 @@
   const memberId = ref(null)
   const password = ref(null)
   const authorizationCode = ref(null)
+
+
   const isValidMemberId = computed(() => {
     return userStore.validateMemberId(memberId.value)
   })
@@ -88,6 +96,11 @@
     
   }
 
+
+  // 회원가입으로 이동
+  const gotoSignUp = function(){
+    router.push({name:'signUp'})
+  }
 
   </script>
   

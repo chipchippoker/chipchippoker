@@ -1,17 +1,29 @@
 <template>
-    <div class="text-center bg-modal-yellow">
-        <div class="d-flex flex-wrap">
-            <div v-for="number in numbers" :key="number" class="text-white grid-item d-flex justify-content-center">
-                
-                <ModalIconItemVue
-                @click="selectIcon(number)"
-                :number = number
-                />
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: #ffde76;">
+          <div class="modal-header border-0">
+            
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="text-center bg-modal-yellow">
+                <div class="d-flex flex-wrap">
+                    <div v-for="number in numbers" :key="number" class="text-white grid-item d-flex justify-content-center">
+                        
+                        <ModalIconItemVue
+                        @click="selectIcon(number)"
+                        :number = number
+                        />
 
-                
+                        
+                    </div>
+                </div>
             </div>
+          </div>
+      
         </div>
-    </div>
+      </div>   
+    
 </template>
 
 <script setup>

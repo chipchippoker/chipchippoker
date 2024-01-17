@@ -1,10 +1,20 @@
 <template>
-    <div>
-        알림 리스트
-        <div class="d-flex flex-column gap-1">
-            <ModalNotificationItem v-for="item in items" :key="item"/>
+    <div class=" modal-dialog modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content " style="background-color: #ffde76;">
+            <div class="modal-header border-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    알림 리스트
+                    <div class="d-flex flex-column gap-1">
+                        <ModalNotificationItem v-for="item in items" :key="item"/>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    
 </template>
 
 <script setup>

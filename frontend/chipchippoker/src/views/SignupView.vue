@@ -1,74 +1,68 @@
 <template>
-
   <div>
-  <div class="d-flex flex-column justify-content-center align-items-center position-absolute top-50 start-50 translate-middle">
-    <div class="d-flex justify-content-center">
-      <img class="big-logo" src="/src/assets/Logo.png" alt="">
-    </div>
-    
-    <div class="formstyle">
-      <div class="h2 fw-bold">회원가입</div>
-      <form @submit.prevent="signUp">
-        <div class="mb-3">
-          <label for="nickname" class="form-label">닉네임</label>
-          <div class="input-group">
-            <input type="text" class="form-control" id="nickname" placeholder="nickname" v-model="nickName">
-            <button class="btn btn-outline-secondary btn-light" type="button" id="check_nickname" @click="checkNickName">중복 확인</button>
+    <div
+      class="d-flex flex-column justify-content-center align-items-center position-absolute top-50 start-50 translate-middle">
+      <div class="d-flex justify-content-center">
+        <img class="small-logo" src="/src/assets/Logo.png" alt="">
+      </div>
+
+      <div class="formstyle">
+        <div class="h2 fw-bold">회원가입</div>
+        <form @submit.prevent="signUp">
+          <div class="mb-3">
+            <label for="nickname" class="form-label">닉네임</label>
+            <div class="input-group">
+              <input type="text" class="form-control" id="nickname" placeholder="nickname" v-model="nickName">
+              <button class="btn btn-outline-secondary btn-light" type="button" id="check_nickname"
+                @click="checkNickName">중복 확인</button>
+            </div>
+            <div v-if="isNickDuplicated" class="form-text text-danger">이미 사용 중인 닉네임입니다.</div>
+            <div v-if="!isValidNickname" id="nickname" class="fw-lgitighter x-little-text text-danger">한글 또는 영어 또는 숫자 또는
+              (_)의 4 ~ 16 글자이어야 합니다.</div>
           </div>
-          <div v-if="isNickDuplicated" class="form-text text-danger">이미 사용 중인 닉네임입니다.</div>
-          <div v-if="!isValidNickname" id="nickname" class="fw-lgitighter x-little-text text-danger">한글 또는 영어 또는 숫자 또는 (_)의 4 ~ 16 글자이어야 합니다.</div>
-        </div>
-        <div class="mb-3">
-          <label for="id" class="form-label">아이디</label>
-          <div class="input-group">
-            <input type="text" class="form-control" id="id" placeholder="id" v-model="memberId">
-            <button class="btn btn-outline-secondary btn-light" type="button" id="check_id" @click="checkMemberId">중복 확인</button>
+          <div class="mb-3">
+            <label for="id" class="form-label">아이디</label>
+            <div class="input-group">
+              <input type="text" class="form-control" id="id" placeholder="id" v-model="memberId">
+              <button class="btn btn-outline-secondary btn-light" type="button" id="check_id" @click="checkMemberId">중복
+                확인</button>
+            </div>
+            <div v-if="isIdDuplicated" class="form-text text-danger">이미 사용 중인 아이디입니다.</div>
+            <div v-if="!isValidMemberId" id="id" class="fw-lgitighter x-little-text text-danger">영어 또는 숫자의 6 ~ 16 글자이어야
+              합니다.</div>
           </div>
-          <div v-if="isIdDuplicated" class="form-text text-danger">이미 사용 중인 아이디입니다.</div>
-          <div v-if="!isValidMemberId"  id="id" class="fw-lgitighter x-little-text text-danger">영어 또는 숫자의 6 ~ 16 글자이어야 합니다.</div>
-        </div>
-        <div class="mb-3">
-          <label for="password1" class="form-label">비밀번호</label>
-          <input type="password" class="form-control" id="password1" placeholder="password" v-model="password1">
-          <div v-if="!isValidPassword1"  id="id" class="fw-lgitighter x-little-text text-danger">영어, 숫자, 특수문자를 모두 포함한 8 ~ 30 글자이어야 합니다.</div>
-        </div>
-        <div class="mb-3">
-          <label for="password2" class="form-label">비밀번호 확인</label>
-          <input type="password" class="form-control" id="password2" placeholder="password" v-model="password2">
-          <div v-if="!isValidPassword2"  id="id" class="fw-lgitighter x-little-text text-danger">비밀번호가 똑같아야 합니다.</div>
-        </div>
+          <div class="mb-3">
+            <label for="password1" class="form-label">비밀번호</label>
+            <input type="password" class="form-control" id="password1" placeholder="password" v-model="password1">
+            <div v-if="!isValidPassword1" id="id" class="fw-lgitighter x-little-text text-danger">영어, 숫자, 특수문자를 모두 포함한 8 ~
+              30 글자이어야 합니다.</div>
+          </div>
+          <div class="mb-3">
+            <label for="password2" class="form-label">비밀번호 확인</label>
+            <input type="password" class="form-control" id="password2" placeholder="password" v-model="password2">
+            <div v-if="!isValidPassword2" id="id" class="fw-lgitighter x-little-text text-danger">비밀번호가 똑같아야 합니다.</div>
+          </div>
 
 
 
 
-        <!-- 아이콘 모달 버튼 -->
-        <div class="d-flex justify-content-center">
-          <img data-bs-toggle="modal" data-bs-target="#IconModal" class="small-icon" :src='userStore.getIconUrl(userStore.myIcon)' :alt="userStore.myIcon">
-        </div>
+          <!-- 아이콘 모달 버튼 -->
+          <div class="d-flex justify-content-center">
+            <img data-bs-toggle="modal" data-bs-target="#IconModal" class="small-icon"
+              :src='userStore.getIconUrl(userStore.myIcon)' :alt="userStore.myIcon">
+          </div>
 
-
-
-        <div class="d-grid gap-2 pt-3">
-          <button :disabled="!(isValidMemberId && isValidPassword1 && isValidPassword2 && isValidNickname)" type="submit" class="btn btn-outline-yellow">제출하기</button>
-        </div>
-      </form>
+          <div class="d-grid gap-2 pt-3">
+            <button :disabled="!(isValidMemberId && isValidPassword1 && isValidPassword2 && isValidNickname)"
+              type="submit" class="btn btn-outline-yellow">제출하기</button>
+          </div>
+        </form>
+      </div>
     </div>
-    </div>
-    
+
     <!-- 아이콘 모달 팝업 -->
     <div class="modal fade" id="IconModal" tabindex="-1" aria-labelledby="IconModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="IconModalLabel">아이콘 선택</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <ModalIconList class=" bg-modal-modal"/>
-          </div>
-      
-        </div>
-      </div>   
+      <ModalIconList />
     </div>
 
 
@@ -103,7 +97,7 @@ const signUp = function () {
     nickName: nickName.value,
   }
   // userStore.signUp(payload)
-  router.push({name:'main'})
+  router.push({ name: 'main' })
 }
 
 const checkNickName = function () {
@@ -117,20 +111,20 @@ const checkMemberId = function () {
 }
 
 watch([memberId, password1, password2, nickName], () => {
-isValidMemberId.value = userStore.validateId(memberId.value);
-isValidPassword1.value = userStore.validatePassword(password1.value);
-isValidNickname.value = userStore.validateNickName(nickName.value);
-if (password2.value !== null && password1.value !== password2.value) {
-  isValidPassword2.value = false
-} else {
-  isValidPassword2.value = true
-}
+  isValidMemberId.value = userStore.validateId(memberId.value);
+  isValidPassword1.value = userStore.validatePassword(password1.value);
+  isValidNickname.value = userStore.validateNickName(nickName.value);
+  if (password2.value !== null && password1.value !== password2.value) {
+    isValidPassword2.value = false
+  } else {
+    isValidPassword2.value = true
+  }
 });
 
 </script>
 
   
-  <style scoped>
-  @import '@/assets/color.css';
-  @import "@/assets/size.css";
-  </style>
+<style scoped>
+@import '@/assets/color.css';
+@import "@/assets/size.css";
+</style>

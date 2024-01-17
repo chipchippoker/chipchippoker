@@ -13,8 +13,6 @@ const gotoProfile = function(){
 
 <template>
   <div>
-
-
     
   <div>
   <RouterLink to="login">로그인</RouterLink> /
@@ -25,17 +23,20 @@ const gotoProfile = function(){
   <RouterLink to="play">플레이페이지</RouterLink> /
   <RouterLink to="wait">대기페이지</RouterLink>
   </div>
-
-  <!-- 옵션, 로고, 아이콘 -->
-  <div class="d-flex justify-content-between align-items-center position-absolute" style="width: 100%; height: 100px;">
+  <div class="position-relative">
+  <!-- 옵션, 로고, 아이콘  -->
+  <div class="d-flex justify-content-between align-items-center position-absolute m-3">
       <div class="d-flex flex-row justify-content-between" style="width: 10%;">
-        <div class="mx-3">
+        <!-- 알림 모달 아이콘 -->
+        <div class="mx-3 z-3">
           <font-awesome-icon icon="bell"  shake size="lg" data-bs-toggle="modal" data-bs-target="#alarmModal" style="color: #ffffff;" />
         </div>
-        <div class="mx-3">
+        <!-- 설정 모달 아이콘 -->
+        <div class="mx-3 z-3">
           <font-awesome-icon icon="gear" size="lg" data-bs-toggle="modal" data-bs-target="#settingModal" style="color: #ffffff;" />
         </div>
-        <div class="ms-3">
+        <!-- 가이드북 모달 아이콘 -->
+        <div class="ms-3 z-3">
           <font-awesome-icon icon="book" size="lg" data-bs-toggle="modal" data-bs-target="#guideModal" style="color: #ffffff;" />
         </div>
       </div>
@@ -52,51 +53,23 @@ const gotoProfile = function(){
 
     <!-- 알림 Modal -->
     <div class="modal fade" id="alarmModal" tabindex="-1" aria-labelledby="alarmModalLabel" aria-hidden="true">
-      <div class=" modal-dialog modal-dialog-scrollable modal-dialog-centered">
-        <div class="modal-content " style="background-color: #ffde76;">
-          <div class="modal-header border-0">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-
-            <ModalNotificationList/>
-          </div>
-        </div>
-      </div>
+      <ModalNotificationList/>
+      
     </div>
     <!-- 세팅 Modal -->
     <div class="modal fade" id="settingModal" tabindex="-1" aria-labelledby="settingModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
-        <div class="modal-content" style="background-color: #ffde76;">
-          <div class="modal-header border-0">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <ModalMainSettings/>
-
-          </div>
-        </div>
-      </div>
+      <ModalMainSettings/>
     </div>
     <!-- 가이드북 Modal -->
     <div class="modal fade " id="guideModal" tabindex="-1" aria-labelledby="guideModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="background-color: #ffde76;">
-          <div class="modal-header border-0">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <ModalGuide/>
-
-
-          </div>
-        </div>
-      </div>
+      <ModalGuide/>
+      
     </div>
 
 
 
 
+  </div>
   </div>
 </template>
 
