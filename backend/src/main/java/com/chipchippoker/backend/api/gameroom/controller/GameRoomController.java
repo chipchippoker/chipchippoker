@@ -13,9 +13,13 @@ import com.chipchippoker.backend.api.gameroom.model.dto.CreateGameRoomRequest;
 import com.chipchippoker.backend.api.gameroom.model.dto.CreateGameRoomResponse;
 import com.chipchippoker.backend.api.gameroom.model.dto.EnterGameRoomRequest;
 import com.chipchippoker.backend.api.gameroom.model.dto.GetGameRoomListResponse;
+import com.chipchippoker.backend.api.gameroom.model.dto.LeaveGameRoomRequest;
+import com.chipchippoker.backend.api.gameroom.model.dto.MemberOutGameRoomRequest;
+import com.chipchippoker.backend.api.gameroom.model.dto.PlayGameRoomRequest;
 import com.chipchippoker.backend.api.gameroom.service.GameRoomServiceImpl;
 import com.chipchippoker.backend.common.dto.ApiResponse;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,20 +27,23 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @Slf4j
 public class GameRoomController {
+	private final HttpServletRequest request;
 	private final GameRoomServiceImpl gameRoomService;
 
 	// 방 생성
 	@PostMapping("/api/rooms")
 	public ResponseEntity<ApiResponse<CreateGameRoomResponse>> createGameRoom(
 		@RequestBody CreateGameRoomRequest createGameRoomRequest) {
-		CreateGameRoomResponse createGameRoomResponse = gameRoomService.createGameRoom(createGameRoomRequest);
+		Long id = (Long)request.getAttribute("id");
+		CreateGameRoomResponse createGameRoomResponse = gameRoomService.createGameRoom(createGameRoomRequest, id);
 		return ResponseEntity.ok(ApiResponse.success(createGameRoomResponse));
 	}
 
 	// 방 입장
 	@PostMapping("/api/rooms/enter")
 	public ResponseEntity<ApiResponse<Void>> enterGameRoom(@RequestBody EnterGameRoomRequest enterGameRoomRequest) {
-		gameRoomService.enterGameRoom(enterGameRoomRequest);
+		Long id = (Long)request.getAttribute("id");
+		gameRoomService.enterGameRoom(enterGameRoomRequest, id);
 		return ResponseEntity.ok(ApiResponse.success());
 	}
 
@@ -52,5 +59,29 @@ public class GameRoomController {
 			isThree, isFour,
 			isEmpty, pageable);
 		return ResponseEntity.ok(ApiResponse.success(getGameRoomListResponse));
+	}
+
+	// 방 나가기
+	@PostMapping("/api/rooms/leave")
+	public ResponseEntity<ApiResponse<Void>> leaveGameRoom(@RequestBody LeaveGameRoomRequest leaveGameRoomRequest) {
+		Long id = (Long)request.getAttribute("id");
+		gameRoomService.leaveGameRoom(leaveGameRoomRequest.getTitle(), id);
+		return ResponseEntity.ok(ApiResponse.success());
+	}
+
+	// 방 게임 시작하기
+	@PostMapping("/api/rooms/play")
+	public ResponseEntity<ApiResponse<Void>> playGameRoom(@RequestBody PlayGameRoomRequest playGameRoomRequest) {
+		gameRoomService.playGameRoom(playGameRoomRequest.getTitle());
+		return ResponseEntity.ok(ApiResponse.success());
+	}
+
+	// 방에서 사용자 강제 퇴장 시키기
+	@PostMapping("/api/rooms/member/out")
+	public ResponseEntity<ApiResponse<Void>> memberOutGameRoom(
+		@RequestBody MemberOutGameRoomRequest memberOutGameRoomRequest) {
+		Long id = (Long)request.getAttribute("id");
+		gameRoomService.memberOutGameRoom(memberOutGameRoomRequest, id);
+		return ResponseEntity.ok(ApiResponse.success());
 	}
 }

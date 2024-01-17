@@ -3,8 +3,10 @@ package com.chipchippoker.backend.api.gameroom.service;
 import java.util.Objects;
 
 import com.chipchippoker.backend.api.gameroom.repository.GameRoomRepository;
+import com.chipchippoker.backend.api.membergameroomblacklist.respository.MemberGameRoomBlackListRepository;
 import com.chipchippoker.backend.common.dto.ErrorBase;
 import com.chipchippoker.backend.common.entity.GameRoom;
+import com.chipchippoker.backend.common.entity.MemberGameRoomBlackList;
 import com.chipchippoker.backend.common.exception.DuplicateException;
 import com.chipchippoker.backend.common.exception.ForbiddenException;
 
@@ -33,6 +35,21 @@ public class GameRoomServiceHelper {
 	public static void isFullGameRoom(GameRoom gameRoom) {
 		if (gameRoom.getMembers().size() >= gameRoom.getTotalParticipantCnt()) {
 			throw new ForbiddenException(ErrorBase.E403_ALREADY_FULL_GAME_ROOM);
+		}
+	}
+
+	public static void isGameRoomManager(String requestMemberNickname, String gameRoomManagerNickname) {
+		if (!requestMemberNickname.equals(gameRoomManagerNickname)) {
+			throw new ForbiddenException(ErrorBase.E403_NOT_GAME_ROOM_MANAGER);
+		}
+	}
+
+	public static void isBlackListMember(MemberGameRoomBlackListRepository memberGameRoomBlackListRepository,
+		Long gameRoomBlackListId, Long memberId) {
+		MemberGameRoomBlackList memberGameRoomBlackList = memberGameRoomBlackListRepository.findByGameRoomBlackListIdAndMemberId(
+			gameRoomBlackListId, memberId);
+		if (memberGameRoomBlackList != null) {
+			throw new ForbiddenException(ErrorBase.E403_FORBIDDEN);
 		}
 	}
 }

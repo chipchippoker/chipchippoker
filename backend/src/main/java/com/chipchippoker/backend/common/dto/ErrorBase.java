@@ -37,6 +37,7 @@ public enum ErrorBase {
 	E403_ALREADY_FULL_GAME_ROOM(FORBIDDEN, false, "FB002", "인원 수가 초과했습니다."),
 	E403_ALREADY_STARTED_GAME_ROOM(FORBIDDEN, false, "FB003", "진행 중인 게임입니다."),
 	E403_OVER_MAX_GAME_ROOM_CNT(FORBIDDEN, false, "FB004", "생성 가능한 최대 개수를 초과했습니다."),
+	E403_NOT_GAME_ROOM_MANAGER(FORBIDDEN, false, "FB005", "방장만 강제 퇴장을 요청할 수 있습니다."),
 
 	/**
 	 * 404 Not Found (존재하지 않는 리소스)
