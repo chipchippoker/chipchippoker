@@ -6,25 +6,23 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body d-flex justify-content-center">
-            <form class="row g-3">
+            <div class="row g-3">
                 <div class="col-auto">
                     <div for="staticEmail2" class="visually-hidden">닉네임</div>
                     
                 </div>
                 <div class="col-auto">
                     <label for="userId" class="visually-hidden">nickname</label>
-                    <input type="text" class="form-control" id="userId" placeholder="Nickname">
+                    <input v-model="nickname" type="text" class="form-control" id="userId" placeholder="Nickname">
                 </div>
                 <div class="col-auto">
-                    <button type="submit" class="btn btn-primary mb-3">검색</button>
+                    <button @click="findNickName" type="submit" class="btn btn-primary mb-3">검색</button>
                 </div>
-            </form>
-
-
-
+            </div>
         </div>
         <div class="text-center mb-3 ">
-            검색 결과 없음
+            <div v-if="friendStore.searchedFriend">{{ friendStore.searchedFriend }}</div>
+            <div v-else>검색 결과 없음</div>
         </div>
         
         </div>
@@ -32,6 +30,16 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
+import { useFriendStore } from '@/stores/friend'
+import { useRouter } from 'vue-router'
+
+const friendStore = useFriendStore()
+const nickname = ref(null)
+const findNickName = function(){
+    console.log(`${nickname.value} 닉네임 검색`)
+    // friendStore.findFriend(nickname.value)
+}
 
 </script>
 

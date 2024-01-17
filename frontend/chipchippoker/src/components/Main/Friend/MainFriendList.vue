@@ -1,51 +1,42 @@
 <template>
     <div>
         <h4 class="text-center fw-bold mb-3">친구목록</h4>
-        <MainFriendItem v-for="item in items" :key="item.name"
+        <div class="row g-3">
+                <div class="col-auto">
+                    <div for="staticEmail2" class="visually-hidden">닉네임</div>
+                    
+                </div>
+                <div class="col-auto">
+                    <label for="userId" class="visually-hidden">nickname</label>
+                    <input v-model="nickname" type="text" class="form-control" id="userId" placeholder="Nickname">
+                </div>
+                <div class="col-auto">
+                    <button @click="findNickName" type="submit" class="btn btn-primary mb-3">검색</button>
+                </div>
+            </div>
+        <MainFriendItem v-for="item in friendStore.friendList" :key="item.name"
         :item="item"/>
     </div>
 </template>
 
 <script setup>
 import MainFriendItem from './MainFriendItem.vue';
+import { useFriendStore } from '@/stores/friend';
+import { ref } from 'vue';
+
+const friendStore = useFriendStore()
+const nickname = ref(null)
+
+const findNickName = function(){
+    console.log(`${nickname.value} 닉네임 검색 친구`)
+    // friendStore.getfriendList(nickname.value)
+}
+
+
 let id = 1
 // 예시 probs 데이터
 const items = [
-    {'name':'윤예빈',
-    'number':id++,
-    'point':12387,
-    'isOnline':true
-    },
-    {'name':'ㄴㅁ이로',
-    'number':id++,
-    'point':2376,
-    'isOnline':false
-    },
-    {'name':'ㅁㄶ,ㅓㅠ',
-    'number':id++,
-    'point':1234,
-    'isOnline':true
-    },
-    {'name':'ㅈㄷㅁ룧ㄹㄷ',
-    'number':id++,
-    'point':1212,
-    'isOnline':false
-    },
-    {'name':'ㅁㄷ러ㅗㅠ',
-    'number':id++,
-    'point':123,
-    'isOnline':true
-    },
-    {'name':'ㅂㅈ도',
-    'number':id++,
-    'point':123,
-    'isOnline':false
-    },
-    {'name':'ㅁㄴ류ㅓㅏㄹㄴㅁ',
-    'number':id++,
-    'point':12,
-    'isOnline':true
-    },
+    
 ]
 </script>
 
