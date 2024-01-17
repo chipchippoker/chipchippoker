@@ -45,11 +45,13 @@
 import MainFriendList from '@/components/Main/Friend/MainFriendList.vue';
 import MainRank from '@/components/Main/Rank/MainRank.vue';
 import MainRoom from '@/components/Main/Room/MainRoom.vue'
+
 </script>
 
 <style scoped>
 @import "@/assets/color.css";
 @import "@/assets/size.css";
+
 .btn-outline-weightyellow {
     height: 30px;
     display: flex;

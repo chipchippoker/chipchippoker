@@ -2,6 +2,7 @@
 .bg-gradation-blue {
     background-image: linear-gradient(to bottom, #000000, #334A82);
     height: 100vh;
+
 }
 
 /* moredarkblue #111D3C */
@@ -80,16 +81,6 @@
 
 .btn-outline-lightyellow:hover {
     background: #ffde76;
-}
-
-
-
-
-.bg-modal-modal {
-    color: #fff0c0;
-}
-.bg-modal-yello {
-    background-color: #fff0c0;
 }
 
 

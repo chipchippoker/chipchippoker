@@ -88,7 +88,7 @@ const signUp = function(){
   console.log('카카오 회원가입 후 메인페이지로 이동')
   // userStore.kakaoSignUp(nickName.value)
   // 메인페이지로 이동
-  // router.push('메인페이지')
+  router.push({name:'main'})
 }
 
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="text-center">
+    <div class="text-center bg-modal-yellow">
         <div class="d-flex flex-wrap">
             <div v-for="number in numbers" :key="number" class="text-white grid-item d-flex justify-content-center">
                 

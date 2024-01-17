@@ -5,11 +5,11 @@
   >
     <!-- 옵션, 방제, 아이콘 -->
     <div
-      class="d-flex justify-content-between align-items-center position-relative"
+      class="d-flex justify-content-end align-items-center position-relative"
       style="width: 100%; height: 100px"
     >
       <!-- 아이콘 -->
-      <div class="d-flex flex-row justify-content-between" style="width: 10%">
+      <!-- <div class="d-flex flex-row justify-content-between" style="width: 10%">
         <div class="mx-3">
           <font-awesome-icon
             icon="bell"
@@ -24,7 +24,7 @@
         <div class="ms-3">
           <font-awesome-icon icon="book" size="lg" style="color: #ffffff" />
         </div>
-      </div>
+      </div> -->
       <!-- 방제 -->
       <div class="position-absolute top-50 start-50 translate-middle">
         <h3 class="room-title">어서오세요. 싸피의 세계로!!</h3>

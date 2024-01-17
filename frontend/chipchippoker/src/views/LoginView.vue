@@ -11,9 +11,9 @@
               <div class="mb-3">
                 <label for="memberId" class="form-label">아이디</label>
                 <div class="input-group">
-                  <input type="text" class="form-control" id="memberId" placeholder="아이디" v-model="memberId">
+                  <input type="text " class="form-control" id="memberId" placeholder="아이디" v-model="memberId">
                 </div>
-                <div v-if="isValidMemberId === false">아이디 형식이 맞지 않습니다.</div>
+                <div class="text-danger little-text" v-if="isValidMemberId === false">아이디 형식이 맞지 않습니다.</div>
               </div>  
               <!-- 비밀번호 -->
               <div class="mb-3">
@@ -21,7 +21,7 @@
                 <div>
                   <input type="password" class="form-control" id="password" placeholder="비밀번호" v-model="password">
                 </div>
-                <div v-if="isValidPassword === false">비밀번호 형식이 맞지 않습니다.</div>
+                <div class="text-danger  little-text" v-if="isValidPassword === false">비밀번호 형식이 맞지 않습니다.</div>
 
               </div>
               <!-- 일반 로그인 버튼 -->
@@ -42,10 +42,12 @@
   <script setup>
   import { computed, ref } from "vue";
   import { useUserStore } from '@/stores/user'
-  import { useRoute } from 'vue-router'
+  import { useRoute,useRouter } from 'vue-router'
   import axios from 'axios'
 
+
   const route = useRoute()
+  const router = useRouter()
   const userStore = useUserStore()
   const memberId = ref(null)
   const password = ref(null)
@@ -64,24 +66,26 @@
       password: password.value
     }
     console.log('일반 로그인 요청')
-    console.log(payload)
-    userStore.generalLogIn(payload)
+    // userStore.generalLogIn(payload)
+    router.push({name:'main'})
   }
+  
 
-  console.log(route.query.code)
+  
   // 간편 로그인
   const simpleLogIn = function () {
     console.log('간편 로그인 요청')
     userStore.simpleLogIn()
   }
   authorizationCode.value = route.query.code
-  console.log(route.query.code)
+  
   if (authorizationCode.value) {
     
     authorizationCode.value = new URL(window.location.href).searchParams.get("code")
-    console.log(authorizationCode.value)
-    userStore.simpleLogInRequest(authorizationCode.value)
-
+    
+    // userStore.simpleLogInRequest(authorizationCode.value)
+    router.push({name:'kakaoSignUp'})
+    
   }
 
 

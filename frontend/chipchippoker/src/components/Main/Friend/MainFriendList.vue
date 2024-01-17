@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h3>친구목록</h3>
+        <h4 class="text-center fw-bold mb-3">친구목록</h4>
         <MainFriendItem v-for="item in items" :key="item.name"
         :item="item"/>
     </div>

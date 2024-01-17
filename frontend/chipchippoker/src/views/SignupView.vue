@@ -75,57 +75,60 @@
   </div>
 </template>
   
-  <script setup>
-  import { ref, watch } from "vue";
-  import { useUserStore } from "@/stores/user";
-  import ModalIconList from "@/components/Modal/ModalIconList.vue";
+<script setup>
+import { ref, watch } from "vue";
+import { useUserStore } from "@/stores/user";
+import ModalIconList from "@/components/Modal/ModalIconList.vue";
+import { useRouter } from "vue-router";
+
+const userStore = useUserStore()
+const memberId = ref(null)
+const password1 = ref(null)
+const password2 = ref(null)
+const nickName = ref(null)
+const isNickDuplicated = ref(null)
+const isIdDuplicated = ref(null)
+const isValidMemberId = ref(true)
+const isValidPassword1 = ref(true)
+const isValidPassword2 = ref(true)
+const isValidNickname = ref(true)
+const router = useRouter()
 
 
-  const userStore = useUserStore()
-  const memberId = ref(null)
-  const password1 = ref(null)
-  const password2 = ref(null)
-  const nickName = ref(null)
-  const isNickDuplicated = ref(null)
-  const isIdDuplicated = ref(null)
-  const isValidMemberId = ref(true)
-  const isValidPassword1 = ref(true)
-  const isValidPassword2 = ref(true)
-  const isValidNickname = ref(true)
-  
-  const signUp = function () {
-    const payload = {
-      memberId: memberId.value,
-      password1: password1.value,
-      password2: password2.value,
-      nickName: nickName.value,
-    }
-    userStore.signUp(payload)
+const signUp = function () {
+  const payload = {
+    memberId: memberId.value,
+    password1: password1.value,
+    password2: password2.value,
+    nickName: nickName.value,
   }
+  // userStore.signUp(payload)
+  router.push({name:'main'})
+}
 
-  const checkNickName = function () {
-  userStore.checkNickName(nickName.value);
+const checkNickName = function () {
+  // userStore.checkNickName(nickName.value);
   isNickDuplicated.value = userStore.isNickDuplicated
-  }
+}
 
-  const checkMemberId = function () {
-  userStore.checkMemberId(memberId.value);
+const checkMemberId = function () {
+  // userStore.checkMemberId(memberId.value);
   isIdDuplicated.value = userStore.isIdDuplicated;
-  }
+}
 
-  watch([memberId, password1, password2, nickName], () => {
-  isValidMemberId.value = userStore.validateId(memberId.value);
-  isValidPassword1.value = userStore.validatePassword(password1.value);
-  isValidNickname.value = userStore.validateNickName(nickName.value);
-  if (password2.value !== null && password1.value !== password2.value) {
-    isValidPassword2.value = false
-  } else {
-    isValidPassword2.value = true
-  }
-  });
+watch([memberId, password1, password2, nickName], () => {
+isValidMemberId.value = userStore.validateId(memberId.value);
+isValidPassword1.value = userStore.validatePassword(password1.value);
+isValidNickname.value = userStore.validateNickName(nickName.value);
+if (password2.value !== null && password1.value !== password2.value) {
+  isValidPassword2.value = false
+} else {
+  isValidPassword2.value = true
+}
+});
 
-  </script>
-  
+</script>
+
   
   <style scoped>
   @import '@/assets/color.css';
