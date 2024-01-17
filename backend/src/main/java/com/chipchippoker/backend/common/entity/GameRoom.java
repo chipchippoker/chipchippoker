@@ -45,8 +45,8 @@ public class GameRoom extends BaseEntity {
 	@OneToMany(mappedBy = "gameRoom", cascade = CascadeType.ALL)
 	private List<Member> members = new ArrayList<>();
 
-	@OneToMany(mappedBy = "gameRoom", cascade = CascadeType.ALL)
-	private List<GameRoomBlackList> gameRoomBlackLists = new ArrayList<>();
+	@OneToOne(mappedBy = "gameRoom", cascade = CascadeType.ALL)
+	private GameRoomBlackList gameRoomBlackLists;
 
 	@OneToOne(mappedBy = "gameRoom", cascade = CascadeType.ALL)
 	private SpectateRoom spectateRoom;
@@ -67,5 +67,9 @@ public class GameRoom extends BaseEntity {
 
 	public void updateMembers(Member member) {
 		this.members.add(member);
+	}
+
+	public void updateGameRoomState(String state) {
+		this.state = state;
 	}
 }
