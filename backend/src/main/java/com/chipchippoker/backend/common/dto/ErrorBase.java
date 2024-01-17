@@ -22,7 +22,7 @@ public enum ErrorBase {
 	E400_MISSING_AUTH_TOKEN_PARAMETER(BAD_REQUEST, false, "BR105", "인증 토큰을 입력해주세요"),
 	E400_INVALID_TOKEN(BAD_REQUEST, false, "BR106", "유효하지 않은 토큰입니다"),
 	E400_INVALID_PASSWORD(BAD_REQUEST, false, "BR107", "올바르지 않은 비밀번호입니다."),
-
+	E400_INVALID_AUTHORIZATION_CODE(BAD_REQUEST, false, "BR108", "올바르지 않은 인가코드입니다."),
 	/**
 	 * 401 UnAuthorized (인증 실패)
 	 */

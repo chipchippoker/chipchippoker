@@ -73,14 +73,12 @@ public class JwtUtil {
 	 */
 	public Long getId(String accessToken, String refreshToken) {
 		//1. JWT 추출
-		System.out.println("accessToken = " + accessToken);
 		if (accessToken == null || accessToken.isEmpty()) {
 			if (isValidateToken(refreshToken)) {
 				throw new UnAuthorizedException(ErrorBase.E401_UNAUTHORIZED_ACCESSTOKEN);
 			} else {
 				throw new InvalidException(ErrorBase.E400_INVALID_TOKEN);
 			}
-
 		} else {
 			if (isValidateToken(accessToken)) {
 				return Jwts.parser()
