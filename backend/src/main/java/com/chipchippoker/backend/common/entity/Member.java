@@ -3,7 +3,8 @@ package com.chipchippoker.backend.common.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.chipchippoker.backend.api.auth.model.dto.SignupRequest;
+import com.chipchippoker.backend.api.auth.model.dto.request.SignupRequest;
+import com.chipchippoker.backend.api.auth.model.dto.request.SimpleSignupRequest;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -79,11 +80,6 @@ public class Member extends BaseEntity {
 		this.gameRoom = null;
 	}
 
-	//비밀번호 암호화 메소드
-	// public void passwordEncode(PasswordEncoder passwordEncoder) {
-	// 	this.password = passwordEncoder.encode(this.password);
-	// }
-
 	public static Member newMember(SignupRequest signupRequest) {
 		return Member.builder()
 			.kakaoFriendListAgreement(Boolean.FALSE)
@@ -95,7 +91,24 @@ public class Member extends BaseEntity {
 			.build();
 	}
 
+	public static Member newKakaoMember(SimpleSignupRequest request) {
+		return Member.builder()
+			.kakaoFriendListAgreement(Boolean.FALSE)
+			.kakaoLinkState(Boolean.TRUE)
+			.nickname(request.getNickname())
+			.icon(request.getIcon())
+			.build();
+	}
+
+	public void createPoint(Point point) {
+		this.point = point;
+	}
+
 	public void updateRefreshToken(String refreshToken) {
 		this.refreshToken = refreshToken;
+	}
+
+	public void connectSocialId(Long socialId) {
+		this.kakaoSocialId = socialId;
 	}
 }

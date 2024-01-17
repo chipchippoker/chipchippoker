@@ -1,4 +1,4 @@
-package com.chipchippoker.backend.api.auth.model.dto;
+package com.chipchippoker.backend.api.auth.model.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
