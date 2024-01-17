@@ -1,26 +1,26 @@
 <template>
-    <div style="width: 80%;">
+    <div style="width:80%;">
         <!-- 로고와 방목록 -->
-
-        <div class="d-flex align-items-center justify-content-end" style="width: 100%;" >
-            <img class="small-logo" src="/src/assets/Logo.png" alt="">
-            <div class="d-flex gap-3">
-                <button class="btn btn-outline-yellow p-1 rounded-2"><strong>경쟁 모드</strong></button>
-                <button class="btn btn-outline-yellow p-1 rounded-2"><strong>친선 모드</strong></button>
-                <button class="btn btn-outline-yellow p-1 rounded-2"><strong>방 만들기</strong></button>
-                <button class="btn btn-outline-yellow p-1 rounded-2"><strong>친구 찾기</strong></button>
+        <div class="m-3">
+            <div class="d-flex align-items-center justify-content-center gap-5" style="width: 100%;" >
+                <img class="small-logo m-0" src="/src/assets/Logo.png" alt="">
+                <div class="d-flex gap-3">
+                    <button class="btn btn-outline-yellow p-1 rounded-2"><strong>경쟁 모드</strong></button>
+                    <button class="btn btn-outline-yellow p-1 rounded-2"><strong>친선 모드</strong></button>
+                    <button class="btn btn-outline-yellow p-1 rounded-2"><strong>방 만들기</strong></button>
+                    <button class="btn btn-outline-yellow p-1 rounded-2"><strong>친구 찾기</strong></button>
+                </div>
             </div>
         </div>
-
         
         <div class="d-flex">
             <!-- 랭킹 -->
-            <div style="width:350px">
-                <MainRank class="mainstyle m-1"/>
+            <div>
+                <MainRank class="mainstyle m-3"/>
             </div>
             <!-- 방목록 -->
-            <div style="width:900px">
-                <MainRoom class="mainstyle m-1"/>
+            <div>
+                <MainRoom class="mainstyle m-3 px-2 pt-3 pb-0"/>
             </div>
         </div>
 

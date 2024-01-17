@@ -16,7 +16,7 @@
             <button class="btn btn-outline-secondary btn-light" type="button" id="check_nickname" @click="checkNickName">중복 확인</button>
           </div>
           <div v-if="isNickDuplicated" class="form-text text-danger">이미 사용 중인 닉네임입니다.</div>
-          <div v-if="!isValidNickname" id="nickname" class="fw-lgitighter little-text text-danger">한글 또는 영어 또는 숫자 또는 (_)의 4 ~ 16 글자이어야 합니다.</div>
+          <div v-if="!isValidNickname" id="nickname" class="fw-lgitighter x-little-text text-danger">한글 또는 영어 또는 숫자 또는 (_)의 4 ~ 16 글자이어야 합니다.</div>
         </div>
         <div class="mb-3">
           <label for="id" class="form-label">아이디</label>
@@ -25,17 +25,17 @@
             <button class="btn btn-outline-secondary btn-light" type="button" id="check_id" @click="checkMemberId">중복 확인</button>
           </div>
           <div v-if="isIdDuplicated" class="form-text text-danger">이미 사용 중인 아이디입니다.</div>
-          <div v-if="!isValidMemberId"  id="id" class="fw-lgitighter little-text text-danger">영어 또는 숫자의 6 ~ 16 글자이어야 합니다.</div>
+          <div v-if="!isValidMemberId"  id="id" class="fw-lgitighter x-little-text text-danger">영어 또는 숫자의 6 ~ 16 글자이어야 합니다.</div>
         </div>
         <div class="mb-3">
           <label for="password1" class="form-label">비밀번호</label>
           <input type="password" class="form-control" id="password1" placeholder="password" v-model="password1">
-          <div v-if="!isValidPassword1"  id="id" class="fw-lgitighter little-text text-danger">영어, 숫자, 특수문자를 모두 포함한 8 ~ 30 글자이어야 합니다.</div>
+          <div v-if="!isValidPassword1"  id="id" class="fw-lgitighter x-little-text text-danger">영어, 숫자, 특수문자를 모두 포함한 8 ~ 30 글자이어야 합니다.</div>
         </div>
         <div class="mb-3">
           <label for="password2" class="form-label">비밀번호 확인</label>
           <input type="password" class="form-control" id="password2" placeholder="password" v-model="password2">
-          <div v-if="!isValidPassword2"  id="id" class="fw-lgitighter little-text text-danger">비밀번호가 똑같아야 합니다.</div>
+          <div v-if="!isValidPassword2"  id="id" class="fw-lgitighter x-little-text text-danger">비밀번호가 똑같아야 합니다.</div>
         </div>
 
 

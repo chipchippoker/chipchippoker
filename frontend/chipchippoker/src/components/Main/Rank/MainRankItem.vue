@@ -3,11 +3,11 @@
     <div class="d-flex  my-2 bg-light rounded-2 p-1 overflow-hidden">
         <div class="d-flex gap-1 align-items-center">
             
-            <div style="width:30px; text-overflow: ellipsis;">{{ item?.number }}등</div>
+            <div style="width:30px;">{{ item?.number }}등</div>
             <img class="x-small-icon"  :src='userStore.getIconUrl(1)'>
         
-            <div style="width:100px; height:20px; text-overflow: ellipsis;">{{ item?.name }}</div>
-            <div style="width:100px; height:20px; text-overflow: ellipsis;">{{ item?.point }} pt</div>
+            <div style="width:100px; height:20px;">{{ item?.name }}</div>
+            <div style="width:100px; height:20px;">{{ item?.point }} pt</div>
                 
             
         </div>

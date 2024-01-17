@@ -40,8 +40,16 @@
 }
 
 /* 작게 적히는 안내 글씨 */
-.little-text {
+.xx-little-text {
     font-size: xx-small;
+}
+
+.x-little-text {
+    font-size: x-small;
+}
+
+.little-text {
+    font-size: small;
 }
 
 

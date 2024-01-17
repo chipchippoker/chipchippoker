@@ -127,3 +127,8 @@
 .online-color {
     color: #0DA600;
 }
+
+/* a태그 밑줄 없에기 */
+a{
+text-decoration-line: none;
+}
