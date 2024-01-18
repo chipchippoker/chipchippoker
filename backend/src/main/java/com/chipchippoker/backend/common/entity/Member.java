@@ -109,6 +109,7 @@ public class Member extends BaseEntity {
 	}
 
 	public void connectSocialId(Long socialId) {
+		this.kakaoLinkState = Boolean.TRUE;
 		this.kakaoSocialId = socialId;
 	}
 }

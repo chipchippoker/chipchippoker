@@ -131,6 +131,13 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
+	public void socialConnection(Long id, Long kakaoSocialId) {
+		Member member = memberRepository.findById(id)
+			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
+		member.connectSocialId(kakaoSocialId);
+	}
+
+	@Override
 	public Boolean isDuplicateMemberId(String memberId) {
 		return memberRepository.existsByMemberId(memberId);
 	}
