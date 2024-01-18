@@ -3,16 +3,16 @@
     <div class="mainstyle d-flex flex-row  profile-box-radius" >
       <!-- 프로필 사진 -->
       <div class="" style="width: 200px;">
-        프사
-        <img class="small-icon" :src='userStore.getIconUrl(profileInfo.icon)' :alt="profileInfo.icon">
+        <img v-if="userStore?.profileInfo?.isMine" data-bs-toggle="modal" data-bs-target="#IconModal"  class="small-icon" :src='userStore.getIconUrl(userStore?.profileInfo?.icon)' :alt="userStore?.profileInfo?.icon">
+        <img v-else class="small-icon" :src='userStore.getIconUrl(userStore?.profileInfo?.icon)' :alt="userStore?.profileInfo?.icon">
       </div>
       <!-- 정보 -->
       <div class="d-flex flex-column me-3 w-100">
         <!-- 닉네임, 티어, 포인트 -->
         <div class="d-flex justify-content-around">
-          <div>{{ profileInfo.nickname }}닉네임</div>
-          <div>{{ profileInfo.tier }}티어</div>
-          <div>{{ profileInfo.point }}포인트</div>
+          <div>{{ userStore?.profileInfo?.nickname }}</div>
+          <div>{{ userStore?.profileInfo?.tier }}</div>
+          <div>{{ userStore?.profileInfo?.point }}pt</div>
         </div>
   
         <!-- 상세 정보 -->
@@ -26,7 +26,7 @@
             </div>
             <div class="d-flex w-50">
               <div class="w-50">승률</div>
-              <div class="">{{ profileInfo.winningRate }}74.1%</div>
+              <div class="">{{ userStore?.profileInfo?.winningRate }}74.1%</div>
               <div></div>
             </div>
           </div>
@@ -34,12 +34,12 @@
           <div class="d-flex w-100 my-3">
             <div class="d-flex w-50">
               <div class="w-50">랭킹(전체)</div>
-              <div class="">{{ profileInfo.rank }}257위</div>
+              <div class="">{{ userStore?.profileInfo?.rank }}위</div>
               <div></div>
             </div>
             <div class="d-flex w-50">
               <div class="w-50">포인트</div>
-              <div class="">{{ profileInfo.point }}1200pt</div>
+              <div class="">{{ userStore?.profileInfo?.point }}pt</div>
               <div></div>
             </div>
           </div>
@@ -47,25 +47,25 @@
           <div class="d-flex w-100 my-3">
             <div class="d-flex w-50">
               <div class="w-50">게임 수</div>
-              <div class="">{{ totalGame }}520전</div>
+              <div class="">{{ userStore?.profileInfo?.total }}전</div>
               <div></div>
             </div>
             <div class="d-flex w-50">
               <div class="w-50">최대 연승</div>
-              <div class="">{{ profileInfo.maxWin }}4연승</div>
+              <div class="">{{ userStore?.profileInfo?.maxWin }}연승</div>
               <div></div>
             </div>
           </div>
           <!-- 승패 -->
             <div class="d-flex mt-3">
               <div class="w-25">승패</div>
-              <div class="">{{ profileInfo.win }}승 {{ profileInfo.draw }}무 {{ profileInfo.lose }}패 329승 171패 20무</div>
+              <div class="">{{ userStore?.profileInfo?.win }}승 {{ userStore?.profileInfo?.draw }}무 {{ userStore?.profileInfo?.lose }}패</div>
               <div></div>
           </div>
         </div>
   
-        <!-- 버튼들 -->
-        <div v-if="profileInfo.isMine" class="d-flex flex-row-reverse">
+        <!-- 나의 프로필 -->
+        <div v-if="userStore?.profileInfo?.isMine" class="d-flex flex-row-reverse">
           <button class="btn btn-signout" @click="userStore.signOut">회원탈퇴</button>
           <button class="btn btn-logout" @click="userStore.logOut">로그아웃</button>
           <button class="btn btn-kakao">
@@ -73,18 +73,36 @@
             카카오 연동하기
           </button>
         </div>
+        <!-- 친구의 프로필 -->
+        <div v-else class="d-flex flex-row-reverse">
+          <button class="btn btn-signout">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdQLmWHJoz263PcrL3G_SLOzQUY28fVmG2wXJUtObYnEK-_WQ/viewform?usp=sf_link">신고하기</a>
+          </button>
+          <button @click="friendRequest" class="btn btn-signout primary">친구 신청</button>
+        </div>
       </div>
+             <!-- 아이콘 모달 팝업 -->
+    <div class="modal fade" id="IconModal" tabindex="-1" aria-labelledby="IconModalLabel" aria-hidden="true">
+      <ModalIconList/>
+    </div>
     </div>
   </template>
    
   <script setup>
+  import ModalIconList from "../Modal/ModalIconList.vue";
     import { ref, onMounted } from "vue";
     import { useUserStore } from '@/stores/user'
-  
+    import { useFriendStore } from "@/stores/friend";
     const userStore = useUserStore()
+    const friendStore = useFriendStore()
     const profileInfo = ref({})
     const totalGame = ref(null)
 
+    // 친구 요청
+    const friendRequest = function(){
+      console.log('친구신청 걸었음!!!')
+      // friendStore.friendRequest(userStore?.profileInfo?.nickname)
+    }
     onMounted(() => {
       // profileInfo.value = userStore.profileInfo
       // totalGame.value = profileInfo.win + profileInfo.draw + profileInfo.lose
