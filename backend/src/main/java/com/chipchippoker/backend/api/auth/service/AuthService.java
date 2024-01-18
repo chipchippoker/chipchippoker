@@ -28,4 +28,6 @@ public interface AuthService {
 	Long getKakaoSocialId(String accessToken);
 
 	Boolean validateExistsUser(Long socialId);
+
+	void socialConnection(Long id, Long kakaoSocialId);
 }

@@ -2,6 +2,7 @@ package com.chipchippoker.backend.api.auth.controller;
 
 import java.security.NoSuchAlgorithmException;
 
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +29,7 @@ import com.chipchippoker.backend.common.exception.InvalidException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -99,4 +101,5 @@ public class AuthController {
 		SimpleSignupResponse socialSignUpResponse = authService.signUp(simpleSignupRequest,token);
 		return ResponseEntity.ok(ApiResponse.success(socialSignUpResponse));
 	}
+
 }
