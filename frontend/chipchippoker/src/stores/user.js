@@ -9,11 +9,13 @@ export const useUserStore = defineStore('user', () => {
   const router = useRouter()
   const isNickDuplicated = ref(null)
   const isIdDuplicated = ref(null)
-  const userIcon = ref(null)
- 
+  
   const accessToken = ref(null)
   const refreshToken = ref(null)
   const kakaoAccessToken = ref(null)
+  const userIcon = ref(null)
+  const nickName = ref(null)
+
   const USER_API = 'http://localhost/api/members'
   const KAKAO_API_KEY = import.meta.env.VITE_KAKAO_API_KEY
   const REDIRECT_URI = 'http://localhost:5173/login'
@@ -27,17 +29,18 @@ export const useUserStore = defineStore('user', () => {
       data: payload
     })
       .then(res => {
-        console.log('일반 로그인 성공!!')
         accessToken.value = res.generalLoginResponse.access-token
         refreshToken.value = res.generalLoginResponse.refresh-token
         userIcon.value = res.generalLoginResponse.icon
+        nickName.value = res.generalLoginResponse.nickname
+        console.log('일반 로그인 성공!!')
       })
       .catch(err => console.log(err))
   }
 
   
-  // 간편 로그인
-  const simpleLogIn = function () {
+  // 카카오 인가코드 받기
+  const getKakaoCode = function () {
     console.log('카카오 인가코드 받기')
     Kakao.Auth.login({
       redirectUri: REDIRECT_URI,
@@ -102,8 +105,6 @@ export const useUserStore = defineStore('user', () => {
     })
 
   }
-
-
 
   // 닉네임 중복확인
   const checkNickName = function (nickName){
@@ -269,8 +270,6 @@ export const useUserStore = defineStore('user', () => {
     return true 
   }
 
-
-
   //  아이콘 변수, 아이콘 가져오기 함수
   const myIcon = ref('1')
   const getIconUrl = function(number){
@@ -278,9 +277,6 @@ export const useUserStore = defineStore('user', () => {
   }
 
 
-
-
-
-  return {checkNickName,accessToken, refreshToken, kakaoAccessToken, kakaoSignUp, generalLogIn, simpleLogIn, signUp, checkMemberId,
-    isNickDuplicated, isIdDuplicated, validateId, validatePassword, validateNickName, generalLogIn, simpleLogIn, simpleLogInRequest, validateMemberId, getIconUrl, myIcon}
+  return {checkNickName,accessToken, refreshToken, kakaoAccessToken, kakaoSignUp, generalLogIn, getKakaoCode, signUp, checkMemberId,
+    isNickDuplicated, isIdDuplicated, validateId, validatePassword, validateNickName, generalLogIn, simpleLogInRequest, validateMemberId, getIconUrl, myIcon, nickName}
 },{persist:true})

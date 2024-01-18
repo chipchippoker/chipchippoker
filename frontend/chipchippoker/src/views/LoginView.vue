@@ -83,7 +83,7 @@
   // 간편 로그인
   const simpleLogIn = function () {
     console.log('간편 로그인 요청')
-    userStore.simpleLogIn()
+    userStore.getKakaoCode()
   }
   authorizationCode.value = route.query.code
   
@@ -93,7 +93,6 @@
     
     // userStore.simpleLogInRequest(authorizationCode.value)
     router.push({name:'kakaoSignUp'})
-    
   }
 
 
