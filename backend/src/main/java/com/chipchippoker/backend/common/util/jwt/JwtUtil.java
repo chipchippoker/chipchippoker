@@ -41,29 +41,26 @@ public class JwtUtil {
 	@param userNum
 	@return String
 	 */
-	public String createAccessToken(Long id) {
+	public String createAccessToken(Long id,String nickname) {
 		Date now = new Date();
 		return Jwts.builder()
 			.setHeaderParam("type", "jwt")
 			.claim("id", id)
+			.claim("nickname",nickname)
 			.setSubject(accessHeader)
 			.setExpiration(new Date(now.getTime() + accessTokenExpirationPeriod))
 			.signWith(SignatureAlgorithm.HS256, secretKey) //signature 부분
 			.compact();
 	}
 
-	public String createRefreshToken(Long id) {
+	public String createRefreshToken(Long id,String nickname) {
 		return Jwts.builder()
 			.setSubject(refreshHeader)
 			.claim("id", id)
+			.claim("nickname",nickname)
 			.setExpiration(new Date(new Date().getTime() + refreshTokenExpirationPeriod))
 			.signWith(SignatureAlgorithm.HS256, secretKey)
 			.compact(); //signature 부분
-	}
-
-	public String getJwt(String header) {
-		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
-		return request.getHeader(header).split(" ")[1];
 	}
 
 	/*
@@ -94,12 +91,37 @@ public class JwtUtil {
 		}
 	}
 
+	public String getNickName(String accessToken, String refreshToken) {
+		//1. JWT 추출
+		if (accessToken == null || accessToken.isEmpty()) {
+			if (isValidateToken(refreshToken)) {
+				throw new UnAuthorizedException(ErrorBase.E401_UNAUTHORIZED_ACCESSTOKEN);
+			} else {
+				throw new InvalidException(ErrorBase.E400_INVALID_TOKEN);
+			}
+		} else {
+			if (isValidateToken(accessToken)) {
+				return Jwts.parser()
+					.setSigningKey(secretKey)
+					.parseClaimsJws(accessToken).getBody().get("nickname", String.class);
+			} else {
+				if (isValidateToken(refreshToken)) {
+					throw new UnAuthorizedException(ErrorBase.E401_UNAUTHORIZED_ACCESSTOKEN);
+				} else {
+					throw new InvalidException(ErrorBase.E400_INVALID_TOKEN);
+				}
+			}
+		}
+	}
 	public TokenResponse reissuanceTokens(String refreshToken) {
 		Long id = Jwts.parser()
 			.setSigningKey(secretKey)
 			.parseClaimsJws(refreshToken).getBody().get("id", Long.class);
-		String newAccessToken = createAccessToken(id);
-		String newRefreshToken = createRefreshToken(id);
+		String nickname = Jwts.parser()
+			.setSigningKey(secretKey)
+			.parseClaimsJws(refreshToken).getBody().get("nickname", String.class);
+		String newAccessToken = createAccessToken(id,nickname);
+		String newRefreshToken = createRefreshToken(id,nickname);
 		return new TokenResponse(newAccessToken, newRefreshToken);
 	}
 
