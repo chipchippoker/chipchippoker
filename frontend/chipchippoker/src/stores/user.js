@@ -9,20 +9,22 @@ export const useUserStore = defineStore('user', () => {
   const router = useRouter()
   const isNickDuplicated = ref(null)
   const isIdDuplicated = ref(null)
-  const userIcon = ref(null)
-  
   const accessToken = ref(null)
   const refreshToken = ref(null)
   const authorizationCode = ref(null)
   const kakaoAccessToken = ref(null)
+
   const USER_API = 'http://localhost/api/members'
   const KAKAO_API_KEY = import.meta.env.VITE_KAKAO_API_KEY
   const REDIRECT_URI = 'http://localhost:5173/login'
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`
+
   
   const myNickName = ref({})
   const myProfileInfo = ref({})
   const profileInfo = ref({})
+  const myIcon = ref('1')
+
   
   // 일반 로그인
   const generalLogIn = function (payload) {
@@ -32,17 +34,18 @@ export const useUserStore = defineStore('user', () => {
       data: payload
     })
       .then(res => {
-        console.log('일반 로그인 성공!!')
         accessToken.value = res.generalLoginResponse.access-token
         refreshToken.value = res.generalLoginResponse.refresh-token
         userIcon.value = res.generalLoginResponse.icon
+        nickName.value = res.generalLoginResponse.nickname
+        console.log('일반 로그인 성공!!')
       })
       .catch(err => console.log(err))
   }
 
   
-  // 간편 로그인
-  const simpleLogIn = function () {
+  // 카카오 인가코드 받기
+  const getKakaoCode = function () {
     console.log('카카오 인가코드 받기')
     Kakao.Auth.login({
       redirectUri: REDIRECT_URI,
@@ -103,24 +106,27 @@ export const useUserStore = defineStore('user', () => {
   }
   
   // 카카오 회원가입
-  const  kakaoSignUp = function(nickName){
+  const  kakaoSignUp = function(nickname){
     const payload = {
-      'nickname':nickName
+      'nickname':nickname,
+      'icon':myIcon.value
     }
     axios({
       method:'post',
-      url:'${USER_API}/login/simple/nickname',
-      data:'payload'
+      url:`${USER_API}/login/simple/nickname`,
+      data:payload
     })
     .then((res)=>{
-      accessToken.value = res.data.access-token
-      refreshToken.value = res.data.refresh-token
+      accessToken.value = res.simpleLoginResponse.accessToken
+      refreshToken.value = res.simpleLoginResponse.refreshToken
+      userIcon.value = res.simpleLoginResponse.icon
     })
     .catch((err)=>{
       console.log(err)
     })
 
   }
+
 
   // 카카오 연동
   const kakaoConnect = function () {
@@ -312,7 +318,7 @@ export const useUserStore = defineStore('user', () => {
   }
 
   //  아이콘 변수, 아이콘 가져오기 함수
-  const myIcon = ref('1')
+  
   const getIconUrl = function(number){
     return new URL(`/src/assets/profile_icons/icon${number}.jpg`,import.meta.url).href;
   }

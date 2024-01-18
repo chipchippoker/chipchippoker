@@ -75,7 +75,8 @@ const checkNickName = function () {
 // 회원가입 함수 -> userStore의 카카오 회원가입 함수 호출
 const signUp = function(){
   console.log('카카오 회원가입 후 메인페이지로 이동')
-  // userStore.kakaoSignUp(nickName.value)
+  
+  // userStore.kakaoSignUp()
   // 메인페이지로 이동
   router.push({name:'main'})
 }
