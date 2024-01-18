@@ -9,19 +9,12 @@
       </div>
     </div>
     <!-- players -->
-    <div class="position-relative w-100" style="height: 70%;">
+    <div class="w-100" style="height: 70%;">
       <!-- 플레이어 화면 / 카드 / 감정 / 정보 -->
-      <PlayPlayerVue />
-      <!-- 배팅보드 -->
-      <PlayBattingVue />
-      <!-- 남은 시간, 총 배팅 코인 -->
-      <div class="position-absolute top-0 start-50 translate-middle mt-4 d-flex flex-column align-items-center">
-        <div class="text-white fs-3 fw-bold">12 초</div>
-        <div class="text-white fw-bold">총 배팅: 21</div>
-      </div>
+      <PlayPlayerVue :mySessionId="mySessionId" :myUserName="myUserName" />
     </div>
     <!-- 채팅, 카드, 컨트롤러 -->
-    <div class="d-flex align-items-center mb-3" style="width: 100%; height: 30%;">
+    <div class="d-flex align-items-center mb-3" style="width: 100%; height: 20%;">
       <!-- 카드 -->
       <div class="text-white w-25">
         card
@@ -40,23 +33,29 @@
         </div>
         <!-- <img class="middle-logo mb-5 me-5" src="/src/assets/Logo.png" alt=""> -->
       </div>
-      <!-- 나가기 -->
-      <div class="position-absolute bottom-0 end-0">
-        <div class="bg-danger me-3 text-white fw-bold rounded-pill d-flex justify-content-center align-items-center border border-2 border-white" style="width: 60px; height: 30px">나가기</div>
-      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-  import PlayBattingVue from "../components/Play/PlayBatting.vue";
   import PlayControllerVue from "../components/Play/PlayController.vue";
   import PlayPlayerVue from "../components/Play/PlayPlayer.vue";
   import PlayTalkVue from "../components/Play/PlayTalk.vue";
+  import { ref, computed, onMounted } from 'vue'
+  import { useRoute, useRouter } from 'vue-router';
 
+  const router = useRouter()
+ 
+  // Join form
+  const mySessionId = ref("SessionCrome")
+  const myUserName = ref("Participant" + Math.floor(Math.random() * 100))
+  
+  const route = useRoute()
+  
+
+  
 </script>
 
 <style scoped>
-  @import '@/assets/color.css';
-  @import "@/assets/size.css";
+
 </style>

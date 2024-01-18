@@ -9,7 +9,6 @@ import PlayView from '@/views/PlayView.vue'
 import WaitView from '../views/WaitView.vue'
 
 
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -48,7 +47,7 @@ const router = createRouter({
       path: '/wait',
       name: 'wait',
       component: WaitView
-    }
+    },
 
   ]
 })
