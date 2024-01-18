@@ -1,17 +1,17 @@
 <template>
     <!-- 각각의 사용자 -->
     <div class="bg-lightyellow">
-        <div class="friend-item d-flex align-items-center bg-light rounded-2 mx-3">
+        <div class="friend-item d-flex align-items-center gap-2 bg-light rounded-2 mx-3">
             <!-- 아이콘 - 내용 d-flex  -->
-            <img class="x-small-icon"  :src='userStore.getIconUrl(1)'>
+            <img class="x-small-icon"  :src='userStore.getIconUrl(item?.icon)'>
             <!-- 내정보 , 온오프라인 정보 수직정렬 -->
             <div class="d-flex flex-column">
                 <div class="container">
                     <!-- 티어, 닉, 카톡 아이콘 -->
                     <div class="row">
-                        <div style="width:60px;">티어</div>
-                        <div class=" text-overflow" style="width:100px;">{{ item?.name }}</div>
-                        <img class="icon text-overflow" src="@/assets/icons/kakaologo.png" alt="">
+                        <div style="width:60px;">{{ item?.tier }}</div>
+                        <div class=" text-overflow" style="width:100px;">{{ item?.nickname }}</div>
+                        <img v-if="item?.isKakaoFriend" class="icon text-overflow" src="@/assets/icons/kakaologo.png" alt="">
                     </div>
                 </div>
                 <!-- 온오프라인 표시 -->
@@ -37,6 +37,17 @@
 </template>
 
 <script setup>
+// {
+    // "icon": "asd",
+    //     "tier": "bronze",
+    //     "isKakaoFriend": true,
+    //     "nickname": "윤예빈",
+    //     "isOnline": true
+    //   }
+
+
+
+
 import { useUserStore } from '@/stores/user';
 const userStore = useUserStore()
 defineProps({item:Object})

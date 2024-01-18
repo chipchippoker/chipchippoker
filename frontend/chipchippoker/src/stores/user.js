@@ -20,7 +20,9 @@ export const useUserStore = defineStore('user', () => {
   const KAKAO_API_KEY = import.meta.env.VITE_KAKAO_API_KEY
   const REDIRECT_URI = 'http://localhost:5173/login'
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`
+  const myIcon = ref('1')
 
+  
   // 일반 로그인
   const generalLogIn = function (payload) {
     axios({
@@ -87,18 +89,20 @@ export const useUserStore = defineStore('user', () => {
 
   
   // 카카오 회원가입
-  const  kakaoSignUp = function(nickName){
+  const  kakaoSignUp = function(nickname){
     const payload = {
-      'nickname':nickName
+      'nickname':nickname,
+      'icon':myIcon.value
     }
     axios({
       method:'post',
-      url:'${USER_API}/login/simple/nickname',
-      data:'payload'
+      url:`${USER_API}/login/simple/nickname`,
+      data:payload
     })
     .then((res)=>{
-      accessToken.value = res.data.access-token
-      refreshToken.value = res.data.refresh-token
+      accessToken.value = res.simpleLoginResponse.accessToken
+      refreshToken.value = res.simpleLoginResponse.refreshToken
+      userIcon.value = res.simpleLoginResponse.icon
     })
     .catch((err)=>{
       console.log(err)
@@ -271,7 +275,7 @@ export const useUserStore = defineStore('user', () => {
   }
 
   //  아이콘 변수, 아이콘 가져오기 함수
-  const myIcon = ref('1')
+  
   const getIconUrl = function(number){
     return new URL(`/src/assets/profile_icons/icon${number}.jpg`,import.meta.url).href;
   }
