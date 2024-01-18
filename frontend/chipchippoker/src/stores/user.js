@@ -341,6 +341,6 @@ export const useUserStore = defineStore('user', () => {
     })
   }
 
-  return {checkNickName,accessToken, refreshToken, authorizationCode, kakaoAccessToken, kakaoSignUp, kakaoConnect, generalLogIn, simpleLogIn, logOut, signUp, signOut, checkMemberId,
-    isNickDuplicated, isIdDuplicated, validateId, validatePassword, validateNickName, generalLogIn, simpleLogIn, simpleLogInRequest, validateMemberId, getIconUrl, myIcon, myNickName, myProfileInfo, profileInfo, getProfileInfo}
+  return {checkNickName,accessToken, refreshToken, authorizationCode, kakaoAccessToken, kakaoSignUp, kakaoConnect, generalLogIn, logOut, signUp, signOut, checkMemberId,
+    isNickDuplicated, isIdDuplicated, validateId, validatePassword, validateNickName, generalLogIn, getKakaoCode, simpleLogInRequest, validateMemberId, getIconUrl, myIcon, myNickName, myProfileInfo, profileInfo, getProfileInfo}
 },{persist:true})
