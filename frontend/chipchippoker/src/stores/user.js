@@ -9,17 +9,20 @@ export const useUserStore = defineStore('user', () => {
   const router = useRouter()
   const isNickDuplicated = ref(null)
   const isIdDuplicated = ref(null)
-  
   const accessToken = ref(null)
   const refreshToken = ref(null)
+  const authorizationCode = ref(null)
   const kakaoAccessToken = ref(null)
-  const userIcon = ref(null)
-  const nickName = ref(null)
 
   const USER_API = 'http://localhost/api/members'
   const KAKAO_API_KEY = import.meta.env.VITE_KAKAO_API_KEY
   const REDIRECT_URI = 'http://localhost:5173/login'
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`
+
+  
+  const myNickName = ref({})
+  const myProfileInfo = ref({})
+  const profileInfo = ref({})
   const myIcon = ref('1')
 
   
@@ -49,6 +52,7 @@ export const useUserStore = defineStore('user', () => {
     })
   }
 
+  // 간편 로그인
   const simpleLogInRequest = function (authorizationCode) {
     console.log(authorizationCode);
     // 인가코드로 로그인 요청
@@ -87,6 +91,19 @@ export const useUserStore = defineStore('user', () => {
   })
   }
 
+  // 로그아웃
+  const logOut = function () {
+    console.log('로그아웃 요청!');
+    axios.post({
+      url: `${USER_API}/logout/`,
+      headers: { 'access-token': accessToken.value }
+    })
+    .then(res => {
+      console.log('로그아웃 성공!!')
+    })
+    .catch(err => console.log(err))
+
+  }
   
   // 카카오 회원가입
   const  kakaoSignUp = function(nickname){
@@ -108,6 +125,21 @@ export const useUserStore = defineStore('user', () => {
       console.log(err)
     })
 
+  }
+
+
+  // 카카오 연동
+  const kakaoConnect = function () {
+    console.log('카카오 연동 요청!');
+    axios({
+      method: 'post',
+      url: `${USER_API}/social/`,
+      data: { 'authorization': authorizationCode.value }
+    })
+    .then(res => {
+      console.log('카카오 연동 성공!');
+    })
+    .catch(err => console.log(err))
   }
 
   // 닉네임 중복확인
@@ -197,7 +229,18 @@ export const useUserStore = defineStore('user', () => {
       .catch(err => console.log(err))
   }
 
-
+  // 회원탈퇴
+  const signOut = function () {
+    console.log('회원탈퇴 요청!');
+    axios({
+      method: 'delete',
+      url: `${USER_API}/members/`,
+      headers: { 'access-token': accessToken.value }
+    })
+    .then(res => {
+      console.log('회원탈퇴 성공')
+    })
+  }
 
   // 아이디 유효성 검사
   const validateId = function (memberId) {
@@ -280,7 +323,24 @@ export const useUserStore = defineStore('user', () => {
     return new URL(`/src/assets/profile_icons/icon${number}.jpg`,import.meta.url).href;
   }
 
+  // 프로필 정보 요청
+  const getProfileInfo = function(nickName) {
+    axios.get({
+      url: `${USER_API}/profile/${nickName}`,
+      headers: {
+        "access-token": accessToken.value
+      }
+    })
+    .then(res => {
+      console.log("프로필 정보 요청 성공");
+      if (nickName === myNickName.value) {
+        myProfileInfo.value = res.profilePageResponse
+      } else {
+        profileInfo.value = res.profilePageResponse
+      }
+    })
+  }
 
-  return {checkNickName,accessToken, refreshToken, kakaoAccessToken, kakaoSignUp, generalLogIn, getKakaoCode, signUp, checkMemberId,
-    isNickDuplicated, isIdDuplicated, validateId, validatePassword, validateNickName, generalLogIn, simpleLogInRequest, validateMemberId, getIconUrl, myIcon, nickName}
+  return {checkNickName,accessToken, refreshToken, authorizationCode, kakaoAccessToken, kakaoSignUp, kakaoConnect, generalLogIn, simpleLogIn, logOut, signUp, signOut, checkMemberId,
+    isNickDuplicated, isIdDuplicated, validateId, validatePassword, validateNickName, generalLogIn, simpleLogIn, simpleLogInRequest, validateMemberId, getIconUrl, myIcon, myNickName, myProfileInfo, profileInfo, getProfileInfo}
 },{persist:true})

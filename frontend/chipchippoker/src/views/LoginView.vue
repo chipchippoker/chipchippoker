@@ -86,6 +86,7 @@
     userStore.getKakaoCode()
   }
   authorizationCode.value = route.query.code
+  userStore.authorizationCode = authorizationCode.value
   
   if (authorizationCode.value) {
     

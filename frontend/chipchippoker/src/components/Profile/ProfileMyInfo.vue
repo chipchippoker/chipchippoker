@@ -4,14 +4,15 @@
       <!-- 프로필 사진 -->
       <div class="" style="width: 200px;">
         프사
+        <img class="small-icon" :src='userStore.getIconUrl(profileInfo.icon)' :alt="profileInfo.icon">
       </div>
       <!-- 정보 -->
       <div class="d-flex flex-column me-3 w-100">
         <!-- 닉네임, 티어, 포인트 -->
         <div class="d-flex justify-content-around">
-          <div>닉네임</div>
-          <div>티어</div>
-          <div>포인트</div>
+          <div>{{ profileInfo.nickname }}닉네임</div>
+          <div>{{ profileInfo.tier }}티어</div>
+          <div>{{ profileInfo.point }}포인트</div>
         </div>
   
         <!-- 상세 정보 -->
@@ -25,7 +26,7 @@
             </div>
             <div class="d-flex w-50">
               <div class="w-50">승률</div>
-              <div class="">74.1%</div>
+              <div class="">{{ profileInfo.winningRate }}74.1%</div>
               <div></div>
             </div>
           </div>
@@ -33,12 +34,12 @@
           <div class="d-flex w-100 my-3">
             <div class="d-flex w-50">
               <div class="w-50">랭킹(전체)</div>
-              <div class="">257위</div>
+              <div class="">{{ profileInfo.rank }}257위</div>
               <div></div>
             </div>
             <div class="d-flex w-50">
               <div class="w-50">포인트</div>
-              <div class="">1200pt</div>
+              <div class="">{{ profileInfo.point }}1200pt</div>
               <div></div>
             </div>
           </div>
@@ -46,29 +47,29 @@
           <div class="d-flex w-100 my-3">
             <div class="d-flex w-50">
               <div class="w-50">게임 수</div>
-              <div class="">520전</div>
+              <div class="">{{ totalGame }}520전</div>
               <div></div>
             </div>
             <div class="d-flex w-50">
               <div class="w-50">최대 연승</div>
-              <div class="">4연승</div>
+              <div class="">{{ profileInfo.maxWin }}4연승</div>
               <div></div>
             </div>
           </div>
           <!-- 승패 -->
             <div class="d-flex mt-3">
               <div class="w-25">승패</div>
-              <div class="">329승 171패 20무</div>
+              <div class="">{{ profileInfo.win }}승 {{ profileInfo.draw }}무 {{ profileInfo.lose }}패 329승 171패 20무</div>
               <div></div>
           </div>
         </div>
   
         <!-- 버튼들 -->
-        <div class="d-flex flex-row-reverse">
-          <button class="btn btn-signout">회원탈퇴</button>
-          <button class="btn btn-logout">로그아웃</button>
+        <div v-if="profileInfo.isMine" class="d-flex flex-row-reverse">
+          <button class="btn btn-signout" @click="userStore.signOut">회원탈퇴</button>
+          <button class="btn btn-logout" @click="userStore.logOut">로그아웃</button>
           <button class="btn btn-kakao">
-            <img class="kakao-logo" src="/src/assets/icons/kakaologo.png" alt="">
+            <img class="kakao-logo" @click="userStore.kakaoConnect" src="/src/assets/icons/kakaologo.png" alt="">
             카카오 연동하기
           </button>
         </div>
@@ -79,10 +80,15 @@
   <script setup>
     import { ref, onMounted } from "vue";
     import { useUserStore } from '@/stores/user'
-    import { useRouter } from 'vue-router'
   
     const userStore = useUserStore()
-  
+    const profileInfo = ref({})
+    const totalGame = ref(null)
+
+    onMounted(() => {
+      // profileInfo.value = userStore.profileInfo
+      // totalGame.value = profileInfo.win + profileInfo.draw + profileInfo.lose
+    })
   </script>
    
   <style scoped>

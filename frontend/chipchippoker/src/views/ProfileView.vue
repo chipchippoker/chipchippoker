@@ -3,7 +3,6 @@
     <!-- 옵션, 로고, 아이콘 -->
     <div class="d-flex justify-content-between align-items-center position-relative" style="width: 100%; height: 100px;">
       <div class="position-absolute top-50 start-50 translate-middle"><img class="small-logo mt-2" src="/src/assets/Logo.png" alt=""></div>
-      
     </div>
     
      <!-- 나의 정보 / 전적 검색 -->
@@ -11,9 +10,9 @@
       <!-- 오른쪽에 수직 탭 -->
       <div class="nav flex-column nav-pills" id="v-pills-tab">
         <a class="nav-link active" style="border-top-left-radius: 0;
-  border-bottom-left-radius: 0;" data-bs-toggle="pill" href="#v-pills-my-info">나의 정보</a>
+        border-bottom-left-radius: 0;" data-bs-toggle="pill" href="#v-pills-my-info">나의 정보</a>
         <a class="nav-link" style="border-top-left-radius: 0;
-  border-bottom-left-radius: 0; " data-bs-toggle="pill" href="#v-pills-history">전적 검색</a>
+        border-bottom-left-radius: 0; " data-bs-toggle="pill" href="#v-pills-history">전적 검색</a>
       </div>
       <!-- 탭 내용 -->
       <div class="tab-content flex-grow-1">
@@ -31,18 +30,19 @@
 </template>
 
 <script setup>
-  import ProfileMyInfo from '@/components/ProfileMyInfo.vue'
-  import ProfileHistoryList from '@/components/ProfileHistoryList.vue'
+  import ProfileMyInfo from '@/components/Profile/ProfileMyInfo.vue'
+  import ProfileHistoryList from '@/components/Profile/ProfileHistoryList.vue'
   import { ref, onMounted } from "vue";
   import { useUserStore } from '@/stores/user'
   import { useRouter } from 'vue-router'
 
   const userStore = useUserStore()
   const recentPlayList = ref(null)
+  const profileInfo = userStore.profileInfo
 
-  // onMounted(() => {
-  //   userStore.getProfileInfo(MemberId)
-  // })
+  onMounted(() => {
+    // userStore.getProfileInfo(MemberId)
+  })
   
 </script>
 
