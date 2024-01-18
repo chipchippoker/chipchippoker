@@ -10,7 +10,7 @@ export const useUserStore = defineStore('user', () => {
   const isNickDuplicated = ref(null)
   const isIdDuplicated = ref(null)
   const userIcon = ref(null)
- 
+  
   const accessToken = ref(null)
   const refreshToken = ref(null)
   const kakaoAccessToken = ref(null)
@@ -18,7 +18,9 @@ export const useUserStore = defineStore('user', () => {
   const KAKAO_API_KEY = import.meta.env.VITE_KAKAO_API_KEY
   const REDIRECT_URI = 'http://localhost:5173/login'
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`
-
+  
+  const profileInfo = ref({})
+  
   // 일반 로그인
   const generalLogIn = function (payload) {
     axios({
@@ -269,18 +271,26 @@ export const useUserStore = defineStore('user', () => {
     return true 
   }
 
-
-
   //  아이콘 변수, 아이콘 가져오기 함수
   const myIcon = ref('1')
   const getIconUrl = function(number){
     return new URL(`/src/assets/profile_icons/icon${number}.jpg`,import.meta.url).href;
   }
 
-
-
-
+  // 프로필 정보 요청
+  const getProfileInfo = function(nickName) {
+    axios.get({
+      url: `${USER_API}/profile/${nickName}`,
+      headers: {
+        "access-token": accessToken.value
+      }
+    })
+    .then(res => {
+      console.log("프로필 정보 요청 성공");
+      profileInfo.value = res.profilePageResponse
+    })
+  }
 
   return {checkNickName,accessToken, refreshToken, kakaoAccessToken, kakaoSignUp, generalLogIn, simpleLogIn, signUp, checkMemberId,
-    isNickDuplicated, isIdDuplicated, validateId, validatePassword, validateNickName, generalLogIn, simpleLogIn, simpleLogInRequest, validateMemberId, getIconUrl, myIcon}
+    isNickDuplicated, isIdDuplicated, validateId, validatePassword, validateNickName, generalLogIn, simpleLogIn, simpleLogInRequest, validateMemberId, getIconUrl, myIcon, profileInfo, getProfileInfo}
 },{persist:true})

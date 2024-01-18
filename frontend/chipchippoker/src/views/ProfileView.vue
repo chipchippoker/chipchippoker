@@ -31,8 +31,8 @@
 </template>
 
 <script setup>
-  import ProfileMyInfo from '@/components/ProfileMyInfo.vue'
-  import ProfileHistoryList from '@/components/ProfileHistoryList.vue'
+  import ProfileMyInfo from '@/components/Profile/ProfileMyInfo.vue'
+  import ProfileHistoryList from '@/components/Profile/ProfileHistoryList.vue'
   import { ref, onMounted } from "vue";
   import { useUserStore } from '@/stores/user'
   import { useRouter } from 'vue-router'
@@ -40,9 +40,9 @@
   const userStore = useUserStore()
   const recentPlayList = ref(null)
 
-  // onMounted(() => {
-  //   userStore.getProfileInfo(MemberId)
-  // })
+  onMounted(() => {
+    userStore.getProfileInfo(MemberId)
+  })
   
 </script>
 
