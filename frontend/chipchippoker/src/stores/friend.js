@@ -35,7 +35,40 @@ export const useFriendStore = defineStore('friend', () => {
 
     ]
   )
-
+  const alarmList = ref([
+    {
+      nickname:'윤예빈',
+      status: "대기" 
+    },
+    {
+      nickname:'김대원',
+      status: "대기" 
+    },
+    {
+      nickname:'crazyhero',
+      status: "대기" 
+    },
+    {
+      nickname:'ㅡㅛㅜ믇',
+      status: "대기" 
+    },
+    {
+      nickname:'인디언포커를하고내인생이즐거워졌',
+      status: "대기" 
+    },
+    {
+      nickname:'제발요',
+      status: "대기" 
+    },
+    {
+      nickname:'친구하자',
+      status: "대기" 
+    },
+    {
+      nickname:'헤헤...',
+      status: "대기" 
+    }
+  ])
 
   // 랭킹 aPI에서 사용되는 변수
   const allRankList = ref([
@@ -194,7 +227,57 @@ export const useFriendStore = defineStore('friend', () => {
     
   }
 
+  // 친구 신청 알람 리스트
+  const RequestAlarm = function(nickname){
+    axios({
+      method: 'get',
+      url: `${FRIEND_API}/request/list`,
+      data: {'nickname':nickname}
+    })
+    .then(res => {
+    })
+    .catch(err => console.log(err))
+    
+  }
+  // 친구 신청
+  const friendRequest = function(nickname){
+    axios({
+      method: 'post',
+      url: `${FRIEND_API}/request`,
+      data: {'nickname':nickname}
+    })
+    .then(res => {
+    })
+    .catch(err => console.log(err))
+    
+  }
 
+  // 친구 신청 수락
+  const acceptFriendRequest = function(nickname){
+    axios({
+      method: 'post',
+      url: `${FRIEND_API}/request/accept`,
+      data: {'nickname':nickname}
+    })
+    .then(res => {
+    })
+    .catch(err => console.log(err))
+    
+  }
+
+  // 친구 신청 거절
+  const rejectFriendRequest = function(nickname){
+    axios({
+      method: 'post',
+      url: `${FRIEND_API}/request/reject`,
+      data: {'nickname':nickname}
+    })
+    .then(res => {
+    })
+    .catch(err => console.log(err))
+    
+  }
+  
   // 랭킹 -------------------------------------------------------------------------------------
 
   // 전체 랭킹 리스트
@@ -234,5 +317,5 @@ export const useFriendStore = defineStore('friend', () => {
     .catch(err => console.log(err))
   }
   
-  return {findFriend, searchedFriend, friendList, getFriendList, allRankList, getAllRankList, friendRankList,getFriendRankList, getMyRankList, myRank}
+  return {findFriend, searchedFriend, friendList, getFriendList, allRankList, getAllRankList, friendRankList,getFriendRankList, getMyRankList, myRank,friendRequest, acceptFriendRequest, rejectFriendRequest, RequestAlarm, alarmList}
 },{persist:true})
