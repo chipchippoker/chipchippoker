@@ -21,7 +21,9 @@ const gotoProfile = function(){
   <RouterLink to="profile">프로필 나의정보</RouterLink> /
   <RouterLink to="main">메인페이지</RouterLink>  /
   <RouterLink to="play">플레이페이지</RouterLink> /
-  <RouterLink to="wait">대기페이지</RouterLink>
+  <RouterLink to="wait">대기페이지</RouterLink> /
+  <RouterLink to="video">비디오</RouterLink> /
+  <RouterLink to="test">테스트메인</RouterLink>
   </div>
   <div class="position-relative">
 
