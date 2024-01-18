@@ -1,6 +1,6 @@
 <template>
     <div>
-        <MainRankItemItem v-for="item in items" :key="item.id"
+        <MainRankItemItem v-for="item in friendStore.friendRankList" :key="item?.nickname"
         :item="item"/>
             
     </div>
@@ -8,29 +8,8 @@
 
 <script setup>
 import MainRankItemItem from './MainRankItem.vue';
-let id = 1
-// 예시 probs 데이터
-const items = [
-    {'name':'ㅁㄶ,ㅓㅠ',
-    'number':id++,
-    'point':1234
-    },
-    {'name':'ㅈㄷㅁ룧ㄹㄷ',
-    'number':id++,
-    'point':1212
-    },
-    {'name':'ㅁㄷ러ㅗㅠ',
-    'number':id++,
-    'point':123
-    },
-    {'name':'ㅂㅈ도',
-    'number':id++,
-    'point':123
-    },
-    {'name':'ㅁㄴ류ㅓㅏㄹㄴㅁ',
-    'number':id++,
-    'point':12
-    },]
+import { useFriendStore } from '@/stores/friend';
+const friendStore = useFriendStore()
 </script>
 
 <style lang="scss" scoped>

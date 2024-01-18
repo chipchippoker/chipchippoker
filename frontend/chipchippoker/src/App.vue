@@ -24,6 +24,8 @@ const gotoProfile = function(){
   <RouterLink to="wait">대기페이지</RouterLink>
   </div>
   <div class="position-relative">
+
+    
   <!-- 옵션, 로고, 아이콘  -->
   <div class="d-flex justify-content-between align-items-center position-absolute m-3">
       <div class="d-flex flex-row justify-content-between" style="width: 10%;">

@@ -7,8 +7,8 @@
                     
                 </div>
                 <div class="col-auto">
-                    <label for="userId" class="visually-hidden">nickname</label>
-                    <input v-model="nickname" type="text" class="form-control" id="userId" placeholder="Nickname">
+                    <label for="friendId" class="visually-hidden">nickname</label>
+                    <input v-model="nickname" type="text" class="form-control" id="friendId" placeholder="Nickname">
                 </div>
                 <div class="col-auto">
                     <button @click="findNickName" type="submit" class="btn btn-primary mb-3">검색</button>

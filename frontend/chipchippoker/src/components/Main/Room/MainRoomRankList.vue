@@ -1,15 +1,17 @@
 <template>
     <div class="bg-lightblue row m-0 tab-radius py-2">
-        <div class="col-6" v-for="item in items" :key="item.id">
-            <MainRoomItem/>
+        <div class="col-6" v-for="item in roomStore.allRoomList" :key="item.id">
+            <MainRoomItem
+            :item="item"/>
         </div>
         
     </div>
 </template>
 
 <script setup>
+import { useRoomStore } from '@/stores/room';
 import MainRoomItem from './MainRoomItem.vue';
-const items = [1,2,3,4,5,6,7,8];
+const roomStore = useRoomStore()
 
 </script>
 
