@@ -20,11 +20,95 @@ export const useUserStore = defineStore('user', () => {
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`
 
   
-  const myNickName = ref({})
-  const myProfileInfo = ref({})
-  const profileInfo = ref({})
+  const myNickName = ref('10기윤예빈')
   const myIcon = ref('1')
-
+  // 나의 데이터
+  const myProfileInfo = ref({
+    "icon": "1",
+    "rank": 12,
+    "rankFriend":3,
+    "total":351,
+    "win": 32,
+    "draw": 3,
+    "lose": 15,
+    "winningrate": 64.3,
+    "maxWin": 15,
+    "point": 1520,
+    "nickname": "10기윤예빈",
+    "tier": "bronze",
+    "isMine":true,
+    "recentPlayList": [
+        {
+            "opponents":[
+                {"asd":'win'},
+                {"asd":'lose'},
+                {"asd":'draw'},
+            ],
+            "gameMode": "경쟁전",
+            "memberNum": 3,
+            "PointChange": 36
+        },
+        
+    ]
+  })
+  // 프로필 들어간 다른 친구 데이터
+  const profileInfo = ref({
+    "icon": "1",
+    "rank": 12,
+    "rankFriend":3,
+    "total":351,
+    "win": 32,
+    "draw": 3,
+    "lose": 15,
+    "winningrate": 64.3,
+    "maxWin": 15,
+    "point": 1520,
+    "nickname": "안녕",
+    "tier": "bronze",
+    "isMine":true,
+    "recentPlayList": [
+        {
+            "opponents":[
+                {"asd":'win'},
+                {"asd":'lose'},
+                {"asd":'draw'},
+            ],
+            "gameMode": "경쟁전",
+            "memberNum": 3,
+            "PointChange": 36
+        },
+        {
+            "opponents":[
+                {"asd":'win'},
+                {"asd":'lose'},
+                {"asd":'draw'},
+            ],
+            "gameMode": "경쟁전",
+            "memberNum": 3,
+            "PointChange": 36
+        },
+        {
+            "opponents":[
+                {"asd":'win'},
+                {"asd":'lose'},
+                {"asd":'draw'},
+            ],
+            "gameMode": "경쟁전",
+            "memberNum": 3,
+            "PointChange": 36
+        },
+        {
+            "opponents":[
+                {"asd":'win'},
+                {"asd":'lose'},
+                {"asd":'draw'},
+            ],
+            "gameMode": "경쟁전",
+            "memberNum": 3,
+            "PointChange": 36
+        },
+    ]
+  })
   
   // 일반 로그인
   const generalLogIn = function (payload) {
@@ -240,6 +324,7 @@ export const useUserStore = defineStore('user', () => {
     .then(res => {
       console.log('회원탈퇴 성공')
     })
+
   }
 
   // 아이디 유효성 검사
@@ -341,6 +426,8 @@ export const useUserStore = defineStore('user', () => {
     })
   }
 
+  
   return {checkNickName,accessToken, refreshToken, authorizationCode, kakaoAccessToken, kakaoSignUp, kakaoConnect, generalLogIn, logOut, signUp, signOut, checkMemberId,
-    isNickDuplicated, isIdDuplicated, validateId, validatePassword, validateNickName, generalLogIn, getKakaoCode, simpleLogInRequest, validateMemberId, getIconUrl, myIcon, myNickName, myProfileInfo, profileInfo, getProfileInfo}
+    isNickDuplicated, isIdDuplicated, validateId, validatePassword, validateNickName, generalLogIn, getKakaoCode, simpleLogInRequest, validateMemberId, getIconUrl, myIcon, myNickName, myProfileInfo, profileInfo, getProfileInfo,myProfileInfo,profileInfo
+    }
 },{persist:true})
