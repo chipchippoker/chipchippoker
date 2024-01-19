@@ -8,15 +8,17 @@
           <div>
             <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
           </div>
+          <!-- 캠활성화, 음소거 버튼 -->
+          <!-- <button id="camera-activate" @click="handleCameraBtn()">캠 비활성화</button>
+          <button id="mute-activate" @click="handleMuteBtn()">음소거 활성화</button> -->
           <div class="bg-black m-2" style="width: 300px; height: 210px;">
-            <UserVideoVue :stream-manager="publisherComputed"/>
+            <UserVideoVue
+            :stream-manager="publisherComputed" 
+            />
           </div>
           <div class="m-2 bg-white align-self-center" style="width: 100px; height: 150px;">카드</div>
         </div>
-        <!-- 캠활성화, 음소거 버튼 -->
-        <!-- <button id="camera-activate" @click="handleCameraBtn">캠 비활성화</button>
-        <button id="mute-activate" @click="handleMuteBtn">음소거 활성화</button>
-        <div>
+        <!-- <div>
           <select name="cameras" @change="handleCameraChange">
             <option disabled>사용할 카메라를 선택하세요</option>
           </select>
@@ -112,8 +114,7 @@
 
 <script setup>
   import PlayBattingVue from "@/components/Play/PlayBatting.vue";
-  import UserVideoVue from "../UserVideo.vue";
-  import { list } from 'postcss';
+  import UserVideoVue from "../Cam/UserVideo.vue";
   import { ref, defineProps, computed, onMounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import axios from 'axios'
@@ -167,6 +168,18 @@
   }
   const fPlayer3 = function(clientData) {
     player3.value = clientData
+  }
+
+  const showControls = ref(false);
+
+  function toggleMute() {
+    // 오디오 상태를 토글합니다.
+    
+  }
+
+  function toggleVideo() {
+    // 비디오 상태를 토글합니다.
+    
   }
 
   // vue2에서의 methods 부분을 vue3화 시키기
@@ -356,47 +369,48 @@
   }
 
 
-  // 음소거, 캠 활성화 버튼 작동
-  function handleCameraBtn() {
-    if (!publisher.value) return;
-    // 카메라 상태 토글
-    camerOff.value = !camerOff.value;
-    const cameraActivate = document.getElementById('camera-activate')
-    if(camerOff.value){   //카메라 비활성화상태
-      cameraActivate.innerText = '카메라 활성화'
-    }else{                //카메라 활성화상태
-      cameraActivate.innerText = '카메라 비활성화'
-    }
+  // // 음소거, 캠 활성화 버튼 작동
+  // function handleCameraBtn() {
+  //   console.log(publisher.value)
+  //   if (!publisher.value) return;
+  //   // 카메라 상태 토글
+  //   camerOff.value = !camerOff.value;
+  //   const cameraActivate = document.getElementById('camera-activate')
+  //   if(camerOff.value){   //카메라 비활성화상태
+  //     cameraActivate.innerText = '카메라 활성화'
+  //   }else{                //카메라 활성화상태
+  //     cameraActivate.innerText = '카메라 비활성화'
+  //   }
     
-    // 카메라 작동 상태를 적용
-    publisher.value.publishVideo(!camerOff.value);
-  }
+  //   // 카메라 작동 상태를 적용
+  //   publisher.value.publishVideo(!camerOff.value);
+  // }
 
-  function handleMuteBtn() {
-    if (!publisher.value) return;
+  // function handleMuteBtn() {
+  //   if (!publisher.value) return;
 
-    // 음소거 상태 토글
-    muted.value = !muted.value;
-    const muteActivate = document.getElementById('mute-activate')
-    if(muted.value){   //음소거 활성화상태
-      muteActivate.innerText = '음소거 비활성화'
-    }else{                //음소거 비활성화상태
-      muteActivate.innerText = '음소거 활성화'
-    }
-    // 음소거 설정을 적용
-    publisher.value.publishAudio(!muted.value);
-  }
+  //   // 음소거 상태 토글
+  //   muted.value = !muted.value;
+  //   const muteActivate = document.getElementById('mute-activate')
+  //   if(muted.value){   //음소거 활성화상태
+  //     muteActivate.innerText = '음소거 비활성화'
+  //   }else{                //음소거 비활성화상태
+  //     muteActivate.innerText = '음소거 활성화'
+  //   }
+  //   // 음소거 설정을 적용
+  //   publisher.value.publishAudio(!muted.value);
+  // }
   
   // select태그에서 사용할 기기를 선택했을때
-  async function handleCameraChange(event) {
-    selectedCamera.value = event.target.value;
-    await replaceCameraTrack(selectedCamera.value);
-  }
+  // async function handleCameraChange(event) {
+  //   selectedCamera.value = event.target.value;
+  //   await replaceCameraTrack(selectedCamera.value);
+  // }
 
-  async function handleAudioChange(event) {
-    selectedAudio.value = event.target.value;
-    await replaceAudioTrack(selectedAudio.value);
-  }
+  // async function handleAudioChange(event) {
+  //   selectedAudio.value = event.target.value;
+  //   await replaceAudioTrack(selectedAudio.value);
+  // }
 
   async function replaceCameraTrack(deviceId) {
     if (!publisher.value) return;

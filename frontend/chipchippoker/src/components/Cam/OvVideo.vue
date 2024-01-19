@@ -1,5 +1,5 @@
 <template>
-  <video class="cam" ref="videoEl" autoplay />
+  <video ref="videoEl" autoplay />
 </template>
 
 <script>
@@ -24,9 +24,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.cam {
-    height: 300px;
-    background-color: black;
-    border-radius: 10px;
-}
+
 </style>
