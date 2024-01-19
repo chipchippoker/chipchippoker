@@ -26,11 +26,11 @@
               </div>
               <!-- 일반 로그인 버튼 -->
               <div class="d-grid gap-2 pt-3">
-                <button type="submit" class="btn btn-primary btn-login">로그인</button>
+                <button @click="generalLogIn()" type="submit" class="btn btn-primary btn-login">로그인</button>
               </div>
               <!-- 카카오 로그인 버튼 -->
               <div class="d-grid gap-2 pt-3">
-                <button @click="simpleLogIn" type="button" class="btn btn-secondary btn-kakao-login">
+                <button @click="simpleLogIn()" type="button" class="btn btn-secondary btn-kakao-login">
                   <img class="kakao-logo" src="@/assets/icons/kakaologo.png" alt="">카카오로그인
                 </button>
               </div>
@@ -51,7 +51,6 @@
   import { useRoute,useRouter } from 'vue-router'
   import axios from 'axios'
 
-
   const route = useRoute()
   const router = useRouter()
   const userStore = useUserStore()
@@ -59,7 +58,7 @@
   const password = ref(null)
   const authorizationCode = ref(null)
 
-
+  // 유효성 검사
   const isValidMemberId = computed(() => {
     return userStore.validateMemberId(memberId.value)
   })
@@ -78,13 +77,12 @@
     router.push({name:'main'})
   }
   
-
-  
   // 간편 로그인
   const simpleLogIn = function () {
     console.log('간편 로그인 요청')
     userStore.getKakaoCode()
   }
+
   authorizationCode.value = route.query.code
   userStore.authorizationCode = authorizationCode.value
   
@@ -96,12 +94,10 @@
     router.push({name:'kakaoSignUp'})
   }
 
-
   // 회원가입으로 이동
   const gotoSignUp = function(){
-    router.push({name:'signUp'})
+    router.push({name:'signup'})
   }
-
   </script>
   
   <style scoped>

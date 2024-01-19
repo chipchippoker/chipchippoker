@@ -1,5 +1,4 @@
 <template>
-
   <div>
     <div class="d-flex flex-column justify-content-center align-items-center position-absolute top-50 start-50 translate-middle">
     <div class="d-flex justify-content-center">
@@ -26,7 +25,6 @@
         <div class="d-flex justify-content-center">
           <img data-bs-toggle="modal" data-bs-target="#IconModal" class="small-icon" :src='userStore.getIconUrl(userStore.myIcon)' :alt="userStore.myIcon">
         </div>
-
 
         <!-- 닉네임 중복 체크를 통과해야만 보임 -->
         <div class="d-grid gap-2 pt-3">
@@ -76,7 +74,7 @@ const checkNickName = function () {
 const signUp = function(){
   console.log('카카오 회원가입 후 메인페이지로 이동')
   
-  // userStore.kakaoSignUp()
+  // userStore.kakaoSignUp(nickName.value)
   // 메인페이지로 이동
   router.push({name:'main'})
 }

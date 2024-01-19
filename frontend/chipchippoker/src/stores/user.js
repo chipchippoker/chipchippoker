@@ -120,14 +120,13 @@ export const useUserStore = defineStore('user', () => {
       .then(res => {
         accessToken.value = res.generalLoginResponse.access-token
         refreshToken.value = res.generalLoginResponse.refresh-token
-        userIcon.value = res.generalLoginResponse.icon
-        nickName.value = res.generalLoginResponse.nickname
+        myIcon.value = res.generalLoginResponse.icon
+        myNickName.value = res.generalLoginResponse.nickname
         console.log('일반 로그인 성공!!')
       })
       .catch(err => console.log(err))
   }
 
-  
   // 카카오 인가코드 받기
   const getKakaoCode = function () {
     console.log('카카오 인가코드 받기')
@@ -150,24 +149,14 @@ export const useUserStore = defineStore('user', () => {
     .then(res => {
       if (res.code === 200) {
         console.log("카카오 로그인 성공!!")
-        accessToken.value = res.simpleLoginResponse.access-token
-        refreshToken.value = res.simpleLoginResponse.refresh-token
-        userIcon.value = res.simpleLoginResponse.icon
+        accessToken.value = res.simpleLoginResponse.accessToken
+        refreshToken.value = res.simpleLoginResponse.refreshToken
+        myIcon.value = res.simpleLoginResponse.icon
+        myNickName.value = res.simpleLoginResponse.nickname
       } else if (res.code === 201) {
         console.log("카카오 로그인 성공2!!")
-        kakaoAccessToken.value = res.kakao-access-token
-        axios({
-          method: 'post',
-          url: `${USER_API}/login/simple/nickname/`,
-          headers: {
-            "kakao-access-token": kakaoAccessToken.value
-          }
-        })
-        .then(res => {
-          accessToken.value = res.simpleLoginResponse.access-token
-          refreshToken.value = res.simpleLoginResponse.refresh-token
-          userIcon.value = res.simpleLoginResponse.icon
-        })
+        kakaoAccessToken.value = res.kakaoAccessToken
+        router.push('kakaosignup')
       }
     })
     .catch(err => {
@@ -198,17 +187,20 @@ export const useUserStore = defineStore('user', () => {
     axios({
       method:'post',
       url:`${USER_API}/login/simple/nickname`,
-      data:payload
+      data:payload,
+      headers: {
+        'kakao-access-token': kakaoAccessToken.value
+      }
     })
     .then((res)=>{
       accessToken.value = res.simpleLoginResponse.accessToken
       refreshToken.value = res.simpleLoginResponse.refreshToken
-      userIcon.value = res.simpleLoginResponse.icon
+      myIcon.value = res.simpleLoginResponse.icon
+      myNickName.value = res.simpleLoginResponse.nickname
     })
     .catch((err)=>{
       console.log(err)
     })
-
   }
 
 
@@ -218,7 +210,8 @@ export const useUserStore = defineStore('user', () => {
     axios({
       method: 'post',
       url: `${USER_API}/social/`,
-      data: { 'authorization': authorizationCode.value }
+      data: { 'authorization': authorizationCode.value },
+      headers: { 'access-token': accessToken.value }
     })
     .then(res => {
       console.log('카카오 연동 성공!');
@@ -262,37 +255,6 @@ export const useUserStore = defineStore('user', () => {
     })
   }
 
-
-
-  // 아이디 유효성 검사
-  const validateMemberId = function (memberId) {
-    if (memberId === null) {
-      return true
-    }
-
-    // 아이디가 공백이면 유효하지 않음
-    if (memberId === '') {
-      return false
-    }
-
-    // 아이디가 영어, 숫자만으로 이루어졌는지 확인
-    const regExp = /^[a-zA-Z0-9]+$/
-    if (!regExp.test(memberId)) {
-      return false
-    }
-
-    // 아이디 길이가 6~12자 사이인지 확인
-    const length = memberId.length
-    if (length < 6 || length > 12) {
-      return false
-    }
-    
-    // 아이디가 유효함
-    console.log('아이디 유효성 검사 통과')
-    return true
-  }
-
-
   // 회원가입
   const signUp = function (payload) {
     const { memberId, password1, password2, nickName } = payload
@@ -306,16 +268,16 @@ export const useUserStore = defineStore('user', () => {
         nickName,
       }
     })
-      .then((res) => {
+    .then((res) => {
         console.log('회원가입 성공!')
-        router.push({ name: 'logIn' })
+        router.push({ name: 'login' })
       })
       .catch(err => console.log(err))
-  }
-
-  // 회원탈퇴
-  const signOut = function () {
-    console.log('회원탈퇴 요청!');
+    }
+    
+    // 회원탈퇴
+    const signOut = function () {
+      console.log('회원탈퇴 요청!');
     axios({
       method: 'delete',
       url: `${USER_API}/members/`,
@@ -324,9 +286,8 @@ export const useUserStore = defineStore('user', () => {
     .then(res => {
       console.log('회원탈퇴 성공')
     })
-
   }
-
+  
   // 아이디 유효성 검사
   const validateId = function (memberId) {
   if (memberId === null) {
@@ -349,7 +310,6 @@ export const useUserStore = defineStore('user', () => {
   console.log('아이디 유효성 검사 통과')
   return true
   }
-
 
   // 비밀번호 유효성 검사
   const validatePassword = function (password) {
@@ -377,7 +337,6 @@ export const useUserStore = defineStore('user', () => {
   return true
   }
 
-
   // 닉네임 유효성 검사
   const validateNickName = function (nickName) {
     if (nickName === null) {
@@ -402,8 +361,7 @@ export const useUserStore = defineStore('user', () => {
     return true 
   }
 
-  //  아이콘 변수, 아이콘 가져오기 함수
-  
+  //  아이콘 변수, 아이콘 가져오기 함수  
   const getIconUrl = function(number){
     return new URL(`/src/assets/profile_icons/icon${number}.jpg`,import.meta.url).href;
   }
@@ -418,16 +376,19 @@ export const useUserStore = defineStore('user', () => {
     })
     .then(res => {
       console.log("프로필 정보 요청 성공");
-      if (nickName === myNickName.value) {
-        myProfileInfo.value = res.profilePageResponse
-      } else {
-        profileInfo.value = res.profilePageResponse
-      }
+      profileInfo.value = res.profilePageResponse
     })
   }
 
-  
-  return {checkNickName,accessToken, refreshToken, authorizationCode, kakaoAccessToken, kakaoSignUp, kakaoConnect, generalLogIn, logOut, signUp, signOut, checkMemberId,
-    isNickDuplicated, isIdDuplicated, validateId, validatePassword, validateNickName, generalLogIn, getKakaoCode, simpleLogInRequest, validateMemberId, getIconUrl, myIcon, myNickName, myProfileInfo, profileInfo, getProfileInfo,myProfileInfo,profileInfo
+  return {
+    // 로그인, 로그아웃, 회원가입, 회원탈퇴, 카카오 연동
+    generalLogIn, getKakaoCode, simpleLogInRequest, kakaoSignUp,
+    logOut, signUp, signOut, checkMemberId, checkNickName, validateId, validatePassword, validateNickName, kakaoConnect, 
+    accessToken, refreshToken, authorizationCode, kakaoAccessToken,
+    isNickDuplicated, isIdDuplicated,
+
+    // 프로필 아이콘, 프로필 정보 받아오기
+    getIconUrl, getProfileInfo, 
+    myIcon, myNickName, myProfileInfo, profileInfo
     }
 },{persist:true})
