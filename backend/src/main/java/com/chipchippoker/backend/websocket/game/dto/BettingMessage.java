@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class BettingMessage {
 	/*
-	DIE, FOLD, CALL, RUN
+	DIE, BET
 	 */
 	private Integer currentRound;
 	private String action;

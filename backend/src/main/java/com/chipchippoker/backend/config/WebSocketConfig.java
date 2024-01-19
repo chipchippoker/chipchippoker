@@ -25,11 +25,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/chipchippoker").setAllowedOriginPatterns("*");
+		registry
+			.addEndpoint("/chipchippoker")
+			.setAllowedOriginPatterns("*");
 	}
 
 	@Override
 	public void configureClientInboundChannel(ChannelRegistration registration) {
 		registration.interceptors(stompHandler);
 	}
+
 }

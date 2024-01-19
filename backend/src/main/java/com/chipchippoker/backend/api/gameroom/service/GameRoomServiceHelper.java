@@ -40,7 +40,7 @@ public class GameRoomServiceHelper {
 
 	public static void isGameRoomManager(String requestMemberNickname, String gameRoomManagerNickname) {
 		if (!requestMemberNickname.equals(gameRoomManagerNickname)) {
-			throw new ForbiddenException(ErrorBase.E403_NOT_GAME_ROOM_MANAGER);
+			throw new ForbiddenException(ErrorBase.E403_FORBIDDEN_BAN_NOT_GAME_ROOM_MANAGER);
 		}
 	}
 

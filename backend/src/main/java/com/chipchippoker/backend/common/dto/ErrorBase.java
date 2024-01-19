@@ -18,16 +18,20 @@ public enum ErrorBase {
 	E400_MISSING_PARAMETER(BAD_REQUEST, false, "BR100", "필수 파라미터가 입력되지 않았습니다"),
 	E400_MISSING_MULTIPART(BAD_REQUEST, false, "BR101", "필수 멀티파트가 입력되지 않았습니다."),
 	E400_MISSING_PATH_VARIABLE(BAD_REQUEST, false, "BR102", "필수 PathVariable이 입력되지 않았습니다."),
-
 	E400_MISSING_AUTH_TOKEN_PARAMETER(BAD_REQUEST, false, "BR105", "인증 토큰을 입력해주세요"),
 	E400_INVALID_TOKEN(BAD_REQUEST, false, "BR106", "유효하지 않은 토큰입니다"),
 	E400_INVALID_PASSWORD(BAD_REQUEST, false, "BR107", "올바르지 않은 비밀번호입니다."),
 	E400_INVALID_AUTHORIZATION_CODE(BAD_REQUEST, false, "BR108", "올바르지 않은 인가코드입니다."),
+	E400_INVALID_NOT_REDDY(BAD_REQUEST, false, "BR109", "플레이어 전원이 준비를 해야 시작할 수 있습니다."),
+	E400_INVALID_ALREADY_DIE(BAD_REQUEST, false, "BR110", "플레이어는 DIE 상태로 배팅에 참여할 수 없습니다."),
+	E400_INVALID_ROUND_MISMATCH(BAD_REQUEST, false, "BR111", "라운드가 일치하지 않습니다."),
+	E400_INVALID_BET_COIN(BAD_REQUEST, false, "BR112", "배팅이 불가능 한 개수의 코인입니다."),
 	/**
 	 * 401 UnAuthorized (인증 실패)
 	 */
 	E401_UNAUTHORIZED(UNAUTHORIZED, false, "UA000", "세션이 만료되었습니다. 다시 로그인 해주세요"),
-	E401_UNAUTHORIZED_ACCESSTOKEN(UNAUTHORIZED, false, "UA001", "access-token을 재발급 하였습니다. 다시 요청해 주세요"),
+	E401_UNAUTHORIZED_ACCESS_TOKEN(UNAUTHORIZED, false, "UA001", "access-token을 재발급 하였습니다. 다시 요청해 주세요"),
+	E401_UNAUTHORIZED_ACCESS_TOKEN_NOT_EQUAL(UNAUTHORIZED, false, "UA002", "구독할 수 없는 메시지 큐입니다."),
 
 	/**
 	 * 403 Forbidden (권한 등의 이유로 허용하지 않는 요청)
@@ -36,10 +40,12 @@ public enum ErrorBase {
 	E403_INVALID_GAME_ROOM_PASSWORD(FORBIDDEN, false, "FB001", "비밀번호가 틀렸습니다."),
 	E403_ALREADY_FULL_GAME_ROOM(FORBIDDEN, false, "FB002", "인원 수가 초과했습니다."),
 	E403_ALREADY_STARTED_GAME_ROOM(FORBIDDEN, false, "FB003", "진행 중인 게임입니다."),
+	E403_NOT_MY_TURN(FORBIDDEN, false, "FB004", "차례가 아닙니다."),
 	E403_OVER_MAX_GAME_ROOM_CNT(FORBIDDEN, false, "FB004", "생성 가능한 최대 개수를 초과했습니다."),
-	E403_NOT_GAME_ROOM_MANAGER(FORBIDDEN, false, "FB005", "방장만 강제 퇴장을 요청할 수 있습니다."),
-	E403_ALREADY_FRIEND(FORBIDDEN, false, "FB006", "이미 친구입니다."),
-	E403_ALREADY_SENT_FRIEND_REQUEST(FORBIDDEN, false, "FB007", "대기 중인 친구 신청 요청입니다."),
+	E403_FORBIDDEN_BAN_NOT_GAME_ROOM_MANAGER(FORBIDDEN, false, "FB005", "방장만 강제 퇴장을 요청할 수 있습니다."),
+	E403_FORBIDDEN_START_NOT_GAME_ROOM_MANAGER(FORBIDDEN, false, "FB006", "방장만 게임 시작을 요청할 수 있습니다."),
+	E403_ALREADY_FRIEND(FORBIDDEN, false, "FB007", "이미 친구입니다."),
+	E403_ALREADY_SENT_FRIEND_REQUEST(FORBIDDEN, false, "FB008", "대기 중인 친구 신청 요청입니다."),
 
 	/**
 	 * 404 Not Found (존재하지 않는 리소스)

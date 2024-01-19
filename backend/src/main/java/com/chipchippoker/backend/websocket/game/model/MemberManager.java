@@ -21,20 +21,12 @@ import lombok.extern.slf4j.Slf4j;
  */
 public class MemberManager {
 	private MemberInfo memberInfo;
-	private Integer cardNumber;
-	private Integer haveCoin;
-	private Integer bettingCoin;
-	private String isState;
-	private Boolean isRoomManager;
+	private MemberGameInfo memberGameInfo;
 
-	public static MemberManager create(MemberInfo memberInfo) {
+	public static MemberManager create(MemberInfo memberInfo, MemberGameInfo memberGameInfo) {
 		return MemberManager.builder()
 			.memberInfo(memberInfo)
-			.cardNumber(0)
-			.haveCoin(25)
-			.bettingCoin(0)
-			.isState("BET")
-			.isRoomManager(Boolean.FALSE)
+			.memberGameInfo(memberGameInfo)
 			.build();
 	}
 }
