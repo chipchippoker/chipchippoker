@@ -114,14 +114,16 @@
 import WaitWatcher from "@/components/Wait/WaitWatcher.vue";
 import UserVideo from "@/components/Cam/UserVideo.vue";
 
-import { ref, computed, watch, onMounted, watchEffect } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted, watchEffect } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useRoute, useRouter } from "vue-router";
 import { OpenVidu } from "openvidu-browser";
 import axios from 'axios'
 
-
 const userStore = useUserStore()
+const router = useRouter()
+const route = useRoute()
+
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/';
@@ -137,9 +139,20 @@ const subscribers = ref([])
 const title = ref("SessionCrome")
 const nickname = ref("Participant" + Math.floor(Math.random() * 100))
 
-// 라우터
-const router = useRouter()
-const data = ref({})
+const roomId = ref('')
+const roomTitle = ref('')
+const totalParticipantsCnt = ref('')
+const myNickName = ref('')
+
+// roomId.value = 100122
+// roomTitle.value = '싸피 다 드루와'
+// totalParticipantsCnt.value = '3'
+// myNickName.value = '10기김대원'
+
+// console.log(roomId.value);
+// console.log(roomTitle.value);
+// console.log(totalParticipantsCnt.value);
+// console.log(myNickName.value);
 
 /////////////////////채팅창을 위한 부분
 const inputMessage = ref("")
@@ -161,6 +174,7 @@ function joinSession() {
 
   session.value.on("streamCreated", ( {stream} )=> {
     const subscriber = session.value.subscribe(stream)
+    console.log('세션 생성!!!!');
     subscribers.value.push(subscriber)
   })
 
@@ -177,11 +191,21 @@ function joinSession() {
     console.warn(exception);
   });
 
+  session.value.on('reconnecting', () => console.warn('Oops! Trying to reconnect to the session'));
+    session.value.on('reconnected', () => console.log('Hurray! You successfully reconnected to the session'));
+    session.value.on('sessionDisconnected', (event) => {
+        if (event.reason === 'networkDisconnect') {
+            console.warn('Dang-it... You lost your connection to the session');
+        } else {
+            // Disconnected from the session for other reason than a network drop
+        }
+    });
+
   // 채팅 이벤트 수신 처리 함. session.on이 addEventListenr 역할인듯.
   session.value.on('signal:chat', (event) => { // event.from.connectionId === session.value.connection.connectionId 이건 나와 보낸이가 같으면임
     const messageData = JSON.parse(event.data);
     if(event.from.connectionId === session.value.connection.connectionId){
-      messageData['username'] = '나'
+      messageData['username'] = myNickName.value
     }
     messages.value.push(messageData);
   });
@@ -189,8 +213,8 @@ function joinSession() {
 
   // --- Connect to the session with a valid user token ---
   // Get a token from the OpenVidu deployment
-  getToken(title.value).then((token) => {
-    session.value.connect(token, {clientData: nickname.value})
+  getToken(roomId.value).then((token) => {
+    session.value.connect(token, {clientData: myNickName.value})
     .then(() => {
         // Get your own camera stream with the desired properties ---
         let publisher_tmp = OV.value.initPublisher(undefined, {
@@ -217,8 +241,12 @@ function joinSession() {
       })
   })
 
-  window.addEventListener("beforeunload", leaveSession)
-}
+  window.addEventListener("beforeunload", (event) => {
+      leaveSession();
+      // Uncomment the line below if you want to show a confirmation message
+      // event.returnValue = "Are you sure you want to leave?";
+    })
+  }
 
 function leaveSession(){
   if(session.value) session.value.disconnect()
@@ -232,7 +260,6 @@ function leaveSession(){
 
   // Remove beforeunload listener
   window.removeEventListener("beforeunload", leaveSession)
-
   router.push('main')
 }
 
@@ -248,8 +275,8 @@ function updateMainVideoStreamManager(stream) {
 * GETTING A TOKEN FROM YOUR APPLICATION SERVER
 * --------------------------------------------
 */
-async function getToken(title) {
-  const sessionId = await createSession(title);
+async function getToken(roomId) {
+  const sessionId = await createSession(roomId);
   return await createToken(sessionId);
 }
 
@@ -274,7 +301,7 @@ function sendMessage(event) {
   if(inputMessage.value.trim()){
     // 다른 참가원에게 메시지 전송하기
     session.value.signal({
-      data: JSON.stringify({username: nickname.value, message: inputMessage.value}), // 메시지 데이터를 문자열로 변환해서 전송
+      data: JSON.stringify({username: myNickName.value, message: inputMessage.value}), // 메시지 데이터를 문자열로 변환해서 전송
       type: 'chat' // 신호 타입을 'chat'으로 설정
     });
     inputMessage.value = '';
@@ -407,12 +434,37 @@ async function replaceAudioTrack(deviceId) {
 
 onMounted(() => {
 
-  // 메인페이지로부터 받아와야 할 것
-  // title, nickname 받아오기 
+  // 방 정보 저장
+  // roomId.value = route.params.roomId
+  // roomTitle.value = history.state.title
+  // totalParticipantsCnt.value = history.state.totalParticipantsCnt
+  
+  roomId.value = '1001223'
+  roomTitle.value = '싸피 다 드루와'
+  totalParticipantsCnt.value = 3
+  myNickName.value = '10기김대원'
+  console.log(' 마운트 됐어요');
+  // localStorage에 저장
+  localStorage.setItem("roomId", roomId.value)
+  localStorage.setItem("roomTitle", roomTitle.value)
+  localStorage.setItem("totalParticipantsCnt", totalParticipantsCnt.value)
+  localStorage.setItem("myNickName", myNickName.value)
+  
   // 메인페이지 -> 방 만들기 : 세션 생성
   joinSession()
-}
-)
+})
+
+// localStorage에서 불러오기
+onUnmounted(() => {
+  // localStorage에서 불러오기
+  roomId.value = localStorage.getItem("roomId")
+  roomTitle.value = localStorage.getItem("roomTitle")
+  totalParticipantsCnt.value = localStorage.getItem("totalParticipantsCnt")
+  myNickName.value = localStorage.getItem("myNickName")
+
+  console.log('방 정보 가져오기 성공!!');
+})
+
 </script>
 
 <style scoped>

@@ -2,6 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useRoute, useRouter } from 'vue-router'
+import { useUserStore } from './user'
 
 export const useRoomStore = defineStore('room', () => {
   const ROOM_API = 'http://localhost/api/rooms'
@@ -96,12 +97,44 @@ export const useRoomStore = defineStore('room', () => {
   const nowPage = ref(0)  // 현재 페이지 번호
   const isEmpty = ref(false) // 데이터가 없는가?
   const pageArray = ref([1]) // 페이지네이션 배열
+  
+  const router = useRouter()
+  const userStore = useUserStore()
+
+  // 방 생성
+  const makeRoom = function(accessToken, payload){
+    console.log('방 생성 요청!!');
+    axios({
+      method: ROOM_API,
+      headers: { 'access-token': accessToken },
+      data: payload
+    })
+    .then(res => {
+      console.log('방 생성 성공')
+      return res.data
+    })
+    .then(roomInfo => {
+      // 방 정보 전달, 대기 페이지로 이동
+      router.push({
+        name:'wait',
+        params: { roomId: roomInfo.roomId },
+        state: {
+          title: roomInfo.title,
+          totalParticipantsCnt: roomInfo.totalParticipantsCnt,
+          nickName: userStore.myNickName
+        }
+      })
+    })
+    .catch(err => console.log(err))
+  }
+
+
 
   // 방 리스트
   const getRoomList = function(payload){
     axios({
       method: 'get',
-      url: `${ROOM_API}/rooms`,
+      url: `${ROOM_API}/`,
       params:{
         type:payload.type,
         title:payload.title,
