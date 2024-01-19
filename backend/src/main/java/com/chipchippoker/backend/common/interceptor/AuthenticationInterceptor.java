@@ -28,7 +28,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 			//accessToken, refreshToken 재발급
 			TokenResponse tokenResponse = jwtUtil.reissuanceTokens(request.getHeader("refresh-token"));
 			request.setAttribute("new-token", tokenResponse);
-			throw new UnAuthorizedException(ErrorBase.E401_UNAUTHORIZED_ACCESSTOKEN);
+			throw new UnAuthorizedException(ErrorBase.E401_UNAUTHORIZED_ACCESS_TOKEN);
 		} catch (InvalidException e) {
 			throw new InvalidException(ErrorBase.E400_INVALID_TOKEN);
 		}

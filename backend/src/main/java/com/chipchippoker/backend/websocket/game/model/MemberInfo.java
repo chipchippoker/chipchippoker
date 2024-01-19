@@ -16,8 +16,9 @@ public class MemberInfo {
 	private Integer lose;
 	private Double rate;
 	private Boolean isReady;
+	private Boolean isRoomManager;
 
-	public static MemberInfo create(String nickname) {
+	public static MemberInfo create(String nickname, Boolean isRoomManager) {
 		return MemberInfo.builder()
 			.nickname(nickname)
 			.win(0)
@@ -25,6 +26,7 @@ public class MemberInfo {
 			.lose(0)
 			.rate(0.0)
 			.isReady(Boolean.FALSE)
+			.isRoomManager(isRoomManager)
 			.build();
 	}
 }
