@@ -1,5 +1,5 @@
 <template>
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="background-color: #ffde76;">
           <div class="modal-header border-0">
             

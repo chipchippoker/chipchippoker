@@ -1,8 +1,7 @@
 <template>
-    <div class="modal-dialog ">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content " style="background-color: #ffde76;">
         <div class="modal-header border-0">
-            <h1 class="modal-title fs-5" id="FindFriendModalLabel">Modal title</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body d-flex justify-content-center">

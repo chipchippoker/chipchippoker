@@ -55,6 +55,7 @@
         <div class="modal fade" id="FindFriendModal" tabindex="-1" aria-labelledby="FindFriendModalLabel" aria-hidden="true">
             <ModalFindFriend/>
         </div>
+        
 
     </div>
     
@@ -67,6 +68,7 @@ import MainRoom from '@/components/Main/Room/MainRoom.vue'
 import ModalCreateRoom from '@/components/Modal/ModalCreateRoom.vue';
 import ModalFindFriend from '@/components/Modal/ModalFindFriend.vue';
 import ModalFindRoom from '@/components/Modal/ModalFindRoom.vue';
+
 import { ref } from 'vue';
 
 const gameType = ref('경쟁전')
