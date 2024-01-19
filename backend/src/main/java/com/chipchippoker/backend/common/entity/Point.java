@@ -16,17 +16,54 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class Point extends BaseEntity {
+	@Column(name = "win")
+	private Integer win;
+	@Column(name = "draw")
+	private Integer draw;
+	@Column(name = "lose")
+	private Integer lose;
+	@Column(name = "current_winning_streak")
+	private Integer currentWinningStreak;
+	@Column(name = "max_win")
+	private Integer maxWin;
 	@Column(name = "point_score")
 	private Integer pointScore;
-
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
 	private Member member;
 
 	public static Point createPoint(Member member) {
 		return Point.builder()
+			.win(0)
+			.draw(0)
+			.lose(0)
+			.currentWinningStreak(0)
+			.maxWin(0)
 			.pointScore(1000)
 			.member(member)
 			.build();
+	}
+
+	public String tierByPoint(Integer pointScore){
+		if(pointScore<800){
+			return "브론즈";
+		}else if(pointScore<1200){
+			return "실버";
+		}else if(pointScore<1600){
+			return "골드";
+		}else if(pointScore<2000){
+			return "플래티넘";
+		}else{
+			return "다이아몬드";
+		}
+	}
+
+	public static Integer calculatePoint(Integer coin){
+		Integer initialCoin = 25;
+		Integer base = coin/initialCoin;
+		Integer point = 0;
+		point+= base > 0 ? base * 10 : (base - 1) * 10;
+		point+= coin-initialCoin;
+		return point;
 	}
 }

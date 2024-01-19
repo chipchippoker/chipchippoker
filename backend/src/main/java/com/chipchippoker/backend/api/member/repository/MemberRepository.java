@@ -1,10 +1,12 @@
 package com.chipchippoker.backend.api.member.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.chipchippoker.backend.common.entity.Member;
+import com.chipchippoker.backend.common.entity.Point;
 
 public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
 
@@ -19,4 +21,5 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
 	Optional<Member> findByMemberId(String memberId);
 
 	Optional<Member> findByKakaoSocialId(Long socialId);
+
 }
