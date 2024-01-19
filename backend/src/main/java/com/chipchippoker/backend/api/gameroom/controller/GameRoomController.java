@@ -16,7 +16,7 @@ import com.chipchippoker.backend.api.gameroom.model.dto.GetGameRoomListResponse;
 import com.chipchippoker.backend.api.gameroom.model.dto.LeaveGameRoomRequest;
 import com.chipchippoker.backend.api.gameroom.model.dto.MemberOutGameRoomRequest;
 import com.chipchippoker.backend.api.gameroom.model.dto.PlayGameRoomRequest;
-import com.chipchippoker.backend.api.gameroom.service.GameRoomServiceImpl;
+import com.chipchippoker.backend.api.gameroom.service.GameRoomService;
 import com.chipchippoker.backend.common.dto.ApiResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GameRoomController {
 	private final HttpServletRequest request;
-	private final GameRoomServiceImpl gameRoomService;
+	private final GameRoomService gameRoomService;
 
 	// 방 생성
 	@PostMapping("/api/rooms")

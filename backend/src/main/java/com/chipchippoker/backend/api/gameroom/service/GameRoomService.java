@@ -20,5 +20,7 @@ public interface GameRoomService {
 
 	void leaveGameRoom(String title, Long id);
 
+	void playGameRoom(String title);
+
 	void memberOutGameRoom(MemberOutGameRoomRequest memberOutGameRoomRequest, Long id);
 }
