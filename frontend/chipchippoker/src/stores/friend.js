@@ -142,6 +142,216 @@ export const useFriendStore = defineStore('friend', () => {
       "nickname": "10기_칠싸피",
       "point": 8000
     },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_윤예빈",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
+    {
+      "rank": 10,
+      "tier": "silver",
+      "icon": 3,
+      "nickname": "10기_칠싸피",
+      "point": 8000
+    },
 
   ])
   const friendRankList = ref([
@@ -316,6 +526,12 @@ export const useFriendStore = defineStore('friend', () => {
     })
     .catch(err => console.log(err))
   }
+
+  //  티어 가져오기 함수
   
-  return {findFriend, searchedFriend, friendList, getFriendList, allRankList, getAllRankList, friendRankList,getFriendRankList, getMyRankList, myRank,friendRequest, acceptFriendRequest, rejectFriendRequest, RequestAlarm, alarmList}
+  const getTierIconUrl = function(tier){
+    return new URL(`/src/assets/tier_icons/${tier}.png`,import.meta.url).href;
+  }
+  
+  return {findFriend, searchedFriend, friendList, getFriendList, allRankList, getAllRankList, friendRankList,getFriendRankList, getMyRankList, myRank,friendRequest, acceptFriendRequest, rejectFriendRequest, RequestAlarm, alarmList, getTierIconUrl}
 },{persist:true})

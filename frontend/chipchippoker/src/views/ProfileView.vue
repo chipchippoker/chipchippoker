@@ -2,7 +2,9 @@
   <div class="d-flex flex-column align-items-center p-3" style="width: 100%; height: 100%;">
     <!-- 옵션, 로고, 아이콘 -->
     <div class="d-flex justify-content-between align-items-center position-relative" style="width: 100%; height: 100px;">
-      <div class="position-absolute top-50 start-50 translate-middle"><img class="small-logo mt-2" src="/src/assets/Logo.png" alt=""></div>
+      <div class="position-absolute top-50 start-50 translate-middle">
+        <img class="small-logo mt-2" src="/src/assets/Logo.png" alt="">
+      </div>
     </div>
     
      <!-- 나의 정보 / 전적 검색 -->

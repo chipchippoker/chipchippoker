@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-light p-2 rounded-2 m-1">
+    <div class="bg-light p-2 rounded-2 m-1" >
         <div class="d-flex justify-content-between">
             <div v-if="item?.isPrivate" class="x-little-text">비공개({{ item?.state }}중)</div>
             <div v-else class="x-little-text">공개({{ item?.state }}중)</div>

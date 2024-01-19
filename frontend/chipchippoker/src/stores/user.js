@@ -20,7 +20,7 @@ export const useUserStore = defineStore('user', () => {
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`
 
   
-  const myNickName = ref('10기윤예빈')
+  const myNickName = ref('10기_윤예빈')
   const myIcon = ref('1')
   // 나의 데이터
   const myProfileInfo = ref({
@@ -65,7 +65,7 @@ export const useUserStore = defineStore('user', () => {
     "point": 1520,
     "nickname": "안녕",
     "tier": "bronze",
-    "isMine":true,
+    "isMine":false,
     "recentPlayList": [
         {
             "opponents":[

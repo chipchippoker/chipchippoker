@@ -11,7 +11,7 @@
         <!-- 닉네임, 티어, 포인트 -->
         <div class="d-flex justify-content-around">
           <div>{{ userStore?.profileInfo?.nickname }}</div>
-          <div>{{ userStore?.profileInfo?.tier }}</div>
+          <div><img class="x-small-icon"  :src='friendStore.getTierIconUrl(userStore?.profileInfo?.tier)'></div>
           <div>{{ userStore?.profileInfo?.point }}pt</div>
         </div>
   

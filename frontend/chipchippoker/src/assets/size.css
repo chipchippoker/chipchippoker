@@ -75,6 +75,12 @@
     border-radius: 50%;  
 }
 
+.xx-small-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;  
+}
+
 
 
 .profile-outline-darkblue {
@@ -92,4 +98,17 @@
     overflow: hidden;  
     white-space: nowrap; 
     text-overflow: ellipsis;
+}
+
+/* 랭크 스크롤 */
+.rank-scroll{
+    overflow-y: scroll;
+    height: 450px;
+}
+.rank-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+.myrank {
+    border: 2px solid #111D3C;
 }
