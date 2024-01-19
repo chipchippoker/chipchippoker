@@ -66,8 +66,8 @@
   
         <!-- 나의 프로필 -->
         <div v-if="userStore?.profileInfo?.isMine" class="d-flex flex-row-reverse">
-          <button class="btn btn-signout" @click="userStore.signOut">회원탈퇴</button>
-          <button class="btn btn-logout" @click="userStore.logOut">로그아웃</button>
+          <button class="btn btn-signout" data-bs-toggle="modal" data-bs-target="#SignOutModal">회원탈퇴</button>
+          <button class="btn btn-logout" data-bs-toggle="modal" data-bs-target="#LogOutModal">로그아웃</button>
           <button class="btn btn-kakao">
             <img class="kakao-logo" @click="userStore.kakaoConnect" src="/src/assets/icons/kakaologo.png" alt="">
             카카오 연동하기
@@ -81,15 +81,33 @@
           <button @click="friendRequest" class="btn btn-signout primary">친구 신청</button>
         </div>
       </div>
-             <!-- 아이콘 모달 팝업 -->
+             
+    <!-- 아이콘 모달 팝업 -->
     <div class="modal fade" id="IconModal" tabindex="-1" aria-labelledby="IconModalLabel" aria-hidden="true">
       <ModalIconList/>
     </div>
+
+
+    <!-- 로그아웃 모달 팝업 -->
+    <div class="modal fade" id="LogOutModal" tabindex="-1" aria-labelledby="LogOutLabel" aria-hidden="true">
+      <ModalLogOut />
+    </div>
+    <!-- 로그아웃 모달 팝업 -->
+    <div class="modal fade" id="SignOutModal" tabindex="-1" aria-labelledby="SignOutLabel" aria-hidden="true">
+      <ModalSignOut />
+    </div>
+
+
+
+
     </div>
   </template>
    
   <script setup>
   import ModalIconList from "../Modal/ModalIconList.vue";
+  import ModalLogOut from "../Modal/ModalLogOut.vue";
+  import ModalSignOut from "../Modal/ModalSignOut.vue";
+
     import { ref, onMounted } from "vue";
     import { useUserStore } from '@/stores/user'
     import { useFriendStore } from "@/stores/friend";

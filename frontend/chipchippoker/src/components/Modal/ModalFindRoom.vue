@@ -1,5 +1,5 @@
 <template>
-    <div class="modal-dialog ">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content pb-3" style="background-color: #ffde76;">
             <div class="modal-header border-0">
                 <h1 class="modal-title fs-5" id="FindFriendModalLabel">{{ type }}</h1>
