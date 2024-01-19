@@ -2,12 +2,15 @@ package com.chipchippoker.backend.api.member.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chipchippoker.backend.api.auth.model.dto.Token;
 import com.chipchippoker.backend.api.auth.service.AuthService;
+import com.chipchippoker.backend.api.member.dto.model.ProfilePageResponse;
+import com.chipchippoker.backend.api.member.service.MemberService;
 import com.chipchippoker.backend.common.dto.ApiResponse;
 import com.chipchippoker.backend.common.dto.ErrorBase;
 import com.chipchippoker.backend.common.exception.InvalidException;
@@ -25,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MemberController {
 	private final AuthService authService;
+	private final MemberService memberService;
 	private final HttpServletRequest httpServletRequest;
 
 	@GetMapping("/jwt-test")
@@ -47,6 +51,13 @@ public class MemberController {
 		}
 
 		return ResponseEntity.ok(ApiResponse.success());
+	}
+
+	@Operation(summary = "프로필 페이지 조회")
+	@GetMapping("/profile/{nickname}")
+	public ResponseEntity<ApiResponse<ProfilePageResponse>> getProfilePage(@PathVariable String nickname){
+		Long id = (Long)httpServletRequest.getAttribute("id");
+		return ResponseEntity.ok(ApiResponse.success(memberService.getProfilePage(id, nickname)));
 	}
 }
 

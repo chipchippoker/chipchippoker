@@ -1,17 +1,16 @@
 package com.chipchippoker.backend.common.collection;
 
-import jakarta.persistence.Entity;
-import lombok.Getter;
-import lombok.ToString;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
+import lombok.Getter;
 
 @Document(collection = "game_result")
-@ToString
 @Getter
 public class GameResult {
     @Id
@@ -22,15 +21,8 @@ public class GameResult {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
-
-    private Long memberAId;
-    private Long memberBId;
-    private Long memberCId;
-    private Long memberDId;
-    private Integer memberACoin;
-    private Integer memberBCoin;
-    private Integer memberCCoin;
-    private Integer memberDCoin;
+    private List<String> memberList;
+    private List<Integer> resultCoinList;
     private Integer gameRoomId;
-    private Integer totalParticipantCnt;
+    private String gameMode;
 }
