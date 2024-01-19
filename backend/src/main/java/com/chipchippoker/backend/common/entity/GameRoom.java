@@ -51,7 +51,7 @@ public class GameRoom extends BaseEntity {
 	@OneToOne(mappedBy = "gameRoom", cascade = CascadeType.ALL)
 	private SpectateRoom spectateRoom;
 
-	public static GameRoom createGameRoom(CreateGameRoomRequest createGameRoomRequest, List<Member> members,
+	public static GameRoom createGameRoom(CreateGameRoomRequest createGameRoomRequest,
 		String nickname) {
 		return GameRoom.builder()
 			.title(createGameRoomRequest.getTitle())
@@ -61,11 +61,10 @@ public class GameRoom extends BaseEntity {
 			.roomManagerNickname(nickname)
 			.isPrivate(createGameRoomRequest.getIsPrivate())
 			.state("대기")
-			.members(members)
 			.build();
 	}
 
-	public void updateMembers(Member member) {
+	public void updateMember(Member member) {
 		this.members.add(member);
 	}
 

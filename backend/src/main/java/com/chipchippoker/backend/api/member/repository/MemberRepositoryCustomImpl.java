@@ -1,6 +1,7 @@
 package com.chipchippoker.backend.api.member.repository;
 
 import static com.chipchippoker.backend.common.entity.QMember.*;
+import static com.chipchippoker.backend.common.entity.QPoint.*;
 
 import java.util.List;
 
@@ -24,13 +25,13 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     @Override
     public ProfilePageResponse getProfilePage(Member m, boolean isMine,
 		List<RecentPlayListResponse> recentPlayListResponseList) {
-        Point point = queryFactory
-            .select(QPoint.point)
-            .from(QPoint.point)
-            .where(QPoint.point.member.id.eq(m.getId()))
-            .leftJoin(QPoint.point.member,member)
+        Point result = queryFactory
+            .selectFrom(point)
+            .where(point.member.id.eq(m.getId()))
+            .leftJoin(point.member,member)
             .fetchJoin()
             .fetchOne();
-        return ProfilePageResponse.createProfilePageResponse(point.getMember().getIcon(),12,6,point.getWin(),point.getDraw(),point.getLose(),point.getMaxWin(),point.getPointScore(),point.getMember().getNickname(),point.tierByPoint(point.getPointScore()),isMine,recentPlayListResponseList);
+        return ProfilePageResponse.createProfilePageResponse(result.getMember().getIcon(),12,6,result.getWin(),result.getDraw(),result.getLose(),result.getMaxWin(),result.getPointScore(),result.getMember().getNickname(),result.tierByPoint(result.getPointScore()),isMine,recentPlayListResponseList);
+        //todo 조인 지우고 테스트
     }
 }

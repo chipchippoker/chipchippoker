@@ -1,6 +1,5 @@
 package com.chipchippoker.backend.api.gameroom.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -51,12 +50,12 @@ public class GameRoomServiceImpl implements GameRoomService {
 		GameRoomServiceHelper.isDuplicatedGameRoom(gameRoomRepository,
 			createGameRoomRequest.getTitle()); // 이미 중복되는 방제목이 있는 경우
 
-		List<Member> members = new ArrayList<>();
-		members.add(member);
-		GameRoom gameRoom = GameRoom.createGameRoom(createGameRoomRequest, members, nickname);
+		GameRoom gameRoom = GameRoom.createGameRoom(createGameRoomRequest, nickname);
 		gameRoomRepository.save(gameRoom);
 
+		// 연관관계 매핑
 		member.enterGameRoom(gameRoom);
+		gameRoom.updateMember(member);
 
 		// 관전방 생성
 		SpectateRoom spectateRoom = SpectateRoom.createSpectateRoom(gameRoom);
@@ -89,7 +88,7 @@ public class GameRoomServiceImpl implements GameRoomService {
 
 		// 입장 가능한 경우
 		member.enterGameRoom(gameRoom);
-		gameRoom.updateMembers(member);
+		gameRoom.updateMember(member);
 	}
 
 	public Page<GetGameRoomListResponse> getGameRoomList(String type, String title, Boolean isTwo, Boolean isThree,
@@ -98,24 +97,16 @@ public class GameRoomServiceImpl implements GameRoomService {
 		Page<GameRoom> gameRoomList = gameRoomRepository.findBySearchOption(type, title, isTwo, isThree, isFour,
 			isEmpty, pageable);
 		return gameRoomList.map(
-			(gameRoom) -> GetGameRoomListResponse.gameRoomListResponse(gameRoom));
+			GetGameRoomListResponse::gameRoomListResponse);
 	}
 
 	public void leaveGameRoom(String title, Long id) {
 		Member member = memberRepository.findById(id)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
 
-		GameRoom gameRoom = gameRoomRepository.findByTitle(title)
-			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS));
-		List<Member> gameRoomMembers = gameRoom.getMembers();
-
-		for (Member m : gameRoomMembers) {
-			if (m.equals(member)) {
-				gameRoomMembers.remove(m);
-				member.leaveGameRoom();
-				break;
-			}
-		}
+		member.leaveGameRoom();
+		memberRepository.save(member);
+		// todo 테스트 필요
 	}
 
 	public void playGameRoom(String title) {
@@ -136,14 +127,10 @@ public class GameRoomServiceImpl implements GameRoomService {
 		// 방에서 강제 퇴장 시키기
 		Member leavingMember = memberRepository.findByNickname(memberOutGameRoomRequest.getNickname())
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
-		List<Member> gameRoomMembers = gameRoom.getMembers();
-		for (Member m : gameRoomMembers) {
-			if (m.equals(leavingMember)) {
-				gameRoomMembers.remove(m);
-				leavingMember.leaveGameRoom();
-				break;
-			}
-		}
+
+		leavingMember.leaveGameRoom();
+		memberRepository.save(leavingMember);
+		//todo 테스트 필요
 
 		// blackList에 강제 퇴장 사용자 추가
 		GameRoomBlackList gameRoomBlackList = gameRoomBlackListRepository.findByGameRoomId(gameRoom.getId())
