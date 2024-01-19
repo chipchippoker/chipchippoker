@@ -25,21 +25,30 @@
         <!-- 모든 캠 -->
         <div id="video-container">
           <div class="flex-container row g-1 p-0">
-            <!-- 내 캠 -->
-            <UserVideo class="col-6" :stream-manager="publisherComputed" />
-            <!-- 다른 사람 캠 -->
-            <UserVideo
-              class="col-6"
+            <div class="col-6">
+              <div style="width: 400px; height: 300px;">
+                <!-- 내 캠 -->
+                <UserVideo :stream-manager="publisherComputed" />
+              </div>
+            </div>
+            <div
+              class="col-6 mb-5"
               v-for="sub in subscribersComputed"
-              :key="sub.stream.connection.connectionId"
-              :stream-manager="sub"
-            />
+              :key="sub.stream.connection.connectionId">
+              <div style="width: 400px; height: 300px;">
+                <!-- 다른 사람 캠 -->
+                <UserVideo
+                  :stream-manager="sub"
+                  @force-disconnect="forceDisconnect(sub)"
+                  />
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- 캠활성화, 음소거 버튼 -->
-        <button id="camera-activate" @click="handleCameraBtn">캠 비활성화</button>
-        <button id="mute-activate" @click="handleMuteBtn">음소거 활성화</button>
+        <!-- <button id="camera-activate" @click="handleCameraBtn">캠 비활성화</button>
+        <button id="mute-activate" @click="handleMuteBtn">음소거 활성화</button> -->
       </div>
       <!-- 로고, 관전자 목록, 채팅창, 버튼 -->
       <div class="col-3">
@@ -226,6 +235,8 @@ function leaveSession(){
 
   router.push('main')
 }
+
+
 
 function updateMainVideoStreamManager(stream) {
   if (mainStreamManager.value === stream) return
