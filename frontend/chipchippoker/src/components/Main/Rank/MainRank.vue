@@ -12,8 +12,8 @@
         </ul>
 
         <!-- 탭 화면 -->
-        <div class="tab-content border-0" id="myTabContent">
-            <div class="tab-pane fade show active" id="all-rank-tab-pane" role="tabpanel" aria-labelledby="all-rank-tab" tabindex="0">
+        <div class="tab-content border-0" style="width: 300px;"  id="myTabContent">
+            <div class="tab-pane fade show active "  id="all-rank-tab-pane" role="tabpanel" aria-labelledby="all-rank-tab" tabindex="0">
                 <MainRankAllList/></div>
             <div class="tab-pane fade" id="friend-tab-pane" role="tabpanel" aria-labelledby="friend-tab" tabindex="0">
                 <MainRankFriendList/></div>

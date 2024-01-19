@@ -11,7 +11,7 @@
         <!-- 닉네임, 티어, 포인트 -->
         <div class="d-flex justify-content-around">
           <div>{{ userStore?.profileInfo?.nickname }}</div>
-          <div>{{ userStore?.profileInfo?.tier }}</div>
+          <div><img class="x-small-icon"  :src='friendStore.getTierIconUrl(userStore?.profileInfo?.tier)'></div>
           <div>{{ userStore?.profileInfo?.point }}</div>
         </div>
         <!-- 최근 전적 -->
@@ -42,8 +42,9 @@
   import ModalIconList from "../Modal/ModalIconList.vue";
   import { ref, onMounted } from "vue";
   import { useUserStore } from '@/stores/user'
-  
+  import { useFriendStore } from "@/stores/friend";
   const profileInfo = ref({})  
+  const friendStore = useFriendStore()
   const userStore = useUserStore()
 
   onMounted(() => {

@@ -9,8 +9,8 @@
                 <div class="container">
                     <!-- 티어, 닉, 카톡 아이콘 -->
                     <div class="row">
-                        <div style="width:60px;">{{ item?.tier }}</div>
-                        <div class=" text-overflow" style="width:100px;">{{ item?.nickname }}</div>
+                        <div style="width:30px;"><img class="xx-small-icon"  :src='friendStore.getTierIconUrl(item?.tier)'></div>
+                        <div class=" text-overflow" style="width:150px;">{{ item?.nickname }}</div>
                         <img v-if="item?.isKakaoFriend" class="icon text-overflow" src="@/assets/icons/kakaologo.png" alt="">
                     </div>
                 </div>
@@ -50,6 +50,8 @@
 
 import { useUserStore } from '@/stores/user';
 const userStore = useUserStore()
+import { useFriendStore } from '@/stores/friend';
+const friendStore = useFriendStore()
 defineProps({item:Object})
 </script>
 

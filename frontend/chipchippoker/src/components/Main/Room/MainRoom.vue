@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex flex-column gap-3">
+    <div class="d-flex flex-column gap-3" style="height: 530px;">
         <div class="d-flex justify-content-between align-items-center w-100 gap-3">
         <!-- 인원수 필터 선택 -->
         <div class="d-flex">
@@ -51,8 +51,8 @@
         </li>
         </ul>
         <!-- 탭 화면 -->
-        <div class="tab-content border-0" id="myTabContent">
-            <div class="tab-pane fade show active" id="v-pills-rank-tab-pane" role="tabpanel" aria-labelledby="v-pills-rank-tab" tabindex="0">
+        <div class="tab-content border-0" id="myTabContent" >
+            <div class="tab-pane fade show active"  id="v-pills-rank-tab-pane" role="tabpanel" aria-labelledby="v-pills-rank-tab" tabindex="0">
                 <MainRoomRankList/></div>
             <div class="tab-pane fade" id="v-pills-friend-tab-pane" role="tabpanel" aria-labelledby="v-pills-friend-tab" tabindex="0">
                 <MainRoomFriendList/></div>
