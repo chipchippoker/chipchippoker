@@ -112,3 +112,12 @@
 .myrank {
     border: 2px solid #111D3C;
 }
+
+/* 랭크 스크롤 */
+/* .rank-scroll-2{
+    overflow: scroll;
+    width: 100%;
+} */
+/* .rank-scroll::-webkit-scrollbar {
+    display: none;
+  } */
