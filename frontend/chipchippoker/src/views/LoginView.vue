@@ -60,7 +60,7 @@
 
   // 유효성 검사
   const isValidMemberId = computed(() => {
-    return userStore.validateMemberId(memberId.value)
+    return userStore.validateId(memberId.value)
   })
   const isValidPassword = computed(() => {
     return userStore.validatePassword(password.value)

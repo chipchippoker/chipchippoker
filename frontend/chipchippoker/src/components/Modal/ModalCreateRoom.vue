@@ -1,6 +1,6 @@
 <template>
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content " style="background-color: #ffde76;">
+        <div class="modal-content " style="background-color: #fff0c0;">
             <div class="modal-header border-0">
                 <h1 class="modal-title fs-5" id="makeRoomModalLabel">방 생성</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

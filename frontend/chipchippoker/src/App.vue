@@ -50,7 +50,7 @@ const gotoProfile = function(){
     </div>
 
 
-    <div id="app" class="bg-gradation-blue d-flex justify-content-center">
+    <div id="app" class="bg-gradation-blue d-flex justify-content-center rank-scroll-2 maple">
       <RouterView />
     </div>
 
@@ -78,8 +78,15 @@ const gotoProfile = function(){
 </template>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Dongle:wght@300;400;700&family=Jua&family=Nanum+Gothic+Coding:wght@400;700&family=Nanum+Pen+Script&display=swap');
 @import "@/assets/color.css";
 @import "@/assets/size.css";
+@font-face {
+  font-family : 'maple';
+  src : url('@/assets/fonts/MaplestoryLight.ttf')  format('truetype');
+}
+.maple {
+  font-family: 'maple'
+}
+
 
 </style>
