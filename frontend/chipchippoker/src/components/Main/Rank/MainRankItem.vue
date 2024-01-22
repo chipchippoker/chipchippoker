@@ -1,7 +1,8 @@
 <template>
     <!-- 각각의 사용자 -->
-    <div class="d-flex  m-2 bg-light rounded-2 p-1 overflow-hidden" 
-    :class="{'myrank':item?.nickname===userStore.myNickName}">
+    <div class="d-flex m-2 rounded-2 p-1 overflow-hidden" 
+    :class="[{'myrank':item?.nickname===userStore.myNickName},{'otherrank':item?.nickname!=userStore.myNickName}]"
+    @click="gotoProfile(item?.nickname)">
         <div class="d-flex gap-1 align-items-center">
             <div class="text-overflow" style="width:35px;">{{ item?.rank }}등</div>
             <img class="x-small-icon"  :src='userStore.getIconUrl(item?.icon)'>
@@ -17,18 +18,19 @@
 </template>
 
 <script setup>
-// {
-    // "rank": 1,
-    //   "tier": "dia",
-    //   "icon": 19,
-    //   "nickname": "10기_임세환",
-    //   "point": 425637
-    // }
+
 import { useUserStore } from '@/stores/user';
-const userStore = useUserStore()
 import { useFriendStore } from '@/stores/friend';
+import { useRouter } from 'vue-router';
+const userStore = useUserStore()
 const friendStore = useFriendStore()
+const router = useRouter()
 defineProps({item:Object})
+
+const gotoProfile = function(nickName){
+    console.log(`${nickName} 페이지로 이동`)
+    // router.push({name:'profile',params:`${nickName}`})
+}
 </script>
 
 <style scoped>

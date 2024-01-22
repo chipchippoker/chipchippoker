@@ -14,7 +14,7 @@
                     <input v-model="password" type="password" class="form-control" id="password" >
                 </div>
                 <div >
-                    <button @click="enterRoom" type="submit" class="btn btn-primary">입력하기</button>
+                    <button @click="enterRoom" type="submit" class="btn-outline-yellow rounded-2">입력하기</button>
                 </div>
             </div>
         </div>

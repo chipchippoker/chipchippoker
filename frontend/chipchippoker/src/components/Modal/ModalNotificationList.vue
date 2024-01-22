@@ -6,7 +6,7 @@
             </div>
             <div class="modal-body">
                 <div>
-                    알림 리스트
+                    
                     <div class="d-flex flex-column gap-1">
                         <ModalNotificationItem v-for="item in friendStore.alarmList" :key="item"
                         :item="item"/>

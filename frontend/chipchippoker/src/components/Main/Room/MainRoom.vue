@@ -27,7 +27,7 @@
                     빈방
                 </label>
             </div>
-            <button @click="filterRoom">
+            <button class="btn-outline-lightblue rounded-2" @click="filterRoom">
                 필터 검색
             </button>
         </div>

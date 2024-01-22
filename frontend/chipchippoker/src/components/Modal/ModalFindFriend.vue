@@ -4,18 +4,14 @@
         <div class="modal-header border-0">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body d-flex justify-content-center">
-            <div class="row g-3">
-                <div class="col-auto">
-                    <div for="staticEmail2" class="visually-hidden">닉네임</div>
-                    
-                </div>
+        <div class="modal-body d-flex justify-content-center align-items-center">
+            <div class="row g-3 align-items-center">
                 <div class="col-auto">
                     <label for="userId" class="visually-hidden">nickname</label>
                     <input v-model="nickname" type="text" class="form-control" id="userId" placeholder="Nickname">
                 </div>
                 <div class="col-auto">
-                    <button @click="findNickName" type="submit" class="btn btn-primary mb-3">검색</button>
+                    <button @click="findNickName" type="submit" class="btn-outline-yellow rounded-2">검색</button>
                 </div>
             </div>
         </div>
