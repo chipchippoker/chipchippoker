@@ -64,10 +64,6 @@ public class GameRoom extends BaseEntity {
 			.build();
 	}
 
-	public void updateMember(Member member) {
-		this.members.add(member);
-	}
-
 	public void updateGameRoomState(String state) {
 		this.state = state;
 	}
