@@ -38,8 +38,6 @@ const selectIcon = function(number){
 </script>
 
 <style scoped>
-@import '@/assets/color.css';
-@import '@/assets/size.css';
 .grid-item {
   display: inline-block;
   width: 20%; /* 4열로 정렬하기 위해 25%로 설정 */

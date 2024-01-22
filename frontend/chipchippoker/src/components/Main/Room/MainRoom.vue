@@ -218,8 +218,6 @@ const pageRoom = function(pagenum){
 </script>
 
 <style lang="css" scoped>
-@import "@/assets/color.css";
-@import "@/assets/size.css";
 .form-check {
     margin-left: 10px;
     margin-right: 10px;

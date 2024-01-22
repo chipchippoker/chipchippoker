@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-column align-items-center w-100">
+  <div class="position-absolute d-flex flex-column align-items-center w-100 h-100">
     <!-- round, 관전 -->
     <div class="m-3 d-flex justify-content-center position-relative" style="width: 90%;">
       <div class="btn-outline-weightyellow py-2 px-4"><p class="fw-bold fs-3 m-0">round 1</p></div>
@@ -31,7 +31,7 @@
           <font-awesome-icon :icon="['fas', 'face-sad-cry']" class="fa-5x" style="color: #ece513;"/>
           <font-awesome-icon :icon="['fas', 'face-grin-tongue-wink']" class="fa-5x" style="color: #ffffff;"/>
         </div>
-        <!-- <img class="middle-logo mb-5 me-5" src="/src/assets/Logo.png" alt=""> -->
+        <!-- <img class="middle-logo mb-5 me-5" src="/src/assets/icons/Logo.png" alt=""> -->
       </div>
     </div>
   </div>

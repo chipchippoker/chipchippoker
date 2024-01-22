@@ -25,7 +25,7 @@ function getRandomValue(max) {
 
 const stars = ref([])
 
-for (let i = 0; i < 700; i++) {
+for (let i = 0; i < 300; i++) {
   const x = getRandomValue(windowWidth);
   const y = getRandomValue(windowHeight);
 
@@ -64,8 +64,6 @@ for (let i = 0; i < 700; i++) {
       <RouterLink to="main">메인페이지</RouterLink>  /
       <RouterLink to="play">플레이페이지</RouterLink> /
       <RouterLink to="wait">대기페이지</RouterLink> /
-      <RouterLink to="video">비디오</RouterLink> /
-      <RouterLink to="test">테스트메인</RouterLink>
     </div>
     
     <div class="position-relative">   
@@ -75,51 +73,53 @@ for (let i = 0; i < 700; i++) {
       <!-- 옵션, 로고, 아이콘  -->
       <div class="d-flex justify-content-between align-items-center position-absolute m-3">
 
-      <div class="d-flex flex-row justify-content-between" style="width: 10%;">
-        <!-- 알림 모달 아이콘 -->
-        <button class="mx-3 z-3 btn-transparency">
-          <font-awesome-icon icon="bell"  shake size="lg" data-bs-toggle="modal" data-bs-target="#alarmModal" style="color: #ffffff;" />
-        </button>
-        <!-- 설정 모달 아이콘 -->
-        <button class="mx-3 z-3 btn-transparency">
-          <font-awesome-icon icon="gear" size="lg" data-bs-toggle="modal" data-bs-target="#settingModal" style="color: #ffffff;" />
-        </button>
-        <!-- 가이드북 모달 아이콘 -->
-        <button class="ms-3 z-3 btn-transparency">
-          <font-awesome-icon icon="book" size="lg" data-bs-toggle="modal" data-bs-target="#guideModal" style="color: #ffffff;" />
-        </button>
+        <div class="d-flex flex-row justify-content-between" style="width: 10%;">
+          <!-- 알림 모달 아이콘 -->
+          <button class="mx-3 z-3 btn-transparency">
+            <font-awesome-icon icon="bell"  shake size="lg" data-bs-toggle="modal" data-bs-target="#alarmModal" style="color: #ffffff;" />
+          </button>
+          <!-- 설정 모달 아이콘 -->
+          <button class="mx-3 z-3 btn-transparency">
+            <font-awesome-icon icon="gear" size="lg" data-bs-toggle="modal" data-bs-target="#settingModal" style="color: #ffffff;" />
+          </button>
+          <!-- 가이드북 모달 아이콘 -->
+          <button class="ms-3 z-3 btn-transparency">
+            <font-awesome-icon icon="book" size="lg" data-bs-toggle="modal" data-bs-target="#guideModal" style="color: #ffffff;" />
+          </button>
+        </div>
+        <!-- <button class="mx-3" style="background-color:transparent; border: 0;">
+          <font-awesome-icon @click="gotoProfile" icon="user" size="lg" style="color: #ffffff;"  />
+        </button> -->
       </div>
-      <!-- <button class="mx-3" style="background-color:transparent; border: 0;">
-        <font-awesome-icon @click="gotoProfile" icon="user" size="lg" style="color: #ffffff;"  />
-      </button> -->
-    </div>
 
 
+    
+      <div id="app" class="bg-gradation-blue d-flex justify-content-center maple">
+        <RouterView />
+      </div>
 
-    <div id="app" class="bg-gradation-blue d-flex justify-content-center maple">
-      <RouterView />
+      <!-- 알림 Modal -->
+      <div class="modal fade" id="alarmModal" tabindex="-1" aria-labelledby="alarmModalLabel" aria-hidden="true">
+        <ModalNotificationList/>
+        
+      </div>
+      <!-- 세팅 Modal -->
+      <div class="modal fade" id="settingModal" tabindex="-1" aria-labelledby="settingModalLabel" aria-hidden="true">
+        <ModalMainSettings/>
+      </div>
+      <!-- 가이드북 Modal -->
+      <div class="modal fade " id="guideModal" tabindex="-1" aria-labelledby="guideModalLabel" aria-hidden="true">
+        <ModalGuide/>
+      </div>
     </div>
-
-    <!-- 알림 Modal -->
-    <div class="modal fade" id="alarmModal" tabindex="-1" aria-labelledby="alarmModalLabel" aria-hidden="true">
-      <ModalNotificationList/>
-      
-    </div>
-    <!-- 세팅 Modal -->
-    <div class="modal fade" id="settingModal" tabindex="-1" aria-labelledby="settingModalLabel" aria-hidden="true">
-      <ModalMainSettings/>
-    </div>
-    <!-- 가이드북 Modal -->
-    <div class="modal fade " id="guideModal" tabindex="-1" aria-labelledby="guideModalLabel" aria-hidden="true">
-      <ModalGuide/>
-    </div>
-  </div>
   </div>
 </template>
 
 <style>
-@import "@/assets/color.css";
-@import "@/assets/size.css";
+
+@import "@/assets/css/color.css";
+@import "@/assets/css/size.css";
+
 @font-face {
   font-family : 'maple';
   src : url('@/assets/fonts/MaplestoryLight.ttf')  format('truetype');

@@ -6,7 +6,7 @@
         :key="item?.nickname"
         :item="item"/>
         <MainRankItemItem 
-        class="sticky-bottom myrank mb-3"
+        class="sticky-bottom sticky-top myrank mb-3"
         :item="friendStore?.myRank"
         />
         

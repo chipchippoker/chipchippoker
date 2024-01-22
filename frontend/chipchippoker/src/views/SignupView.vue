@@ -3,7 +3,7 @@
     <div
       class="d-flex flex-column justify-content-center align-items-center position-absolute top-50 start-50 translate-middle">
       <div class="d-flex justify-content-center">
-        <img class="small-logo" src="/src/assets/Logo.png" alt="">
+        <img class="small-logo" src="/src/assets/icons/Logo.png" alt="">
       </div>
 
       <div class="formstyle">
@@ -48,7 +48,7 @@
 
           <!-- 아이콘 모달 버튼 -->
           <div class="d-flex justify-content-center">
-            <button class="btn-transparency">
+            <button class="btn-transparency" type="button">
               <img data-bs-toggle="modal" data-bs-target="#IconModal" class="small-icon"
                 :src='userStore.getIconUrl(userStore.myIcon)' :alt="userStore.myIcon">
             </button>
@@ -127,8 +127,7 @@ watch([memberId, password1, password2, nickName], () => {
 
   
 <style scoped>
-@import '@/assets/color.css';
-@import "@/assets/size.css";
+
 
 .btn-login {
       box-shadow: 0 0 0 3px #ffffff inset;

@@ -131,8 +131,7 @@
 </script>
   
 <style scoped>
-  @import "@/assets/color.css";
-  @import "@/assets/size.css";
+
 
   .kakao-logo {
     width: 15px;

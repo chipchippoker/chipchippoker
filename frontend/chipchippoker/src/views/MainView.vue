@@ -1,9 +1,9 @@
 <template>
-    <div style="width:80%;">
+    <div class="position-absolute" style="width:80%;">
         <!-- 로고와 방목록 -->
         <div class="m-3">
             <div class="d-flex align-items-center justify-content-center gap-5" style="width: 100%;" >
-                <img class="small-logo m-0" src="/src/assets/Logo.png" alt="">
+                <img class="small-logo m-0" src="/src/assets/icons/Logo.png" alt="">
                 <div class="d-flex gap-3">
                     <button @click="changeType('경쟁전')" class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#FindRoomModal">경쟁 모드</button>
                     <button @click="changeType('친선전')" class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#FindRoomModal">친선 모드</button>
@@ -78,8 +78,7 @@ const changeType = function(type){
 </script>
 
 <style scoped>
-@import "@/assets/color.css";
-@import "@/assets/size.css";
+
 
 .btn-outline-weightyellow {
     height: 30px;
