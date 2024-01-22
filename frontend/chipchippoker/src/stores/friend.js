@@ -8,6 +8,7 @@ export const useFriendStore = defineStore('friend', () => {
   const RANK_API = 'http://localhost/api/ranks'
   
   // 친구 API에서 사용되는 변수
+  const isContained = ref(true)
   const searchedFriend = ref(null)
   const friendList = ref(
     [
@@ -69,7 +70,6 @@ export const useFriendStore = defineStore('friend', () => {
       status: "대기" 
     }
   ])
-
   // 랭킹 aPI에서 사용되는 변수
   const allRankList = ref([
     {
@@ -274,84 +274,7 @@ export const useFriendStore = defineStore('friend', () => {
       "icon": 3,
       "nickname": "10기_칠싸피",
       "point": 8000
-    },
-    {
-      "rank": 10,
-      "tier": "silver",
-      "icon": 3,
-      "nickname": "10기_윤예빈",
-      "point": 8000
-    },
-    {
-      "rank": 10,
-      "tier": "silver",
-      "icon": 3,
-      "nickname": "10기_칠싸피",
-      "point": 8000
-    },
-    {
-      "rank": 10,
-      "tier": "silver",
-      "icon": 3,
-      "nickname": "10기_칠싸피",
-      "point": 8000
-    },
-    {
-      "rank": 10,
-      "tier": "silver",
-      "icon": 3,
-      "nickname": "10기_칠싸피",
-      "point": 8000
-    },
-    {
-      "rank": 10,
-      "tier": "silver",
-      "icon": 3,
-      "nickname": "10기_칠싸피",
-      "point": 8000
-    },
-    {
-      "rank": 10,
-      "tier": "silver",
-      "icon": 3,
-      "nickname": "10기_칠싸피",
-      "point": 8000
-    },
-    {
-      "rank": 10,
-      "tier": "silver",
-      "icon": 3,
-      "nickname": "10기_칠싸피",
-      "point": 8000
-    },
-    {
-      "rank": 10,
-      "tier": "silver",
-      "icon": 3,
-      "nickname": "10기_칠싸피",
-      "point": 8000
-    },
-    {
-      "rank": 10,
-      "tier": "silver",
-      "icon": 3,
-      "nickname": "10기_칠싸피",
-      "point": 8000
-    },
-    {
-      "rank": 10,
-      "tier": "silver",
-      "icon": 3,
-      "nickname": "10기_칠싸피",
-      "point": 8000
-    },
-    {
-      "rank": 10,
-      "tier": "silver",
-      "icon": 3,
-      "nickname": "10기_칠싸피",
-      "point": 8000
-    },
+    }
 
   ])
   const friendRankList = ref([
@@ -494,6 +417,8 @@ export const useFriendStore = defineStore('friend', () => {
     })
     .then(res => {
       allRankList.value = res.totalRankResponse.totalRankList
+      // 내가 전체 랭킹에 존재하는지 판단하는 함수
+      isContained.value = allRankList.value.filter((rank) => rank.nickname === myNickName).length > 0
     })
     .catch(err => console.log(err))
   }
@@ -527,5 +452,5 @@ export const useFriendStore = defineStore('friend', () => {
     return new URL(`/src/assets/tier_icons/${tier}.png`,import.meta.url).href;
   }
   
-  return {findFriend, searchedFriend, friendList, getFriendList, allRankList, getAllRankList, friendRankList,getFriendRankList, getMyRankList, myRank,friendRequest, acceptFriendRequest, rejectFriendRequest, RequestAlarm, alarmList, getTierIconUrl}
+  return {findFriend, searchedFriend, friendList, getFriendList, allRankList, getAllRankList, friendRankList,getFriendRankList, getMyRankList, myRank,friendRequest, acceptFriendRequest, rejectFriendRequest, RequestAlarm, alarmList, getTierIconUrl, isContained}
 },{persist:true})
