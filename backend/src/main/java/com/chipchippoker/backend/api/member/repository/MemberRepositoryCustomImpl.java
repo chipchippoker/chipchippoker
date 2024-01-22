@@ -1,6 +1,5 @@
 package com.chipchippoker.backend.api.member.repository;
 
-import static com.chipchippoker.backend.common.entity.QMember.*;
 import static com.chipchippoker.backend.common.entity.QPoint.*;
 
 import java.util.List;
@@ -11,7 +10,6 @@ import com.chipchippoker.backend.api.member.dto.model.ProfilePageResponse;
 import com.chipchippoker.backend.api.member.dto.model.RecentPlayListResponse;
 import com.chipchippoker.backend.common.entity.Member;
 import com.chipchippoker.backend.common.entity.Point;
-import com.chipchippoker.backend.common.entity.QPoint;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
@@ -28,10 +26,16 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
         Point result = queryFactory
             .selectFrom(point)
             .where(point.member.id.eq(m.getId()))
-            .leftJoin(point.member,member)
-            .fetchJoin()
             .fetchOne();
         return ProfilePageResponse.createProfilePageResponse(result.getMember().getIcon(),12,6,result.getWin(),result.getDraw(),result.getLose(),result.getMaxWin(),result.getPointScore(),result.getMember().getNickname(),result.tierByPoint(result.getPointScore()),isMine,recentPlayListResponseList);
-        //todo 조인 지우고 테스트
+    }
+
+
+    public List<Point> getTotalRank() {
+        return queryFactory
+            .selectFrom(point)
+            .orderBy(point.pointScore.desc())
+            .limit(30)
+            .fetch();
     }
 }
