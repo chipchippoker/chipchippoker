@@ -66,4 +66,18 @@ public class Point extends BaseEntity {
 		point+= coin-initialCoin;
 		return point;
 	}
+
+	//테스트용
+	public static Point createPoint(Member member,Integer pointScore) {
+		return Point.builder()
+			.win(0)
+			.draw(0)
+			.lose(0)
+			.currentWinningStreak(0)
+			.maxWin(0)
+			.pointScore(pointScore)
+			.member(member)
+			.build();
+	}
+
 }
