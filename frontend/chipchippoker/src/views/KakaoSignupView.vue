@@ -23,12 +23,14 @@
 
         <!-- 아이콘 모달 버튼 -->
         <div class="d-flex justify-content-center">
-          <img data-bs-toggle="modal" data-bs-target="#IconModal" class="small-icon" :src='userStore.getIconUrl(userStore.myIcon)' :alt="userStore.myIcon">
+          <button class="btn-transparency">
+            <img data-bs-toggle="modal" data-bs-target="#IconModal" class="small-icon" :src='userStore.getIconUrl(userStore.myIcon)' :alt="userStore.myIcon">
+          </button>
         </div>
 
         <!-- 닉네임 중복 체크를 통과해야만 보임 -->
         <div class="d-grid gap-2 pt-3">
-          <button @click="signUp" type="submit" class="btn btn-outline-yellow">회원가입</button>
+          <button @click="signUp" type="submit" class="btn btn-primary btn-login">회원가입</button>
         </div>
       </form>
     </div>
@@ -86,5 +88,15 @@ const signUp = function(){
 <style scoped>
 @import '@/assets/color.css';
 @import '@/assets/size.css';
+
+.btn-login {
+      box-shadow: 0 0 0 3px #ffffff inset;
+      border: 0px;
+      background-color: #99A5C1;
+      width: 100%;
+  }
+  .btn-login:hover {
+    background-color: rgb(95, 98, 136);
+  }
 </style>
   

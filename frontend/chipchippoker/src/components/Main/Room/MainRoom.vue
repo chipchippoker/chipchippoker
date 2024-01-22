@@ -40,7 +40,7 @@
         </div>
     </div>
     
-    <div >
+    <div class="">
         <!-- 경쟁전 탭, 친선전 탭 버튼-->
         <ul class="nav nav-tabs nav-justified border-0"  id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -51,7 +51,7 @@
         </li>
         </ul>
         <!-- 탭 화면 -->
-        <div class="tab-content border-0" id="myTabContent" >
+        <div class="tab-content border-0" id="myTabContent">
             <div class="tab-pane fade show active"  id="v-pills-rank-tab-pane" role="tabpanel" aria-labelledby="v-pills-rank-tab" tabindex="0">
                 <MainRoomRankList/></div>
             <div class="tab-pane fade" id="v-pills-friend-tab-pane" role="tabpanel" aria-labelledby="v-pills-friend-tab" tabindex="0">

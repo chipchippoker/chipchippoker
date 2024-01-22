@@ -13,6 +13,7 @@ export const useUserStore = defineStore('user', () => {
   const refreshToken = ref(null)
   const authorizationCode = ref(null)
   const kakaoAccessToken = ref(null)
+  const isLogIn = ref(false)
 
   const USER_API = 'http://localhost/api/members'
   const KAKAO_API_KEY = import.meta.env.VITE_KAKAO_API_KEY
@@ -123,6 +124,7 @@ export const useUserStore = defineStore('user', () => {
         myIcon.value = res.generalLoginResponse.icon
         myNickName.value = res.generalLoginResponse.nickname
         console.log('일반 로그인 성공!!')
+        isLogIn.value = true
       })
       .catch(err => console.log(err))
   }
@@ -153,6 +155,7 @@ export const useUserStore = defineStore('user', () => {
         refreshToken.value = res.simpleLoginResponse.refreshToken
         myIcon.value = res.simpleLoginResponse.icon
         myNickName.value = res.simpleLoginResponse.nickname
+        isLogIn.value = true
       } else if (res.code === 201) {
         console.log("카카오 로그인 성공2!!")
         kakaoAccessToken.value = res.kakaoAccessToken
@@ -173,6 +176,7 @@ export const useUserStore = defineStore('user', () => {
     })
     .then(res => {
       console.log('로그아웃 성공!!')
+      isLogIn.value = false
     })
     .catch(err => console.log(err))
 
@@ -385,7 +389,7 @@ export const useUserStore = defineStore('user', () => {
     generalLogIn, getKakaoCode, simpleLogInRequest, kakaoSignUp,
     logOut, signUp, signOut, checkMemberId, checkNickName, validateId, validatePassword, validateNickName, kakaoConnect, 
     accessToken, refreshToken, authorizationCode, kakaoAccessToken,
-    isNickDuplicated, isIdDuplicated,
+    isNickDuplicated, isIdDuplicated, isLogIn,
 
     // 프로필 아이콘, 프로필 정보 받아오기
     getIconUrl, getProfileInfo, 

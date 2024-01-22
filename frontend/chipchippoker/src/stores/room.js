@@ -48,30 +48,30 @@ export const useRoomStore = defineStore('room', () => {
       "currentParticipantsCnt": 3,
       "currentSpectatorsCnt": 0
   },
-  {
-      "isPrivate": false,
-      "state": "진행",
-      "title": "테스트 방6",
-      "totalParticipantsCnt": 3,
-      "currentParticipantsCnt": 0,
-      "currentSpectatorsCnt": 1
-  },
-  {
-      "isPrivate": false,
-      "state": "대기",
-      "title": "테스트 방7",
-      "totalParticipantsCnt": 3,
-      "currentParticipantsCnt": 3,
-      "currentSpectatorsCnt": 0
-  },
-  {
-      "isPrivate": false,
-      "state": "대기",
-      "title": "테스트 방8",
-      "totalParticipantsCnt": 4,
-      "currentParticipantsCnt": 4,
-      "currentSpectatorsCnt": 4
-  },
+  // {
+  //     "isPrivate": false,
+  //     "state": "진행",
+  //     "title": "테스트 방6",
+  //     "totalParticipantsCnt": 3,
+  //     "currentParticipantsCnt": 0,
+  //     "currentSpectatorsCnt": 1
+  // },
+  // {
+  //     "isPrivate": false,
+  //     "state": "대기",
+  //     "title": "테스트 방7",
+  //     "totalParticipantsCnt": 3,
+  //     "currentParticipantsCnt": 3,
+  //     "currentSpectatorsCnt": 0
+  // },
+  // {
+  //     "isPrivate": false,
+  //     "state": "대기",
+  //     "title": "테스트 방8",
+  //     "totalParticipantsCnt": 4,
+  //     "currentParticipantsCnt": 4,
+  //     "currentSpectatorsCnt": 4
+  // },
 
 
   ])

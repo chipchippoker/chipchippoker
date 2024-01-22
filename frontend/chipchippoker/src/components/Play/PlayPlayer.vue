@@ -11,6 +11,14 @@
           <!-- 캠활성화, 음소거 버튼 -->
           <!-- <button id="camera-activate" @click="handleCameraBtn()">캠 비활성화</button>
           <button id="mute-activate" @click="handleMuteBtn()">음소거 활성화</button> -->
+          <!-- <div>
+            <select name="cameras" @change="handleCameraChange">
+              <option disabled>사용할 카메라를 선택하세요</option>
+            </select>
+            <select name="audios" @change="handleAudioChange">
+              <option disabled>사용할 마이크를 선택하세요</option>
+            </select>
+          </div> -->
           <div class="bg-black m-2" style="width: 300px; height: 210px;">
             <UserVideoVue
             :stream-manager="publisherComputed" 
@@ -18,14 +26,6 @@
           </div>
           <div class="m-2 bg-white align-self-center" style="width: 100px; height: 150px;">카드</div>
         </div>
-        <!-- <div>
-          <select name="cameras" @change="handleCameraChange">
-            <option disabled>사용할 카메라를 선택하세요</option>
-          </select>
-          <select name="audios" @change="handleAudioChange">
-            <option disabled>사용할 마이크를 선택하세요</option>
-          </select>
-        </div> -->
       </div>
       <div class="position-absolute top-0 end-0 d-flex flex-column h-50" id="player2" style="width: 500px;">
         <div class="text-white align-self-center " v-if="subscribersComputed.length > 0" >{{ player1 }} / 보유코인: 10개</div>
@@ -85,7 +85,7 @@
     </div>
     <!-- 나가기 -->
     <div class="position-absolute bottom-0 end-0">
-      <button class="bg-danger me-3 text-white fw-bold rounded-pill d-flex justify-content-center align-items-center border border-2 border-white" 
+      <button class="bg-danger me-3 mb-3 text-white fw-bold rounded-pill d-flex justify-content-center align-items-center border border-2 border-white" 
       data-bs-toggle="modal" data-bs-target="#roomOutModal" style="width: 70px; height: 30px" >나가기</button>
     </div>
 
@@ -402,15 +402,15 @@
   // }
   
   // select태그에서 사용할 기기를 선택했을때
-  // async function handleCameraChange(event) {
-  //   selectedCamera.value = event.target.value;
-  //   await replaceCameraTrack(selectedCamera.value);
-  // }
+  async function handleCameraChange(event) {
+    selectedCamera.value = event.target.value;
+    await replaceCameraTrack(selectedCamera.value);
+  }
 
-  // async function handleAudioChange(event) {
-  //   selectedAudio.value = event.target.value;
-  //   await replaceAudioTrack(selectedAudio.value);
-  // }
+  async function handleAudioChange(event) {
+    selectedAudio.value = event.target.value;
+    await replaceAudioTrack(selectedAudio.value);
+  }
 
   async function replaceCameraTrack(deviceId) {
     if (!publisher.value) return;
@@ -451,6 +451,14 @@
   }
 
   onMounted (() => {
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+      .then((stream) => {
+        // 카메라 및 마이크에 대한 성공적인 액세스 처리
+      })
+      .catch((error) => {
+        console.error('카메라 및 마이크 액세스 오류:', error);
+      });
+
     joinSession()
   })
 </script>

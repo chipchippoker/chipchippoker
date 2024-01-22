@@ -1,6 +1,6 @@
 <template>
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content " style="background-color: #ffde76;">
+        <div class="modal-content " style="background-color: #fff0c0;">
         <div class="modal-header border-0">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>

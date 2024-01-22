@@ -87,9 +87,9 @@
     const remote = props.streamManager.remote
     // 음소거 설정을 적용
     if (remote === true) {
-      props.streamManager.subscribeToAudio(!camerOff.value);
+      props.streamManager.subscribeToAudio(!muted.value);
     } else {
-      props.streamManager.publishAudio(!camerOff.value);
+      props.streamManager.publishAudio(!muted.value);
     }
   }
   
