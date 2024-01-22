@@ -263,8 +263,6 @@ function leaveSession(){
   router.push('main')
 }
 
-
-
 function updateMainVideoStreamManager(stream) {
   if (mainStreamManager.value === stream) return
   mainStreamManager.value = stream
@@ -351,7 +349,6 @@ async function getMedia() {
   }
 }
 
-
 // 음소거, 캠 활성화 버튼 작동
 function handleCameraBtn() {
   if (!publisher.value) return;
@@ -433,12 +430,12 @@ async function replaceAudioTrack(deviceId) {
 }
 
 onMounted(() => {
-
   // 방 정보 저장
   // roomId.value = route.params.roomId
   // roomTitle.value = history.state.title
   // totalParticipantsCnt.value = history.state.totalParticipantsCnt
-  
+  // myNickName.value = history.state.nickName
+
   roomId.value = '1001223'
   roomTitle.value = '싸피 다 드루와'
   totalParticipantsCnt.value = 3

@@ -102,7 +102,7 @@ export const useRoomStore = defineStore('room', () => {
   const userStore = useUserStore()
 
   // 방 생성
-  const makeRoom = function(accessToken, payload){
+  const createRoom = function(accessToken, payload){
     console.log('방 생성 요청!!');
     axios({
       method: ROOM_API,
@@ -161,5 +161,11 @@ export const useRoomStore = defineStore('room', () => {
     .catch(err => console.log(err))
   }
 
-  return {getRoomList,allRoomList, pageData, isLast, isfirst, totalPages, totalElements, nowElements, nowPage, isEmpty,pageArray}
+  return {
+    // 방 목록
+    getRoomList,
+    allRoomList, pageData, isLast, isfirst, totalPages, totalElements, nowElements, nowPage, isEmpty, pageArray,
+    // 방 생성
+    createRoom
+  }
 },{persist:true})
