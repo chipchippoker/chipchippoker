@@ -1,7 +1,5 @@
 package com.chipchippoker.backend.api.gameroom.service;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -10,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.chipchippoker.backend.api.gameroom.model.dto.CreateGameRoomRequest;
 import com.chipchippoker.backend.api.gameroom.model.dto.CreateGameRoomResponse;
 import com.chipchippoker.backend.api.gameroom.model.dto.EnterGameRoomRequest;
+import com.chipchippoker.backend.api.gameroom.model.dto.EnterGameRoomResponse;
 import com.chipchippoker.backend.api.gameroom.model.dto.GetGameRoomListResponse;
 import com.chipchippoker.backend.api.gameroom.model.dto.MemberOutGameRoomRequest;
 import com.chipchippoker.backend.api.gameroom.repository.GameRoomRepository;
@@ -55,7 +54,6 @@ public class GameRoomServiceImpl implements GameRoomService {
 
 		// 연관관계 매핑
 		member.enterGameRoom(gameRoom);
-		gameRoom.updateMember(member);
 
 		// 관전방 생성
 		SpectateRoom spectateRoom = SpectateRoom.createSpectateRoom(gameRoom);
@@ -68,7 +66,7 @@ public class GameRoomServiceImpl implements GameRoomService {
 		return CreateGameRoomResponse.createGameRoomResponse(gameRoom);
 	}
 
-	public void enterGameRoom(EnterGameRoomRequest enterGameRoomRequest, Long id) {
+	public EnterGameRoomResponse enterGameRoom(EnterGameRoomRequest enterGameRoomRequest, Long id) {
 		Member member = memberRepository.findById(id)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
 		GameRoom gameRoom = gameRoomRepository.findByTitle(enterGameRoomRequest.getTitle())
@@ -88,7 +86,7 @@ public class GameRoomServiceImpl implements GameRoomService {
 
 		// 입장 가능한 경우
 		member.enterGameRoom(gameRoom);
-		gameRoom.updateMember(member);
+		return EnterGameRoomResponse.enterGameRoomResponse(gameRoom.getId());
 	}
 
 	public Page<GetGameRoomListResponse> getGameRoomList(String type, String title, Boolean isTwo, Boolean isThree,
@@ -106,7 +104,6 @@ public class GameRoomServiceImpl implements GameRoomService {
 
 		member.leaveGameRoom();
 		memberRepository.save(member);
-		// todo 테스트 필요
 	}
 
 	public void playGameRoom(String title) {
@@ -130,7 +127,6 @@ public class GameRoomServiceImpl implements GameRoomService {
 
 		leavingMember.leaveGameRoom();
 		memberRepository.save(leavingMember);
-		//todo 테스트 필요
 
 		// blackList에 강제 퇴장 사용자 추가
 		GameRoomBlackList gameRoomBlackList = gameRoomBlackListRepository.findByGameRoomId(gameRoom.getId())

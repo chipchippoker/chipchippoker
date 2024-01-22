@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.chipchippoker.backend.api.gameroom.model.dto.CreateGameRoomRequest;
 import com.chipchippoker.backend.api.gameroom.model.dto.CreateGameRoomResponse;
 import com.chipchippoker.backend.api.gameroom.model.dto.EnterGameRoomRequest;
+import com.chipchippoker.backend.api.gameroom.model.dto.EnterGameRoomResponse;
 import com.chipchippoker.backend.api.gameroom.model.dto.GetGameRoomListResponse;
 import com.chipchippoker.backend.api.gameroom.model.dto.LeaveGameRoomRequest;
 import com.chipchippoker.backend.api.gameroom.model.dto.MemberOutGameRoomRequest;
@@ -41,10 +42,11 @@ public class GameRoomController {
 
 	// 방 입장
 	@PostMapping("/api/rooms/enter")
-	public ResponseEntity<ApiResponse<Void>> enterGameRoom(@RequestBody EnterGameRoomRequest enterGameRoomRequest) {
+	public ResponseEntity<ApiResponse<EnterGameRoomResponse>> enterGameRoom(
+		@RequestBody EnterGameRoomRequest enterGameRoomRequest) {
 		Long id = (Long)request.getAttribute("id");
-		gameRoomService.enterGameRoom(enterGameRoomRequest, id);
-		return ResponseEntity.ok(ApiResponse.success());
+		EnterGameRoomResponse enterGameRoomResponse = gameRoomService.enterGameRoom(enterGameRoomRequest, id);
+		return ResponseEntity.ok(ApiResponse.success(enterGameRoomResponse));
 	}
 
 	// 방 목록
