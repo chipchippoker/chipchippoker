@@ -42,7 +42,7 @@
                 </div>
                 
                 <div class="modal-footer border-0">
-                    <button @click="createRoom()" type="button" class="btn btn-primary">방만들기</button>
+                    <button @click="createRoom()" type="button" class="btn-outline-yellow rounded-2">방만들기</button>
                 </div>
             </div>
         </div>

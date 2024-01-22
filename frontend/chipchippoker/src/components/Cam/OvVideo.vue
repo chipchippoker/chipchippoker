@@ -3,6 +3,7 @@
 </template>
 
 <script>
+
   export default {
     name: 'OvVideo',
   }
@@ -10,6 +11,8 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+
+
 
 const props = defineProps({
   streamManager: Object,

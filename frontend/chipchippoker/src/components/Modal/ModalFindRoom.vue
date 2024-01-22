@@ -27,7 +27,7 @@
                             4인
                         </label>
                     </div>
-                    <button type="button" class="btn btn-primary">찾기</button>
+                    <button type="button" class="btn-outline-yellow rounded-2">찾기</button>
                     
                 </div>
             </div>

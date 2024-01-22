@@ -124,5 +124,19 @@
   }
 
 .myrank {
-    border: 2px solid #111D3C;
+    border: 2px solid #ddd;
+    background-color: #576fac;
+    color: #fff;
+}
+.myrank:hover {
+    background-color: #fff;
+    color: #000;
+}
+.otherrank {
+    
+    background-color: #667db6;
+}
+.otherrank:hover {
+    background-color: #fff;
+    color: #000;
 }
