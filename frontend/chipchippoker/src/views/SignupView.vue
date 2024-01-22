@@ -8,7 +8,7 @@
 
       <div class="formstyle">
         <div class="h2 fw-bold">회원가입</div>
-        <form @submit.prevent="signUp">
+        <form @submit.prevent="signUp" style="width: 400px;">
           <div class="mb-3">
             <label for="nickname" class="form-label">닉네임</label>
             <div class="input-group">
@@ -48,13 +48,15 @@
 
           <!-- 아이콘 모달 버튼 -->
           <div class="d-flex justify-content-center">
-            <img data-bs-toggle="modal" data-bs-target="#IconModal" class="small-icon"
-              :src='userStore.getIconUrl(userStore.myIcon)' :alt="userStore.myIcon">
+            <button class="btn-transparency">
+              <img data-bs-toggle="modal" data-bs-target="#IconModal" class="small-icon"
+                :src='userStore.getIconUrl(userStore.myIcon)' :alt="userStore.myIcon">
+            </button>
           </div>
 
           <div class="d-grid gap-2 pt-3">
             <button :disabled="!(isValidMemberId && isValidPassword1 && isValidPassword2 && isValidNickname)"
-              type="submit" class="btn btn-outline-yellow">제출하기</button>
+              type="submit" class="btn btn-primary btn-login">회원가입</button>
           </div>
         </form>
       </div>
@@ -127,4 +129,14 @@ watch([memberId, password1, password2, nickName], () => {
 <style scoped>
 @import '@/assets/color.css';
 @import "@/assets/size.css";
+
+.btn-login {
+      box-shadow: 0 0 0 3px #ffffff inset;
+      border: 0px;
+      background-color: #99A5C1;
+      width: 100%;
+  }
+  .btn-login:hover {
+    background-color: rgb(95, 98, 136);
+  }
 </style>

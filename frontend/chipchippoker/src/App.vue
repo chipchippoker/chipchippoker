@@ -4,11 +4,17 @@ import ModalNotificationList from './components/Modal/ModalNotificationList.vue'
 import ModalMainSettings from './components/Modal/ModalMainSettings.vue';
 import { RouterLink, RouterView } from 'vue-router'
 import { useRouter } from 'vue-router';
+import { ref, computed } from 'vue';
+import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
 const gotoProfile = function(){
   router.push({name:'profile'})
 }
+
+const userStore = useUserStore()
+console.log(userStore.isLogIn)
+
 </script>
 
 <template>
@@ -22,35 +28,33 @@ const gotoProfile = function(){
   <RouterLink to="main">메인페이지</RouterLink>  /
   <RouterLink to="play">플레이페이지</RouterLink> /
   <RouterLink to="wait">대기페이지</RouterLink> /
-  <RouterLink to="video">비디오</RouterLink> /
-  <RouterLink to="test">테스트메인</RouterLink>
   </div>
   <div class="position-relative">
 
     
   <!-- 옵션, 로고, 아이콘  -->
-  <div class="d-flex justify-content-between align-items-center position-absolute m-3">
+  <div v-show="userStore.isLogIn" class="d-flex justify-content-between align-items-center position-absolute m-3">
       <div class="d-flex flex-row justify-content-between" style="width: 10%;">
         <!-- 알림 모달 아이콘 -->
-        <div class="mx-3 z-3">
+        <button class="mx-3 z-3 btn-transparency">
           <font-awesome-icon icon="bell"  shake size="lg" data-bs-toggle="modal" data-bs-target="#alarmModal" style="color: #ffffff;" />
-        </div>
+        </button>
         <!-- 설정 모달 아이콘 -->
-        <div class="mx-3 z-3">
+        <button class="mx-3 z-3 btn-transparency">
           <font-awesome-icon icon="gear" size="lg" data-bs-toggle="modal" data-bs-target="#settingModal" style="color: #ffffff;" />
-        </div>
+        </button>
         <!-- 가이드북 모달 아이콘 -->
-        <div class="ms-3 z-3">
+        <button class="ms-3 z-3 btn-transparency">
           <font-awesome-icon icon="book" size="lg" data-bs-toggle="modal" data-bs-target="#guideModal" style="color: #ffffff;" />
-        </div>
+        </button>
       </div>
-      <!-- <div class="mx-3">
+      <!-- <button class="mx-3" style="background-color:transparent; border: 0;">
         <font-awesome-icon @click="gotoProfile" icon="user" size="lg" style="color: #ffffff;"  />
-      </div> -->
+      </button> -->
     </div>
 
 
-    <div id="app" class="bg-gradation-blue d-flex justify-content-center rank-scroll-2 maple">
+    <div id="app" class="bg-gradation-blue d-flex justify-content-center">
       <RouterView />
     </div>
 
@@ -78,15 +82,8 @@ const gotoProfile = function(){
 </template>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Dongle:wght@300;400;700&family=Jua&family=Nanum+Gothic+Coding:wght@400;700&family=Nanum+Pen+Script&display=swap');
 @import "@/assets/color.css";
 @import "@/assets/size.css";
-@font-face {
-  font-family : 'maple';
-  src : url('@/assets/fonts/MaplestoryLight.ttf')  format('truetype');
-}
-.maple {
-  font-family: 'maple'
-}
-
 
 </style>

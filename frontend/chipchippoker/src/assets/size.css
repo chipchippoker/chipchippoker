@@ -54,16 +54,15 @@
 
 
 .small-icon {
-    width: 80px;
-    height: 80px;
-    margin: 20px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     
 }
 .small-icon:hover {
-    width: 100px;
-    height: 100px;
-    margin: 20px;
+    width: 80px;
+    height: 80px;
+    margin: 10px;
     transition: 0.3s;
     border-radius: 50%;
     /* position: absolute; */
@@ -112,12 +111,3 @@
 .myrank {
     border: 2px solid #111D3C;
 }
-
-/* 랭크 스크롤 */
-/* .rank-scroll-2{
-    overflow: scroll;
-    width: 100%;
-} */
-/* .rank-scroll::-webkit-scrollbar {
-    display: none;
-  } */

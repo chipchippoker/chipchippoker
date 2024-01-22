@@ -5,10 +5,10 @@
             <div class="d-flex align-items-center justify-content-center gap-5" style="width: 100%;" >
                 <img class="small-logo m-0" src="/src/assets/Logo.png" alt="">
                 <div class="d-flex gap-3">
-                    <div @click="changeType('경쟁전')" class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#FindRoomModal">경쟁 모드</div>
-                    <div @click="changeType('친선전')" class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#FindRoomModal">친선 모드</div>
-                    <div class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#makeRoomModal">방 만들기</div>
-                    <div class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#FindFriendModal">친구 찾기</div>
+                    <button @click="changeType('경쟁전')" class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#FindRoomModal">경쟁 모드</button>
+                    <button @click="changeType('친선전')" class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#FindRoomModal">친선 모드</button>
+                    <button class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#makeRoomModal">방 만들기</button>
+                    <button class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#FindFriendModal">친구 찾기</button>
                 </div>
             </div>
         </div>

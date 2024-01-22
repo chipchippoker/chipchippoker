@@ -121,5 +121,12 @@
 
 /* a태그 밑줄 없에기 */
 a{
-text-decoration-line: none;
+    text-decoration-line: none;
+}
+
+
+/* 투명 버튼 */
+.btn-transparency {
+    background-color:transparent;
+    border: 0;
 }
