@@ -1,13 +1,17 @@
 package com.chipchippoker.backend.api.friendrequest.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chipchippoker.backend.api.friendrequest.model.dto.AcceptFriendRequestRequest;
+import com.chipchippoker.backend.api.friendrequest.model.dto.GetFriendRequestListResponse;
 import com.chipchippoker.backend.api.friendrequest.model.dto.RejectFriendRequest;
 import com.chipchippoker.backend.api.friendrequest.model.dto.RequestFriendRequest;
 import com.chipchippoker.backend.api.friendrequest.service.FriendRequestService;
@@ -48,5 +52,14 @@ public class FriendRequestController {
 		Long toMemberId = (Long)request.getAttribute("id");
 		friendRequestService.rejectFriendRequest(toMemberId, rejectFriendRequest.getNickname());
 		return ResponseEntity.ok(ApiResponse.success());
+	}
+
+	// 친구 신청 요청 알림 목록
+	@GetMapping("/list")
+	public ResponseEntity<ApiResponse<List<GetFriendRequestListResponse>>> getFriendRequestList() {
+		Long id = (Long)request.getAttribute("id");
+		List<GetFriendRequestListResponse> responseList = friendRequestService.getFriendRequestList(
+			id);
+		return ResponseEntity.ok(ApiResponse.success(responseList));
 	}
 }

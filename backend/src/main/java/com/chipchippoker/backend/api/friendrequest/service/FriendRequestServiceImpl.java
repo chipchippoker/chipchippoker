@@ -1,9 +1,13 @@
 package com.chipchippoker.backend.api.friendrequest.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chipchippoker.backend.api.friend.repository.FriendRepository;
+import com.chipchippoker.backend.api.friendrequest.model.dto.GetFriendRequestListResponse;
 import com.chipchippoker.backend.api.friendrequest.repository.FriendRequestRepository;
 import com.chipchippoker.backend.api.member.repository.MemberRepository;
 import com.chipchippoker.backend.common.dto.ErrorBase;
@@ -80,5 +84,27 @@ public class FriendRequestServiceImpl implements FriendRequestService {
 		FriendRequest friendRequest = friendRequestRepository.findByFromMemberIdAndToMemberId(fromMember.getId(),
 			toMember.getId());
 		friendRequest.updateStatus("거절");
+	}
+
+	@Override
+	public List<GetFriendRequestListResponse> getFriendRequestList(Long id) {
+		// 사용자가 받은 친구 요청 중 대기 상태만을 조회
+		Member toMember = memberRepository.findById(id)
+			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
+		List<FriendRequest> friendRequestList = friendRequestRepository.findByToMemberAndStatus(toMember);
+
+		List<GetFriendRequestListResponse> responseList = new ArrayList<>();
+		for (FriendRequest friendRequest : friendRequestList) {
+			Member fromMember = friendRequest.getFromMember();
+			Friend friend = friendRepository.findByMemberAIdAndMemberBId(fromMember.getId(),
+				toMember.getId());
+			// 친구 신청 요청자와 이미 친구가 아니라면
+			if (friend == null) {
+				GetFriendRequestListResponse getFriendRequestListResponse = GetFriendRequestListResponse.getFriendRequestListResponse(
+					fromMember.getNickname());
+				responseList.add(getFriendRequestListResponse);
+			}
+		}
+		return responseList;
 	}
 }
