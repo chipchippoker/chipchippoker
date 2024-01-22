@@ -44,17 +44,17 @@ public class Point extends BaseEntity {
 			.build();
 	}
 
-	public String tierByPoint(Integer pointScore){
+	public static String tierByPoint(Integer pointScore){
 		if(pointScore<800){
-			return "브론즈";
+			return "bronze";
 		}else if(pointScore<1200){
-			return "실버";
+			return "silver";
 		}else if(pointScore<1600){
-			return "골드";
+			return "gold";
 		}else if(pointScore<2000){
-			return "플래티넘";
+			return "platinum";
 		}else{
-			return "다이아몬드";
+			return "diamond";
 		}
 	}
 
