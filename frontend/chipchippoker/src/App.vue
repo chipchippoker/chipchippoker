@@ -128,6 +128,7 @@ for (let i = 0; i < 300; i++) {
   font-family: 'maple'
 }
 
+
 /* 별 만들기 */
 .star {
   border-radius: 50%;
