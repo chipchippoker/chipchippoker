@@ -5,9 +5,9 @@
     @click="gotoProfile(item?.nickname)">
         <div class="d-flex gap-1 align-items-center">
             <div class="text-overflow" style="width:35px;">{{ item?.rank }}등</div>
-            <img class="x-small-icon"  :src='userStore.getIconUrl(item?.icon)'>
+            <img class="x-small-icon rounded-4"  :src='userStore.getIconUrl(item?.icon)'>
             <div class="text-overflow" style="width:100px;">{{ item?.nickname }}</div>
-            <img class="xx-small-icon"  :src='friendStore.getTierIconUrl(item?.tier)'>
+            <img class="xx-small-icon "  :src='friendStore.getTierIconUrl(item?.tier)'>
             <div  class="text-overflow text-end" style="width:50px;">{{ item?.point }}</div>
             <div class="me-2">pt</div>
             

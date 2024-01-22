@@ -3,7 +3,7 @@
     <div class="bg-lightyellow">
         <div class="friend-item d-flex align-items-center gap-2 bg-light rounded-2 mx-3">
             <!-- 아이콘 - 내용 d-flex  -->
-            <img class="x-small-icon"  :src='userStore.getIconUrl(item?.icon)'>
+            <img class="x-small-icon rounded-4"  :src='userStore.getIconUrl(item?.icon)'>
             <!-- 내정보 , 온오프라인 정보 수직정렬 -->
             <div class="d-flex flex-column">
                 <div class="container">
@@ -11,7 +11,6 @@
                     <div class="row">
                         <div style="width:30px;"><img class="xx-small-icon"  :src='friendStore.getTierIconUrl(item?.tier)'></div>
                         <div class=" text-overflow" style="width:150px;">{{ item?.nickname }}</div>
-                        <img v-if="item?.isKakaoFriend" class="icon text-overflow" src="@/assets/icons/kakaologo.png" alt="">
                     </div>
                 </div>
                 <!-- 온오프라인 표시 -->

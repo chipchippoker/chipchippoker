@@ -86,13 +86,13 @@
 .x-small-icon {
     width: 30px;
     height: 30px;
-    border-radius: 50%;  
+    /* border-radius: 50%;   */
 }
 
 .xx-small-icon {
     width: 20px;
     height: 20px;
-    border-radius: 50%;  
+    /* border-radius: 50%;   */
 }
 
 
