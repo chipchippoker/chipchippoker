@@ -116,9 +116,9 @@ for (let i = 0; i < 300; i++) {
 </template>
 
 <style>
-
 @import "@/assets/css/color.css";
 @import "@/assets/css/size.css";
+
 
 @font-face {
   font-family : 'maple';

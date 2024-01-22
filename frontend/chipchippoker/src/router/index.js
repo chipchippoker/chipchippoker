@@ -45,7 +45,7 @@ const router = createRouter({
       component: PlayView
     },
     {
-      path: '/wait',
+      path: '/wait/:roomId',
       name: 'wait',
       component: WaitView
     },

@@ -72,7 +72,7 @@ const createRoom = function(){
       totalParticipantsCnt: totalParticipantsCnt.value
     }
   console.log('방 생성하기!!');
-  roomStore.makeRoom(userStore.accessToken, payload.value)
+  roomStore.createRoom(userStore.accessToken, payload.value)
 }
 </script>
 
