@@ -23,35 +23,7 @@ export const useUserStore = defineStore('user', () => {
   
   const myNickName = ref('10기_윤예빈')
   const myIcon = ref('1')
-  // 나의 데이터
-  const myProfileInfo = ref({
-    "icon": "1",
-    "rank": 12,
-    "rankFriend":3,
-    "total":351,
-    "win": 32,
-    "draw": 3,
-    "lose": 15,
-    "winningrate": 64.3,
-    "maxWin": 15,
-    "point": 1520,
-    "nickname": "10기윤예빈",
-    "tier": "bronze",
-    "isMine":true,
-    "recentPlayList": [
-        {
-            "opponents":[
-                {"asd":'win'},
-                {"asd":'lose'},
-                {"asd":'draw'},
-            ],
-            "gameMode": "경쟁전",
-            "memberNum": 3,
-            "PointChange": 36
-        },
-        
-    ]
-  })
+
   // 프로필 들어간 다른 친구 데이터
   const profileInfo = ref({
     "icon": "1",
@@ -61,53 +33,143 @@ export const useUserStore = defineStore('user', () => {
     "win": 32,
     "draw": 3,
     "lose": 15,
-    "winningrate": 64.3,
+    "winningRate": 64.3,
     "maxWin": 15,
     "point": 1520,
-    "nickname": "안녕",
-    "tier": "bronze",
-    "isMine":false,
+    "nickname": "안녕나야",
+    "tier": "rare",
+    "isMine":true,
     "recentPlayList": [
-        {
-            "opponents":[
-                {"asd":'win'},
-                {"asd":'lose'},
-                {"asd":'draw'},
-            ],
-            "gameMode": "경쟁전",
-            "memberNum": 3,
-            "PointChange": 36
+      {
+        "opponents": {
+          "페이커": "승",
+          "쵸비": "패",
+          "비디디": "무"
         },
-        {
-            "opponents":[
-                {"asd":'win'},
-                {"asd":'lose'},
-                {"asd":'draw'},
-            ],
-            "gameMode": "경쟁전",
-            "memberNum": 3,
-            "PointChange": 36
+        "gameMode": "경쟁전",
+        "memberNum": 3,
+        "pointChange": 36
+      },
+      {
+        "opponents": {
+          "도란": "승",
+          "너구리": "패",
+          "캐니언": "무"
         },
-        {
-            "opponents":[
-                {"asd":'win'},
-                {"asd":'lose'},
-                {"asd":'draw'},
-            ],
-            "gameMode": "경쟁전",
-            "memberNum": 3,
-            "PointChange": 36
+        "gameMode": "경쟁전",
+        "memberNum": 3,
+        "pointChange": 24
+      },
+      {
+        "opponents": {
+          "테디": "승",
+          "라이즈": "패",
+          "오너": "무"
         },
-        {
-            "opponents":[
-                {"asd":'win'},
-                {"asd":'lose'},
-                {"asd":'draw'},
-            ],
-            "gameMode": "경쟁전",
-            "memberNum": 3,
-            "PointChange": 36
+        "gameMode": "경쟁전",
+        "memberNum": 3,
+        "pointChange": 12
+      },
+      {
+        "opponents": {
+          "구마유시": "승",
+          "제우스": "패",
+          "오른": "무"
         },
+        "gameMode": "경쟁전",
+        "memberNum": 3,
+        "pointChange": -12
+      },
+      {
+        "opponents": {
+          "베릴": "승",
+          "칸": "패",
+          "너프": "무"
+        },
+        "gameMode": "경쟁전",
+        "memberNum": 3,
+        "pointChange": -24
+      },
+      {
+        "opponents": {
+          "룰러": "승",
+          "칸나": "패",
+          "캐니언": "무"
+        },
+        "gameMode": "경쟁전",
+        "memberNum": 3,
+        "pointChange": 36
+      },
+      {
+        "opponents": {
+          "오너": "승",
+          "너구리": "패",
+          "쵸비": "무"
+        },
+        "gameMode": "경쟁전",
+        "memberNum": 3,
+        "pointChange": 24
+      },
+      {
+        "opponents": {
+          "피넛": "승",
+          "페이커": "패",
+          "비디디": "무"
+        },
+        "gameMode": "경쟁전",
+        "memberNum": 3,
+        "pointChange": 12
+      },
+      {
+        "opponents": {
+          "제우스": "승",
+          "구마유시": "패",
+          "오른": "무"
+        },
+        "gameMode": "경쟁전",
+        "memberNum": 3,
+        "pointChange": -12
+      },
+      {
+        "opponents": {
+          "라이즈": "승",
+          "테디": "패",
+          "너프": "무"
+        },
+        "gameMode": "경쟁전",
+        "memberNum": 3,
+        "pointChange": -24
+      },
+      {
+        "opponents": {
+          "정글러": "승",
+          "탑": "패",
+          "미드": "무"
+        },
+        "gameMode": "경쟁전",
+        "memberNum": 3,
+        "pointChange": 36
+      },
+      {
+        "opponents": {
+          "원딜": "승",
+          "서포터": "패",
+          "서폿": "무"
+        },
+        "gameMode": "경쟁전",
+        "memberNum": 3,
+        "pointChange": 24
+      },
+      {
+        "opponents": {
+          "탑": "승",
+          "정글러": "패",
+          "미드": "무"
+        },
+        "gameMode": "경쟁전",
+        "memberNum": 3,
+        "pointChange": 12
+      },
     ]
   })
   
@@ -279,8 +341,8 @@ export const useUserStore = defineStore('user', () => {
       .catch(err => console.log(err))
     }
     
-    // 회원탈퇴
-    const signOut = function () {
+  // 회원탈퇴
+  const signOut = function () {
       console.log('회원탈퇴 요청!');
     axios({
       method: 'delete',
@@ -370,6 +432,11 @@ export const useUserStore = defineStore('user', () => {
     return new URL(`/src/assets/profile_icons/icon${number}.jpg`,import.meta.url).href;
   }
 
+  //  아이콘 변수, 아이콘 가져오기 함수  
+  const getTierIconUrl = function(number){
+    return new URL(`/src/assets/tier_icons/icon${number}.jpg`,import.meta.url).href;
+  }
+
   // 프로필 정보 요청
   const getProfileInfo = function(nickName) {
     axios.get({
@@ -392,7 +459,7 @@ export const useUserStore = defineStore('user', () => {
     isNickDuplicated, isIdDuplicated, isLogIn,
 
     // 프로필 아이콘, 프로필 정보 받아오기
-    getIconUrl, getProfileInfo, 
-    myIcon, myNickName, myProfileInfo, profileInfo
+    getIconUrl, getTierIconUrl, getProfileInfo, 
+    myIcon, myNickName, profileInfo
     }
 },{persist:true})

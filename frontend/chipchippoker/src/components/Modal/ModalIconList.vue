@@ -13,14 +13,11 @@
                         <ModalIconItemVue
                         @click="selectIcon(number)"
                         :number = number
-                        />
-
-                        
+                        /> 
                     </div>
                 </div>
             </div>
           </div>
-      
         </div>
       </div>   
     
