@@ -13,7 +13,7 @@ export const useFriendStore = defineStore('friend', () => {
     [
       {
         "icon": 1,
-        "tier": "bronze",
+        "tier": "rare",
         "isKakaoFriend": true,
         "nickname": "윤예빈",
         "isOnline": true
@@ -409,8 +409,6 @@ export const useFriendStore = defineStore('friend', () => {
     },
   )
 
-
-
   // 친구 찾기 
   const findFriend = function(nickname){
     axios({
@@ -423,7 +421,6 @@ export const useFriendStore = defineStore('friend', () => {
     .catch(err => console.log(err))
   }
 
-
   // 친구 목록 조회
   const getFriendList = function(nickname){
     axios({
@@ -434,7 +431,6 @@ export const useFriendStore = defineStore('friend', () => {
       friendList.value = res.friendListResponse.friendList
     })
     .catch(err => console.log(err))
-    
   }
 
   // 친구 신청 알람 리스트
@@ -447,8 +443,8 @@ export const useFriendStore = defineStore('friend', () => {
     .then(res => {
     })
     .catch(err => console.log(err))
-    
   }
+
   // 친구 신청
   const friendRequest = function(nickname){
     axios({
@@ -501,6 +497,7 @@ export const useFriendStore = defineStore('friend', () => {
     })
     .catch(err => console.log(err))
   }
+
   // 친구 랭킹 리스트
   const getFriendRankList = function(){
     axios({
@@ -512,8 +509,6 @@ export const useFriendStore = defineStore('friend', () => {
     })
     .catch(err => console.log(err))
   }
-
-
 
   // 내 랭킹 조회
   const getMyRankList = function(){
@@ -528,7 +523,6 @@ export const useFriendStore = defineStore('friend', () => {
   }
 
   //  티어 가져오기 함수
-  
   const getTierIconUrl = function(tier){
     return new URL(`/src/assets/tier_icons/${tier}.png`,import.meta.url).href;
   }
