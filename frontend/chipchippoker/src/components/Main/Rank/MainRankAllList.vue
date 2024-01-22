@@ -2,14 +2,20 @@
     <div class="rank-scroll tab-radius bg-lightblue">
         <MainRankItemItem 
         v-for="item in friendStore.allRankList" 
-        :class="{'myrank':item?.nickname==userStore.myNickName}"
+        :class="{'sticky-top sticky-bottom myrank':item?.nickname==userStore.myNickName}"
         :key="item?.nickname"
         :item="item"/>
-        <MainRankItemItem 
-        class="sticky-bottom sticky-top myrank mb-3"
-        :item="friendStore?.myRank"
-        />
-        
+        <div class="text-center" v-if="!friendStore.isContained">
+        <div>.</div>
+        <div>.</div>
+        </div>
+        <div class="sticky-bottom" v-if="!friendStore.isContained">
+            
+            <MainRankItemItem 
+            class=" myrank mb-3"
+            :item="friendStore?.myRank"
+            />
+        </div>
     </div>
 </template>
 
