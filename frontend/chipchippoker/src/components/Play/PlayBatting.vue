@@ -31,7 +31,11 @@
 </template>
 
 <script setup>
-
+  import { ref, onMounted, computed, } from 'vue';
+  const props = defineProps({
+    session: Object,
+  })
+  console.log(props.session)
 </script>
 
 <style scoped>

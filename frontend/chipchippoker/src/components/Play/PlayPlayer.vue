@@ -27,7 +27,7 @@
           <div class="m-2 bg-white align-self-center" style="width: 100px; height: 150px;">카드</div>
         </div>
       </div>
-      <div class="position-absolute top-0 end-0 d-flex flex-column h-50" id="player2" style="width: 500px;">
+      <div v-if="subscribersComputed.length > 0" class="position-absolute top-0 end-0 d-flex flex-column h-50" id="player2" style="width: 500px;">
         <div class="text-white align-self-center " v-if="subscribersComputed.length > 0" >{{ player1 }} / 보유코인: 10개</div>
         <div class="d-flex flex-row-reverse h-100 m-2 mt-0">
           <div>
@@ -43,8 +43,8 @@
           <div class="m-2 bg-white align-self-center" style="width: 100px; height: 150px;">카드</div>
         </div>
       </div>
-      <div class="position-absolute bottom-0 start-0 d-flex flex-column h-50" id="player3" style="width: 500px;">
-        <div class="text-white align-self-center " v-if="subscribersComputed.length > 1" >{{ player2 }} / 보유코인: 10개</div>
+      <div v-if="subscribersComputed.length > 1" class="position-absolute bottom-0 start-0 d-flex flex-column h-50" id="player3" style="width: 500px;">
+        <div class="text-white align-self-center ">{{ player2 }} / 보유코인: 10개</div>
         <div class="d-flex m-2 mt-0 h-100">
           <div>
             <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
@@ -59,8 +59,8 @@
           <div class="m-2 bg-white align-self-center" style="width: 100px; height: 150px;">카드</div>
         </div>
       </div>
-      <div class="position-absolute bottom-0 end-0 d-flex flex-column h-50" id="player4" style="width: 500px;">
-        <div class="text-white align-self-center" v-if="subscribersComputed.length > 2" >{{ player3 }} / 보유코인: 10개</div>
+      <div v-if="subscribersComputed.length > 2" class="position-absolute bottom-0 end-0 d-flex flex-column h-50" id="player4" style="width: 500px;">
+        <div class="text-white align-self-center">{{ player3 }} / 보유코인: 10개</div>
         <div class="d-flex flex-row-reverse m-2 h-100 mt-0">
           <div>
             <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
@@ -76,7 +76,9 @@
         </div>
       </div>
       <!-- 배팅보드 -->
-      <PlayBattingVue />
+      <PlayBattingVue 
+      :session="session"
+      />
       <!-- 남은 시간, 총 배팅 코인 -->
       <div class="position-absolute top-0 start-50 translate-middle mt-4 d-flex flex-column align-items-center">
         <div class="text-white fs-3 fw-bold">12 초</div>
@@ -464,8 +466,6 @@
 </script>
 
 <style scoped>
-@import '@/assets/color.css';
-@import '@/assets/size.css';
 
 .custom-btn {
   width: 60px;

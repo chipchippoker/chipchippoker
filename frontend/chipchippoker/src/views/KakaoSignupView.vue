@@ -2,7 +2,7 @@
   <div>
     <div class="d-flex flex-column justify-content-center align-items-center position-absolute top-50 start-50 translate-middle">
     <div class="d-flex justify-content-center">
-      <img class="big-logo" src="/src/assets/Logo.png" alt="">
+      <img class="big-logo" src="/src/assets/icons/Logo.png" alt="">
     </div>
     
     <div class="formstyle">
@@ -86,8 +86,7 @@ const signUp = function(){
 </script>
 
 <style scoped>
-@import '@/assets/color.css';
-@import '@/assets/size.css';
+
 
 .btn-login {
       box-shadow: 0 0 0 3px #ffffff inset;

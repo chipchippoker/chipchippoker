@@ -15,8 +15,6 @@
   </script>
   
   <style scoped>
-  @import '@/assets/color.css';
-  @import '@/assets/size.css';
 
   .selected {
     border: 6px solid greenyellow;

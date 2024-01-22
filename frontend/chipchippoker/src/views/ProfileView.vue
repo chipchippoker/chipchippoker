@@ -1,10 +1,10 @@
 <template>
-  <div class="d-flex flex-column align-items-center p-3" style="width: 100%; height: 100%;">
+  <div class="position-absolute d-flex flex-column align-items-center p-3" style="width: 100%; height: 100%;">
     <!-- 옵션, 로고, 아이콘 -->
     <div class="d-flex justify-content-between align-items-center position-relative" style="width: 100%; height: 100px;">
-      <div class="position-absolute top-50 start-50 translate-middle">
-        <img class="small-logo mt-2" src="/src/assets/Logo.png" alt="">
-      </div>
+      <button @click="goMainPage()" class="btn-transparency position-absolute top-50 start-50 translate-middle">
+        <img class="small-logo m-0" src="/src/assets/icons/Logo.png" alt="">
+      </button>
     </div>
     
      <!-- 나의 정보 / 전적 검색 -->
@@ -41,16 +41,20 @@
   const userStore = useUserStore()
   const recentPlayList = ref(null)
   const profileInfo = userStore.profileInfo
+  const router = useRouter()
 
   onMounted(() => {
     // userStore.getProfileInfo(MemberId)
   })
+
+  const goMainPage = function() {
+    router.push({name: 'main'})
+  }
   
 </script>
 
 <style scoped>
-  @import "@/assets/color.css";
-  @import "@/assets/size.css";
+
 
   .button-radius {
   border-top-left-radius: 0;

@@ -27,18 +27,32 @@
                             4인
                         </label>
                     </div>
+
                     <button type="button" class="btn-outline-yellow rounded-2">찾기</button>
+
                     
                 </div>
             </div>
+        </div>
+        <!-- 방만들기 모달 -->
+        <div class="modal fade" id="FindGame" tabindex="-1" aria-hidden="true">
+            <ModalFindGame/>
         </div>
     </div>
 </template>
 
 <script setup>
+import ModalFindGame from '@/components/Modal/ModalFindGame.vue';
+
+
 defineProps({
     type:String
 })
+const showFindGameModal = () => {
+    // 모달을 트리거하기 위한 JavaScript 로직
+    const findGameModal = new bootstrap.Modal(document.getElementById('FindGame'));
+    findGameModal.show();
+}
 </script>
 
 <style lang="scss" scoped></style>

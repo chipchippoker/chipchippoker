@@ -19,7 +19,6 @@ const roomStore = useRoomStore()
 
 const emptyList = ref([])
 emptyList.value = Array(8 - roomStore.allRoomList.length).fill(0)
-console.log(emptyList.value)
 
 </script>
 

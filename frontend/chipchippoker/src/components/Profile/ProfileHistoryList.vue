@@ -67,8 +67,7 @@
   </script>
   
 <style scoped>
-  @import "@/assets/color.css";
-  @import "@/assets/size.css";
+
 
   ::-webkit-scrollbar {
     width: 10px; /* 스크롤바 너비 */

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="container d-flex flex-column align-items-center p-3 m-0"
+    class="position-absolute container d-flex flex-column align-items-center p-3 m-0"
     style="width: 100%; height: 100%"
   >
     <!-- 옵션, 방제, 아이콘 -->
@@ -53,7 +53,7 @@
       <!-- 로고, 관전자 목록, 채팅창, 버튼 -->
       <div class="col-3">
         <!-- 로고 -->
-        <div class="my-3 me-5"><img class="small-logo ms-4 mt-1 ps-1" src="/src/assets/Logo.png" alt=""></div>
+        <div class="my-3 me-5"><img class="small-logo ms-4 mt-1 ps-1" src="/src/assets/icons/Logo.png" alt=""></div>
         <div class="">
           <!-- 관전자 목록 -->
           <div id="watcher-container">
@@ -167,7 +167,7 @@ const publisherComputed = computed(() => publisher.value);
 const subscribersComputed = computed(() => subscribers.value);
 ////
 
-// 
+//
 function joinSession() {
   OV.value = new OpenVidu()
   session.value = OV.value.initSession()
@@ -468,8 +468,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-@import "@/assets/color.css";
-@import "@/assets/size.css";
 
 .room-title {
   color: white;

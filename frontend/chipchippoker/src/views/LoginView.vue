@@ -2,7 +2,7 @@
     <!-- 로그인 -->
     <div class="d-flex flex-column justify-content-center align-items-center position-absolute top-50 start-50 translate-middle">
       <div class="d-flex justify-content-center">
-        <img class="big-logo" src="/src/assets/Logo.png" alt="">
+        <img class="big-logo" src="/src/assets/icons/Logo.png" alt="">
       </div>
         <div class="formstyle">
           <div class="fs-2 fw-bold">로그인</div>
@@ -101,8 +101,7 @@
   </script>
   
   <style scoped>
-  @import "@/assets/color.css";
-  @import "@/assets/size.css";
+  
   .container {
       background-color: #99A5C1;
       color: white;

@@ -5,11 +5,13 @@
             <div v-else class="x-little-text">공개({{ item?.state }}중)</div>
 
             <div class="d-flex gap-1">
+
                 <div v-if="item?.isPrivate" data-bs-toggle="modal" data-bs-target="#EnterPWModal" class="btn-lightred x-little-text rounded-1 px-1">입장</div>
                 <div v-else class="btn-lightred x-little-text rounded-1 px-1">입장</div>
                 <!-- <div class="btn-gray x-little-text rounded-1 px-1">관전
                     <font-awesome-icon :icon="['fas', 'caret-right']" style="color: #8f8f8f;" />
                 </div> -->
+
             </div>
         </div>
         
