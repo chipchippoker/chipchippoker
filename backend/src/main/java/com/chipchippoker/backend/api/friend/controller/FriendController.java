@@ -1,5 +1,6 @@
 package com.chipchippoker.backend.api.friend.controller;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -27,19 +28,25 @@ public class FriendController {
 
 	// 친구 찾기 검색
 	@GetMapping("/search")
-	public ResponseEntity<ApiResponse<SearchFriendResponse>> searchFriend(
+	public ResponseEntity<ApiResponse<?>> searchFriend(
 		@RequestParam(value = "nickname") String nickname) {
 		Long id = (Long)request.getAttribute("id");
 		SearchFriendResponse searchFriendResponse = friendService.searchFriend(id, nickname);
-		return ResponseEntity.ok(ApiResponse.success(searchFriendResponse));
+		if (searchFriendResponse == null)
+			return ResponseEntity.ok(ApiResponse.success(Collections.EMPTY_MAP));
+		else
+			return ResponseEntity.ok(ApiResponse.success(searchFriendResponse));
 	}
 
 	// 친구 찾기 목록 검색
 	@GetMapping("/list/search")
-	public ResponseEntity<ApiResponse<List<SearchFriendListResponse>>> searchFriendList(
+	public ResponseEntity<ApiResponse<?>> searchFriendList(
 		@RequestParam(value = "nickname") String nickname) {
 		Long id = (Long)request.getAttribute("id");
 		List<SearchFriendListResponse> searchFriendListResponses = friendService.searchFriendList(id, nickname);
-		return ResponseEntity.ok(ApiResponse.success(searchFriendListResponses));
+		if (searchFriendListResponses == null)
+			return ResponseEntity.ok(ApiResponse.success(Collections.EMPTY_LIST));
+		else
+			return ResponseEntity.ok(ApiResponse.success(searchFriendListResponses));
 	}
 }
