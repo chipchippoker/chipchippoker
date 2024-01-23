@@ -18,4 +18,6 @@ public interface MemberRepositoryCustom {
 	List<Friend> getFriendRank(Long id);
 
 	Friend getMyRankInFriend(Long id);
+
+	public List<Point> getTotalRankAll();
 }

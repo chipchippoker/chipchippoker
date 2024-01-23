@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chipchippoker.backend.api.rank.model.dto.FriendRankResponse;
+import com.chipchippoker.backend.api.rank.model.dto.MyselfRankResponse;
 import com.chipchippoker.backend.api.rank.model.dto.TotalRankResponse;
 import com.chipchippoker.backend.api.rank.service.RankService;
 import com.chipchippoker.backend.common.dto.ApiResponse;
@@ -36,5 +37,13 @@ public class RankController {
 	public ResponseEntity<ApiResponse<List<FriendRankResponse>>> getFriendRank() {
 		Long id = (Long)request.getAttribute("id");
 		return ResponseEntity.ok(ApiResponse.success(rankService.getFriendRank(id)));
+	}
+
+
+	@Operation(summary = "내 랭킹 조회")
+	@GetMapping("/myself")
+	public ResponseEntity<ApiResponse<MyselfRankResponse>> getMyselfRank() {
+		Long id = (Long)request.getAttribute("id");
+		return ResponseEntity.ok(ApiResponse.success(rankService.getMyselfRank(id)));
 	}
 }
