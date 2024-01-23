@@ -6,7 +6,7 @@
     <div v-if="showControls" class="position-absolute top-0 end-0 d-flex flex-column">
       <button id="camera-activate" @click="handleCameraBtn()">Video Off</button>
       <button id="mute-activate" @click="handleMuteBtn()">Sound Off</button>
-      <button @click="forceDisconnect()">강퇴</button>
+      <button v-if="view='waitView'" @click="forceDisconnect()">강퇴</button>
     </div>
   </div>
 </template>
@@ -26,6 +26,7 @@
 
   const props = defineProps({
     streamManager: Object,
+    view: String,
   })
 
   const showControls = ref(false);

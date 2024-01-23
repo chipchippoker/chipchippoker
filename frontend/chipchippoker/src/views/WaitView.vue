@@ -118,9 +118,11 @@ import { ref, computed, watch, onMounted, onUnmounted, watchEffect } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useRoute, useRouter } from "vue-router";
 import { OpenVidu } from "openvidu-browser";
+import { useRoomStore } from "@/stores/room";
 import axios from 'axios'
 
 const userStore = useUserStore()
+const roomStore = useRoomStore()
 const router = useRouter()
 const route = useRoute()
 
@@ -260,6 +262,7 @@ function leaveSession(){
 
   // Remove beforeunload listener
   window.removeEventListener("beforeunload", leaveSession)
+  roomStore.leaveRoom()
   router.push('main')
 }
 

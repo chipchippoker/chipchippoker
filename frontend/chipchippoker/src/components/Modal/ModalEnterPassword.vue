@@ -14,7 +14,7 @@
                     <input v-model="password" type="password" class="form-control" id="password" >
                 </div>
                 <div >
-                    <button @click="enterRoom" type="submit" class="btn-outline-yellow rounded-2">입력하기</button>
+                    <button @click="enterRoomPrivate()" type="submit" class="btn-outline-yellow rounded-2">입장하기</button>
                 </div>
             </div>
         </div>
@@ -27,15 +27,24 @@
 import { ref } from 'vue';
 import { useFriendStore } from '@/stores/friend'
 import { useRouter } from 'vue-router'
+import { useRoomStore } from '@/stores/room';
+
 
 const friendStore = useFriendStore()
 const password = ref(null)
-const enterRoom = function(){
-    console.log(`${password.value} 비밀번호 입력`)
-}
+
 defineProps({
     roomData:Object
 })
+
+const roomStore = useRoomStore()
+const enterRoomPrivate = function () {
+    const payload = {
+        title: roomData.title,
+        password: password
+    }
+    roomStore.enterRoomPrivate(payload)
+}
 
 </script>
 

@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from './user'
 
 export const useRoomStore = defineStore('room', () => {
-  const ROOM_API = 'http://i10a804.p.ssafy.io:8082/rooms'
+  const ROOM_API = 'http://i10a804.p.ssafy.io:8082/api/rooms'
   const allRoomList = ref([
     {
       "isPrivate": true,
@@ -102,11 +102,12 @@ export const useRoomStore = defineStore('room', () => {
   const userStore = useUserStore()
 
   // 방 생성
-  const createRoom = function(accessToken, payload){
+  const createRoom = function(payload){
     console.log('방 생성 요청!!');
     axios({
-      method: ROOM_API,
-      headers: { 'access-token': accessToken },
+      method: 'post',
+      url: `${ROOM_API}`,
+      headers: { 'access-token': userStore.accessToken },
       data: payload
     })
     .then(res => {
@@ -134,7 +135,7 @@ export const useRoomStore = defineStore('room', () => {
   const getRoomList = function(payload){
     axios({
       method: 'get',
-      url: `${ROOM_API}/`,
+      url: `${ROOM_API}`,
       params:{
         type:payload.type,
         title:payload.title,
@@ -161,11 +162,73 @@ export const useRoomStore = defineStore('room', () => {
     .catch(err => console.log(err))
   }
 
+
+  // 공개방 입장
+  const enterRoomPublic = function (title) {
+    axios({
+      method: 'post',
+      url: `${ROOM_API}/enter`,
+      headers: { 'access-token': userStore.accessToken },
+      data: {
+        title: title
+      }
+    })
+    .then(res => {
+      console.log('방 입장 성공')
+      return res.data
+    })
+    .catch(err => console.log(err))
+  }
+
+
+  // 비공개방 입장
+  const enterRoomPrivate = function(payload) {
+    axios({
+      method: 'post',
+      url: `${ROOM_API}/enter`,
+      headers: { 'access-token': userStore.accessToken },
+      data: {
+        title: payload.title,
+        password: payload.password
+      }
+    })
+    .then(res => {
+      console.log('방 입장 성공')
+      return res.data
+    })
+    .catch(err => console.log(err))
+  }
+
+
+  // 대기방 나가기
+  const leaveRoom = function(title) {
+    axios({
+      method: 'post',
+      url: `${ROOM_API}/leave`,
+      headers: { 'access-token': userStore.accessToken },
+      data: {
+        title: title
+      }
+    })
+    .then(res => {
+      console.log('방 나가기 성공')
+      return res.data
+    })
+    .catch(err => console.log(err))
+  }
+
+
+  // 방에서 게임 시작
+
   return {
     // 방 목록
     getRoomList,
     allRoomList, pageData, isLast, isfirst, totalPages, totalElements, nowElements, nowPage, isEmpty, pageArray,
     // 방 생성
-    createRoom
+    createRoom,
+    // 방 입장
+    enterRoomPublic, enterRoomPrivate,
+    // 방 나가기
+    leaveRoom,
   }
 },{persist:true})
