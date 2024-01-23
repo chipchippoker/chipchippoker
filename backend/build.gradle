@@ -1,72 +1,75 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.2.1'
-	id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
+    id 'org.springframework.boot' version '3.2.1'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
 
 group = 'com.chipchippoker'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '17'
+    sourceCompatibility = '17'
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	// Lombok
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 
-	// Spring MVC
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+    // Spring MVC
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	// Spring WebSocket & STOMP
-	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    // Spring WebSocket & STOMP
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
-	// Spring Validation
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // Spring Validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-	// Spring Data JPA
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // Spring Data JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
 
-	// Spring Data MongoDB
-	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    // Spring Data MongoDB
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
-	// MySQL
-	runtimeOnly 'com.mysql:mysql-connector-j'
+    // MySQL
+    runtimeOnly 'com.mysql:mysql-connector-j'
 
-	// Spring Test
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
+    // MariaDB
+    implementation 'org.mariadb.jdbc:mariadb-java-client'
+    
+    // Spring Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
 
-	// QueryDSL 설정
-	implementation "com.querydsl:querydsl-jpa:5.0.0:jakarta"
-	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
-	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+    // QueryDSL 설정
+    implementation "com.querydsl:querydsl-jpa:5.0.0:jakarta"
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
-	// Swagger
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4'
+    // Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4'
 
-	// JWT
-	implementation 'io.jsonwebtoken:jjwt:0.9.1'
-	// com.sun.xml.bind
-	implementation 'com.sun.xml.bind:jaxb-impl:4.0.1'
-	implementation 'com.sun.xml.bind:jaxb-core:4.0.1'
-	// javax.xml.bind
-	implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    // com.sun.xml.bind
+    implementation 'com.sun.xml.bind:jaxb-impl:4.0.1'
+    implementation 'com.sun.xml.bind:jaxb-core:4.0.1'
+    // javax.xml.bind
+    implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
