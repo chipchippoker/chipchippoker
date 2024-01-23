@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from './user'
 
 export const useRoomStore = defineStore('room', () => {
-  const ROOM_API = 'http://localhost/api/rooms'
+  const ROOM_API = 'http://i10a804.p.ssafy.io:8082/rooms'
   const allRoomList = ref([
     {
       "isPrivate": true,

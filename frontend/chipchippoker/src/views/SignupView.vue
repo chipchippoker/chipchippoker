@@ -12,9 +12,9 @@
           <div class="mb-3">
             <label for="nickname" class="form-label">닉네임</label>
             <div class="input-group">
-              <input type="text" class="form-control" id="nickname" placeholder="nickname" v-model="nickName">
+              <input type="text" class="form-control" id="nickname" placeholder="nickname" v-model="nickname">
               <button class="btn btn-outline-secondary btn-light" type="button" id="check_nickname"
-                @click="checkNickName">중복 확인</button>
+                @click="checkNickname">중복 확인</button>
             </div>
             <div v-if="isNickDuplicated" class="form-text text-danger">이미 사용 중인 닉네임입니다.</div>
             <div v-if="!isValidNickname" id="nickname" class="fw-lgitighter x-little-text text-danger">한글 또는 영어 또는 숫자 또는
@@ -81,7 +81,7 @@ const userStore = useUserStore()
 const memberId = ref(null)
 const password1 = ref(null)
 const password2 = ref(null)
-const nickName = ref(null)
+const nickname = ref(null)
 const isNickDuplicated = ref(null)
 const isIdDuplicated = ref(null)
 const isValidMemberId = ref(true)
@@ -90,32 +90,35 @@ const isValidPassword2 = ref(true)
 const isValidNickname = ref(true)
 const router = useRouter()
 
-
+// 회원가입
 const signUp = function () {
   const payload = {
     memberId: memberId.value,
-    password1: password1.value,
-    password2: password2.value,
-    nickName: nickName.value,
+    password: password1.value,
+    passwordConfirm: password2.value,
+    nickname: nickname.value,
+    icon: userStore.myIcon
   }
-  // userStore.signUp(payload)
+  userStore.signUp(payload)
   router.push({ name: 'main' })
 }
 
-const checkNickName = function () {
-  // userStore.checkNickName(nickName.value);
+// 닉네임 중복 확인
+const checkNickname = function () {
+  userStore.checkNickname(nickname.value);
   isNickDuplicated.value = userStore.isNickDuplicated
 }
 
+// 아이디 중복 확인
 const checkMemberId = function () {
-  // userStore.checkMemberId(memberId.value);
+  userStore.checkMemberId(memberId.value);
   isIdDuplicated.value = userStore.isIdDuplicated;
 }
 
-watch([memberId, password1, password2, nickName], () => {
+watch([memberId, password1, password2, nickname], () => {
   isValidMemberId.value = userStore.validateId(memberId.value);
   isValidPassword1.value = userStore.validatePassword(password1.value);
-  isValidNickname.value = userStore.validateNickName(nickName.value);
+  isValidNickname.value = userStore.validateNickname(nickname.value);
   if (password2.value !== null && password1.value !== password2.value) {
     isValidPassword2.value = false
   } else {

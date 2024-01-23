@@ -9,10 +9,10 @@
       <div class="h2 fw-bold">회원가입</div>
       <form style="width: 400px;">
         <div class="mb-3">
-          <label for="nickName" class="form-label">닉네임</label>
+          <label for="nickname" class="form-label">닉네임</label>
           <div class="input-group mb-3">
-            <input v-model="nickName" type="text" class="form-control" id="nickName" placeholder="nickName">
-            <button @click="checkNickName" class="btn btn-outline-secondary" type="button" id="check_nickName">중복 확인</button>
+            <input v-model="nickname" type="text" class="form-control" id="nickname" placeholder="nickname">
+            <button @click="checkNickname" class="btn btn-outline-secondary" type="button" id="nickname">중복 확인</button>
           </div>
           <div v-if="isNickDuplicated" class="form-text text-danger">이미 사용 중인 닉네임입니다.</div>
           <div v-if="!isValidNickname" id="nickname" class="fw-lgitighter little-text text-danger">한글 또는 영어 또는 숫자 또는 (_)의 4 ~ 16 글자이어야 합니다.</div>
@@ -36,15 +36,11 @@
     </div>
     </div>
 
-
     <!-- 아이콘 모달 팝업 -->
     <div class="modal fade" id="IconModal" tabindex="-1" aria-labelledby="IconModalLabel" aria-hidden="true">
       <ModalIconList/>
     </div>
-
-    
   </div>
-
 </template>
   
 <script setup>
@@ -59,35 +55,31 @@ const isValidNickname = ref(true)
 const router = useRouter()
 
 // 닉네임 변수
-const nickName = ref('')
+const nickname = ref('')
+const payload = ref({
+  nickname: nickname.value,
+  icon: userStore.myIcon
+})
 
-watch([nickName], () => {
-isValidNickname.value = userStore.validateNickName(nickName.value);
+watch([nickname], () => {
+isValidNickname.value = userStore.validateNickname(nickname.value);
 });
 
 
 // 닉네임 중복 확인 함수 -> userStore의 닉네임 중복 체크 함수 호출
-const checkNickName = function () {
-  userStore.checkNickName(nickName.value);
+const checkNickname = function () {
+  userStore.checkNickname(nickname.value);
   isNickDuplicated.value = userStore.isNickDuplicated
 }
 
 // 회원가입 함수 -> userStore의 카카오 회원가입 함수 호출
 const signUp = function(){
   console.log('카카오 회원가입 후 메인페이지로 이동')
-  
-  // userStore.kakaoSignUp(nickName.value)
-  // 메인페이지로 이동
-  router.push({name:'main'})
+  userStore.kakaoSignUp(payload.value)
 }
-
-
-
 </script>
 
 <style scoped>
-
-
 .btn-login {
       box-shadow: 0 0 0 3px #ffffff inset;
       border: 0px;
