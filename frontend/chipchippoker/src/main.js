@@ -3,7 +3,6 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
-import socket from 'vue3-websocket'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -14,7 +13,6 @@ import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 // window.Kakao.init("e38b60d9d4f380ee6e87b6deeebf7a0a")
-
 
 const app = createApp(App)
 const pinia = createPinia()
