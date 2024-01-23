@@ -16,6 +16,9 @@
             </div>
         <MainFriendItem v-for="item in friendStore.friendList" :key="item.name"
         :item="item"/>
+        <div v-if="friendStore.friendList?.length == 0" class="d-flex justify-content-center">
+        검색결과 없음
+        </div>
     </div>
 </template>
 
@@ -32,12 +35,6 @@ const findNickName = function(){
     // friendStore.getfriendList(nickname.value)
 }
 
-
-let id = 1
-// 예시 probs 데이터
-const items = [
-    
-]
 </script>
 
 <style lang="scss" scoped>

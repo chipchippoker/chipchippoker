@@ -105,7 +105,8 @@
 .btn-lightred:hover {
     background-color: #ee1010;
 }
-/* 빨간 버튼 */
+
+/* 회색 버튼 */
 .btn-gray {
     background-color: #aeaeae;
 }
@@ -123,10 +124,20 @@ a{
     text-decoration-line: none;
 }
 
-
-
+/* 모달색 */
+.bg-modal {
+    background-color: #fff0c0;
+}
 /* 투명 버튼 */
 .btn-transparency {
     background-color:transparent;
     border: 0;
+}
+
+/* 친구목록 hover */
+.friend-list {
+    background-color: #fff;   
+}
+.friend-list:hover {
+    background-color: #ffd752;   
 }

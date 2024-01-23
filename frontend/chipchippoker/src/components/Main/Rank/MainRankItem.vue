@@ -1,6 +1,6 @@
 <template>
     <!-- 각각의 사용자 -->
-    <div class="d-flex m-2 rounded-2 p-1 overflow-hidden" 
+    <div type="button" class="d-flex m-2 rounded-2 p-1 overflow-hidden" 
     :class="[{'myrank':item?.nickname===userStore.myNickName},{'otherrank':item?.nickname!=userStore.myNickName}]"
     @click="gotoProfile(item?.nickname)">
         <div class="d-flex gap-1 align-items-center">

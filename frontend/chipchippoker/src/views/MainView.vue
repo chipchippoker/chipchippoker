@@ -25,15 +25,15 @@
         </div>
 
         <!-- 친구 목록 -->
-        <button class="btn-outline-yellow fixed-left" type="button" data-bs-toggle="offcanvas" data-bs-target="#friendList" aria-controls="friendList">
+        <button class="btn-outline-yellow fixed-left" type="button" data-bs-toggle="offcanvas" data-bs-target="#friendList" aria-controls="friendList" >
             <font-awesome-icon :icon="['fas', 'caret-left']" style="color: #ffffff;" />
         </button>
 
         <div class="offcanvas offcanvas-end" tabindex="-1" id="friendList" aria-labelledby="friendListLabel">
-        <div class="offcanvas-header bg-lightyellow">
+        <div class="offcanvas-header bg-modal">
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body bg-lightyellow">
+        <div class="offcanvas-body bg-modal">
             <MainFriendList/>
         </div>
 
@@ -68,13 +68,20 @@ import MainRoom from '@/components/Main/Room/MainRoom.vue'
 import ModalCreateRoom from '@/components/Modal/ModalCreateRoom.vue';
 import ModalFindFriend from '@/components/Modal/ModalFindFriend.vue';
 import ModalFindRoom from '@/components/Modal/ModalFindRoom.vue';
+import { useFriendStore } from '@/stores/friend';
 
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
 
-const gameType = ref('경쟁전')
+const gameType = ref('경쟁')
 const changeType = function(type){
     gameType.value = type
 }
+onMounted(()=>{
+    // const friendStore = useFriendStore()
+    // friendStore.getAllRankList()
+    // friendStore.getFriendRankList()
+    // friendStore.getMyRankList()
+})
 </script>
 
 <style scoped>

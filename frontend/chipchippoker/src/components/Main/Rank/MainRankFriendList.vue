@@ -1,10 +1,21 @@
 <template>
     <div class="rank-scroll bg-lightblue tab-radius-2">
-        <MainRankItemItem
-         v-for="item in friendStore.friendRankList" 
-         :class="{'myrank sticky-bottom sticky-top':item?.nickname==userStore.myNickName}"
-         :key="item?.nickname"
+        <MainRankItemItem 
+        v-for="item in friendStore.friendRankList" 
+        :class="{'sticky-top sticky-bottom myrank':item?.nickname==userStore.myNickName}"
+        :key="item?.nickname"
         :item="item"/>
+        <!-- 내가 rank안에 없을때 추가로 붙음 -->
+        <div class="text-center" v-if="!friendStore.isContainedinFriend">
+        <div>.</div>
+        <div>.</div>
+        </div>
+        <div class="sticky-bottom" v-if="!friendStore.isContainedinFriend">
+            <MainRankItemItem 
+            class=" myrank mb-3"
+            :item="friendStore?.myRank"
+            />
+        </div>
     </div>
 </template>
 
