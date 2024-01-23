@@ -55,7 +55,7 @@ public class MemberController {
 
 	@Operation(summary = "프로필 페이지 조회")
 	@GetMapping("/profile/{nickname}")
-	public ResponseEntity<ApiResponse<ProfilePageResponse>> getProfilePage(@PathVariable String nickname){
+	public ResponseEntity<ApiResponse<ProfilePageResponse>> getProfilePage(@PathVariable(value = "nickname") String nickname){
 		Long id = (Long)httpServletRequest.getAttribute("id");
 		return ResponseEntity.ok(ApiResponse.success(memberService.getProfilePage(id, nickname)));
 	}

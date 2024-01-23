@@ -10,14 +10,14 @@ import com.chipchippoker.backend.common.entity.Point;
 
 public interface MemberRepositoryCustom {
 
-	ProfilePageResponse getProfilePage(Member member, boolean isMine,
+	ProfilePageResponse getProfilePage(Member member, Integer myTotalRank, Integer myFriendRank, boolean isMine,
+		boolean isFriend, boolean isSent,
 		List<RecentPlayListResponse> recentPlayListResponseList);
 
-	List<Point> getTotalRank();
+	List<Point> getTotalRank(Integer limit);
 
-	List<Friend> getFriendRank(Long id);
+	List<Friend> getFriendRank(Long id, Integer limit);
 
-	Friend getMyRankInFriend(Long id);
+	Friend getMyInformInFriend(Long id);
 
-	public List<Point> getTotalRankAll();
 }
