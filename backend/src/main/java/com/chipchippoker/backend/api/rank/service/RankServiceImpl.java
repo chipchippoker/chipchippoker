@@ -30,7 +30,7 @@ public class RankServiceImpl implements RankService {
 
 	@Override
 	public List<TotalRankResponse> getTotalRank() {
-		List<Point> totalRankList = memberRepository.getTotalRank();
+		List<Point> totalRankList = memberRepository.getTotalRank(30);
 		return IntStream.range(0, totalRankList.size())
 			.mapToObj(index -> {
 				Point point = totalRankList.get(index);
@@ -42,13 +42,14 @@ public class RankServiceImpl implements RankService {
 
 	@Override
 	public List<FriendRankResponse> getFriendRank(Long id) {
-		List<Friend> friendRankList = memberRepository.getFriendRank(id);
-		Friend myRankInFriend = memberRepository.getMyRankInFriend(id);
+		List<Friend> friendRankList = memberRepository.getFriendRank(id, 30);
+		Friend myRankInFriend = memberRepository.getMyInformInFriend(id);
 		friendRankList.add(myRankInFriend);
 
 		//친구가 한명도 없는 경우
-		if(myRankInFriend==null){
-			Member member = memberRepository.findById(id).orElseThrow(()->new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
+		if (myRankInFriend == null) {
+			Member member = memberRepository.findById(id)
+				.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
 			FriendRankResponse friendRankResponse = new FriendRankResponse(1,
 				Point.tierByPoint(member.getPoint().getPointScore()),
 				member.getIcon(), member.getNickname(),
@@ -74,11 +75,12 @@ public class RankServiceImpl implements RankService {
 	@Override
 	public MyselfRankResponse getMyselfRank(Long id) {
 		//인원 제한이 없는 전체 조회 메서드
-		List<Point> totalRank = memberRepository.getTotalRankAll();
-		for(int i=0;i<totalRank.size();i++){
-			if(totalRank.get(i).getMember().getId()==id){
+		List<Point> totalRank = memberRepository.getTotalRank(0);
+		for (int i = 0; i < totalRank.size(); i++) {
+			if (totalRank.get(i).getMember().getId() == id) {
 				Point p = totalRank.get(i);
-				return new MyselfRankResponse(i+1,Point.tierByPoint(p.getPointScore()),p.getMember().getIcon(),p.getMember().getNickname(),p.getPointScore());
+				return new MyselfRankResponse(i + 1, Point.tierByPoint(p.getPointScore()), p.getMember().getIcon(),
+					p.getMember().getNickname(), p.getPointScore());
 			}
 		}
 		throw new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER);

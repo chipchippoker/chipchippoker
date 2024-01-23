@@ -23,38 +23,56 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public ProfilePageResponse getProfilePage(Member m, boolean isMine,
+	public ProfilePageResponse getProfilePage(Member m, Integer myTotalRank, Integer myFriendRank, boolean isMine,
+		boolean isFriend, boolean isSent,
 		List<RecentPlayListResponse> recentPlayListResponseList) {
 		Point result = queryFactory
 			.selectFrom(point)
 			.where(point.member.id.eq(m.getId()))
 			.fetchOne();
-		return ProfilePageResponse.createProfilePageResponse(result.getMember().getIcon(), 12, 6, result.getWin(),
+		return ProfilePageResponse.createProfilePageResponse(result.getMember().getIcon(), myTotalRank, myFriendRank,
+			result.getWin(),
 			result.getDraw(), result.getLose(), result.getMaxWin(), result.getPointScore(),
-			result.getMember().getNickname(), result.tierByPoint(result.getPointScore()), isMine,
+			result.getMember().getNickname(), result.tierByPoint(result.getPointScore()), isMine, isFriend, isSent,
 			recentPlayListResponseList);
 	}
 
-	public List<Point> getTotalRank() {
+	public List<Point> getTotalRank(Integer limit) {
+		if (limit != 0) {
+			return queryFactory
+				.selectFrom(point)
+				.orderBy(point.pointScore.desc())
+				.limit(limit)
+				.fetch();
+		}
 		return queryFactory
 			.selectFrom(point)
 			.orderBy(point.pointScore.desc())
-			.limit(30)
 			.fetch();
+
 	}
 
-	public List<Friend> getFriendRank(Long id) {
+	public List<Friend> getFriendRank(Long id, Integer limit) {
+		if (limit != 0) {
+			return queryFactory
+				.selectFrom(friend)
+				.join(friend.memberA, member)
+				.join(member.point, point)
+				.where(member.id.eq(id))
+				.orderBy(friend.memberB.point.pointScore.desc())
+				.limit(limit)
+				.fetch();
+		}
 		return queryFactory
 			.selectFrom(friend)
 			.join(friend.memberA, member)
 			.join(member.point, point)
 			.where(member.id.eq(id))
 			.orderBy(friend.memberB.point.pointScore.desc())
-			.limit(30)
 			.fetch();
 	}
 
-	public Friend getMyRankInFriend(Long id) {
+	public Friend getMyInformInFriend(Long id) {
 		return queryFactory
 			.selectFrom(friend)
 			.join(friend.memberB, member)
@@ -63,10 +81,4 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 			.fetchFirst();
 	}
 
-	public List<Point> getTotalRankAll() {
-		return queryFactory
-			.selectFrom(point)
-			.orderBy(point.pointScore.desc())
-			.fetch();
-	}
 }
