@@ -67,4 +67,8 @@ public class GameRoom extends BaseEntity {
 	public void updateGameRoomState(String state) {
 		this.state = state;
 	}
+
+	public void updateGameRoomManagerNickname(String nickname) {
+		this.roomManagerNickname = nickname;
+	}
 }

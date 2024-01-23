@@ -101,7 +101,24 @@ public class GameRoomServiceImpl implements GameRoomService {
 	public void leaveGameRoom(String title, Long id) {
 		Member member = memberRepository.findById(id)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
+		GameRoom gameRoom = gameRoomRepository.findByTitle(title)
+			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS));
 
+		if (member.getNickname().equals(gameRoom.getRoomManagerNickname())) { // 나가려는 사용자가 방장인 경우
+			if (gameRoom.getMembers().size() == 1) { // 나가려는 방장이 남은 인원 중 마지막 인원인 경우
+				gameRoom.updateGameRoomState("종료");
+			} else { // 나가려는 방장이 남은 인원 중 마지막 인원이 아닌 경우
+				// 방장을 제외한 방의 남은 인원 중 한명을 방장으로 변경
+				for (Member leftMember : gameRoom.getMembers()) {
+					if (!leftMember.equals(member)) {
+						gameRoom.updateGameRoomManagerNickname(leftMember.getNickname());
+						break;
+					}
+				}
+			}
+		}
+
+		// 방 나가기
 		member.leaveGameRoom();
 		memberRepository.save(member);
 	}
