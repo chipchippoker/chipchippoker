@@ -35,8 +35,8 @@
         <!-- 방검색 -->
         <div class="d-flex align-items-center gap-3">
             <input v-model="title" type="text" class="form-control little-text" placeholder="방 이름" aria-label="Recipient's username" aria-describedby="button-addon2">
-            <font-awesome-icon type="button" @click="searchRoom" :icon="['fas', 'magnifying-glass']" class="icon-hover"/>
-            <font-awesome-icon type="button" @click="refreshRoom" :icon="['fas', 'arrows-rotate']" class="icon-hover"/>
+            <font-awesome-icon type="button" @click="searchRoom" :icon="['fas', 'magnifying-glass']" style="color: #ffffff;" />
+            <font-awesome-icon type="button" @click="refreshRoom" :icon="['fas', 'arrows-rotate']" style="color: #ffffff;" />
         </div>
     </div>
     
@@ -63,7 +63,7 @@
     <div>
         
         <nav aria-label="Page navigation example ">
-        <ul class="pagination pagination-sm justify-content-center gap-1">
+        <ul class="pagination pagination-sm justify-content-center gap-1" type="button">
             <!-- 이전 버튼 -->
             <li v-if="roomStore.isFirst" class="page-item xx-little-text">
                 <a class="btn-outline-yellow rounded-1 px-1 text-black" href="#" aria-label="Previous">

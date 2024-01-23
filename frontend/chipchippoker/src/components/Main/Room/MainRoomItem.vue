@@ -6,9 +6,9 @@
 
             <div class="d-flex gap-1">
 
-                <div v-if="item?.isPrivate" data-bs-toggle="modal" data-bs-target="#EnterPWModal" class="btn-lightred x-little-text rounded-1 px-1">입장</div>
-                <div v-else class="btn-lightred x-little-text rounded-1 px-1">입장</div>
-                <!-- <div class="btn-gray x-little-text rounded-1 px-1">관전
+                <div v-if="item?.isPrivate" type="button" data-bs-toggle="modal" data-bs-target="#EnterPWModal" class="btn-lightred x-little-text rounded-1 px-1">입장</div>
+                <div v-else type="button" @click="enterRoomPublic(item.title)" class="btn-lightred x-little-text rounded-1 px-1">입장</div>
+                <!-- <div type="button" class="btn-gray x-little-text rounded-1 px-1">관전
                     <font-awesome-icon :icon="['fas', 'caret-right']" style="color: #8f8f8f;" />
                 </div> -->
 
@@ -33,13 +33,19 @@
 
 <script setup>
 import ModalEnterPassword from '@/components/Modal/ModalEnterPassword.vue';
+import { useRoomStore } from '@/stores/room';
 import { ref } from "vue";
+
+const roomStore = useRoomStore()
+
 defineProps({
     item:Object
 })
 
 
-
+const enterRoomPublic = function (title) {
+    roomStore.enterRoomPublic(title)
+}
 
 // "isPrivate": false,
 // "state": "대기",

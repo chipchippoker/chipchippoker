@@ -21,7 +21,8 @@
           </div> -->
           <div class="bg-black m-2" style="width: 300px; height: 210px;">
             <UserVideoVue
-            :stream-manager="publisherComputed" 
+            :stream-manager="publisherComputed"
+            view="playView"
             />
           </div>
           <div class="m-2 bg-white align-self-center" style="width: 100px; height: 150px;">카드</div>
@@ -37,6 +38,7 @@
             <UserVideoVue
             v-if="subscribersComputed.length > 0"
             :stream-manager="subscribersComputed[0]"
+            view="playView"
             @client-data="fPlayer1"
             />
           </div>
@@ -53,6 +55,7 @@
             <UserVideoVue
             v-if="subscribersComputed.length > 1"
             :stream-manager="subscribersComputed[1]"
+            view="playView"
             @client-data="fPlayer2"
             />
           </div>
@@ -69,6 +72,7 @@
             <UserVideoVue
             v-if="subscribersComputed.length > 2"
             :stream-manager="subscribersComputed[2]"
+            view="playView"
             @client-data="fPlayer3"
             />
           </div>
