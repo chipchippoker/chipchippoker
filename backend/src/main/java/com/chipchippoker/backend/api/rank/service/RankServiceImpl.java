@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.chipchippoker.backend.api.member.repository.MemberRepository;
 import com.chipchippoker.backend.api.rank.model.dto.FriendRankResponse;
+import com.chipchippoker.backend.api.rank.model.dto.MyselfRankResponse;
 import com.chipchippoker.backend.api.rank.model.dto.TotalRankResponse;
 import com.chipchippoker.backend.common.dto.ErrorBase;
 import com.chipchippoker.backend.common.entity.Friend;
@@ -68,5 +69,18 @@ public class RankServiceImpl implements RankService {
 					friend.getMemberB().getPoint().getPointScore());
 			})
 			.collect(Collectors.toList());
+	}
+
+	@Override
+	public MyselfRankResponse getMyselfRank(Long id) {
+		//인원 제한이 없는 전체 조회 메서드
+		List<Point> totalRank = memberRepository.getTotalRankAll();
+		for(int i=0;i<totalRank.size();i++){
+			if(totalRank.get(i).getMember().getId()==id){
+				Point p = totalRank.get(i);
+				return new MyselfRankResponse(i+1,Point.tierByPoint(p.getPointScore()),p.getMember().getIcon(),p.getMember().getNickname(),p.getPointScore());
+			}
+		}
+		throw new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER);
 	}
 }

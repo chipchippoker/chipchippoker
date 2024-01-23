@@ -62,4 +62,11 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 			.where(member.id.eq(id))
 			.fetchFirst();
 	}
+
+	public List<Point> getTotalRankAll() {
+		return queryFactory
+			.selectFrom(point)
+			.orderBy(point.pointScore.desc())
+			.fetch();
+	}
 }
