@@ -5,11 +5,12 @@
         :class="{'sticky-top sticky-bottom myrank':item?.nickname==userStore.myNickName}"
         :key="item?.nickname"
         :item="item"/>
-        <div class="text-center" v-if="!friendStore.isContained">
+        <!-- 내가 rank안에 없을때 추가로 붙음 -->
+        <div class="text-center" v-if="!friendStore.isContainedinAll">
         <div>.</div>
         <div>.</div>
         </div>
-        <div class="sticky-bottom" v-if="!friendStore.isContained">
+        <div class="sticky-bottom" v-if="!friendStore.isContainedinAll">
             
             <MainRankItemItem 
             class=" myrank mb-3"

@@ -15,8 +15,13 @@
                 </div>
             </div>
         </div>
+        
         <div class="text-center mb-3 ">
-            <div v-if="friendStore.searchedFriend">{{ friendStore.searchedFriend }}</div>
+            <div v-if="friendStore.searchedPerson">
+                <ModalFindFriendItem
+                :item="friendStore.searchedPerson"/>
+                </div>
+
             <div v-else>검색 결과 없음</div>
         </div>
         
@@ -25,10 +30,18 @@
 </template>
 
 <script setup>
+import ModalFindFriendItem from './ModalFindFriendItem.vue';
 import { ref } from 'vue';
 import { useFriendStore } from '@/stores/friend'
 import { useRouter } from 'vue-router'
 
+// {
+    // "nickname": "최현기",
+    //     "icon": "asd",
+    //     "isOnline": true,
+    //     "isFriend": false,
+    //     "isSent": false
+    // }
 const friendStore = useFriendStore()
 const nickname = ref(null)
 const findNickName = function(){

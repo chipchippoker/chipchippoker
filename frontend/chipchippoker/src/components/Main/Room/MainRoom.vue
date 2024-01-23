@@ -35,8 +35,8 @@
         <!-- 방검색 -->
         <div class="d-flex align-items-center gap-3">
             <input v-model="title" type="text" class="form-control little-text" placeholder="방 이름" aria-label="Recipient's username" aria-describedby="button-addon2">
-            <font-awesome-icon @click="searchRoom" :icon="['fas', 'magnifying-glass']" style="color: #ffffff;" />
-            <font-awesome-icon @click="refreshRoom" :icon="['fas', 'arrows-rotate']" style="color: #ffffff;" />
+            <font-awesome-icon type="button" @click="searchRoom" :icon="['fas', 'magnifying-glass']" class="icon-hover"/>
+            <font-awesome-icon type="button" @click="refreshRoom" :icon="['fas', 'arrows-rotate']" class="icon-hover"/>
         </div>
     </div>
     
@@ -186,35 +186,6 @@ const pageRoom = function(pagenum){
 
 
 
-
-
-
-
-// const pageData = ref(
-//     {
-//       "pageNumber": 0, // 현재 내가 요청한 페이지
-//       "pageSize": 8, // 한 페이지당 보여줄 컨텐츠의 개수 (우리는 8개로 고정)
-//       "sort": {
-//           "sorted": false,
-//           "empty": true,
-//           "unsorted": true
-//       },
-//       "offset": 0,
-//       "paged": true,
-//       "unpaged": false
-//   }
-//   )  // 페이지 데이터
-//   const isLast = ref(true) // 마지막 페이지인가?
-//   const isfirst = ref(true) // 첫번째 페이지인가?
-//   const totalPages = ref(1)  // 전체 몇 페이지로 나뉘는가?
-//   const totalElements = ref(8) // 전체 페이지의 컨텐츠의 개수
-//   const nowElements = ref(8) // 현재 페이지의 컨텐츠의 개수
-//   const nowPage = ref(1)  // 현재 페이지 번호
-//   const isEmpty = ref(false) // 데이터가 없는가?
-
-
-
-
 </script>
 
 <style lang="css" scoped>
@@ -232,4 +203,12 @@ const pageRoom = function(pagenum){
     border: 0px;
 }
 
+.icon-hover{
+    color: #fff;
+    border-radius: 4px;
+    padding: 3px;
+}
+.icon-hover:hover{
+    background-color: #365aa1;
+}
 </style>

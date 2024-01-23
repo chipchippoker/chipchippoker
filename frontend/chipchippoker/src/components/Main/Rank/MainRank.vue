@@ -4,10 +4,10 @@
         <!-- 탭 버튼 -->
         <ul class="nav nav-tabs nav-justified border-0"  id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active text-white" id="all-rank-tab" data-bs-toggle="tab" data-bs-target="#all-rank-tab-pane" type="button" role="tab" aria-controls="all-rank-tab-pane" aria-selected="true">전체</button>
+            <button @click="getRankData" class="nav-link active text-white" id="all-rank-tab" data-bs-toggle="tab" data-bs-target="#all-rank-tab-pane" type="button" role="tab" aria-controls="all-rank-tab-pane" aria-selected="true">전체</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link text-white" id="friend-tab" data-bs-toggle="tab" data-bs-target="#friend-tab-pane" type="button" role="tab" aria-controls="friend-tab-pane" aria-selected="false">친구</button>
+            <button @click="getRankData" class="nav-link text-white" id="friend-tab" data-bs-toggle="tab" data-bs-target="#friend-tab-pane" type="button" role="tab" aria-controls="friend-tab-pane" aria-selected="false">친구</button>
         </li>
         </ul>
 
@@ -26,6 +26,13 @@
 <script setup>
 import MainRankAllList from '../Rank/MainRankAllList.vue';
 import MainRankFriendList from '../Rank/MainRankFriendList.vue';
+import { useFriendStore } from '@/stores/friend';
+const friendStore = useFriendStore()
+const getRankData = function (){
+    friendStore.getAllRankList()
+    friendStore.getFriendRankList()
+    friendStore.getMyRankList()
+}
 </script>
 
 <style scoped>
