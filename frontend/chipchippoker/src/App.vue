@@ -13,8 +13,6 @@ const gotoProfile = function(){
   router.push({name:'profile'})
 }
 
-
-
 const windowWidth = window.innerWidth;
 const windowHeight = window.innerHeight;
 console.log(windowWidth);
@@ -54,8 +52,6 @@ for (let i = 0; i < 300; i++) {
 
 <template>
   <div>
-    
-
     <div>
       <RouterLink to="login">로그인</RouterLink> /
       <RouterLink to="signup">회원가입</RouterLink> / 
@@ -64,6 +60,7 @@ for (let i = 0; i < 300; i++) {
       <RouterLink to="main">메인페이지</RouterLink>  /
       <RouterLink to="play">플레이페이지</RouterLink> /
       <RouterLink to="wait">대기페이지</RouterLink> /
+      <RouterLink to="game">소켓테스트</RouterLink> /
     </div>
     
     <div class="position-relative">   
