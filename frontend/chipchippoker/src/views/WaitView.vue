@@ -28,7 +28,11 @@
             <div class="col-6">
               <div style="width: 400px; height: 300px;">
                 <!-- 내 캠 -->
-                <UserVideo :stream-manager="publisherComputed" />
+                <UserVideo 
+                :stream-manager="publisherComputed" 
+                :is-manager="isManager"
+                :room-manager-nickname="roomManagerNickname"
+                />
               </div>
             </div>
             <div
@@ -39,7 +43,8 @@
                 <!-- 다른 사람 캠 -->
                 <UserVideo
                   :stream-manager="sub"
-                  @force-disconnect="forceDisconnect(sub)"
+                  :is-manager="isManager"
+                  @force-disconnect="forceDisconnect"
                   />
               </div>
             </div>
@@ -78,7 +83,9 @@
           <!-- 여러 버튼들 -->
           <div class="d-flex flex-column justify-content-center align-items-center box-btns m-0 pb-4 mt-5">
             <div>
-              <button class="custom-btn btn-1 m-1"><span>시작해?</span><span>시작</span></button>
+              <button v-if="myNickname===roomManagerNickname" @click="startGame()" class="custom-btn btn-1 m-1"><span>시작해?</span><span>시작</span></button>
+              <button v-else-if="myNickname!==roomManagerNickname && isReady===false" @click="readyGame()" class="custom-btn btn-1 m-1"><span>준비해?</span><span>준비</span></button>
+              <button v-else-if="myNickname!==roomManagerNickname && isReady===true" @click="readyGame()" class="custom-btn btn-1 m-1"><span>준비취소</span><span>준비완료</span></button>
               <button class="custom-btn btn-2 m-1"><span>초대해?</span><span>초대</span></button>
               <button class="custom-btn btn-3 m-1" data-bs-toggle="modal" data-bs-target="#roomOutModal"><span>나가?</span><span>나가기</span></button>
             </div>
@@ -144,18 +151,43 @@ const nickname = ref("Participant" + Math.floor(Math.random() * 100))
 const roomId = ref('')
 const roomTitle = ref('')
 const totalParticipantsCnt = ref('')
-const myNickName = ref('')
+const myNickname = ref('')
+const roomManagerNickname = ref('')
+const isManager = ref(false)
+const isReady = ref(false)
 
+
+roomId.value = roomStore.roomId
+roomTitle.value = roomStore.title
+roomManagerNickname.value = roomStore.roomManagerNickname
+if (myNickname.value === roomManagerNickname.value) {
+  isManager.value = true
+}
 // roomId.value = 100122
 // roomTitle.value = '싸피 다 드루와'
 // totalParticipantsCnt.value = '3'
-// myNickName.value = '10기김대원'
+// myNickname.value = '10기김대원'
 
 // console.log(roomId.value);
 // console.log(roomTitle.value);
 // console.log(totalParticipantsCnt.value);
-// console.log(myNickName.value);
+// console.log(myNickname.value);
 
+const startGame = function () {
+  roomStore.startGame(roomTitle.value)
+}
+
+const readyGame = function () {
+  isReady.value === !isReady.value
+}
+
+const forceDisconnect = function(clientData) {
+  const payload = {
+    title: roomTitle,
+    nickname: clientData
+  }
+  roomStore.forceMemberOut(payload)
+}
 /////////////////////채팅창을 위한 부분
 const inputMessage = ref("")
 const messages = ref([])
@@ -207,7 +239,7 @@ function joinSession() {
   session.value.on('signal:chat', (event) => { // event.from.connectionId === session.value.connection.connectionId 이건 나와 보낸이가 같으면임
     const messageData = JSON.parse(event.data);
     if(event.from.connectionId === session.value.connection.connectionId){
-      messageData['username'] = myNickName.value
+      messageData['username'] = myNickname.value
     }
     messages.value.push(messageData);
   });
@@ -216,7 +248,7 @@ function joinSession() {
   // --- Connect to the session with a valid user token ---
   // Get a token from the OpenVidu deployment
   getToken(roomId.value).then((token) => {
-    session.value.connect(token, {clientData: myNickName.value})
+    session.value.connect(token, {clientData: myNickname.value})
     .then(() => {
         // Get your own camera stream with the desired properties ---
         let publisher_tmp = OV.value.initPublisher(undefined, {
@@ -236,7 +268,7 @@ function joinSession() {
 
         // --- Publish your stream ---
         session.value.publish(publisher.value)
-        getMedia()  // 세션이 만들어졌을때 미디어 불러옴
+        // getMedia()  // 세션이 만들어졌을때 미디어 불러옴
       })
       .catch((error) => {
         console.log("There was an error connecting to the session:", error.code, error.message);
@@ -302,7 +334,7 @@ function sendMessage(event) {
   if(inputMessage.value.trim()){
     // 다른 참가원에게 메시지 전송하기
     session.value.signal({
-      data: JSON.stringify({username: myNickName.value, message: inputMessage.value}), // 메시지 데이터를 문자열로 변환해서 전송
+      data: JSON.stringify({username: myNickname.value, message: inputMessage.value}), // 메시지 데이터를 문자열로 변환해서 전송
       type: 'chat' // 신호 타입을 'chat'으로 설정
     });
     inputMessage.value = '';
@@ -437,18 +469,18 @@ onMounted(() => {
   // roomId.value = route.params.roomId
   // roomTitle.value = history.state.title
   // totalParticipantsCnt.value = history.state.totalParticipantsCnt
-  // myNickName.value = history.state.nickName
+  // myNickname.value = history.state.nickName
 
   roomId.value = '1001223'
   roomTitle.value = '싸피 다 드루와'
   totalParticipantsCnt.value = 3
-  myNickName.value = '10기김대원'
+  myNickname.value = '10기김대원'
   console.log(' 마운트 됐어요');
   // localStorage에 저장
   localStorage.setItem("roomId", roomId.value)
   localStorage.setItem("roomTitle", roomTitle.value)
   localStorage.setItem("totalParticipantsCnt", totalParticipantsCnt.value)
-  localStorage.setItem("myNickName", myNickName.value)
+  localStorage.setItem("myNickname", myNickname.value)
   
   // 메인페이지 -> 방 만들기 : 세션 생성
   joinSession()
@@ -460,7 +492,7 @@ onUnmounted(() => {
   roomId.value = localStorage.getItem("roomId")
   roomTitle.value = localStorage.getItem("roomTitle")
   totalParticipantsCnt.value = localStorage.getItem("totalParticipantsCnt")
-  myNickName.value = localStorage.getItem("myNickName")
+  myNickname.value = localStorage.getItem("myNickname")
 
   console.log('방 정보 가져오기 성공!!');
 })

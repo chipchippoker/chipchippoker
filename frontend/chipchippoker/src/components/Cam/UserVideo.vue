@@ -6,7 +6,8 @@
     <div v-if="showControls" class="position-absolute top-0 end-0 d-flex flex-column">
       <button id="camera-activate" @click="handleCameraBtn()">Video Off</button>
       <button id="mute-activate" @click="handleMuteBtn()">Sound Off</button>
-      <button v-if="view='waitView'" @click="forceDisconnect()">강퇴</button>
+      <!-- 방장일 때만 강퇴가 보이기 / 방장 자신은 안보이기 -->
+      <button v-if="isManager===true && clientData!==roomManagerNickname" @click="forceDisconnect()">강퇴</button>
     </div>
   </div>
 </template>
@@ -26,7 +27,8 @@
 
   const props = defineProps({
     streamManager: Object,
-    view: String,
+    isManager: Boolean,
+    roomManagerNickname:String,
   })
 
   const showControls = ref(false);
@@ -49,7 +51,7 @@
 
   // 강제 퇴장 버튼 작동
   function forceDisconnect () {
-    emit('forceDisconnect', 'forceDisconnect')
+    emit('forceDisconnect', clientData.value)
   }
 
   // 음소거, 캠 활성화 버튼 작동

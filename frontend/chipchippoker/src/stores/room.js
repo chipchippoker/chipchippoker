@@ -101,6 +101,12 @@ export const useRoomStore = defineStore('room', () => {
   const router = useRouter()
   const userStore = useUserStore()
 
+  // 방 생성 변수
+  const roomManagerNickname = ref('')
+  const roomId = ref('')
+  const title = ref('')
+  const totalParticipantsCnt = ref('')
+
   // 방 생성
   const createRoom = function(payload){
     console.log('방 생성 요청!!');
@@ -112,6 +118,10 @@ export const useRoomStore = defineStore('room', () => {
     })
     .then(res => {
       console.log('방 생성 성공')
+      roomManagerNickname.value = res.data.roomManagerNickname
+      roomId.value = res.data.roomId
+      title.value = res.data.title
+      totalParticipantsCnt.value = res.data.totalParticipantsCnt
       return res.data
     })
     .then(roomInfo => {
@@ -175,6 +185,7 @@ export const useRoomStore = defineStore('room', () => {
     })
     .then(res => {
       console.log('방 입장 성공')
+      roomId.value = res.data.roomId
       return res.data
     })
     .catch(err => console.log(err))
@@ -219,16 +230,51 @@ export const useRoomStore = defineStore('room', () => {
 
 
   // 방에서 게임 시작
+  const startGame = function(title) {
+    axios({
+      method: 'post',
+      url: `${ROOM_API}/play`,
+      headers: { 'access-token': userStore.accessToken },
+      data: {
+        title: title
+      }
+    })
+    .then(res => {
+      console.log('게임 시작 성공')
+      return res.data
+    })
+    .catch(err => console.log(err))
+  }
+
+
+  // 사용자 강제 퇴장
+  const forceMemberOut = function(payload) {
+    axios({
+      method: 'post',
+      url: `${ROOM_API}/member/out`,
+      headers: { 'access-token': userStore.accessToken },
+      data: payload
+    })
+    .then(res => {
+      console.log('강제 퇴장 성공')
+      return res.data
+    })
+    .catch(err => console.log(err))
+  } 
 
   return {
     // 방 목록
     getRoomList,
     allRoomList, pageData, isLast, isfirst, totalPages, totalElements, nowElements, nowPage, isEmpty, pageArray,
     // 방 생성
-    createRoom,
+    createRoom, roomManagerNickname, roomId, title, totalParticipantsCnt,
     // 방 입장
     enterRoomPublic, enterRoomPrivate,
     // 방 나가기
     leaveRoom,
+    // 게임 시작하기
+    startGame,
+    // 사용자 강제 퇴장
+    forceMemberOut,
   }
 },{persist:true})
