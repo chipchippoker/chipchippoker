@@ -71,5 +71,14 @@ public class GameRoomRepositoryCustomImpl implements GameRoomRepositoryCustom {
 		}
 		return gameRoom.members.size().lt(gameRoom.totalParticipantCnt);
 	}
+
+	public List<GameRoom> findByStartFriendlyMatchingSearchOption(Integer totalParticipantCnt) {
+		return queryFactory
+			.selectFrom(gameRoom)
+			.where(gameRoom.type.eq("친선"), gameRoom.isPrivate.eq(Boolean.FALSE), gameRoom.state.eq("대기"),
+				gameRoom.totalParticipantCnt.eq(totalParticipantCnt), gameRoom.members.size().lt(totalParticipantCnt))
+			.orderBy(gameRoom.createdAt.asc())
+			.fetch();
+	}
 }
 
