@@ -11,7 +11,7 @@
     <!-- players -->
     <div class="w-100" style="height: 70%;">
       <!-- 플레이어 화면 / 카드 / 감정 / 정보 -->
-      <PlayPlayerVue :mySessionId="mySessionId" :myUserName="myUserName" />
+      <PlayPlayerVue :roomId="roomId" :myNickname="myNickname" />
     </div>
     <!-- 채팅, 카드, 컨트롤러 -->
     <div class="d-flex align-items-center mb-3" style="width: 100%; height: 20%;">
@@ -47,8 +47,8 @@
   const router = useRouter()
  
   // Join form
-  const mySessionId = ref("SessionCrome")
-  const myUserName = ref("Participant" + Math.floor(Math.random() * 100))
+  const roomId = ref("SessionCrome")
+  const myNickname = ref("Participant" + Math.floor(Math.random() * 100))
   
   const route = useRoute()
   

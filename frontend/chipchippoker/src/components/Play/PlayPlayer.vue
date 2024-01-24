@@ -3,7 +3,7 @@
     <!-- 플레이어 감정, 동영상, 카드 -->
     <div class="w-100 h-100 position-relative">
       <div class="position-absolute top-0 start-0 d-flex flex-column h-50" id="player1" style="width: 500px;">
-        <div class="text-white align-self-center ">{{ myUserName }} / 보유코인: 10개</div>
+        <div class="text-white align-self-center ">{{ myNickname }} / 보유코인: 10개</div>
         <div class="d-flex m-2 mt-0 h-100">
           <div>
             <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
@@ -128,15 +128,15 @@
 
   const router = useRouter()
 
-  const mySessionId = ref(null)
-  const myUserName = ref(null)
+  const roomId = ref(null)
+  const myNickname = ref(null)
   const props = defineProps({
-    mySessionId: String,
-    myUserName: String
+    roomId: String,
+    myNickname: String
   });
 
-  mySessionId.value = props.mySessionId
-  myUserName.value = props.myUserName
+  roomId.value = props.roomId
+  myNickname.value = props.myNickname
 
   axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -240,11 +240,11 @@
     // --- 4) Connect to the session with a valid user token ---
     // Get a token from the OpenVidu deployment
     // getToken(mySessionId).then((token) => {
-    getToken(mySessionId.value).then((token) => {
+    getToken(roomId.value).then((token) => {
       // First param is the token. Second param can be retrieved by every user on event
       // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
       // session.value.connect(token, {clientData: myUserName})
-      session.value.connect(token, {clientData: myUserName.value})
+      session.value.connect(token, {clientData: myNickname.value})
       .then(() => {
           // --- 5) Get your own camera stream with the desired properties ---
 
@@ -312,8 +312,8 @@
     mainStreamManager.value = stream
   }
 
-  async function getToken(mySessionId) {
-    const sessionId = await createSession(mySessionId);
+  async function getToken(roomId) {
+    const sessionId = await createSession(roomId);
     return await createToken(sessionId);
   }
 
