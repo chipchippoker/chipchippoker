@@ -86,7 +86,7 @@ public class GameRoomServiceImpl implements GameRoomService {
 
 		// 입장 가능한 경우
 		member.enterGameRoom(gameRoom);
-		return EnterGameRoomResponse.enterGameRoomResponse(gameRoom.getId());
+		return EnterGameRoomResponse.enterGameRoomResponse(gameRoom);
 	}
 
 	public Page<GetGameRoomListResponse> getGameRoomList(String type, String title, Boolean isTwo, Boolean isThree,
