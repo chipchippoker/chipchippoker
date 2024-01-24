@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class MatchingController {
+public class GameMatchingController {
 	private final SimpMessagingTemplate template;
 	private final GameRoomService gameRoomService;
 	private static Map<String, GameManager> gameManagerMap;
