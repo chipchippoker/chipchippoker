@@ -1,45 +1,66 @@
 <template>
     <!-- 나의 정보, 게임 프로필 -->
     <div class="container mainstyle d-flex flex-row profile-box-radius" >
-      <!-- 프로필 사진 -->
-      <div class="" style="position: relative; width: 200px;">
-        <img v-if="userStore?.profileInfo?.isMine" data-bs-toggle="modal" data-bs-target="#IconModal"  class="small-icon" :src='userStore.getIconUrl(userStore?.profileInfo?.icon)' :alt="userStore?.profileInfo?.icon">
-        <img v-else class="small-icon-others" :src='userStore.getIconUrl(userStore?.profileInfo?.icon)' :alt="userStore?.profileInfo?.icon">
-        <font-awesome-icon
-        v-if="userStore?.profileInfo?.isMine"
-        data-bs-toggle="modal" data-bs-target="#IconModal" 
-        class="xx-small-icon"
-        :icon="['fas', 'arrows-rotate']"
-        beat-fade
-        style="position: absolute; bottom: 15px; right: 50px; color: #ffffff;"
-        />
-      </div>
-
       <!-- 정보 -->
-      <div class="d-flex flex-column me-3 w-100">
-        <!-- 닉네임, 티어, 포인트 -->
-        <div class="d-flex justify-content-between fs-3">
-          <strong>{{ userStore?.profileInfo?.nickname }}</strong>
-          <div style="width: 56px; height: 50px;">
-            <img class=""  :src='friendStore.getTierIconUrl(userStore?.profileInfo?.tier)' style="width: 100%; height: 100%; object-fit: cover;">
+      <div class="d-flex flex-column w-100">
+        <!-- 프사, 닉네임, 티어, 포인트 -->
+        <div class="d-flex align-items-end fs-3">
+          <!-- 프로필 사진 -->
+          <div
+          class="d-flex justify-content-center mx-5 fade-in"
+          style="position: relative;">
+            <!-- 내프로필 -->
+            <img v-if="userStore?.profileInfo?.isMine" 
+            class="profile-icon-mine" 
+            type="button"
+            data-bs-toggle="modal" data-bs-target="#IconModal" 
+            :src='userStore.getIconUrl(userStore?.profileInfo?.icon)' :alt="userStore?.profileInfo?.icon">
+
+            <font-awesome-icon
+            v-if="userStore?.profileInfo?.isMine"
+            class="xx-small-icon"
+            style="position: absolute; top: 35px; color: #ffffff;"
+            type="button"
+            data-bs-toggle="modal" data-bs-target="#IconModal" 
+            :icon="['fas', 'arrows-rotate']"
+            />
+            <!-- 다른사람 프로필 -->
+            <img v-else class="profile-icon-other" :src='userStore.getIconUrl(userStore?.profileInfo?.icon)' :alt="userStore?.profileInfo?.icon">
+            
           </div>
-          <strong>{{ userStore?.profileInfo?.point }}pt</strong>
+
+          <!-- 닉네임 티어, 포인트 -->
+          <div class="d-flex align-items-end gap-5 fw-bold">
+            <div>
+              {{ userStore?.profileInfo?.nickname }}
+            </div>
+            <div style="width: 56px; height: 50px;">
+              <img class=""  :src='friendStore.getTierIconUrl(userStore?.profileInfo?.tier)' style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div>
+              {{ userStore?.profileInfo?.point }}pt
+            </div>
+          </div>
         </div>
+
         
         <!-- 상세 정보 -->
-        <div class="row profile-outline-darkblue my-3">
+        <div class="row profile-outline-darkblue m-3">
           <!-- 왼쪽 -->
           <div class="col-6 row p-3">
             <!-- 랭킹 친구 -->
-            <div class="col-6 mb-3">
+            <div v-if="userStore?.profileInfo?.isMine===true" 
+            class="col-6 mb-3">
               <strong>랭킹(친구)</strong>
             </div>
-            <div class="col-6 mb-3">3위</div>
+            <div v-if="userStore?.profileInfo?.isMine===true"
+             class="col-6 mb-3">{{ userStore?.profileInfo?.rank }}위</div>
             <!-- 랭킨(전체) -->
             <div class="col-6 mb-3">
               <strong>랭킹(전체)</strong>
             </div>
-            <div class="col-6 mb-3">{{ userStore?.profileInfo?.rank }}위</div>
+            <div 
+             class="col-6 mb-3">{{ userStore?.profileInfo?.rank }}위</div>
             <!-- 게임 수 -->
             <div class="col-6 mb-3">
               <strong>게임 수</strong>
@@ -58,7 +79,7 @@
             <div class="col-6 my-3">
               <strong>승률</strong>
             </div>
-            <div class="col-6 my-3">{{ userStore?.profileInfo?.winningRate }}74.1%</div>
+            <div class="col-6 my-3">{{ userStore?.profileInfo?.winningRate }}%</div>
             <!-- 포인트 -->
             <div class="col-6 mb-3">
               <strong>포인트</strong>
@@ -173,4 +194,6 @@
   .detail-info {
     border: 1px solid black;
   }
+
+
 </style>

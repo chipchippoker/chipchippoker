@@ -3,7 +3,7 @@
         <!-- 로고와 방목록 -->
         <div class="m-3">
             <div class="d-flex align-items-center justify-content-center gap-5" style="width: 100%;" >
-                <img class="small-logo m-0" src="/src/assets/icons/Logo.png" alt="">
+                <img @click="soundStore.bgmToggle" class="small-logo m-0" src="/src/assets/icons/Logo.png" alt="">
                 <div class="d-flex gap-3">
                     <button @click="changeType('경쟁전')" class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#FindRoomModal">경쟁 모드</button>
                     <button @click="changeType('친선전')" class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#FindRoomModal">친선 모드</button>
@@ -56,7 +56,6 @@
             <ModalFindFriend/>
         </div>
         
-
     </div>
     
 </template>
@@ -69,19 +68,24 @@ import ModalCreateRoom from '@/components/Modal/ModalCreateRoom.vue';
 import ModalFindFriend from '@/components/Modal/ModalFindFriend.vue';
 import ModalFindRoom from '@/components/Modal/ModalFindRoom.vue';
 import { useFriendStore } from '@/stores/friend';
+import { useSoundStore } from '@/stores/sound';
+import { ref,onMounted,onUpdated } from 'vue';
 
-import { ref,onMounted } from 'vue';
-
+const soundStore = useSoundStore()
 const gameType = ref('경쟁')
 const changeType = function(type){
     gameType.value = type
 }
+
 onMounted(()=>{
     // const friendStore = useFriendStore()
     // friendStore.getAllRankList()
     // friendStore.getFriendRankList()
     // friendStore.getMyRankList()
+    // const soundStore = useSoundStore()
+    soundStore.bgmOn()
 })
+
 </script>
 
 <style scoped>

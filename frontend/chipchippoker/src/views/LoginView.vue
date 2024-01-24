@@ -48,6 +48,8 @@
   import { computed, ref } from "vue";
   import { useUserStore } from '@/stores/user'
   import { useRoute,useRouter } from 'vue-router'
+  import { useSoundStore } from "@/stores/sound";
+  const soundStore = useSoundStore()
 
   const route = useRoute()
   const router = useRouter()
@@ -71,8 +73,8 @@
       password: password.value
     }
     console.log('일반 로그인 요청')
+    soundStore.bgmOn()
     userStore.generalLogIn(payload)
-    router.push({name:'main'})
   }
   
   // 간편 로그인
@@ -95,6 +97,7 @@
   // 회원가입으로 이동
   const gotoSignUp = function(){
     router.push({name:'signup'})
+
   }
 </script>
   
