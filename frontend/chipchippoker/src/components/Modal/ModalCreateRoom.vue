@@ -1,8 +1,8 @@
 <template>
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content " style="background-color: #fff0c0;">
-            <div class="modal-header border-0">
-                <h1 class="modal-title fs-5" id="makeRoomModalLabel">방 생성</h1>
+            <div class="modal-header border-0 position-relative">
+                <h1 class="position-absolute top-50 start-50 translate-middle modal-title fs-5 mt-2" id="makeRoomModalLabel">방 생성</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
         <div class="modal-body">
@@ -42,7 +42,7 @@
                 </div>
                 
                 <div class="modal-footer border-0">
-                    <button @click="createRoom()" type="button" class="btn-outline-yellow rounded-2">방만들기</button>
+                    <button data-bs-dismiss="modal" @click="createRoom()" type="button" class="btn-outline-yellow rounded-2">방만들기</button>
                 </div>
             </div>
         </div>
@@ -55,6 +55,8 @@
 import { ref } from "vue";
 import { useUserStore } from "@/stores/user";
 import { useRoomStore } from "@/stores/room";
+import { useRouter } from "vue-router";
+const router = useRouter()
 
 const userStore = useUserStore()
 const roomStore = useRoomStore()
@@ -64,7 +66,7 @@ const isPrivate = ref(null)
 const password = ref(null)
 const totalParticipantsCnt = ref(1)
 
-const createRoom = function(){
+const createRoom = function() {
   const payload = {
       title: title.value,
       isPrivate: isPrivate.value,
@@ -72,6 +74,7 @@ const createRoom = function(){
       totalParticipantsCnt: totalParticipantsCnt.value
     }
   console.log('방 생성하기!!');
+
   roomStore.createRoom(payload.value)
 }
 </script>

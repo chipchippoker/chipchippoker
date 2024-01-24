@@ -44,7 +44,10 @@ defineProps({
 
 
 const enterRoomPublic = function (title) {
-    roomStore.enterRoomPublic(title)
+    const payload = {
+        title: title
+    }
+    roomStore.enterRoomPublic(payload)
 }
 
 // "isPrivate": false,
