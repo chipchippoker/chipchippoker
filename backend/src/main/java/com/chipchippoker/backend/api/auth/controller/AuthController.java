@@ -69,7 +69,7 @@ public class AuthController {
 	@Operation(summary = "인가코드 전달")
 	@PostMapping("/authorization")
 	public ResponseEntity<ApiResponse<AuthorizationInformationResponse>> passAuthorizationCode(
-		String authorizationCode) {
+		@ModelAttribute(value = "authorizationCode") String authorizationCode) {
 		if (authorizationCode == null || authorizationCode.isEmpty()) {
 			throw new InvalidException(ErrorBase.E400_INVALID_AUTHORIZATION_CODE);
 		}
