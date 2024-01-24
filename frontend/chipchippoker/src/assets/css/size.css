@@ -64,18 +64,33 @@
     width: 80px;
     height: 80px;
     margin: 10px;
-    transition: 0.3s;
+    transition: 0.1s;
     border-radius: 50%;
     /* position: absolute; */
 }
 
-/* 다른 유저 프로필 아이콘 */
-.small-icon-others {
+/* 유저 프로필 아이콘 */
+.profile-icon-mine {
     width: 80px;
     height: 80px;
-    margin: 20px;
+    border-radius: 50%;  
+    
+}
+
+.profile-icon-other {
+    width: 80px;
+    height: 80px;
     border-radius: 50%;  
 }
+
+.fade-in{
+    opacity: 1;
+  }
+.fade-in:hover{
+    opacity: 0.3;
+    transition: 0.3s;
+}
+
 
 .tier-icon {
     width: 50px;

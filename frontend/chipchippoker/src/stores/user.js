@@ -37,7 +37,7 @@ export const useUserStore = defineStore('user', () => {
     "point": 1520,
     "nickname": "안녕나야",
     "tier": "rare",
-    "isMine":true,
+    "isMine":false,
     "recentPlayList": [
       {
         "opponents": {

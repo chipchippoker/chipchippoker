@@ -1,6 +1,6 @@
 <template>
     <!-- 각각의 사용자 -->
-    <div type="button" @click="gotoProfile(item?.nickname)" class="bg-modal">
+    <div type="button" @mouseover="soundStore.hoverSound" @click="gotoProfile(item?.nickname)" class="bg-modal">
         <div class="friend-item d-flex align-items-center gap-2 friend-list rounded-2 mx-3">
             <!-- 아이콘 - 내용 d-flex  -->
             <img  class="x-small-icon"  :src='userStore.getIconUrl(item?.icon)'>
@@ -40,6 +40,8 @@ import { useUserStore } from '@/stores/user';
 const userStore = useUserStore()
 import { useFriendStore } from '@/stores/friend';
 const friendStore = useFriendStore()
+import { useSoundStore } from '@/stores/sound';
+const soundStore = useSoundStore()
 defineProps({item:Object})
 
 import { useRouter } from 'vue-router';

@@ -1,30 +1,49 @@
 <template>
     <!-- 나의 정보, 게임 프로필 -->
     <div class="mainstyle d-flex flex-row" >
-      <!-- 프로필 사진 -->
-      <div class="" style="position: relative; width: 200px;">
-        <img v-if="userStore?.profileInfo?.isMine" data-bs-toggle="modal" data-bs-target="#IconModal"  class="small-icon" :src='userStore.getIconUrl(userStore?.profileInfo?.icon)' :alt="userStore?.profileInfo?.icon">
-        <img v-else class="small-icon-others" :src='userStore.getIconUrl(userStore?.profileInfo?.icon)' :alt="userStore?.profileInfo?.icon">
-        <font-awesome-icon
-        v-if="userStore?.profileInfo?.isMine"
-        data-bs-toggle="modal" data-bs-target="#IconModal" 
-        class="xx-small-icon"
-        :icon="['fas', 'arrows-rotate']"
-        style="position: absolute; bottom: 15px; right: 50px; color: #ffffff;"
-        />
-      </div>
+      
 
       <!-- 정보 -->
-      <div class="d-flex flex-column me-3 w-100">
-        <!-- 닉네임, 티어, 포인트 -->
-        <div class="d-flex justify-content-between fs-3">
-          <strong>{{ userStore?.profileInfo?.nickname }}</strong>
-          <div style="width: 56px; height: 50px;">
-            <img class=""  :src='friendStore.getTierIconUrl(userStore?.profileInfo?.tier)' style="width: 100%; height: 100%; object-fit: cover;">
-          </div>
-          <strong>{{ userStore?.profileInfo?.point }}pt</strong>
-        </div>
+      <div class="d-flex flex-column w-100">
+        <!-- 프사, 닉네임, 티어, 포인트 -->
+        <div class="d-flex align-items-end fs-3">
+          <!-- 프로필 사진 -->
+          <div
+          class="d-flex justify-content-center mx-5 fade-in"
+          style="position: relative;">
+            <!-- 내프로필 -->
+            <img v-if="userStore?.profileInfo?.isMine" 
+            class="profile-icon-mine" 
+            type="button"
+            data-bs-toggle="modal" data-bs-target="#IconModal" 
+            :src='userStore.getIconUrl(userStore?.profileInfo?.icon)' :alt="userStore?.profileInfo?.icon">
 
+            <font-awesome-icon
+            v-if="userStore?.profileInfo?.isMine"
+            class="xx-small-icon"
+            style="position: absolute; top: 35px; color: #ffffff;"
+            type="button"
+            data-bs-toggle="modal" data-bs-target="#IconModal" 
+            :icon="['fas', 'arrows-rotate']"
+            />
+            <!-- 다른사람 프로필 -->
+            <img v-else class="profile-icon-other" :src='userStore.getIconUrl(userStore?.profileInfo?.icon)' :alt="userStore?.profileInfo?.icon">
+            
+          </div>
+
+          <!-- 닉네임 티어, 포인트 -->
+          <div class="d-flex align-items-end gap-5 fw-bold">
+            <div>
+              {{ userStore?.profileInfo?.nickname }}
+            </div>
+            <div style="width: 56px; height: 50px;">
+              <img class=""  :src='friendStore.getTierIconUrl(userStore?.profileInfo?.tier)' style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div>
+              {{ userStore?.profileInfo?.point }}pt
+            </div>
+          </div>
+        </div>
         <!-- 최근 전적 -->
           <ul class="profile-outline-darkblue my-3 d-flex flex-column gap-1 overflow-y-auto" style="max-height: 300px;">
             <div 
@@ -39,7 +58,12 @@
                 <div v-for="(result, player) in recentPlay.opponents" :key="player">
                     {{ player }}: {{ result }}
                 </div>
-                <div>{{ recentPlay?.pointChange  }}pt</div>
+                <div
+                class="fw-bold"
+                :class="[{'text-primary':recentPlay?.pointChange>0},
+                {'text-danger':recentPlay?.pointChange<0}]"
+                >{{ recentPlay?.pointChange  }}pt
+              </div>
               </div>
             </div>
           </ul>
