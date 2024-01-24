@@ -1,5 +1,8 @@
 package com.chipchippoker.backend.api.gameroom.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -151,5 +154,14 @@ public class GameRoomServiceImpl implements GameRoomService {
 		MemberGameRoomBlackList memberGameRoomBlackList = MemberGameRoomBlackList.createMemberGameRoomBlackList(
 			leavingMember, gameRoomBlackList);
 		memberGameRoomBlackListRepository.save(memberGameRoomBlackList);
+	}
+
+	@Override
+	public List<String> findMemberNicknames(String gameRoomTitle) {
+		GameRoom gameRoom = gameRoomRepository.findByTitle(gameRoomTitle)
+			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS));
+		List<Member> members = gameRoom.getMembers();
+		return members.stream().map(Member::getNickname).collect(Collectors.toList());
+
 	}
 }
