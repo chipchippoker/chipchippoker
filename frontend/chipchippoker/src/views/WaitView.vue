@@ -183,7 +183,7 @@ const readyGame = function () {
 
 const forceDisconnect = function(clientData) {
   const payload = {
-    title: roomTitle,
+    title: roomTitle.value,
     nickname: clientData
   }
   roomStore.forceMemberOut(payload)
