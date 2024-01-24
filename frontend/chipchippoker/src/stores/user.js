@@ -1,26 +1,27 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import { useRouter } from 'vue-router'
-import { icon } from '@fortawesome/fontawesome-svg-core'
+import { useRoute, useRouter } from 'vue-router'
 
 export const useUserStore = defineStore('user', () => {
    
+  const route = useRoute()
   const router = useRouter()
-  const isNickDuplicated = ref(false)
-  const isIdDuplicated = ref(false)
+  const isNickDuplicated = ref(null)
+  const isIdDuplicated = ref(null)
   const accessToken = ref(null)
   const refreshToken = ref(null)
   const authorizationCode = ref(null)
   const kakaoAccessToken = ref(null)
+  const isLogIn = ref(false)
 
-  const USER_API = 'http://i10a804.p.ssafy.io:8082/api/auth'
+  const USER_API = 'http://localhost/api/members'
   const KAKAO_API_KEY = import.meta.env.VITE_KAKAO_API_KEY
-  const KAKAO_JAVASCRIPT_KEY = import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY
   const REDIRECT_URI = 'http://localhost:5173/login'
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`
 
-  const myNickname = ref('10기_윤예빈')
+  
+  const myNickName = ref('10기_윤예빈')
   const myIcon = ref('1')
 
   // 프로필 들어간 다른 친구 데이터
@@ -37,7 +38,7 @@ export const useUserStore = defineStore('user', () => {
     "point": 1520,
     "nickname": "안녕나야",
     "tier": "rare",
-    "isMine":false,
+    "isMine":true,
     "recentPlayList": [
       {
         "opponents": {
@@ -176,27 +177,24 @@ export const useUserStore = defineStore('user', () => {
   const generalLogIn = function (payload) {
     axios({
       method: 'post',
-      url: `${USER_API}/login/`,
+      url: `${USER_API}/login/general/`,
       data: payload
     })
       .then(res => {
-        accessToken.value = res.data.accessToken
-        refreshToken.value = res.data.refreshToken
-        myIcon.value = res.data.icon
-        myNickname.value = res.data.nickname
-
+        accessToken.value = res.generalLoginResponse.access-token
+        refreshToken.value = res.generalLoginResponse.refresh-token
+        myIcon.value = res.generalLoginResponse.icon
+        myNickName.value = res.generalLoginResponse.nickname
         console.log('일반 로그인 성공!!')
-        // 로그인 상태로 바로 메인으로 이동
-        router.push({ name: 'main' })
+        isLogIn.value = true
       })
       .catch(err => console.log(err))
   }
-  // 문제가 있음 손 봐야 함
+
   // 카카오 인가코드 받기
   const getKakaoCode = function () {
     console.log('카카오 인가코드 받기')
-    Kakao.init(KAKAO_JAVASCRIPT_KEY)
-    Kakao.Auth.authorize({
+    Kakao.Auth.login({
       redirectUri: REDIRECT_URI,
     })
   }
@@ -207,9 +205,9 @@ export const useUserStore = defineStore('user', () => {
     // 인가코드로 로그인 요청
     axios({
       method: 'post',
-      url: `${USER_API}/authorization/`,
+      url: `${USER_API}/login/simple/`,
       data: {
-        authorizationCode: authorizationCode
+        'authorizationCode': authorizationCode
       }
     })
     .then(res => {
@@ -218,35 +216,17 @@ export const useUserStore = defineStore('user', () => {
         accessToken.value = res.simpleLoginResponse.accessToken
         refreshToken.value = res.simpleLoginResponse.refreshToken
         myIcon.value = res.simpleLoginResponse.icon
-        myNickname.value = res.simpleLoginResponse.nickname
-        router.push({ name: 'main' })
-
-      } else if (res.code === 202) {
-        console.log("카카오 로그인 성공, 닉네임 설정!!")
+        myNickName.value = res.simpleLoginResponse.nickname
+        isLogIn.value = true
+      } else if (res.code === 201) {
+        console.log("카카오 로그인 성공2!!")
         kakaoAccessToken.value = res.kakaoAccessToken
         router.push('kakaosignup')
       }
     })
-    .catch(err => {console.log('카카오 로그인 실패')})
-  }
-
-  // 카카오 회원가입
-  const kakaoSignUp = function(payload){
-    console.log("카카오 회원가입 요청");
-    axios({
-      method:'post',
-      url:`${USER_API}/social-signup/`,
-      data: payload,
-      headers: { 'kakao-access-token': kakaoAccessToken.value }
-    })
-    .then((res)=>{
-      accessToken.value = res.simpleLoginResponse.accessToken
-      refreshToken.value = res.simpleLoginResponse.refreshToken
-      myIcon.value = res.simpleLoginResponse.icon
-      myNickname.value = res.simpleLoginResponse.nickname
-      router.push({ name: 'main' })
-    })
-    .catch((err)=>{console.log(err)})
+    .catch(err => {
+      console.log('카카오 로그인 실패');
+  })
   }
 
   // 로그아웃
@@ -255,17 +235,40 @@ export const useUserStore = defineStore('user', () => {
     axios.post({
       url: `${USER_API}/logout/`,
       headers: { 'access-token': accessToken.value }
-    })  
+    })
     .then(res => {
       console.log('로그아웃 성공!!')
-      accessToken.value = ''
-      refreshToken.value = ''
-      myIcon.value = ''
-      myNickname.value = ''
-      router.push({ name: 'login'})
-    })  
+      isLogIn.value = false
+    })
     .catch(err => console.log(err))
-  }  
+
+  }
+  
+  // 카카오 회원가입
+  const  kakaoSignUp = function(nickname){
+    const payload = {
+      'nickname':nickname,
+      'icon':myIcon.value
+    }
+    axios({
+      method:'post',
+      url:`${USER_API}/login/simple/nickname`,
+      data:payload,
+      headers: {
+        'kakao-access-token': kakaoAccessToken.value
+      }
+    })
+    .then((res)=>{
+      accessToken.value = res.simpleLoginResponse.accessToken
+      refreshToken.value = res.simpleLoginResponse.refreshToken
+      myIcon.value = res.simpleLoginResponse.icon
+      myNickName.value = res.simpleLoginResponse.nickname
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  }
+
 
   // 카카오 연동
   const kakaoConnect = function () {
@@ -273,8 +276,8 @@ export const useUserStore = defineStore('user', () => {
     axios({
       method: 'post',
       url: `${USER_API}/social/`,
-      headers: { 'access-token': accessToken.value },
-      data: { authorizationCode: authorizationCode.value }
+      data: { 'authorization': authorizationCode.value },
+      headers: { 'access-token': accessToken.value }
     })
     .then(res => {
       console.log('카카오 연동 성공!');
@@ -283,14 +286,17 @@ export const useUserStore = defineStore('user', () => {
   }
 
   // 닉네임 중복확인
-  const checkNickname = function (nickname){
+  const checkNickName = function (nickName){
+    const payload = {
+      'nickname':nickName
+    }
     axios({
       method:'post',
-      url: `${USER_API}/duplication/nickname/`,
-      data: nickname
+      url: `${USER_API}/duplication/nickname`,
+      data:payload
     })
     .then((res)=>{
-      isNickDuplicated.value = res.data
+      isNickDuplicated.value = res.data.isDuplicated
     })
     .catch((err)=>{
       console.log(err)
@@ -299,13 +305,16 @@ export const useUserStore = defineStore('user', () => {
 
   // 아이디 중복확인
   const checkMemberId = function (memberId){
+    const payload = {
+      'memberId':memberId
+    }
     axios({
       method:'post',
-      url: `${USER_API}/duplication/id/`,
-      data: memberId
+      url: `${USER_API}/duplication/id`,
+      data:payload
     })
     .then((res)=>{
-      isIdDuplicated.value = res.data
+      isIdDuplicated.value = res.data.isDuplicated
     })
     .catch((err)=>{
       console.log(err)
@@ -314,20 +323,20 @@ export const useUserStore = defineStore('user', () => {
 
   // 회원가입
   const signUp = function (payload) {
+    const { memberId, password1, password2, nickName } = payload
     axios({
       method: 'post',
       url: `${USER_API}/signup/`,
-      data: payload
+      data: {
+        memberId,
+        password1,
+        password2,
+        nickName,
+      }
     })
     .then((res) => {
         console.log('회원가입 성공!')
-        accessToken.value = res.data.accessToken
-        refreshToken.value =  res.data.refreshToken
-        myIcon.value = res.data.icon
-        myNickname.value = res.data.nickname
-
-        // 로그인 상태로 바로 메인으로 이동
-        router.push({ name: 'main' })
+        router.push({ name: 'login' })
       })
       .catch(err => console.log(err))
     }
@@ -395,21 +404,21 @@ export const useUserStore = defineStore('user', () => {
   }
 
   // 닉네임 유효성 검사
-  const validateNickname = function (nickname) {
-    if (nickname === null) {
+  const validateNickName = function (nickName) {
+    if (nickName === null) {
       return true
     }
 
-    if (nickname.value === '') {
+    if (nickName.value === '') {
       console.log('닉넴 공백')
       return false
     }
     const regExp = /^[가-힣a-zA-Z0-9_]+$/
-    if (!regExp.test(nickname)) {
+    if (!regExp.test(nickName)) {
       console.log('닉넴 한영숫특')
       return false
     }
-    const length = nickname.length
+    const length = nickName.length
     if (length < 4 || length > 16) {
       console.log('닉넴 길이')
       return false
@@ -429,9 +438,9 @@ export const useUserStore = defineStore('user', () => {
   }
 
   // 프로필 정보 요청
-  const getProfileInfo = function(nickname) {
+  const getProfileInfo = function(nickName) {
     axios.get({
-      url: `${USER_API}/profile/${nickname}`,
+      url: `${USER_API}/profile/${nickName}`,
       headers: {
         "access-token": accessToken.value
       }
@@ -445,12 +454,12 @@ export const useUserStore = defineStore('user', () => {
   return {
     // 로그인, 로그아웃, 회원가입, 회원탈퇴, 카카오 연동
     generalLogIn, getKakaoCode, simpleLogInRequest, kakaoSignUp,
-    logOut, signUp, signOut, checkMemberId, checkNickname, validateId, validatePassword, validateNickname, kakaoConnect, 
+    logOut, signUp, signOut, checkMemberId, checkNickName, validateId, validatePassword, validateNickName, kakaoConnect, 
     accessToken, refreshToken, authorizationCode, kakaoAccessToken,
-    isNickDuplicated, isIdDuplicated,
+    isNickDuplicated, isIdDuplicated, isLogIn,
 
     // 프로필 아이콘, 프로필 정보 받아오기
     getIconUrl, getTierIconUrl, getProfileInfo, 
-    myIcon, myNickname, profileInfo
+    myIcon, myNickName, profileInfo
     }
 },{persist:true})
