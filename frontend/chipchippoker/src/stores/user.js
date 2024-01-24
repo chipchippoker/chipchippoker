@@ -286,11 +286,15 @@ export const useUserStore = defineStore('user', () => {
   const checkNickname = function (nickname){
     axios({
       method:'post',
-      url: `${USER_API}/duplication/nickname/`,
-      data: nickname
+      url: `${USER_API}/duplication/nickname`,
+      data: {
+        nickname: nickname
+      }
     })
     .then((res)=>{
       isNickDuplicated.value = res.data
+      console.log(res.data)
+      console.log(isNickDuplicated.value)
     })
     .catch((err)=>{
       console.log(err)
@@ -301,11 +305,15 @@ export const useUserStore = defineStore('user', () => {
   const checkMemberId = function (memberId){
     axios({
       method:'post',
-      url: `${USER_API}/duplication/id/`,
-      data: memberId
+      url: `${USER_API}/duplication/id`,
+      data: {
+        memberId: memberId
+      }
     })
     .then((res)=>{
       isIdDuplicated.value = res.data
+      console.log(res.data)
+      console.log(isIdDuplicated.value)
     })
     .catch((err)=>{
       console.log(err)

@@ -41,7 +41,7 @@
     <!-- 모달 -->
 
         <!-- 빠른방 입장 모달 -->
-        <div class="modal fade" id="FindRoomModal" tabindex="-1" aria-labelledby="makeRoomModalLabel" aria-hidden="true">
+        <div class="modal fade" data-bs-backdrop="false" id="FindRoomModal" tabindex="-1" aria-labelledby="makeRoomModalLabel" aria-hidden="true">
             <ModalFindRoom
             :type="gameType"
             />

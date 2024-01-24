@@ -174,7 +174,10 @@ if (myNickname.value === roomManagerNickname.value) {
 // console.log(myNickname.value);
 
 const startGame = function () {
-  roomStore.startGame(roomTitle.value)
+  const payload = {
+    title: roomTitle.value
+  }
+  roomStore.startGame(payload)
 }
 
 const readyGame = function () {

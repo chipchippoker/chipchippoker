@@ -41,7 +41,7 @@ const router = createRouter({
       component: ProfileView
     },
     {
-      path: '/play',
+      path: '/play/:roomId',
       name: 'play',
       component: PlayView
     },

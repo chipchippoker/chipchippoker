@@ -131,8 +131,7 @@ export const useRoomStore = defineStore('room', () => {
         params: { roomId: roomInfo.roomId },
         state: {
           title: roomInfo.title,
-          totalParticipantsCnt: roomInfo.totalParticipantsCnt,
-          nickName: userStore.myNickName
+          totalParticipantsCnt: roomInfo.totalParticipantsCnt
         }
       })
     })
@@ -174,19 +173,30 @@ export const useRoomStore = defineStore('room', () => {
 
 
   // 공개방 입장
-  const enterRoomPublic = function (title) {
+  const enterRoomPublic = function (payload) {
     axios({
       method: 'post',
       url: `${ROOM_API}/enter`,
       headers: { 'access-token': userStore.accessToken },
-      data: {
-        title: title
-      }
+      data: payload
     })
     .then(res => {
       console.log('방 입장 성공')
       roomId.value = res.data.roomId
+      title.value = res.data.title
+      totalParticipantsCnt.value = res.data.totalParticipantsCnt
       return res.data
+    })
+    .then(roomInfo => {
+      // 방 정보 전달, 대기 페이지로 이동
+      router.push({
+        name:'wait',
+        params: { roomId: roomInfo.roomId },
+        state: {
+          title: roomInfo.title,
+          totalParticipantsCnt: roomInfo.totalParticipantsCnt
+        }
+      })
     })
     .catch(err => console.log(err))
   }
@@ -205,43 +215,72 @@ export const useRoomStore = defineStore('room', () => {
     })
     .then(res => {
       console.log('방 입장 성공')
+      roomId.value = res.data.roomId
+      title.value = res.data.title
+      totalParticipantsCnt.value = res.data.totalParticipantsCnt
       return res.data
+    })
+    .then(roomInfo => {
+      // 방 정보 전달, 대기 페이지로 이동
+      router.push({
+        name:'wait',
+        params: { roomId: roomInfo.roomId },
+        state: {
+          title: roomInfo.title,
+          totalParticipantsCnt: roomInfo.totalParticipantsCnt
+        }
+      })
     })
     .catch(err => console.log(err))
   }
 
 
   // 대기방 나가기
-  const leaveRoom = function(title) {
+  const leaveRoom = function() {
     axios({
       method: 'post',
       url: `${ROOM_API}/leave`,
       headers: { 'access-token': userStore.accessToken },
       data: {
-        title: title
+        title: title.value
       }
     })
     .then(res => {
       console.log('방 나가기 성공')
       return res.data
     })
+    .then(() => {
+      // 메인 페이지로 이동
+      router.push({
+        name:'main'
+      })
+    })
     .catch(err => console.log(err))
   }
 
 
   // 방에서 게임 시작
-  const startGame = function(title) {
+  const startGame = function(payload) {
     axios({
       method: 'post',
       url: `${ROOM_API}/play`,
       headers: { 'access-token': userStore.accessToken },
-      data: {
-        title: title
-      }
+      data: payload
     })
     .then(res => {
       console.log('게임 시작 성공')
       return res.data
+    })
+    .then(() => {
+      // 플레이 페이지로 이동
+      router.push({
+        name:'wait',
+        params: { roomId: roomId.value.toString() + 'p' },
+        state: {
+          title: title.value,
+          totalParticipantsCnt: totalParticipantsCnt.value
+        }
+      })
     })
     .catch(err => console.log(err))
   }
