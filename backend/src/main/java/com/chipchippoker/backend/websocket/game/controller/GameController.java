@@ -36,7 +36,7 @@ public class GameController {
 	private final JwtUtil jwtUtil;
 	private final SimpMessagingTemplate template;
 
-	private static Map<String, GameManager> gameManagerMap;
+	public static Map<String, GameManager> gameManagerMap;
 
 	@PostConstruct
 	public void init() {
