@@ -38,7 +38,7 @@
     </div>
     <div class="text-white mt-3">
       아직 회원이 아니십니까? 
-      <a href="" @click="gotoSignUp" style="color:#70E5FF;">
+      <a href="" @click="goSignUp" style="color:#70E5FF;">
         회원가입 ></a>
     </div>
   </div>
@@ -49,11 +49,12 @@
   import { useUserStore } from '@/stores/user'
   import { useRoute,useRouter } from 'vue-router'
   import { useSoundStore } from "@/stores/sound";
-  const soundStore = useSoundStore()
 
+  const soundStore = useSoundStore()
   const route = useRoute()
   const router = useRouter()
   const userStore = useUserStore()
+  
   const memberId = ref(null)
   const password = ref(null)
   const authorizationCode = ref(null)
@@ -86,18 +87,14 @@
   // 카카오 인가코드 받기
   authorizationCode.value = route.query.code
   userStore.authorizationCode = authorizationCode.value
-  console.log(authorizationCode.value);
-  // // 인가코드 받으면
+  // 인가코드 받으면
   if (authorizationCode.value) {
-    authorizationCode.value = new URL(window.location.href).searchParams.get("code")
     userStore.simpleLogInRequest(authorizationCode.value)
-    router.push({name:'kakaosignup'})
   }
 
   // 회원가입으로 이동
-  const gotoSignUp = function(){
+  const goSignUp = function(){
     router.push({name:'signup'})
-
   }
 </script>
   

@@ -1,197 +1,84 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
-import { icon } from '@fortawesome/fontawesome-svg-core'
+ 
+const USER_API = 'https://i10a804.p.ssafy.io/api/auth'
+const MEMBERS_API = 'https://i10a804.p.ssafy.io/api/members'
+const KAKAO_JAVASCRIPT_KEY = import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY
+const REDIRECT_URI = 'http://localhost:5173/login'
 
 export const useUserStore = defineStore('user', () => {
-   
+  // State
   const router = useRouter()
-  const isNickDuplicated = ref(false)
-  const isIdDuplicated = ref(false)
   const accessToken = ref(null)
   const refreshToken = ref(null)
   const authorizationCode = ref(null)
   const kakaoAccessToken = ref(null)
-
-  const USER_API = 'http://i10a804.p.ssafy.io:8082/api/auth'
-  const KAKAO_API_KEY = import.meta.env.VITE_KAKAO_API_KEY
-  const KAKAO_JAVASCRIPT_KEY = import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY
-  const REDIRECT_URI = 'http://localhost:5173/login'
-  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`
-
-  const myNickname = ref('10기_윤예빈')
+  const myNickname = ref('')
   const myIcon = ref('1')
+  const profileInfo = ref({})
+  let headers = {'access-token': accessToken.value}
+  let authHeaders = {'access-token': accessToken.value}
+  let refreshHeaders = {'refresh-token': refreshToken.value}
+  let kakaoHeaders = {'kakao-access-token': kakaoAccessToken.value}
 
-  // 프로필 들어간 다른 친구 데이터
-  const profileInfo = ref({
-    "icon": "1",
-    "rank": 12,
-    "rankFriend":3,
-    "total":351,
-    "win": 32,
-    "draw": 3,
-    "lose": 15,
-    "winningRate": 64.3,
-    "maxWin": 15,
-    "point": 1520,
-    "nickname": "안녕나야",
-    "tier": "rare",
-    "isMine":true,
-    "recentPlayList": [
-      {
-        "opponents": {
-          "페이커": "승",
-          "쵸비": "패",
-          "비디디": "무"
-        },
-        "gameMode": "경쟁전",
-        "memberNum": 3,
-        "pointChange": 36
-      },
-      {
-        "opponents": {
-          "도란": "승",
-          "너구리": "패",
-          "캐니언": "무"
-        },
-        "gameMode": "경쟁전",
-        "memberNum": 3,
-        "pointChange": 24
-      },
-      {
-        "opponents": {
-          "테디": "승",
-          "라이즈": "패",
-          "오너": "무"
-        },
-        "gameMode": "경쟁전",
-        "memberNum": 3,
-        "pointChange": 12
-      },
-      {
-        "opponents": {
-          "구마유시": "승",
-          "제우스": "패",
-          "오른": "무"
-        },
-        "gameMode": "경쟁전",
-        "memberNum": 3,
-        "pointChange": -12
-      },
-      {
-        "opponents": {
-          "베릴": "승",
-          "칸": "패",
-          "너프": "무"
-        },
-        "gameMode": "경쟁전",
-        "memberNum": 3,
-        "pointChange": -24
-      },
-      {
-        "opponents": {
-          "룰러": "승",
-          "칸나": "패",
-          "캐니언": "무"
-        },
-        "gameMode": "경쟁전",
-        "memberNum": 3,
-        "pointChange": 36
-      },
-      {
-        "opponents": {
-          "오너": "승",
-          "너구리": "패",
-          "쵸비": "무"
-        },
-        "gameMode": "경쟁전",
-        "memberNum": 3,
-        "pointChange": 24
-      },
-      {
-        "opponents": {
-          "피넛": "승",
-          "페이커": "패",
-          "비디디": "무"
-        },
-        "gameMode": "경쟁전",
-        "memberNum": 3,
-        "pointChange": 12
-      },
-      {
-        "opponents": {
-          "제우스": "승",
-          "구마유시": "패",
-          "오른": "무"
-        },
-        "gameMode": "경쟁전",
-        "memberNum": 3,
-        "pointChange": -12
-      },
-      {
-        "opponents": {
-          "라이즈": "승",
-          "테디": "패",
-          "너프": "무"
-        },
-        "gameMode": "경쟁전",
-        "memberNum": 3,
-        "pointChange": -24
-      },
-      {
-        "opponents": {
-          "정글러": "승",
-          "탑": "패",
-          "미드": "무"
-        },
-        "gameMode": "경쟁전",
-        "memberNum": 3,
-        "pointChange": 36
-      },
-      {
-        "opponents": {
-          "원딜": "승",
-          "서포터": "패",
-          "서폿": "무"
-        },
-        "gameMode": "경쟁전",
-        "memberNum": 3,
-        "pointChange": 24
-      },
-      {
-        "opponents": {
-          "탑": "승",
-          "정글러": "패",
-          "미드": "무"
-        },
-        "gameMode": "경쟁전",
-        "memberNum": 3,
-        "pointChange": 12
-      },
-    ]
-  })
+  watch(accessToken, (newAccessToken) => {
+    headers['access-token'] = newAccessToken;
+    authHeaders['access-token'] = newAccessToken;
+  });
   
+  watch(refreshToken, (newRefreshToken) => {
+    refreshHeaders['refresh-token'] = newRefreshToken;
+  });
+  
+  watch(kakaoAccessToken, (newKakaoAccessToken) => {
+    kakaoHeaders['kakao-access-token'] = newKakaoAccessToken;
+  });
+
+  // 회원가입
+  const signUp = function (payload) {
+    console.log('회원가입 요청');
+    axios({
+      method: 'post',
+      url: `${USER_API}/signup`,
+      data: payload
+    })
+    .then((response) => {
+        console.log('회원가입 성공!')
+        const res = response.data
+        if (res.code === 200) {
+          accessToken.value = res.data.accessToken
+          refreshToken.value = res.data.refreshToken
+          myIcon.value = res.data.icon
+          myNickname.value = res.data.nickname
+          router.push({ name: 'main' })
+        }
+      })
+      .catch(err => console.log(err))
+    }
+    
   // 일반 로그인
   const generalLogIn = function (payload) {
+    console.log('일반 로그인 요청');
     axios({
       method: 'post',
       url: `${USER_API}/login`,
       data: payload
     })
-      .then(res => {
+      .then(response => {
+        const res = response.data
+        console.log('일반 로그인 성공!!')
+        console.log(res.data);
         accessToken.value = res.data.accessToken
         refreshToken.value = res.data.refreshToken
         myIcon.value = res.data.icon
         myNickname.value = res.data.nickname
-
-        console.log('일반 로그인 성공!!')
-        // 로그인 상태로 바로 메인으로 이동
         router.push({ name: 'main' })
       })
       .catch(err => console.log(err))
   }
-  // 문제가 있음 손 봐야 함
+
   // 카카오 인가코드 받기
   const getKakaoCode = function () {
     console.log('카카오 인가코드 받기')
@@ -203,58 +90,64 @@ export const useUserStore = defineStore('user', () => {
 
   // 간편 로그인
   const simpleLogInRequest = function (authorizationCode) {
-    console.log(authorizationCode);
+    console.log('간편 로그인 요청');
     // 인가코드로 로그인 요청
     axios({
       method: 'post',
       url: `${USER_API}/authorization`,
-      data: {
-        authorizationCode: authorizationCode
-      }
+      data: {authorizationCode}
     })
-    .then(res => {
-      if (res.code === 200) {
+    .then(response => {
+      const res = response.data
+      console.log(res.data);
+      if (res.data.code === 200) {
         console.log("카카오 로그인 성공!!")
-        accessToken.value = res.simpleLoginResponse.accessToken
-        refreshToken.value = res.simpleLoginResponse.refreshToken
-        myIcon.value = res.simpleLoginResponse.icon
-        myNickname.value = res.simpleLoginResponse.nickname
+        accessToken.value = res.data.accessToken
+        refreshToken.value = res.data.refreshToken
+        myIcon.value = res.data.icon
+        myNickname.value = res.data.nickname
         router.push({ name: 'main' })
 
-      } else if (res.code === 202) {
+      } else if (res.data.code === 202) {
         console.log("카카오 로그인 성공, 닉네임 설정!!")
-        kakaoAccessToken.value = res.kakaoAccessToken
-        router.push('kakaosignup')
+        console.log(res.data);
+        kakaoAccessToken.value = res.data.kakaoAccessToken
+        router.push({ name: 'kakaosignup' })
       }
     })
-    .catch(err => {console.log('카카오 로그인 실패')})
+    .catch(err => console.log(err))
   }
 
   // 카카오 회원가입
   const kakaoSignUp = function(payload){
-    console.log("카카오 회원가입 요청");
+    console.log("카카오 회원가입 요청")
+    console.log(kakaoAccessToken.value)
     axios({
-      method:'post',
-      url:`${USER_API}/social-signup`,
+      method: 'post',
+      url: `${USER_API}/social-signup`,
       data: payload,
-      headers: { 'kakao-access-token': kakaoAccessToken.value }
+      headers: kakaoHeaders
     })
-    .then((res)=>{
-      accessToken.value = res.simpleLoginResponse.accessToken
-      refreshToken.value = res.simpleLoginResponse.refreshToken
-      myIcon.value = res.simpleLoginResponse.icon
-      myNickname.value = res.simpleLoginResponse.nickname
+    .then((response)=>{
+      const res = response.data
+      console.log('카카오 회원가입 성공');
+      console.log(res.data);
+      accessToken.value = res.data.accessToken
+      refreshToken.value = res.data.refreshToken
+      myIcon.value = res.data.icon
+      myNickname.value = res.data.nickname
       router.push({ name: 'main' })
     })
-    .catch((err)=>{console.log(err)})
+    .catch(err => console.log(err))
   }
 
   // 로그아웃
   const logOut = function () {
     console.log('로그아웃 요청!');
-    axios.post({
+    axios({
+      method: 'post',
       url: `${USER_API}/logout`,
-      headers: { 'access-token': accessToken.value }
+      headers: authHeaders
     })  
     .then(res => {
       console.log('로그아웃 성공!!')
@@ -273,8 +166,8 @@ export const useUserStore = defineStore('user', () => {
     axios({
       method: 'post',
       url: `${USER_API}/social`,
-      headers: { 'access-token': accessToken.value },
-      data: { authorizationCode: authorizationCode.value }
+      data: { authorizationCode },
+      headers: authHeaders
     })
     .then(res => {
       console.log('카카오 연동 성공!');
@@ -284,73 +177,46 @@ export const useUserStore = defineStore('user', () => {
 
   // 닉네임 중복확인
   const checkNickname = function (nickname){
+    console.log("닉네임 중복 확인 요청")
     axios({
-      method:'post',
+      method: 'post',
       url: `${USER_API}/duplication/nickname`,
-      data: {
-        nickname: nickname
-      }
+      data: { nickname }
     })
     .then((res)=>{
-      isNickDuplicated.value = res.data
-      console.log(res.data)
-      console.log(isNickDuplicated.value)
+      console.log('닉네임 중복 확인 성공');
+      return res.data.data
     })
-    .catch((err)=>{
-      console.log(err)
-    })
+    .catch(err => console.log(err))
   }
 
   // 아이디 중복확인
   const checkMemberId = function (memberId){
-    axios({
-      method:'post',
-      url: `${USER_API}/duplication/id`,
-      data: {
-        memberId: memberId
-      }
-    })
-    .then((res)=>{
-      isIdDuplicated.value = res.data
-      console.log(res.data)
-      console.log(isIdDuplicated.value)
-    })
-    .catch((err)=>{
-      console.log(err)
-    })
-  }
-
-  // 회원가입
-  const signUp = function (payload) {
+    console.log("아이디 중복 확인 요청")
     axios({
       method: 'post',
-      url: `${USER_API}/signup`,
-      data: payload
+      url: `${USER_API}/duplication/id`,
+      data: { memberId }
     })
-    .then((res) => {
-        console.log('회원가입 성공!')
-        accessToken.value = res.data.accessToken
-        refreshToken.value =  res.data.refreshToken
-        myIcon.value = res.data.icon
-        myNickname.value = res.data.nickname
+    .then((res)=>{
+      console.log('아이디 중복 확인 성공')
+      return res.data.data
+    })
+    .catch(err => console.log(err))
+  }
 
-        // 로그인 상태로 바로 메인으로 이동
-        router.push({ name: 'main' })
-      })
-      .catch(err => console.log(err))
-    }
-    
   // 회원탈퇴
   const signOut = function () {
-      console.log('회원탈퇴 요청!');
+    console.log('회원탈퇴 요청!')
     axios({
       method: 'delete',
       url: `${USER_API}/members`,
-      headers: { 'access-token': accessToken.value }
+      headers: authHeaders
     })
     .then(res => {
       console.log('회원탈퇴 성공')
     })
+    .catch(err => console.log(err))
   }
   
   // 아이디 유효성 검사
@@ -436,15 +302,17 @@ export const useUserStore = defineStore('user', () => {
 
   // 프로필 정보 요청
   const getProfileInfo = function(nickname) {
-    axios.get({
-      url: `${USER_API}/profile/${nickname}`,
+    axios({
+      method:'get',
+      url: `${MEMBER_API}/profile/${nickname}`,
       headers: {
         "access-token": accessToken.value
       }
     })
     .then(res => {
-      console.log("프로필 정보 요청 성공");
-      profileInfo.value = res.profilePageResponse
+      console.log("프로필 정보 요청 결과",res);
+      profileInfo.value = res.data.data
+      console.log("profileInfo",profileInfo.value)
     })
   }
 
@@ -453,7 +321,6 @@ export const useUserStore = defineStore('user', () => {
     generalLogIn, getKakaoCode, simpleLogInRequest, kakaoSignUp,
     logOut, signUp, signOut, checkMemberId, checkNickname, validateId, validatePassword, validateNickname, kakaoConnect, 
     accessToken, refreshToken, authorizationCode, kakaoAccessToken,
-    isNickDuplicated, isIdDuplicated,
 
     // 프로필 아이콘, 프로필 정보 받아오기
     getIconUrl, getTierIconUrl, getProfileInfo, 
