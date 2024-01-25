@@ -87,7 +87,7 @@ public class MemberServiceImpl implements MemberService {
 				}
 			}
 		}
-		return memberRepository.getProfilePage(member, myTotalRank, myFriendRank, isMine, isFriend, isSent,
+		return memberRepository.getProfilePage(searchMember, myTotalRank, myFriendRank, isMine, isFriend, isSent,
 			recentPlayList);
 
 	}
