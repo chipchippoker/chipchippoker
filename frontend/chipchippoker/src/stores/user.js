@@ -36,6 +36,10 @@ export const useUserStore = defineStore('user', () => {
     kakaoHeaders['kakao-access-token'] = newKakaoAccessToken;
   });
 
+  // 프로필 아이콘 보여주기
+  const viewProfileIcon = ref(true)
+
+
   // 회원가입
   const signUp = function (payload) {
     console.log('회원가입 요청');
@@ -324,6 +328,6 @@ export const useUserStore = defineStore('user', () => {
 
     // 프로필 아이콘, 프로필 정보 받아오기
     getIconUrl, getTierIconUrl, getProfileInfo, 
-    myIcon, myNickname, profileInfo
+    myIcon, myNickname, profileInfo, viewProfileIcon,
     }
 },{persist:true})
