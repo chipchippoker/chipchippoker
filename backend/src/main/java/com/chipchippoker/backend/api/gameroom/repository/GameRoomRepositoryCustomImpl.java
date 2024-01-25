@@ -80,5 +80,13 @@ public class GameRoomRepositoryCustomImpl implements GameRoomRepositoryCustom {
 			.orderBy(gameRoom.createdAt.asc())
 			.fetch();
 	}
+
+	public GameRoom findByStartCompetitionMatchingSearchOption(Integer totalParticipantCnt) {
+		return queryFactory
+			.selectFrom(gameRoom)
+			.where(gameRoom.type.eq("경쟁"), gameRoom.state.eq("대기"),
+				gameRoom.totalParticipantCnt.eq(totalParticipantCnt))
+			.fetchOne();
+	}
 }
 

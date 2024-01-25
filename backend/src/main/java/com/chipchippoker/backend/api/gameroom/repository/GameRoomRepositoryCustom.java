@@ -12,4 +12,6 @@ public interface GameRoomRepositoryCustom {
 		Boolean isEmpty, Pageable pageable);
 
 	List<GameRoom> findByStartFriendlyMatchingSearchOption(Integer totalParticipantCnt);
+
+	GameRoom findByStartCompetitionMatchingSearchOption(Integer totalParticipantCnt);
 }
