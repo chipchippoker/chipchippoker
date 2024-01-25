@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chipchippoker.backend.api.matching.model.dto.QuitMatchingResponse;
+import com.chipchippoker.backend.api.matching.model.dto.StartCompetitionMatchingRequest;
+import com.chipchippoker.backend.api.matching.model.dto.StartCompetitionMatchingResponse;
 import com.chipchippoker.backend.api.matching.model.dto.StartFriendlyMatchingRequest;
 import com.chipchippoker.backend.api.matching.model.dto.StartFriendlyMatchingResponse;
 import com.chipchippoker.backend.api.matching.service.MatchingService;
@@ -36,5 +39,23 @@ public class MatchingController {
 			return ResponseEntity.ok(ApiResponse.success(Collections.EMPTY_MAP));
 		else
 			return ResponseEntity.ok(ApiResponse.success(startFriendlyMatchingResponse));
+	}
+
+	// 경쟁전 빠른 게임 시작
+	@PostMapping("/competition")
+	public ResponseEntity<ApiResponse<StartCompetitionMatchingResponse>> startCompetitionMatching(
+		@RequestBody StartCompetitionMatchingRequest startCompetitionMatchingRequest) {
+		Long id = (Long)request.getAttribute("id");
+		StartCompetitionMatchingResponse startCompetitionMatchingResponse = matchingService.startCompetitionMatching(id,
+			startCompetitionMatchingRequest.getTotalParticipantCnt());
+		return ResponseEntity.ok(ApiResponse.success(startCompetitionMatchingResponse));
+	}
+
+	// 빠른 게임 시작 중단
+	@PostMapping("/quit")
+	public ResponseEntity<ApiResponse<QuitMatchingResponse>> quitMatching() {
+		Long id = (Long)request.getAttribute("id");
+		QuitMatchingResponse quitMatchingResponse = matchingService.quitMatching(id);
+		return ResponseEntity.ok(ApiResponse.success(quitMatchingResponse));
 	}
 }

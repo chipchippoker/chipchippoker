@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chipchippoker.backend.api.gameroom.repository.GameRoomRepository;
+import com.chipchippoker.backend.api.matching.model.dto.QuitMatchingResponse;
+import com.chipchippoker.backend.api.matching.model.dto.StartCompetitionMatchingResponse;
 import com.chipchippoker.backend.api.matching.model.dto.StartFriendlyMatchingResponse;
 import com.chipchippoker.backend.api.member.repository.MemberRepository;
 import com.chipchippoker.backend.common.dto.ErrorBase;
@@ -37,5 +39,43 @@ public class MatchingServiceImpl implements MatchingService {
 		} else { // 조회된 게임방이 없는 경우
 			return null;
 		}
+	}
+
+	@Override
+	public StartCompetitionMatchingResponse startCompetitionMatching(Long id, Integer totalParticipantCnt) {
+		Member member = memberRepository.findById(id)
+			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
+
+		// 경쟁, 대기, 총 인원수를 만족하는 게임방 조회
+		GameRoom gameRoom = gameRoomRepository.findByStartCompetitionMatchingSearchOption(
+			totalParticipantCnt);
+
+		if (gameRoom != null) { // 입장 가능한 게임방이 있다면
+			member.enterGameRoom(gameRoom); // 게임방 입장
+
+			if (gameRoom.getMembers().size() == totalParticipantCnt - 1) { // 인원 수가 모두 충족되었다면
+				gameRoom.updateGameRoomState("진행");
+				// TODO: 웹소켓 호출
+			}
+		} else { // 입장 가능한 게임방이 없다면
+			// 새로운 게임방 생성
+			String title = "경쟁전 " + (gameRoomRepository.findAll().size() + 1);
+			gameRoom = GameRoom.createGameRoom(title, null, totalParticipantCnt, Boolean.FALSE, "경쟁", null);
+			gameRoomRepository.save(gameRoom);
+
+			// 방에 입장
+			member.enterGameRoom(gameRoom);
+		}
+
+		return StartCompetitionMatchingResponse.startCompetitionMatchingResponse(gameRoom); // 응답
+	}
+
+	@Override
+	public QuitMatchingResponse quitMatching(Long id) {
+		Member member = memberRepository.findById(id)
+			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
+		GameRoom gameRoom = member.getGameRoom();
+		member.leaveGameRoom();
+		return QuitMatchingResponse.quitMatchingResponse(gameRoom);
 	}
 }

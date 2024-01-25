@@ -3,8 +3,6 @@ package com.chipchippoker.backend.common.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.chipchippoker.backend.api.gameroom.model.dto.CreateGameRoomRequest;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,7 +31,7 @@ public class GameRoom extends BaseEntity {
 	@Column(name = "type", nullable = false)
 	private String type;
 
-	@Column(name = "room_manager_nickname", nullable = false)
+	@Column(name = "room_manager_nickname")
 	private String roomManagerNickname;
 
 	@Column(name = "is_private", nullable = false)
@@ -51,15 +49,15 @@ public class GameRoom extends BaseEntity {
 	@OneToOne(mappedBy = "gameRoom", cascade = CascadeType.ALL)
 	private SpectateRoom spectateRoom;
 
-	public static GameRoom createGameRoom(CreateGameRoomRequest createGameRoomRequest,
-		String nickname) {
+	public static GameRoom createGameRoom(String title, Integer password, Integer totalParticipantCnt,
+		Boolean isPrivate, String type, String nickname) {
 		return GameRoom.builder()
-			.title(createGameRoomRequest.getTitle())
-			.password(createGameRoomRequest.getPassword())
-			.totalParticipantCnt(createGameRoomRequest.getTotalParticipantCnt())
-			.type("친선")
+			.title(title)
+			.password(password)
+			.totalParticipantCnt(totalParticipantCnt)
+			.type(type)
 			.roomManagerNickname(nickname)
-			.isPrivate(createGameRoomRequest.getIsPrivate())
+			.isPrivate(isPrivate)
 			.state("대기")
 			.build();
 	}

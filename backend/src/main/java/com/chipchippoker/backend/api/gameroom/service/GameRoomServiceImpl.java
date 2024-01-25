@@ -52,7 +52,9 @@ public class GameRoomServiceImpl implements GameRoomService {
 		GameRoomServiceHelper.isDuplicatedGameRoom(gameRoomRepository,
 			createGameRoomRequest.getTitle()); // 이미 중복되는 방제목이 있는 경우
 
-		GameRoom gameRoom = GameRoom.createGameRoom(createGameRoomRequest, nickname);
+		GameRoom gameRoom = GameRoom.createGameRoom(createGameRoomRequest.getTitle(),
+			createGameRoomRequest.getPassword(), createGameRoomRequest.getTotalParticipantCnt(),
+			createGameRoomRequest.getIsPrivate(), "친선", nickname);
 		gameRoomRepository.save(gameRoom);
 
 		// 연관관계 매핑
