@@ -8,7 +8,9 @@
 
       <div class="formstyle">
         <div class="h2 fw-bold">회원가입</div>
+        <!-- 회원가입 -->
         <form @submit.prevent="signUp" style="width: 400px;">
+          <!-- 닉네임 -->
           <div class="mb-3">
             <label for="nickname" class="form-label">닉네임</label>
             <div class="input-group">
@@ -21,6 +23,7 @@
               (_)의 4 ~ 16 글자이어야 합니다.</div>
             <div v-if="isNickDuplicated===null" id="nickname" class="fw-lgitighter x-little-text text-danger">닉네임 중복확인을 해주세요.</div>
           </div>
+          <!-- 아이디 -->
           <div class="mb-3">
             <label for="id" class="form-label">아이디</label>
             <div class="input-group">
@@ -33,20 +36,19 @@
               합니다.</div>
             <div v-if="isIdDuplicated===null" id="id" class="fw-lgitighter x-little-text text-danger">아이디 중복확인을 해주세요.</div>
           </div>
+          <!-- 비밀번호 -->
           <div class="mb-3">
             <label for="password1" class="form-label">비밀번호</label>
             <input type="password" class="form-control" id="password1" placeholder="password" v-model="password1">
             <div v-if="!isValidPassword1" id="id" class="fw-lgitighter x-little-text text-danger">영어, 숫자, 특수문자를 모두 포함한 8 ~
               30 글자이어야 합니다.</div>
           </div>
+          <!-- 비밀번호 확인 -->
           <div class="mb-3">
             <label for="password2" class="form-label">비밀번호 확인</label>
             <input type="password" class="form-control" id="password2" placeholder="password" v-model="password2">
             <div v-if="!isValidPassword2" id="id" class="fw-lgitighter x-little-text text-danger">비밀번호가 똑같아야 합니다.</div>
           </div>
-
-
-
 
           <!-- 아이콘 모달 버튼 -->
           <div class="d-flex justify-content-center">
@@ -56,6 +58,7 @@
             </button>
           </div>
 
+          <!-- 회원가입 버튼 -->
           <div class="d-grid gap-2 pt-3">
             <button :disabled="!(isValidMemberId && isValidPassword1 && isValidPassword2 && isValidNickname && !isNickDuplicated && !isIdDuplicated)"
               type="submit" class="btn btn-primary btn-login">회원가입</button>
@@ -69,7 +72,6 @@
       <ModalIconList />
     </div>
 
-
   </div>
 </template>
   
@@ -79,18 +81,19 @@ import { useUserStore } from "@/stores/user";
 import ModalIconList from "@/components/Modal/ModalIconList.vue";
 import { useRouter } from "vue-router";
 
+const router = useRouter()
 const userStore = useUserStore()
 const memberId = ref(null)
 const password1 = ref(null)
 const password2 = ref(null)
 const nickname = ref(null)
+
 const isNickDuplicated = ref(null)
 const isIdDuplicated = ref(null)
 const isValidMemberId = ref(true)
 const isValidPassword1 = ref(true)
 const isValidPassword2 = ref(true)
 const isValidNickname = ref(true)
-const router = useRouter()
 
 // 회원가입
 const signUp = function () {
@@ -107,16 +110,15 @@ const signUp = function () {
 
 // 닉네임 중복 확인
 const checkNickname = function () {
-  userStore.checkNickname(nickname.value);
-  isNickDuplicated.value = userStore.isNickDuplicated
+  isNickDuplicated.value = userStore.checkNickname(nickname.value);
 }
 
 // 아이디 중복 확인
 const checkMemberId = function () {
-  userStore.checkMemberId(memberId.value);
-  isIdDuplicated.value = userStore.isIdDuplicated;
+  isIdDuplicated.value = userStore.checkMemberId(memberId.value);
 }
 
+// 유효성 검사
 watch([memberId, password1, password2, nickname], () => {
   isValidMemberId.value = userStore.validateId(memberId.value);
   isValidPassword1.value = userStore.validatePassword(password1.value);
@@ -126,14 +128,11 @@ watch([memberId, password1, password2, nickname], () => {
   } else {
     isValidPassword2.value = true
   }
-});
-
+})
 </script>
 
   
 <style scoped>
-
-
 .btn-login {
       box-shadow: 0 0 0 3px #ffffff inset;
       border: 0px;

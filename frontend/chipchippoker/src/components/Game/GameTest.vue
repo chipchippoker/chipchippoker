@@ -1,8 +1,21 @@
 <template>
-  <div>
+  <div style="color: white">
     <h1>게임 테스트</h1>
     <input type="text" v-model="gameRoomTitle" placeholder="방 제목">
+
+    <!-- 인원 수 선택 체크박스 -->
+    <label>
+      <input type="radio" v-model="countOfPeople" value=2> 2인
+    </label>
+    <label>
+      <input type="radio" v-model="countOfPeople" value=3> 3인
+    </label>
+    <label>
+      <input type="radio" v-model="countOfPeople" value=4> 4인
+    </label>
+
     <button @click="onCreatRoom">방 생성</button>
+    <p v-if="errorText" class="error-message">{{ errorText }}</p>
   </div>
 </template>
 
@@ -13,15 +26,38 @@ import { useUserStore } from '@/stores/user';
 
 const gameStore = useGameStore()
 const gameRoomTitle = ref('')
+const countOfPeople = ref(undefined)
+const errorText = ref('')
 
-const onCreatRoom = () => {
+// 방생성 버튼 클릭시 호출되는 함수
+const onCreatRoom = function(){
+  if (!validateConditions()) {
+    return
+  }
+
   // 게임방 생성
-  // gameStore.connectHandler(gameRoomTitle.value)
-  // gameStore.gameRoomTitle = gameRoomTitle.value
-  gameStore.createRoom(gameRoomTitle.value, 3)
+  gameStore.createRoom(gameRoomTitle.value, countOfPeople.value)
   gameStore.subscribeHandler(gameRoomTitle.value)
-
 }
+
+const validateConditions = function(){
+  // 방 제목 길이 확인
+  if (gameRoomTitle.value.length < 1 || gameRoomTitle.value.length > 20) {
+    errorText.value = '방 제목은 1~20자 이어야 합니다.'
+    return false
+  }
+
+  // 인원 수 선택 확인
+  if (countOfPeople === undefined) {
+    errorText.value = '인원 수를 선택하세요.'
+    return false
+  }
+
+  // 모든 조건을 만족하면 true 반환
+  errorText.value = ''
+  return true
+}
+
 </script>
 
 <style scoped>
