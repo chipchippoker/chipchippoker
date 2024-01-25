@@ -14,6 +14,7 @@ import com.chipchippoker.backend.common.dto.ErrorBase;
 import com.chipchippoker.backend.common.entity.Friend;
 import com.chipchippoker.backend.common.entity.FriendRequest;
 import com.chipchippoker.backend.common.entity.Member;
+import com.chipchippoker.backend.common.exception.ForbiddenException;
 import com.chipchippoker.backend.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,10 @@ public class FriendRequestServiceImpl implements FriendRequestService {
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
 		FriendRequest friendRequest = friendRequestRepository.findByFromMemberIdAndToMemberId(fromMember.getId(),
 			toMember.getId());
+
+		// 나 자신에서 친구 요청을 보낸 경우
+		if (fromMemberId.equals(toMember.getId()))
+			throw new ForbiddenException(ErrorBase.E403_FORBIDDEN);
 
 		// 나와 상대방은 이미 친구인 경우
 		FriendRequestServiceHelper.isAlreadyFriend(friendRepository, fromMember.getId(), toMember.getId());
