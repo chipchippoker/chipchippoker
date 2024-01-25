@@ -59,8 +59,8 @@ public class AuthServiceImpl implements AuthService {
 		member.createPoint(point);
 		memberRepository.save(member);
 
-		String accessToken = jwtUtil.createAccessToken(member.getId(),member.getNickname());
-		String refreshToken = jwtUtil.createRefreshToken(member.getId(),member.getNickname());
+		String accessToken = jwtUtil.createAccessToken(member.getId(), member.getNickname());
+		String refreshToken = jwtUtil.createRefreshToken(member.getId(), member.getNickname());
 
 		updateRefreshToken(member.getMemberId(), refreshToken);
 		return new SignupResponse(accessToken, refreshToken, member.getIcon(), member.getNickname());
@@ -75,8 +75,8 @@ public class AuthServiceImpl implements AuthService {
 		if (!loginPassword.equals(member.getPassword())) {
 			throw new InvalidException(ErrorBase.E400_INVALID_PASSWORD);
 		}
-		String accessToken = jwtUtil.createAccessToken(member.getId(),member.getNickname());
-		String refreshToken = jwtUtil.createRefreshToken(member.getId(),member.getNickname());
+		String accessToken = jwtUtil.createAccessToken(member.getId(), member.getNickname());
+		String refreshToken = jwtUtil.createRefreshToken(member.getId(), member.getNickname());
 
 		updateRefreshToken(member.getMemberId(), refreshToken);
 		return new LoginResponse(accessToken, refreshToken, member.getIcon(), member.getNickname());
@@ -89,8 +89,8 @@ public class AuthServiceImpl implements AuthService {
 
 		Member member = memberRepository.findByKakaoSocialId(socialId)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
-		String accessToken = jwtUtil.createAccessToken(member.getId(),member.getNickname());
-		String refreshToken = jwtUtil.createRefreshToken(member.getId(),member.getNickname());
+		String accessToken = jwtUtil.createAccessToken(member.getId(), member.getNickname());
+		String refreshToken = jwtUtil.createRefreshToken(member.getId(), member.getNickname());
 		return new SimpleLoginResponse(accessToken, refreshToken, member.getIcon(), member.getNickname());
 
 	}
@@ -108,10 +108,13 @@ public class AuthServiceImpl implements AuthService {
 			throw new InvalidException(ErrorBase.E400_INVALID_AUTH_TOKEN);
 		}
 		Long socialId = authProvider.getSocialId(token);
+		if (validateExistsUser(socialId)) {
+			throw new DuplicateException(ErrorBase.E409_DUPLICATE_MEMBER);
+		}
 		Member member = Member.newKakaoMember(request);
 		member.connectSocialId(socialId);
-		String accessToken = jwtUtil.createAccessToken(member.getId(),member.getNickname());
-		String refreshToken = jwtUtil.createRefreshToken(member.getId(),member.getNickname());
+		String accessToken = jwtUtil.createAccessToken(member.getId(), member.getNickname());
+		String refreshToken = jwtUtil.createRefreshToken(member.getId(), member.getNickname());
 		member.updateRefreshToken(refreshToken);
 		Point point = Point.createPoint(member);
 		member.createPoint(point);
