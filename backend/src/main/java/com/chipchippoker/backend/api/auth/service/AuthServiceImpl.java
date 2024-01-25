@@ -27,10 +27,12 @@ import com.chipchippoker.backend.common.exception.NotFoundException;
 import com.chipchippoker.backend.common.util.jwt.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class AuthServiceImpl implements AuthService {
 
 	private final MemberRepository memberRepository;
@@ -89,6 +91,7 @@ public class AuthServiceImpl implements AuthService {
 
 		Member member = memberRepository.findByKakaoSocialId(socialId)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
+
 		String accessToken = jwtUtil.createAccessToken(member.getId(), member.getNickname());
 		String refreshToken = jwtUtil.createRefreshToken(member.getId(), member.getNickname());
 		return new SimpleLoginResponse(accessToken, refreshToken, member.getIcon(), member.getNickname());
@@ -113,12 +116,12 @@ public class AuthServiceImpl implements AuthService {
 		}
 		Member member = Member.newKakaoMember(request);
 		member.connectSocialId(socialId);
-		String accessToken = jwtUtil.createAccessToken(member.getId(), member.getNickname());
-		String refreshToken = jwtUtil.createRefreshToken(member.getId(), member.getNickname());
-		member.updateRefreshToken(refreshToken);
 		Point point = Point.createPoint(member);
 		member.createPoint(point);
 		memberRepository.save(member);
+		String accessToken = jwtUtil.createAccessToken(member.getId(), member.getNickname());
+		String refreshToken = jwtUtil.createRefreshToken(member.getId(), member.getNickname());
+		member.updateRefreshToken(refreshToken);
 		return new SimpleSignupResponse(accessToken, refreshToken, member.getIcon(), member.getNickname());
 	}
 
