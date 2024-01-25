@@ -3,8 +3,11 @@
     <div 
     @mouseover="soundStore.hoverSound()"
      type="button" class="d-flex m-2 rounded-2 p-1 overflow-hidden" 
-    :class="[{'myrank':item?.nickname===userStore.myNickName},{'otherrank':item?.nickname!=userStore.myNickName}]"
+    :class="[{'myrank':item?.nickname===userStore.myNickname},{'otherrank':item?.nickname!=userStore.myNickname}]"
     @click="gotoProfile(item?.nickname)">
+
+    <!-- {{ item }} -->
+
         <div class="d-flex gap-1 align-items-center">
             <div class="text-overflow" style="width:35px;">{{ item?.rank }}등</div>
             <img class="x-small-icon"  :src='userStore.getIconUrl(item?.icon)'>
@@ -31,10 +34,10 @@ const soundStore = useSoundStore()
 const router = useRouter()
 defineProps({item:Object})
 
-const gotoProfile = function(nickName){
-    console.log(`${nickName} 페이지로 이동`)
+const gotoProfile = function(nickname){
+    console.log(`${nickname} 페이지로 이동`)
     
-    // router.push({name:'profile',params:`${nickName}`})
+    router.push({name:'profile',query:{nickname}})
 }
 
 </script>

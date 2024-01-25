@@ -25,9 +25,9 @@
 
           <!-- 아이콘 모달 버튼 -->
           <div class="d-flex justify-content-center">
-            <button class="btn-transparency">
+            <div type="button" class="btn-transparency">
               <img data-bs-toggle="modal" data-bs-target="#IconModal" class="small-icon" :src='userStore.getIconUrl(userStore.myIcon)' :alt="userStore.myIcon">
-            </button>
+            </div>
           </div>
 
           <!-- 닉네임 중복 체크를 통과해야만 보임 -->

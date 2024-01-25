@@ -8,6 +8,7 @@ import PlayView from '@/views/PlayView.vue'
 
 import WaitView from '../views/WaitView.vue'
 import GameTest from '@/components/Game/GameTest.vue'
+import animation from '@/views/animation.vue'
 
 
 const router = createRouter({
@@ -36,7 +37,6 @@ const router = createRouter({
     },
     {
       path: '/profile',
-      // /:nickname
       name: 'profile',
       component: ProfileView
     },
@@ -56,6 +56,11 @@ const router = createRouter({
       path: '/game',
       name: 'game',
       component: GameTest
+    },
+    {
+      path: '/animation',
+      name: 'animation',
+      component: animation
     }
   ]
 })

@@ -36,15 +36,16 @@
   import ProfileHistoryList from '@/components/Profile/ProfileHistoryList.vue'
   import { ref, onMounted } from "vue";
   import { useUserStore } from '@/stores/user'
-  import { useRouter } from 'vue-router'
-
+  import { useRoute,useRouter } from 'vue-router'
+  const route = useRoute()
   const userStore = useUserStore()
   const recentPlayList = ref(null)
   const profileInfo = userStore.profileInfo
   const router = useRouter()
 
   onMounted(() => {
-    // userStore.getProfileInfo(MemberId)
+    userStore.getProfileInfo(route.query.nickname)
+    console.log("route.query.nickname",route.query.nickname);
   })
 
   const goMainPage = function() {

@@ -13,7 +13,7 @@ export const useFriendStore = defineStore('friend', () => {
     'access-token': userStore.accessToken
   }
   // 친구 API에서 사용되는 변수
-  const searchedPerson = ref()
+  const searchedPerson = ref({})
   const friendList = ref([])
   const alarmList = ref([])
 
@@ -56,14 +56,15 @@ export const useFriendStore = defineStore('friend', () => {
 
   // 친구 신청 알람 리스트
   const RequestAlarm = function(nickname){
+    
     axios({
       method: 'get',
       url: `${FRIEND_API}/request/list`,
-      data: {nickname},
       headers: headers
     })
     .then(res => {
-      console.log("res.data.data => ",res.data.data)
+      console.log(userStore.myNickname,"res => ",res)
+      console.log(userStore.myNickname,"res.data.data => ",res.data.data)
       alarmList.value = res.data.data
     })
     .catch(err => console.log(err))
@@ -85,10 +86,16 @@ export const useFriendStore = defineStore('friend', () => {
 
   // 친구 신청 수락
   const acceptFriendRequest = function(nickname){
+    console.log(nickname)
+    
+    const data = new FormData()
+    data.append("nickname",nickname)
+    console.log(data)
+
     axios({
       method: 'post',
       url: `${FRIEND_API}/request/accept`,
-      data: {nickname},
+      data: data,
       headers: headers
     })
     .then(res => {
