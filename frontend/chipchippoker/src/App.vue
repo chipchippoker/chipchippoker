@@ -7,6 +7,9 @@ import { useRouter } from 'vue-router';
 
 import { ref, computed } from 'vue';
 import { useUserStore } from '@/stores/user'
+import { useFriendStore } from './stores/friend';
+const userStore = useUserStore()
+const friendStore = useFriendStore()
 
 const router = useRouter()
 const gotoProfile = function(){
@@ -51,16 +54,17 @@ for (let i = 0; i < 300; i++) {
 </script>
 
 <template>
-  <div>
+  <div class="maple">
     <div>
       <RouterLink to="login">로그인</RouterLink> /
       <RouterLink to="signup">회원가입</RouterLink> / 
       <RouterLink to="kakaosignup">카카오 회원가입</RouterLink> /
-      <RouterLink to="profile">프로필 나의정보</RouterLink> /
+      <RouterLink :to="{ name: 'profile', query: { nickname: userStore.myNickname }}">프로필 나의정보</RouterLink> /
       <RouterLink to="main">메인페이지</RouterLink>  /
       <RouterLink to="play">플레이페이지</RouterLink> /
       <RouterLink to="wait">대기페이지</RouterLink> /
       <RouterLink to="game">소켓테스트</RouterLink> /
+      <RouterLink to="animation">애니메이션</RouterLink> /
     </div>
     
     <div class="position-relative">   
@@ -72,7 +76,7 @@ for (let i = 0; i < 300; i++) {
 
         <div class="d-flex flex-row justify-content-between" style="width: 10%;">
           <!-- 알림 모달 아이콘 -->
-          <button class="mx-3 z-3 btn-transparency">
+          <button @click="friendStore.RequestAlarm(userStore.myNickname)" class="mx-3 z-3 btn-transparency">
             <font-awesome-icon icon="bell"  shake size="lg" data-bs-toggle="modal" data-bs-target="#alarmModal" style="color: #ffffff;" />
           </button>
           <!-- 설정 모달 아이콘 -->
@@ -91,7 +95,7 @@ for (let i = 0; i < 300; i++) {
 
 
     
-      <div id="app" class="bg-gradation-blue d-flex justify-content-center maple">
+      <div id="app" class="bg-gradation-blue d-flex justify-content-center ">
         <RouterView />
       </div>
 

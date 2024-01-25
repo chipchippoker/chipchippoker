@@ -72,18 +72,18 @@ import { useSoundStore } from '@/stores/sound';
 import { ref,onMounted,onUpdated } from 'vue';
 
 const soundStore = useSoundStore()
+const friendStore = useFriendStore()
 const gameType = ref('경쟁')
 const changeType = function(type){
     gameType.value = type
 }
 
+
 onMounted(()=>{
-    // const friendStore = useFriendStore()
-    // friendStore.getAllRankList()
+    
     // friendStore.getFriendRankList()
     // friendStore.getMyRankList()
-    // const soundStore = useSoundStore()
-    soundStore.bgmOn()
+    // soundStore.bgmOn()
 })
 
 

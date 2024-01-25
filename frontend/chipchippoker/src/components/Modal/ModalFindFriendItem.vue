@@ -31,13 +31,14 @@
                     </div>
                 </div>
             </div>
+            
             <!-- 친구 신청 수신확인 -->
             <!-- 이미 친구라면 -->
             <div type="button" v-if="item?.isFriend==true" class="bg-secondary-subtle p-1 rounded-3">
                 이미 친구입니다
             </div>
             <!-- 이미 보냈습니다 -->
-            <div type="button" v-else-if="item?.isSent==true" class="bg-secondary-subtle p-1 rounded-3">
+            <div type="button" v-else-if="item?.isSent==true || isSent===true" class="bg-secondary-subtle p-1 rounded-3">
                 수락 대기중
             </div>
             <!-- 친구요청 -->
@@ -50,6 +51,7 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 defineProps({
     item:Object
 })
@@ -59,15 +61,16 @@ import { useFriendStore } from '@/stores/friend';
 const friendStore = useFriendStore()
 
 import { useRouter } from 'vue-router';
-
+const isSent = ref(false)
 const router = useRouter()
 const gotoProfile = function(nickname){
     console.log(`${nickname}의 페이지로 이동`);
-    // router.push({name:'profile',params:{nickname:nickname}})
+    router.push({name:'profile',params:{nickname:nickname}})
 }
 // 친구요청
 const friendRequest = function(nickname){
-    // friendStore.friendRequest(nickname)
+    friendStore.friendRequest(nickname)
+    isSent.value = true
 }
 </script>
 

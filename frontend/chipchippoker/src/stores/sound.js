@@ -27,8 +27,8 @@ export const useSoundStore = defineStore('sound', () => {
 
 
     const bgmOn = function(){
-      bgm.pause()
-      bgm.play()
+      // bgm.pause()
+      // bgm.play()
       isBgmPlay.value = true
     }
     const bgmOff = function(){

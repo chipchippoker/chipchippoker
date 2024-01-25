@@ -299,12 +299,12 @@ export const useUserStore = defineStore('user', () => {
   const getTierIconUrl = function(number){
     return new URL(`/src/assets/tier_icons/icon${number}.jpg`,import.meta.url).href;
   }
-
+  
   // 프로필 정보 요청
   const getProfileInfo = function(nickname) {
     axios({
       method:'get',
-      url: `${MEMBER_API}/profile/${nickname}`,
+      url: `${MEMBERS_API}/profile/${nickname}`,
       headers: {
         "access-token": accessToken.value
       }
@@ -315,6 +315,7 @@ export const useUserStore = defineStore('user', () => {
       console.log("profileInfo",profileInfo.value)
     })
   }
+
 
   return {
     // 로그인, 로그아웃, 회원가입, 회원탈퇴, 카카오 연동
