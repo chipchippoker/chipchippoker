@@ -16,7 +16,6 @@ const gotoProfile = function(){
   router.push({name:'profile'})
 }
 
-const userStore = useUserStore()
 
 const windowWidth = window.innerWidth;
 const windowHeight = window.innerHeight;

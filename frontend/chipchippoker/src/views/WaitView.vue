@@ -490,7 +490,7 @@ onMounted(() => {
 
 // localStorage에서 불러오기
 onUnmounted(() => {
-  // 프로필 아이콘 안보이기
+  // 프로필 아이콘 보이기
   userStore.viewProfileIcon = true
 
   // localStorage에서 불러오기
