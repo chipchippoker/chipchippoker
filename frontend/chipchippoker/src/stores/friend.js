@@ -87,15 +87,12 @@ export const useFriendStore = defineStore('friend', () => {
   // 친구 신청 수락
   const acceptFriendRequest = function(nickname){
     console.log(nickname)
-    
-    const data = new FormData()
-    data.append("nickname",nickname)
-    console.log(data)
+
 
     axios({
       method: 'post',
       url: `${FRIEND_API}/request/accept`,
-      data: data,
+      data: {nickname},
       headers: headers
     })
     .then(res => {
