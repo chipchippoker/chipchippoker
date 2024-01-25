@@ -44,8 +44,8 @@
   const router = useRouter()
 
   onMounted(() => {
-    userStore.getProfileInfo(route.query.nickname)
     console.log("route.query.nickname",route.query.nickname);
+    userStore.getProfileInfo(route.query.nickname)
   })
 
   const goMainPage = function() {

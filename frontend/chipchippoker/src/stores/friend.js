@@ -10,7 +10,8 @@ export const useFriendStore = defineStore('friend', () => {
   const RANK_API = 'https://i10a804.p.ssafy.io/api/ranks'
   const userStore = useUserStore()
   let headers = {
-    'access-token': userStore.accessToken
+    // 'Access-Control-Allow-Origin': 'https://i10a804.p.io/',
+  'access-token': userStore.accessToken,
   }
   // 친구 API에서 사용되는 변수
   const searchedPerson = ref({})
@@ -87,15 +88,10 @@ export const useFriendStore = defineStore('friend', () => {
   // 친구 신청 수락
   const acceptFriendRequest = function(nickname){
     console.log(nickname)
-    
-    const data = new FormData()
-    data.append("nickname",nickname)
-    console.log(data)
-
     axios({
       method: 'post',
       url: `${FRIEND_API}/request/accept`,
-      data: data,
+      data: {nickname},
       headers: headers
     })
     .then(res => {
@@ -108,7 +104,7 @@ export const useFriendStore = defineStore('friend', () => {
   // 친구 신청 거절
   const rejectFriendRequest = function(nickname){
     axios({
-      method: 'post',
+      method: 'delete',
       url: `${FRIEND_API}/request/reject`,
       data: {nickname},
       headers: headers
