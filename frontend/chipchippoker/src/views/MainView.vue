@@ -70,7 +70,8 @@ import ModalFindRoom from '@/components/Modal/ModalFindRoom.vue';
 import { useFriendStore } from '@/stores/friend';
 import { useSoundStore } from '@/stores/sound';
 import { ref,onMounted,onUpdated } from 'vue';
-
+import { useUserStore } from '@/stores/user';
+const userStore = useUserStore()
 const soundStore = useSoundStore()
 const friendStore = useFriendStore()
 const gameType = ref('경쟁')
@@ -80,7 +81,7 @@ const changeType = function(type){
 
 
 onMounted(()=>{
-    
+    friendStore.RequestAlarm(userStore.myNickname)
     // friendStore.getFriendRankList()
     // friendStore.getMyRankList()
     // soundStore.bgmOn()
