@@ -12,10 +12,6 @@
       <div class="position-absolute top-50 start-50 translate-middle">
         <h3 class="room-title">어서오세요. 싸피의 세계로!!</h3>
       </div>
-      <!-- 유저 아이콘 -->
-      <div class="d-flex justify-content-center">
-          <img class="small-icon" :src='userStore.getIconUrl(userStore.myIcon)' :alt="userStore.myIcon">
-        </div>
     </div>
 
     <!--  body -->
@@ -468,6 +464,9 @@ async function replaceAudioTrack(deviceId) {
 }
 
 onMounted(() => {
+  // 프로필 아이콘 안보이기
+  userStore.viewProfileIcon = false
+
   // 방 정보 저장
   // roomId.value = route.params.roomId
   // roomTitle.value = history.state.title
@@ -491,6 +490,9 @@ onMounted(() => {
 
 // localStorage에서 불러오기
 onUnmounted(() => {
+  // 프로필 아이콘 안보이기
+  userStore.viewProfileIcon = true
+
   // localStorage에서 불러오기
   roomId.value = localStorage.getItem("roomId")
   roomTitle.value = localStorage.getItem("roomTitle")

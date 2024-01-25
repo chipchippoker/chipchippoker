@@ -38,13 +38,16 @@
 </template>
 
 <script setup>
+  import { useUserStore } from "@/stores/user";
   import PlayControllerVue from "../components/Play/PlayController.vue";
   import PlayPlayerVue from "../components/Play/PlayPlayer.vue";
   import PlayTalkVue from "../components/Play/PlayTalk.vue";
-  import { ref, computed, onMounted } from 'vue'
+  import { ref, computed, onMounted, onUnmounted } from 'vue'
   import { useRoute, useRouter } from 'vue-router';
+  
 
   const router = useRouter()
+  const userStore = useUserStore()
  
   // Join form
   const roomId = ref("SessionCrome")
@@ -52,7 +55,15 @@
   
   const route = useRoute()
   
+  onMounted(() => {
+    // 프로필 아이콘 안보이기
+    userStore.viewProfileIcon = false
+  })
 
+  onUnmounted(() => {
+    // 프로필 아이콘 보이기
+    userStore.viewProfileIcon = true
+  })
   
 </script>
 

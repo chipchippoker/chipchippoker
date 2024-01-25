@@ -16,6 +16,8 @@ const gotoProfile = function(){
   router.push({name:'profile'})
 }
 
+const userStore = useUserStore()
+
 const windowWidth = window.innerWidth;
 const windowHeight = window.innerHeight;
 console.log(windowWidth);
@@ -72,7 +74,7 @@ for (let i = 0; i < 300; i++) {
       <!-- <div v-for="star in stars" :key="star" :class="star.className" :style="{ top: star.y + 'px', left: star.x + 'px' }"></div> -->
 
       <!-- 옵션, 로고, 아이콘  -->
-      <div class="d-flex justify-content-between align-items-center position-absolute m-3">
+      <div v-if="userStore.accessToken !== null" class="d-flex justify-content-between align-items-center position-absolute m-3 z-1" style="width: 95%;">
 
         <div class="d-flex flex-row justify-content-between" style="width: 10%;">
           <!-- 알림 모달 아이콘 -->
@@ -88,9 +90,8 @@ for (let i = 0; i < 300; i++) {
             <font-awesome-icon icon="book" size="lg" data-bs-toggle="modal" data-bs-target="#guideModal" style="color: #ffffff;" />
           </button>
         </div>
-        <!-- <button class="mx-3" style="background-color:transparent; border: 0;">
-          <font-awesome-icon @click="gotoProfile" icon="user" size="lg" style="color: #ffffff;"  />
-        </button> -->
+        <!-- 유저 아이콘 -->
+        <img v-if="userStore.viewProfileIcon" type="button" @click="gotoProfile()" :src='userStore.getIconUrl(userStore.myIcon)' style="width: 60px; height: 60px; border-radius: 50%;">
       </div>
 
 
