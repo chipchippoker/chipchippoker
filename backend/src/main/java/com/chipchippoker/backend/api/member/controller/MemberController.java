@@ -4,10 +4,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chipchippoker.backend.api.auth.model.dto.Token;
+import com.chipchippoker.backend.api.auth.model.dto.request.AuthorizationCodeRequest;
 import com.chipchippoker.backend.api.auth.service.AuthService;
 import com.chipchippoker.backend.api.member.dto.model.ProfilePageResponse;
 import com.chipchippoker.backend.api.member.service.MemberService;
@@ -38,7 +40,9 @@ public class MemberController {
 
 	@Operation(summary = "소셜 연동하기")
 	@PostMapping("/social")
-	public ResponseEntity<ApiResponse<Void>> socialConnection(String authorizationCode) {
+	public ResponseEntity<ApiResponse<Void>> socialConnection(
+		@RequestBody AuthorizationCodeRequest authorizationCodeRequest) {
+		String authorizationCode = authorizationCodeRequest.getAuthorizationCode();
 		if (authorizationCode == null || authorizationCode.isEmpty()) {
 			throw new InvalidException(ErrorBase.E400_INVALID_AUTHORIZATION_CODE);
 		}
@@ -55,7 +59,8 @@ public class MemberController {
 
 	@Operation(summary = "프로필 페이지 조회")
 	@GetMapping("/profile/{nickname}")
-	public ResponseEntity<ApiResponse<ProfilePageResponse>> getProfilePage(@PathVariable(value = "nickname") String nickname){
+	public ResponseEntity<ApiResponse<ProfilePageResponse>> getProfilePage(
+		@PathVariable(value = "nickname") String nickname) {
 		Long id = (Long)httpServletRequest.getAttribute("id");
 		return ResponseEntity.ok(ApiResponse.success(memberService.getProfilePage(id, nickname)));
 	}
