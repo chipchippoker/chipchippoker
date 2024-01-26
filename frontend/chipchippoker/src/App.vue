@@ -13,7 +13,7 @@ const friendStore = useFriendStore()
 
 const router = useRouter()
 const gotoProfile = function(){
-  router.push({name:'profile',params:{nickname:userStore.myNickname}})
+  router.push({name:'profile',query:{nickname:userStore.myNickname}})
 }
 
 
