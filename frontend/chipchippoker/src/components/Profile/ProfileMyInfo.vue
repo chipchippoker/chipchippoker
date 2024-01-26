@@ -107,7 +107,11 @@
           <button class="btn btn-signout">
             <a href="https://docs.google.com/forms/d/e/1FAIpQLSdQLmWHJoz263PcrL3G_SLOzQUY28fVmG2wXJUtObYnEK-_WQ/viewform?usp=sf_link">신고하기</a>
           </button>
-          <button @click="friendRequest" class="btn btn-signout primary">친구 신청</button>
+          <!-- 버튼 누르고 바뀜 -->
+        <div v-if="isSent===true || profileInfo?.isSent" class="btn-signout rounded-2 p-1 bg-secondary text-white text-center border-0">
+            대기중
+        </div>
+          <button v-else @click="friendRequest" class="btn btn-signout primary">친구 신청</button>
         </div>
       </div>
              
@@ -139,11 +143,13 @@
   const friendStore = useFriendStore()
   // const profileInfo = ref({})
   const totalGame = ref(null)
+  const isSent = ref(false)
 
   // 친구 요청
   const friendRequest = function(){
     console.log('친구신청 걸었음!!!')
-    // friendStore.friendRequest(userStore?.profileInfo?.nickname)
+    isSent.value = true
+    friendStore.friendRequest(userStore?.profileInfo?.nickname)
   }
   onMounted(() => {
     // profileInfo.value = userStore.profileInfo
