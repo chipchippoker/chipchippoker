@@ -13,7 +13,7 @@ const friendStore = useFriendStore()
 
 const router = useRouter()
 const gotoProfile = function(){
-  router.push({name:'profile'})
+  router.push({name:'profile',query:{nickname:userStore.myNickname}})
 }
 
 
@@ -77,8 +77,9 @@ for (let i = 0; i < 300; i++) {
 
         <div class="d-flex flex-row justify-content-between" style="width: 10%;">
           <!-- 알림 모달 아이콘 -->
-          <button @click="friendStore.RequestAlarm(userStore.myNickname)" class="mx-3 z-3 btn-transparency">
+          <button class="mx-3 z-3 btn-transparency position-relative">
             <font-awesome-icon icon="bell"  shake size="lg" data-bs-toggle="modal" data-bs-target="#alarmModal" style="color: #ffffff;" />
+            <div v-if="friendStore.alarmList.length > 0" class="alarm-on"></div>
           </button>
           <!-- 설정 모달 아이콘 -->
           <button class="mx-3 z-3 btn-transparency">
@@ -129,6 +130,15 @@ for (let i = 0; i < 300; i++) {
   font-family: 'maple'
 }
 
+.alarm-on {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: red;
+}
 
 /* 별 만들기 */
 .star {
