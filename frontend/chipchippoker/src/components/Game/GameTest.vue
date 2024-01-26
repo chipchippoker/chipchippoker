@@ -1,5 +1,6 @@
 <template>
-  <div style="color: white">
+  <div style="color: white" class="d-flex flex-column">
+    afkbhaf
     <h1>게임 테스트</h1>
     <input type="text" v-model="gameRoomTitle" placeholder="방 제목">
 
@@ -16,6 +17,11 @@
 
     <button @click="onCreatRoom">방 생성</button>
     <p v-if="errorText" class="error-message">{{ errorText }}</p>
+    <button @click="enterRoom(gameRoomTitle)">방 입장</button>
+    <input v-model="nickname" type="text" name="" id="" placeholder="강퇴할사람닉네임">
+    <button @click="gameStore.kickUser(gameRoomTitle,nickname)">강퇴</button>
+
+    <div></div>
   </div>
 </template>
 
@@ -28,7 +34,7 @@ const gameStore = useGameStore()
 const gameRoomTitle = ref('')
 const countOfPeople = ref(undefined)
 const errorText = ref('')
-
+const nickname = ref('')
 // 방생성 버튼 클릭시 호출되는 함수
 const onCreatRoom = function(){
   if (!validateConditions()) {
@@ -36,9 +42,16 @@ const onCreatRoom = function(){
   }
 
   // 게임방 생성
-  gameStore.createRoom(gameRoomTitle.value, countOfPeople.value)
+  gameStore.sendCreateRoom(gameRoomTitle.value, countOfPeople.value)
   gameStore.subscribeHandler(gameRoomTitle.value)
 }
+
+
+const enterRoom = function(gameRoomTitle){
+  gameStore.subscribeHandler(gameRoomTitle)
+  gameStore.sendJoinRoom(gameRoomTitle)
+}
+
 
 const validateConditions = function(){
   // 방 제목 길이 확인
