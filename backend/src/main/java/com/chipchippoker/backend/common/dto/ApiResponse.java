@@ -19,7 +19,6 @@ public class ApiResponse<T> {
 
 	private final String code;
 	private final String message;
-
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private T data;
 
@@ -29,6 +28,14 @@ public class ApiResponse<T> {
 
 	public static <T> ApiResponse<T> success(T data) {
 		return new ApiResponse<>("성공", HttpStatus.OK.getReasonPhrase(), data);
+	}
+
+	public static <T> ApiResponse<T> messageSuccess(MessageBase messageBase) {
+		return new ApiResponse<>(messageBase.getCode(), messageBase.getMessage(), null);
+	}
+
+	public static <T> ApiResponse<T> messageSuccess(MessageBase messageBase, T data) {
+		return new ApiResponse<>(messageBase.getCode(), messageBase.getMessage(), data);
 	}
 
 	public static <T> ApiResponse<T> error(ErrorBase errorBase) {
@@ -45,5 +52,13 @@ public class ApiResponse<T> {
 
 	public static <T> ApiResponse<T> error(ErrorBase errorBase, String message) {
 		return new ApiResponse<>(errorBase.getCode(), message, null);
+	}
+
+	public static ApiResponse<Exception> messageError(MessageBase messageBase) {
+		return new ApiResponse<>(messageBase.getCode(), messageBase.getMessage(), null);
+	}
+
+	public static ApiResponse<Exception> messageError(MessageBase messageBase, String message) {
+		return new ApiResponse<>(messageBase.getCode(), message, null);
 	}
 }

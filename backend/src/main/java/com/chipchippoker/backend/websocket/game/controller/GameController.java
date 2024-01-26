@@ -13,15 +13,17 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chipchippoker.backend.api.gameroom.repository.GameRoomRepository;
 import com.chipchippoker.backend.common.dto.ApiResponse;
-import com.chipchippoker.backend.common.dto.ErrorBase;
+import com.chipchippoker.backend.common.dto.MessageBase;
 import com.chipchippoker.backend.common.exception.InvalidException;
 import com.chipchippoker.backend.common.util.jwt.JwtUtil;
-import com.chipchippoker.backend.websocket.game.dto.BettingMessage;
+import com.chipchippoker.backend.websocket.game.dto.BanMemberMessageRequest;
+import com.chipchippoker.backend.websocket.game.dto.BettingMessageRequest;
 import com.chipchippoker.backend.websocket.game.dto.CreateGameRoomMessageRequest;
-import com.chipchippoker.backend.websocket.game.dto.GameReddyMessageRequest;
+import com.chipchippoker.backend.websocket.game.dto.GameReadyMessageRequest;
 import com.chipchippoker.backend.websocket.game.dto.GameRoomMessageResponse;
-import com.chipchippoker.backend.websocket.game.dto.ReddyRoomMessageResponse;
+import com.chipchippoker.backend.websocket.game.dto.ReadyRoomMessageResponse;
 import com.chipchippoker.backend.websocket.game.model.GameManager;
 import com.chipchippoker.backend.websocket.game.model.MemberManager;
 
@@ -33,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class GameController {
+	private final GameRoomRepository gameRoomRepository;
 	private final JwtUtil jwtUtil;
 	private final SimpMessagingTemplate template;
 
@@ -54,6 +57,7 @@ public class GameController {
 		CreateGameRoomMessageRequest createGameRoomMessageRequest
 	) {
 		log.info("게임방 생성 시작");
+		log.info("닉네임 찍어보기");
 		String nickname = jwtUtil.getNickName(accessToken, null);
 
 		makeGameManager(gameRoomTitle,
@@ -62,7 +66,8 @@ public class GameController {
 		GameManager gameManager = gameManagerMap.get(gameRoomTitle);
 		gameManager.insertMember(nickname, Boolean.TRUE);
 
-		broadcastAllMemberInfoInReddyRoom(gameRoomTitle);
+		broadcastAllMemberInfoInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_CREATED,
+			ReadyRoomMessageResponse.create(gameManager));
 		log.info("게임방 생성 완료");
 	}
 
@@ -75,10 +80,12 @@ public class GameController {
 		@DestinationVariable(value = "gameRoomTitle") String gameRoomTitle
 	) {
 		log.info("게임방 입장 시작");
+		// todo 블랙리스트라면 들어가지 못하게 만들기
 		String nickname = jwtUtil.getNickName(accessToken, null);
 		GameManager gameManager = gameManagerMap.get(gameRoomTitle);
 		gameManager.insertMember(nickname, Boolean.FALSE);
-		broadcastAllMemberInfoInReddyRoom(gameRoomTitle);
+		broadcastAllMemberInfoInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_NEW_MEMBER_ENTER,
+			ReadyRoomMessageResponse.create(gameManager));
 		log.info("게임방 입장 성공");
 	}
 
@@ -94,7 +101,13 @@ public class GameController {
 		String nickname = jwtUtil.getNickName(accessToken, null);
 		GameManager gameManager = gameManagerMap.get(gameRoomTitle);
 		gameManager.deleteMember(nickname);
-		broadcastAllMemberInfoInReddyRoom(gameRoomTitle);
+		// 게임방 가져오기 REST API 연결시
+		// GameRoom gameRoom = gameRoomRepository.findByTitle(gameRoomTitle)
+		// 	.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS));
+		// String roomManagerNickname = gameRoom.getRoomManagerNickname();
+		// gameManager.setRoomManager(roomManagerNickname);
+		broadcastAllMemberInfoInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_MEMBER_EXIT,
+			ReadyRoomMessageResponse.create(gameManager));
 		log.info("게임방 퇴장 성공");
 	}
 
@@ -102,36 +115,39 @@ public class GameController {
 	public void banGameRoom(
 		@Header(name = "access-token") String accessToken,
 		@DestinationVariable(value = "gameRoomTitle") String gameRoomTitle,
-		String banMemberNickname
+		BanMemberMessageRequest banMemberMessageRequest
 	) {
 		log.info("게임방 강퇴 시작");
 		String nickname = jwtUtil.getNickName(accessToken, null);
 		GameManager gameManager = gameManagerMap.get(gameRoomTitle);
 		String roomManager = gameManager.getRoomManager();
 		if (nickname.equals(roomManager)) {
-			gameManager.banMember(banMemberNickname);
-			broadcastToMember(banMemberNickname, ResponseEntity.ok(ApiResponse.success("강퇴당하셨습니다.")));
-			broadcastAllMemberInfoInReddyRoom(gameRoomTitle);
+			gameManager.banMember(banMemberMessageRequest.getNickname());
+			broadcastToMember(banMemberMessageRequest.getNickname(),
+				ResponseEntity.ok(ApiResponse.messageSuccess(MessageBase.S200_GAME_ROOM_BANED_MEMBER)));
+			broadcastAllMemberInfoInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_BAN_MEMBER,
+				ReadyRoomMessageResponse.create(gameManager));
 		} else {
-			broadcastToMember(nickname, ResponseEntity.badRequest().body(ApiResponse.error(
-				ErrorBase.E403_FORBIDDEN_BAN_NOT_GAME_ROOM_MANAGER)));
+			broadcastToMember(nickname, ResponseEntity.badRequest().body(ApiResponse.messageError(
+				MessageBase.E400_CAN_NOT_BAN)));
 		}
 	}
 
 	/**
 	 * 게임방(대기방)에서 회원이 레디를 하면 모든 사람에게 알린다.
 	 */
-	@MessageMapping("/game/reddy/{gameRoomTitle}")
-	public void reddyGameRoom(
+	@MessageMapping("/game/ready/{gameRoomTitle}")
+	public void readyGameRoom(
 		@Header(name = "access-token") String accessToken,
 		@DestinationVariable(value = "gameRoomTitle") String gameRoomTitle,
-		GameReddyMessageRequest gameReddyMessageRequest
+		GameReadyMessageRequest gameReadyMessageRequest
 	) {
 		log.info("게임방 레디 시작");
 		String nickname = jwtUtil.getNickName(accessToken, null);
 		GameManager gameManager = gameManagerMap.get(gameRoomTitle);
-		gameManager.playReddy(nickname, gameReddyMessageRequest.getIsReddy());
-		broadcastAllMemberInfoInReddyRoom(gameRoomTitle);
+		gameManager.playReady(nickname, gameReadyMessageRequest.getIsReady());
+		broadcastAllMemberInfoInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_MEMBER_READY,
+			ReadyRoomMessageResponse.create(gameManager));
 		log.info("게임방 레디 완료");
 	}
 
@@ -155,13 +171,14 @@ public class GameController {
 			} catch (InvalidException e) {
 				// 모두 준비완료 상태가 아니라 시작 불가
 				broadcastToMember(gameManager.getRoomManager(),
-					ResponseEntity.badRequest().body(ApiResponse.error(e.getErrorBase())));
-				log.info("게임방 게임 시작 실패(NOT REDDY)");
+					ResponseEntity.badRequest()
+						.body(ApiResponse.messageError(MessageBase.E400_CAN_NOT_START_NOT_READY)));
+				log.info("게임방 게임 시작 실패(NOT READY)");
 			}
 		} else {
 			broadcastToMember(nickname,
 				ResponseEntity.badRequest()
-					.body(ApiResponse.error(ErrorBase.E403_FORBIDDEN_START_NOT_GAME_ROOM_MANAGER)));
+					.body(ApiResponse.messageError(MessageBase.E400_CAN_NOT_START_NOT_ROOM_MANAGER)));
 			log.info("게임방 게임 시작 실패(NOT MANAGER)");
 		}
 	}
@@ -173,9 +190,9 @@ public class GameController {
 	public void bettingGameRoom(
 		@Header(name = "access-token") String accessToken,
 		@DestinationVariable(value = "gameRoomTitle") String gameRoomTitle,
-		BettingMessage bettingMessage
+		BettingMessageRequest bettingMessageRequest
 	) {
-		/*  todo (환)
+		/*
 		검증 내역
 		- 현재 라운드가 진행 라운드와 동일한지
 		1. 아니다 -> 불가능 ( DONE )
@@ -198,24 +215,25 @@ public class GameController {
 		MemberManager memberManager = gameManager.getMemberManagerMap().get(nickname);
 
 		// 진행 라운드와 게임의 현재 라운드가 다른 경우
-		if (!gameManager.getCurrentRound().equals(bettingMessage.getCurrentRound())) {
-			broadcastToMember(nickname, ResponseEntity.badRequest().body(ApiResponse.error(
-				ErrorBase.E400_INVALID_ROUND_MISMATCH,
+		if (!gameManager.getCurrentRound().equals(bettingMessageRequest.getCurrentRound())) {
+			broadcastToMember(nickname, ResponseEntity.badRequest().body(ApiResponse.messageError(
+				MessageBase.E400_CAN_NOT_BET_ROUND_MISMATCH,
 				"현재 라운드는 ".concat(String.valueOf(gameManager.getCurrentRound()).concat("입니다."))
 			)));
+			return;
 		}
 
 		if (!nickname.equals(gameManager.getOrder().get(gameManager.getTurnNumber()))) {
 			// 니 차례가 아닙니다.
-			broadcastToMember(nickname, ResponseEntity.badRequest().body(ApiResponse.error(
-				ErrorBase.E403_NOT_MY_TURN,
+			broadcastToMember(nickname, ResponseEntity.badRequest().body(ApiResponse.messageError(
+				MessageBase.E400_CAN_NOT_BET_TURN_MISMATCH,
 				gameManager.getOrder().get(gameManager.getTurnNumber()).concat("의 차례입니다."))));
 			return;
 		}
 
 		// 배팅 내용 확인하기
 		try {
-			gameManager.betting(bettingMessage, memberManager);
+			gameManager.betting(bettingMessageRequest, memberManager);
 		} catch (InvalidException e) {
 			log.info("베팅이 불가능합니다.");
 			broadcastToMember(nickname, ResponseEntity.badRequest().body(ApiResponse.error(e.getErrorBase())));
@@ -225,17 +243,18 @@ public class GameController {
 		// 라운드 종료인지 확인
 		if (gameManager.checkDone()) {
 			// 라운드종료
-			// todo 라운드 종료 메시지 출력 테스트
 			gameManager.roundEnd();
 			broadcastAllConnected(gameRoomTitle,
-				ResponseEntity.ok(ApiResponse.success(GameRoomMessageResponse.roundEnd(gameManager,
-					gameManager.getMemberManagerMap().values()))));
+				ResponseEntity.ok(ApiResponse.messageSuccess(MessageBase.S200_GAME_ROOM_ROUND_END,
+					GameRoomMessageResponse.roundEnd(gameManager,
+						gameManager.getMemberManagerMap().values()))));
 			try {
 				// 새로운 라운드 세팅
 				// todo 혼자 남았으면 게임종료
-				gameManager.newRoundSetting(bettingMessage.getCurrentRound());
+				gameManager.newRoundSetting(bettingMessageRequest.getCurrentRound());
 			} catch (Exception e) {
 				// 게임 전체 종료
+				// todo 게임이 전체 종료되었으니 전체종료 메시지를 보내준다.
 				deliveryAnotherMessage(gameRoomTitle, gameManager);
 				return;
 			}
@@ -275,9 +294,10 @@ public class GameController {
 	/**
 	 * 대기방에 있는 모든 사람에게 대기방의 상태를 전달하는 메서드
 	 */
-	private void broadcastAllMemberInfoInReddyRoom(String gameRoomTitle) {
+	private void broadcastAllMemberInfoInReadyRoom(String gameRoomTitle, MessageBase messageBase, Object object) {
 		broadcastAllConnected(gameRoomTitle, ResponseEntity.ok(
-			ApiResponse.success(ReddyRoomMessageResponse.create(gameManagerMap.get(gameRoomTitle)))));
+			ApiResponse.messageSuccess(messageBase, object)
+		));
 	}
 
 	/**
@@ -296,9 +316,10 @@ public class GameController {
 
 		broadcastToMember(nickname,
 			ResponseEntity.ok(
-				ApiResponse.success(GameRoomMessageResponse.createRoundProceed(gameManager,
-					isNotTurnMemberManager,
-					isTurnMemberManager))
+				ApiResponse.messageSuccess(MessageBase.S200_GAME_ROOM_IN_PLAY_INFO,
+					GameRoomMessageResponse.createRoundProceed(gameManager,
+						isNotTurnMemberManager,
+						isTurnMemberManager))
 			));
 	}
 
