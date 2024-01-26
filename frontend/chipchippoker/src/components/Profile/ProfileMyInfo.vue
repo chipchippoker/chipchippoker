@@ -124,7 +124,7 @@
       <div class="modal fade" id="LogOutModal" tabindex="-1" aria-labelledby="LogOutLabel" aria-hidden="true">
         <ModalLogOut />
       </div>
-      <!-- 로그아웃 모달 팝업 -->
+      <!-- 회원탈퇴 모달 팝업 -->
       <div class="modal fade" id="SignOutModal" tabindex="-1" aria-labelledby="SignOutLabel" aria-hidden="true">
         <ModalSignOut />
       </div>
@@ -141,7 +141,7 @@
   import { useFriendStore } from "@/stores/friend";
   const userStore = useUserStore()
   const friendStore = useFriendStore()
-  // const profileInfo = ref({})
+  const profileInfo = ref({})
   const totalGame = ref(null)
   const isSent = ref(false)
 
@@ -152,8 +152,8 @@
     friendStore.friendRequest(userStore?.profileInfo?.nickname)
   }
   onMounted(() => {
-    // profileInfo.value = userStore.profileInfo
-    // totalGame.value = profileInfo.win + profileInfo.draw + profileInfo.lose
+    profileInfo.value = userStore.profileInfo
+    totalGame.value = profileInfo.win + profileInfo.draw + profileInfo.lose
   })
 </script>
   

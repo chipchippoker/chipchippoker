@@ -68,7 +68,7 @@ const showFindGameModal = function () {
     // 3초 동안은 게임 찾기
     setTimeout(() => {
         const payload = {
-            totalParticipantsCnt: Number(checkedOptions.value)
+            totalParticipantCnt: Number(checkedOptions.value)
         }
         if (props.type === '경쟁전') {
             matchStore.matchCompete(payload)
@@ -80,7 +80,7 @@ const showFindGameModal = function () {
                     params: { roomId: matchStore.roomId },
                     state: {
                     title: matchStore.title,
-                    totalParticipantsCnt: matchStore.totalParticipantsCnt
+                    totalParticipantCnt: matchStore.totalParticipantCnt
                     }
                 })
             }
@@ -95,7 +95,7 @@ const showFindGameModal = function () {
                     params: { roomId: matchStore.roomId },
                     state: {
                     title: matchStore.title,
-                    totalParticipantsCnt: matchStore.totalParticipantsCnt
+                    totalParticipantCnt: matchStore.totalParticipantCnt
                     }
                 })
             } else if (matchStore.isMatch === false)  { // 생성된 친선 방이 없으면

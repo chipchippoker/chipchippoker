@@ -13,7 +13,7 @@ export const useMatchStore = defineStore('match', () => {
   
   const roomId = ref(null)
   const title = ref(null)
-  const totalParticipantsCnt = ref(null)
+  const totalParticipantCnt = ref(null)
   const isMatch = ref(null)
 
   // 경쟁전 빠른 시작
@@ -28,7 +28,7 @@ export const useMatchStore = defineStore('match', () => {
       console.log('경쟁전 매치 성공')
       roomId.value = res.data.roomId
       title.value = res.data.title
-      totalParticipantsCnt.value = res.data.totalParticipantsCnt
+      totalParticipantCnt.value = res.data.totalParticipantCnt
       isMatch.value = true
       return res.data
     })
@@ -52,7 +52,7 @@ export const useMatchStore = defineStore('match', () => {
         console.log('친선전 매치 성공')
         roomId.value = res.data.roomId
         title.value = res.data.title
-        totalParticipantsCnt.value = res.data.totalParticipantsCnt
+        totalParticipantCnt.value = res.data.totalParticipantCnt
         isMatch.value = true
       }
       return res.data
@@ -77,7 +77,7 @@ export const useMatchStore = defineStore('match', () => {
 
   return {
     // 경쟁전 빠른 시작
-    matchCompete, roomId, title, totalParticipantsCnt, isMatch,
+    matchCompete, roomId, title, totalParticipantCnt, isMatch,
     // 친선전 빠른 시작
     matchFriend,
     // 빠른 게임 찾기 중단

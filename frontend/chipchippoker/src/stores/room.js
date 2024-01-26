@@ -5,76 +5,12 @@ import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from './user'
 import { useGameStore } from '@/stores/game'
 
-const ROOM_API = 'https://i10a804.p.ssafy.io/api/rooms'
 
 export const useRoomStore = defineStore('room', () => {
-  const allRoomList = ref([
-    {
-      "isPrivate": true,
-      "state": "대기",
-      "title": "테스트 방1",
-      "totalParticipantCnt": 2,
-      "currentParticipantsCnt": 2,
-      "currentSpectatorsCnt": 0
-  },
-  {
-      "isPrivate": false,
-      "state": "대기",
-      "title": "테스트 방2",
-      "totalParticipantCnt": 2,
-      "currentParticipantsCnt": 3,
-      "currentSpectatorsCnt": 0
-  },
-  
-  {
-      "isPrivate": true,
-      "state": "진행",
-      "title": "테스트 방3",
-      "totalParticipantCnt": 2,
-      "currentParticipantsCnt": 0,
-      "currentSpectatorsCnt": 1
-  },
-  {
-      "isPrivate": true,
-      "state": "대기",
-      "title": "테스트 방4",
-      "totalParticipantCnt": 2,
-      "currentParticipantsCnt": 2,
-      "currentSpectatorsCnt": 1
-  },
-  {
-      "isPrivate": true,
-      "state": "진행",
-      "title": "테스트 방5",
-      "totalParticipantCnt": 3,
-      "currentParticipantsCnt": 3,
-      "currentSpectatorsCnt": 0
-  },
-  {
-      "isPrivate": false,
-      "state": "진행",
-      "title": "테스트 방6",
-      "totalParticipantCnt": 3,
-      "currentParticipantsCnt": 0,
-      "currentSpectatorsCnt": 1
-  },
-  {
-      "isPrivate": false,
-      "state": "대기",
-      "title": "테스트 방7",
-      "totalParticipantCnt": 3,
-      "currentParticipantsCnt": 3,
-      "currentSpectatorsCnt": 0
-  },
-  {
-      "isPrivate": false,
-      "state": "대기",
-      "title": "테스트 방8",
-      "totalParticipantCnt": 4,
-      "currentParticipantsCnt": 4,
-      "currentSpectatorsCnt": 4
-  },
-  ])
+  const ROOM_API = 'http://i10a804.p.ssafy.io:8082/api/rooms'
+  const roomType = ref('친선')
+  const allRoomList = ref([])
+
 
   const pageData = ref(
     {
@@ -107,9 +43,12 @@ export const useRoomStore = defineStore('room', () => {
   const roomId = ref('')
   const title = ref('')
   const totalParticipantCnt = ref('')
+  const isRoom = ref(false)
+
 
   // 웹소켓
   const gameStore = useGameStore()
+>>>>>>> frontend/chipchippoker/src/stores/room.js
 
   // 방 생성
   const createRoom = function(payload){
@@ -139,7 +78,11 @@ export const useRoomStore = defineStore('room', () => {
     .then(data => {
       gameStore.sendCreateRoom(title.value, totalParticipantCnt.value)
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      isRoom.value = true
+      console.log(err);
+      console.log(isRoom.value)
+    })
   }
 
   // 방 리스트
@@ -147,28 +90,31 @@ export const useRoomStore = defineStore('room', () => {
     axios({
       method: 'get',
       url: `${ROOM_API}`,
-      params: {
-        type: payload.type,
-        title: payload.title,
-        isTwo: payload.isTwo,
-        isThree: payload.isThree,
-        isFour: payload.isFour,
-        isEmpty: payload.isEmpty,
-        page: payload.page,
-        size: payload.size,
+      headers: { 'access-token': userStore.accessToken },
+      params:{
+        type:payload.type,
+        title:payload.title,
+        isTwo:payload.isTwo,
+        isThree:payload.isThree,
+        isFour:payload.isFour,
+        isEmpty:payload.isEmpty,
+        page:payload.page,
+        size:payload.size,
+
       }
     })
     .then(res => {
-      allRoomList.value = res.data.content
-      pageData.value = res.data.pageable
-      isLast.value = res.data.last
-      totalElements.value = res.data.totalElements
-      totalPages.value = res.data.totalPages
-      isfirst.value = res.data.first
-      nowElements.value = res.data.numberOfElements
-      nowPage.value = res.data.number
-      isEmpty.value = res.data.empty
-      pageArray.value = Array.from({ length: res.data.totalPages }, (_, i) => i + 1)
+      console.log(res)
+      allRoomList.value = res.data.data.content
+      pageData.value = res.data.data.pageable
+      isLast.value = res.data.data.last
+      totalElements.value = res.data.data.totalElements
+      totalPages.value = res.data.data.totalPages
+      isfirst.value = res.data.data.first
+      nowElements.value = res.dat.dataa.numberOfElements
+      nowPage.value = res.data.data.number
+      isEmpty.value = res.data.data.empty
+      pageArray.value = Array.from({ length: res.data.data.totalPages }, (_, i) => i + 1)
     })
     .catch(err => console.log(err))
   }
@@ -260,7 +206,7 @@ export const useRoomStore = defineStore('room', () => {
     .then(() => {
       // 플레이 페이지로 이동
       router.push({
-        name:'wait',
+        name:'play',
         params: { roomId: roomId.value.toString() + 'p' },
         state: {
           title: title.value,
@@ -289,9 +235,9 @@ export const useRoomStore = defineStore('room', () => {
   return {
     // 방 목록
     getRoomList,
-    allRoomList, pageData, isLast, isfirst, totalPages, totalElements, nowElements, nowPage, isEmpty, pageArray,
+    allRoomList, pageData, isLast, isfirst, totalPages, totalElements, nowElements, nowPage, isEmpty, pageArray, roomType,
     // 방 생성
-    createRoom, roomManagerNickname, roomId, title, totalParticipantCnt,
+    createRoom, roomManagerNickname, roomId, title, totalParticipantCnt, isRoom,
     // 방 입장
     enterRoomPublic, enterRoomPrivate,
     // 방 나가기

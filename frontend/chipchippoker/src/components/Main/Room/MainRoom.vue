@@ -4,32 +4,29 @@
         <!-- 인원수 필터 선택 -->
         <div class="d-flex">
             <div class="form-check ">
-                <input v-model="isTwo" class="form-check-input " type="checkbox" value="" id="two">
+                <input v-model="isTwo" @change="updateRoomList" class="form-check-input " type="checkbox" value="" id="two">
                 <label class="form-check-label x-little-text" for="two">
                     2인
                 </label>
             </div>
             <div class="form-check ">
-                <input v-model="isThree" class="form-check-input " type="checkbox" value="" id="three">
+                <input v-model="isThree" @change="updateRoomList" class="form-check-input " type="checkbox" value="" id="three">
                 <label class="form-check-label x-little-text" for="three">
                     3인
                 </label>
             </div>
             <div class="form-check ">
-                <input v-model="isFour" class="form-check-input " type="checkbox" value="" id="four">
+                <input v-model="isFour" @change="updateRoomList" class="form-check-input " type="checkbox" value="" id="four">
                 <label class="form-check-label x-little-text" for="four">
                     4인
                 </label>
             </div>
             <div class="form-check ">
-                <input v-model="isEmpty" class="form-check-input " type="checkbox" value="" id="four">
-                <label class="form-check-label x-little-text" for="four">
+                <input v-model="isEmpty" @change="updateRoomList" class="form-check-input " type="checkbox" value="" id="empty">
+                <label class="form-check-label x-little-text" for="empty">
                     빈방
                 </label>
             </div>
-            <button class="btn-outline-lightblue rounded-2" @click="filterRoom">
-                필터 검색
-            </button>
         </div>
         
         <!-- 방검색 -->
@@ -43,19 +40,19 @@
     <div class="">
         <!-- 경쟁전 탭, 친선전 탭 버튼-->
         <ul class="nav nav-tabs nav-justified border-0"  id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button @click="changeType('경쟁')" class="nav-link active text-white" id="v-pills-rank-tab" data-bs-toggle="tab" data-bs-target="#v-pills-rank-tab-pane" type="button" role="tab" aria-controls="v-pills-rank-tab-pane" aria-selected="true">경쟁전</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button @click="changeType('친선')" class="nav-link text-white" id="v-pills-friend-tab" data-bs-toggle="tab" data-bs-target="#v-pills-friend-tab-pane" type="button" role="tab" aria-controls="v-pills-friend-tab-pane" aria-selected="false">친선전</button>
-        </li>
+            <li class="nav-item" role="presentation">
+                <button @click="changeType('친선')" class="nav-link active text-white" id="v-pills-friend-tab" data-bs-toggle="tab" data-bs-target="#v-pills-friend-tab-pane" type="button" role="tab" aria-controls="v-pills-friend-tab-pane" aria-selected="true">친선전</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button @click="changeType('경쟁')" class="nav-link text-white" id="v-pills-rank-tab" data-bs-toggle="tab" data-bs-target="#v-pills-rank-tab-pane" type="button" role="tab" aria-controls="v-pills-rank-tab-pane" aria-selected="false">경쟁전</button>
+            </li>
         </ul>
         <!-- 탭 화면 -->
         <div class="tab-content border-0" id="myTabContent">
-            <div class="tab-pane fade show active"  id="v-pills-rank-tab-pane" role="tabpanel" aria-labelledby="v-pills-rank-tab" tabindex="0">
-                <MainRoomRankList/></div>
-            <div class="tab-pane fade" id="v-pills-friend-tab-pane" role="tabpanel" aria-labelledby="v-pills-friend-tab" tabindex="0">
+            <div class="tab-pane fade show active" id="v-pills-friend-tab-pane" role="tabpanel" aria-labelledby="v-pills-friend-tab" tabindex="0">
                 <MainRoomFriendList/></div>
+            <div class="tab-pane fade"  id="v-pills-rank-tab-pane" role="tabpanel" aria-labelledby="v-pills-rank-tab" tabindex="0">
+                <MainRoomRankList/></div>
         </div>
 
         
@@ -104,12 +101,13 @@ import { useRoomStore } from '@/stores/room';
 
 const roomStore = useRoomStore()
 
-const roomType = ref('경쟁')
+const roomType = ref('친선')
 const changeType = function(type){
     roomType.value = type
+    roomStore.roomType = type
 }
  
-const title = ref(null)
+const title = ref('')
 const isTwo = ref(false)
 const isThree = ref(false)
 const isFour = ref(false)
@@ -129,7 +127,7 @@ const searchRoom = function(){
         size:8
     }
     console.log(payload)
-    // roomStore.getRoomList(payload)
+    roomStore.getRoomList(payload)
 }
 
 // 새로고침 검색
@@ -146,26 +144,25 @@ const refreshRoom = function(){
     }
     
     console.log(payload)
-    // roomStore.getRoomList(payload)
+    roomStore.getRoomList(payload)
 }
 
 
-// 방 필터 검색
-const filterRoom = function(){
-    console.log('방 필터 검색')
+// 체크박스 검색
+const updateRoomList = function () {
     const payload = {
-        type:roomType.value,
-        isTwo:isTwo.value,
-        isThree:isThree.value,
-        isFour:isFour.value,
-        isEmpty:isEmpty.value,
-        page:0,
-        size:8
-    }
+        type: roomType.value,
+        title: title.value,
+        isTwo: isTwo.value,
+        isThree: isThree.value,
+        isFour: isFour.value,
+        isEmpty: isEmpty.value,
+        page: 0,
+        size: 8
+    };
     console.log(payload)
-    // roomStore.getRoomList(payload)
-}
-    
+    roomStore.getRoomList(payload);
+};
     
 // 페이지네이션 검색
 const pageRoom = function(pagenum){
@@ -180,7 +177,7 @@ const pageRoom = function(pagenum){
         size:8
     }
     console.log(payload)
-    // roomStore.getRoomList(payload)
+    roomStore.getRoomList(payload)
     }
 
 

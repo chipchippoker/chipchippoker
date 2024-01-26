@@ -5,9 +5,11 @@
             <div v-else class="x-little-text">공개({{ item?.state }}중)</div>
 
             <div class="d-flex gap-1">
-
-                <div v-if="item?.isPrivate" type="button" data-bs-toggle="modal" data-bs-target="#EnterPWModal" class="btn-lightred x-little-text rounded-1 px-1">입장</div>
-                <div v-else type="button" @click="enterRoomPublic(item.title)" class="btn-lightred x-little-text rounded-1 px-1">입장</div>
+                <!-- 친선일 때만 입장 보이기 -->
+                <div v-if="roomStore.roomType=='친선'">
+                    <div v-if="item?.isPrivate" type="button" data-bs-toggle="modal" data-bs-target="#EnterPWModal" class="btn-lightred x-little-text rounded-1 px-1">입장</div>
+                    <div v-else type="button" @click="enterRoomPublic(item.title)" class="btn-lightred x-little-text rounded-1 px-1">입장</div>
+                </div>
                 <!-- <div type="button" class="btn-gray x-little-text rounded-1 px-1">관전
                     <font-awesome-icon :icon="['fas', 'caret-right']" style="color: #8f8f8f;" />
                 </div> -->
@@ -19,7 +21,7 @@
             <div><strong>{{ item?.title }}</strong></div>
         </div>
         <div class="x-little-text">
-            참여 인원 : {{ item?.currentParticipantsCnt }}/{{item?.totalParticipantsCnt}} 관전 인원 : {{ item?.currentSpectatorsCnt }}/6
+             참여 인원 : {{ item?.currentParticipantCnt }}/{{item?.totalParticipantCnt}} <!--관전 인원 : {{ item?.currentSpectatorCnt }}/6 -->
         </div>
 
 
@@ -53,7 +55,7 @@ const enterRoomPublic = function (title) {
 // "isPrivate": false,
 // "state": "대기",
 // "title": "테스트 방1",
-// "totalParticipantsCnt": 2,
+// "totalParticipantCnt": 2,
 // "currentParticipantsCnt": 2,
 // "currentSpectatorsCnt": 0
 

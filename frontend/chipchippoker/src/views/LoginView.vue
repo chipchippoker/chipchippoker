@@ -6,7 +6,7 @@
     </div>
       <div class="formstyle">
         <div class="fs-2 fw-bold">로그인</div>
-          <form @submit.prevent="generalLogIn" style="width: 400px;">
+          <form @submit.prevent="generalLogIn()" style="width: 400px;">
             <!-- 아이디 -->
             <div class="mb-3">
               <label for="memberId" class="form-label">아이디</label>
@@ -26,7 +26,7 @@
           </div>
           <!-- 일반 로그인 버튼 -->
           <div class="d-grid gap-2 pt-3">
-            <button @click="generalLogIn()" type="submit" class="btn btn-primary btn-login">로그인</button>
+            <button type="submit" class="btn btn-primary btn-login">로그인</button>
           </div>
           <!-- 카카오 로그인 버튼 -->
           <div class="d-grid gap-2 pt-3">

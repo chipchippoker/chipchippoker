@@ -7,6 +7,8 @@ import { useUserStore } from './user'
 const FRIEND_API = 'http://i10a804.p.ssafy.io:8082/api/friends'
 const RANK_API = 'https://i10a804.p.ssafy.io/api/ranks'
 
+const FRIEND_API = 'https://i10a804.p.ssafy.io/api/friends'
+const RANK_API = 'https://i10a804.p.ssafy.io/api/ranks'
 export const useFriendStore = defineStore('friend', () => {
   const userStore = useUserStore()
   
@@ -29,7 +31,7 @@ export const useFriendStore = defineStore('friend', () => {
       method: 'get',
       url: `${FRIEND_API}/search`,
       params: {nickname},
-      headers: { "access-token": userStore.accessToken }
+      headers: {"access-token": userStore.accessToken}
     })
     .then(res => {
       console.log("res.data.data => ",res.data.data)
@@ -58,7 +60,7 @@ export const useFriendStore = defineStore('friend', () => {
     axios({
       method: 'get',
       url: `${FRIEND_API}/request/list`,
-      headers: {"access-token": "eyJ0eXBlIjoiand0IiwiYWxnIjoiSFMyNTYifQ.eyJpZCI6MSwibmlja25hbWUiOiLstZztmITquLAiLCJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJleHAiOjE3MDc0NTQzMjl9.Vr5nyGtAtfYtZwttOpOTg_J_IvUnNRPx061Jx6qqw5M"}
+      headers: {"access-token": userStore.accessToken}
     })
     .then(res => {
       console.log(userStore.myNickname,"res => ",res)
