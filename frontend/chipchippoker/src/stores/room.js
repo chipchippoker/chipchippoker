@@ -48,8 +48,7 @@ export const useRoomStore = defineStore('room', () => {
 
   // 웹소켓
   const gameStore = useGameStore()
->>>>>>> frontend/chipchippoker/src/stores/room.js
-
+  
   // 방 생성
   const createRoom = function(payload){
     console.log('방 생성 요청!!');

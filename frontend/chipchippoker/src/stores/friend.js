@@ -4,9 +4,6 @@ import axios from 'axios'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from './user'
 
-const FRIEND_API = 'http://i10a804.p.ssafy.io:8082/api/friends'
-const RANK_API = 'https://i10a804.p.ssafy.io/api/ranks'
-
 const FRIEND_API = 'https://i10a804.p.ssafy.io/api/friends'
 const RANK_API = 'https://i10a804.p.ssafy.io/api/ranks'
 export const useFriendStore = defineStore('friend', () => {
