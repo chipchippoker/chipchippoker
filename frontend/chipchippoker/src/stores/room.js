@@ -3,15 +3,17 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from './user'
+import { useGameStore } from '@/stores/game'
+
+const ROOM_API = 'https://i10a804.p.ssafy.io/api/rooms'
 
 export const useRoomStore = defineStore('room', () => {
-  const ROOM_API = 'http://i10a804.p.ssafy.io:8082/api/rooms'
   const allRoomList = ref([
     {
       "isPrivate": true,
       "state": "대기",
       "title": "테스트 방1",
-      "totalParticipantsCnt": 2,
+      "totalParticipantCnt": 2,
       "currentParticipantsCnt": 2,
       "currentSpectatorsCnt": 0
   },
@@ -19,7 +21,7 @@ export const useRoomStore = defineStore('room', () => {
       "isPrivate": false,
       "state": "대기",
       "title": "테스트 방2",
-      "totalParticipantsCnt": 2,
+      "totalParticipantCnt": 2,
       "currentParticipantsCnt": 3,
       "currentSpectatorsCnt": 0
   },
@@ -28,7 +30,7 @@ export const useRoomStore = defineStore('room', () => {
       "isPrivate": true,
       "state": "진행",
       "title": "테스트 방3",
-      "totalParticipantsCnt": 2,
+      "totalParticipantCnt": 2,
       "currentParticipantsCnt": 0,
       "currentSpectatorsCnt": 1
   },
@@ -36,7 +38,7 @@ export const useRoomStore = defineStore('room', () => {
       "isPrivate": true,
       "state": "대기",
       "title": "테스트 방4",
-      "totalParticipantsCnt": 2,
+      "totalParticipantCnt": 2,
       "currentParticipantsCnt": 2,
       "currentSpectatorsCnt": 1
   },
@@ -44,37 +46,36 @@ export const useRoomStore = defineStore('room', () => {
       "isPrivate": true,
       "state": "진행",
       "title": "테스트 방5",
-      "totalParticipantsCnt": 3,
+      "totalParticipantCnt": 3,
       "currentParticipantsCnt": 3,
       "currentSpectatorsCnt": 0
   },
-  // {
-  //     "isPrivate": false,
-  //     "state": "진행",
-  //     "title": "테스트 방6",
-  //     "totalParticipantsCnt": 3,
-  //     "currentParticipantsCnt": 0,
-  //     "currentSpectatorsCnt": 1
-  // },
-  // {
-  //     "isPrivate": false,
-  //     "state": "대기",
-  //     "title": "테스트 방7",
-  //     "totalParticipantsCnt": 3,
-  //     "currentParticipantsCnt": 3,
-  //     "currentSpectatorsCnt": 0
-  // },
-  // {
-  //     "isPrivate": false,
-  //     "state": "대기",
-  //     "title": "테스트 방8",
-  //     "totalParticipantsCnt": 4,
-  //     "currentParticipantsCnt": 4,
-  //     "currentSpectatorsCnt": 4
-  // },
-
-
+  {
+      "isPrivate": false,
+      "state": "진행",
+      "title": "테스트 방6",
+      "totalParticipantCnt": 3,
+      "currentParticipantsCnt": 0,
+      "currentSpectatorsCnt": 1
+  },
+  {
+      "isPrivate": false,
+      "state": "대기",
+      "title": "테스트 방7",
+      "totalParticipantCnt": 3,
+      "currentParticipantsCnt": 3,
+      "currentSpectatorsCnt": 0
+  },
+  {
+      "isPrivate": false,
+      "state": "대기",
+      "title": "테스트 방8",
+      "totalParticipantCnt": 4,
+      "currentParticipantsCnt": 4,
+      "currentSpectatorsCnt": 4
+  },
   ])
+
   const pageData = ref(
     {
       "pageNumber": 0, // 현재 내가 요청한 페이지
@@ -105,55 +106,56 @@ export const useRoomStore = defineStore('room', () => {
   const roomManagerNickname = ref('')
   const roomId = ref('')
   const title = ref('')
-  const totalParticipantsCnt = ref('')
+  const totalParticipantCnt = ref('')
+
+  // 웹소켓
+  const gameStore = useGameStore()
 
   // 방 생성
   const createRoom = function(payload){
     console.log('방 생성 요청!!');
+    console.log(payload);
+    // 방 생성 API 호출
     axios({
       method: 'post',
       url: `${ROOM_API}`,
       headers: { 'access-token': userStore.accessToken },
       data: payload
     })
-    .then(res => {
+    // 방 생성 API 응답 & 방 구독 SEND
+    .then(response => {
       console.log('방 생성 성공')
+      const res = response.data
+      console.log(res.data);
       roomManagerNickname.value = res.data.roomManagerNickname
       roomId.value = res.data.roomId
       title.value = res.data.title
-      totalParticipantsCnt.value = res.data.totalParticipantsCnt
+      totalParticipantCnt.value = res.data.totalParticipantCnt
+      console.log(title.value);
+      gameStore.subscribeHandler(title.value)
       return res.data
     })
-    .then(roomInfo => {
-      // 방 정보 전달, 대기 페이지로 이동
-      router.push({
-        name:'wait',
-        params: { roomId: roomInfo.roomId },
-        state: {
-          title: roomInfo.title,
-          totalParticipantsCnt: roomInfo.totalParticipantsCnt
-        }
-      })
+    // 방 생성 SEND
+    .then(data => {
+      gameStore.sendCreateRoom(title.value, totalParticipantCnt.value)
     })
     .catch(err => console.log(err))
   }
-
-
 
   // 방 리스트
   const getRoomList = function(payload){
     axios({
       method: 'get',
       url: `${ROOM_API}`,
-      params:{
-        type:payload.type,
-        title:payload.title,
-        isTwo:payload.isTwo,
-        isThree:payload.isThree,
-        isFour:payload.isFour,
-        isEmpty:payload.isEmpty,
-        page:payload.page,
-        size:payload.size,
+      params: {
+        type: payload.type,
+        title: payload.title,
+        isTwo: payload.isTwo,
+        isThree: payload.isThree,
+        isFour: payload.isFour,
+        isEmpty: payload.isEmpty,
+        page: payload.page,
+        size: payload.size,
       }
     })
     .then(res => {
@@ -171,36 +173,29 @@ export const useRoomStore = defineStore('room', () => {
     .catch(err => console.log(err))
   }
 
-
   // 공개방 입장
   const enterRoomPublic = function (payload) {
+    // 공개방 입장 API 호출
     axios({
       method: 'post',
       url: `${ROOM_API}/enter`,
       headers: { 'access-token': userStore.accessToken },
       data: payload
     })
+    // 공개방 입장 API 응당 & 방 구독 SEND
     .then(res => {
       console.log('방 입장 성공')
       roomId.value = res.data.roomId
       title.value = res.data.title
-      totalParticipantsCnt.value = res.data.totalParticipantsCnt
-      return res.data
+      totalParticipantCnt.value = res.data.totalParticipantCnt
+      gameStore.subscribeHandler(title.value)
     })
-    .then(roomInfo => {
-      // 방 정보 전달, 대기 페이지로 이동
-      router.push({
-        name:'wait',
-        params: { roomId: roomInfo.roomId },
-        state: {
-          title: roomInfo.title,
-          totalParticipantsCnt: roomInfo.totalParticipantsCnt
-        }
-      })
+    // 방 입장 SEND
+    .then(() => {
+      gameStore.sendJoinRoom(title.value)
     })
     .catch(err => console.log(err))
   }
-
 
   // 비공개방 입장
   const enterRoomPrivate = function(payload) {
@@ -217,23 +212,15 @@ export const useRoomStore = defineStore('room', () => {
       console.log('방 입장 성공')
       roomId.value = res.data.roomId
       title.value = res.data.title
-      totalParticipantsCnt.value = res.data.totalParticipantsCnt
-      return res.data
+      totalParticipantCnt.value = res.data.totalParticipantCnt
+      gameStore.subscribeHandler(title.value)
     })
-    .then(roomInfo => {
-      // 방 정보 전달, 대기 페이지로 이동
-      router.push({
-        name:'wait',
-        params: { roomId: roomInfo.roomId },
-        state: {
-          title: roomInfo.title,
-          totalParticipantsCnt: roomInfo.totalParticipantsCnt
-        }
-      })
+    .then(() => {
+      // 방 입장 SEND
+      gameStore.sendJoinRoom(title.value)
     })
     .catch(err => console.log(err))
   }
-
 
   // 대기방 나가기
   const leaveRoom = function() {
@@ -258,7 +245,6 @@ export const useRoomStore = defineStore('room', () => {
     .catch(err => console.log(err))
   }
 
-
   // 방에서 게임 시작
   const startGame = function(payload) {
     axios({
@@ -278,13 +264,12 @@ export const useRoomStore = defineStore('room', () => {
         params: { roomId: roomId.value.toString() + 'p' },
         state: {
           title: title.value,
-          totalParticipantsCnt: totalParticipantsCnt.value
+          totalParticipantCnt: totalParticipantCnt.value
         }
       })
     })
     .catch(err => console.log(err))
   }
-
 
   // 사용자 강제 퇴장
   const forceMemberOut = function(payload) {
@@ -306,7 +291,7 @@ export const useRoomStore = defineStore('room', () => {
     getRoomList,
     allRoomList, pageData, isLast, isfirst, totalPages, totalElements, nowElements, nowPage, isEmpty, pageArray,
     // 방 생성
-    createRoom, roomManagerNickname, roomId, title, totalParticipantsCnt,
+    createRoom, roomManagerNickname, roomId, title, totalParticipantCnt,
     // 방 입장
     enterRoomPublic, enterRoomPrivate,
     // 방 나가기

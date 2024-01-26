@@ -1,18 +1,15 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from './user'
-import { faL } from '@fortawesome/free-solid-svg-icons'
+
+const FRIEND_API = 'http://i10a804.p.ssafy.io:8082/api/friends'
+const RANK_API = 'https://i10a804.p.ssafy.io/api/ranks'
 
 export const useFriendStore = defineStore('friend', () => {
-  const FRIEND_API = 'http://i10a804.p.ssafy.io:8082/api/friends'
-  const RANK_API = 'https://i10a804.p.ssafy.io/api/ranks'
   const userStore = useUserStore()
-  let headers = {
-    // 'Access-Control-Allow-Origin': 'https://i10a804.p.io/',
-  'access-token': userStore.accessToken,
-  }
+  
   // 친구 API에서 사용되는 변수
   const searchedPerson = ref({})
   const friendList = ref([])
@@ -25,13 +22,14 @@ export const useFriendStore = defineStore('friend', () => {
   const friendRankList = ref([])
   const myRank = ref([])
 
-  // 전제 db에서 사람 찾기 
+  // 친구 찾기 
   const findFriendinAll = function(nickname){
+    console.log(userStore.accessToken);
     axios({
       method: 'get',
       url: `${FRIEND_API}/search`,
       params: {nickname},
-      headers: headers
+      headers: { "access-token": userStore.accessToken }
     })
     .then(res => {
       console.log("res.data.data => ",res.data.data)
@@ -46,7 +44,7 @@ export const useFriendStore = defineStore('friend', () => {
       method: 'get',
       url: `${FRIEND_API}/list/search`,
       params: {nickname},
-      headers: headers
+      headers: {"access-token": userStore.accessToken}
     })
     .then(res => {
       console.log("res.data.data => ",res.data.data)
@@ -57,11 +55,10 @@ export const useFriendStore = defineStore('friend', () => {
 
   // 친구 신청 알람 리스트
   const RequestAlarm = function(nickname){
-    
     axios({
       method: 'get',
       url: `${FRIEND_API}/request/list`,
-      headers: headers
+      headers: {"access-token": "eyJ0eXBlIjoiand0IiwiYWxnIjoiSFMyNTYifQ.eyJpZCI6MSwibmlja25hbWUiOiLstZztmITquLAiLCJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJleHAiOjE3MDc0NTQzMjl9.Vr5nyGtAtfYtZwttOpOTg_J_IvUnNRPx061Jx6qqw5M"}
     })
     .then(res => {
       console.log(userStore.myNickname,"res => ",res)
@@ -77,7 +74,7 @@ export const useFriendStore = defineStore('friend', () => {
       method: 'post',
       url: `${FRIEND_API}/request`,
       data: {nickname},
-      headers: headers
+      headers: {"access-token": userStore.accessToken}
     })
     .then(res => {
       console.log("res.data => ",res.data)
@@ -92,7 +89,7 @@ export const useFriendStore = defineStore('friend', () => {
       method: 'post',
       url: `${FRIEND_API}/request/accept`,
       data: {nickname},
-      headers: headers
+      headers: {"access-token": userStore.accessToken}
     })
     .then(res => {
       console.log("res.data => ",res.data)
@@ -107,7 +104,7 @@ export const useFriendStore = defineStore('friend', () => {
       method: 'delete',
       url: `${FRIEND_API}/request/reject`,
       data: {nickname},
-      headers: headers
+      headers: {"access-token": userStore.accessToken}
     })
     .then(res => {
       console.log("res.data => ",res.data)
@@ -125,7 +122,7 @@ export const useFriendStore = defineStore('friend', () => {
     axios({
       method: 'get',
       url: `${RANK_API}/totals`,
-      headers:headers
+      headers:{"access-token": userStore.accessToken}
     })
     
     .then(res => {
@@ -143,7 +140,7 @@ export const useFriendStore = defineStore('friend', () => {
     axios({
       method: 'get',
       url: `${RANK_API}/friends`,
-      headers: headers
+      headers: {"access-token": userStore.accessToken}
     })
     .then(res => {
       friendRankList.value = res.data.data
@@ -160,7 +157,7 @@ export const useFriendStore = defineStore('friend', () => {
     axios({
       method: 'get',
       url: `${RANK_API}/myself`,
-      headers: headers
+      headers: {"access-token": userStore.accessToken}
     })
     .then(res => {
       console.log("res.data.data => ",res.data.data)

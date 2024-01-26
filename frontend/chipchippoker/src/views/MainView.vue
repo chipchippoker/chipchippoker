@@ -71,6 +71,7 @@ import { useFriendStore } from '@/stores/friend';
 import { useSoundStore } from '@/stores/sound';
 import { ref,onMounted,onUpdated } from 'vue';
 import { useUserStore } from '@/stores/user';
+
 const userStore = useUserStore()
 const soundStore = useSoundStore()
 const friendStore = useFriendStore()
@@ -79,15 +80,12 @@ const changeType = function(type){
     gameType.value = type
 }
 
-
 onMounted(()=>{
     friendStore.RequestAlarm(userStore.myNickname)
     // friendStore.getFriendRankList()
     // friendStore.getMyRankList()
     // soundStore.bgmOn()
 })
-
-
 
 </script>
 

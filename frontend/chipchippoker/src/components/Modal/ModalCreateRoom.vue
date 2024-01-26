@@ -62,7 +62,7 @@ const userStore = useUserStore()
 const roomStore = useRoomStore()
 
 const title = ref(null)
-const isPrivate = ref(null)
+const isPrivate = ref(false)
 const password = ref(null)
 const totalParticipantsCnt = ref(1)
 
@@ -71,11 +71,11 @@ const createRoom = function() {
       title: title.value,
       isPrivate: isPrivate.value,
       password: password.value,
-      totalParticipantsCnt: totalParticipantsCnt.value
+      totalParticipantCnt: totalParticipantsCnt.value
     }
   console.log('방 생성하기!!');
-
-  roomStore.createRoom(payload.value)
+    
+  roomStore.createRoom(payload)
 }
 </script>
 

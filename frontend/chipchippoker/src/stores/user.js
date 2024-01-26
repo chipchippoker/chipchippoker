@@ -3,8 +3,8 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
  
-const USER_API = 'https://i10a804.p.ssafy.io/api/auth'
-const MEMBERS_API = 'https://i10a804.p.ssafy.io/api/members'
+const USER_API = 'http://i10a804.p.ssafy.io:8082/api/auth'
+const MEMBERS_API = 'http://i10a804.p.ssafy.io:8082/api/members'
 const KAKAO_JAVASCRIPT_KEY = import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY
 const REDIRECT_URI = 'http://localhost:5173/login'
 
@@ -18,23 +18,6 @@ export const useUserStore = defineStore('user', () => {
   const myNickname = ref('')
   const myIcon = ref('1')
   const profileInfo = ref({})
-  let headers = {'access-token': accessToken.value}
-  let authHeaders = {'access-token': accessToken.value}
-  let refreshHeaders = {'refresh-token': refreshToken.value}
-  let kakaoHeaders = {'kakao-access-token': kakaoAccessToken.value}
-
-  watch(accessToken, (newAccessToken) => {
-    headers['access-token'] = newAccessToken;
-    authHeaders['access-token'] = newAccessToken;
-  });
-  
-  watch(refreshToken, (newRefreshToken) => {
-    refreshHeaders['refresh-token'] = newRefreshToken;
-  });
-  
-  watch(kakaoAccessToken, (newKakaoAccessToken) => {
-    kakaoHeaders['kakao-access-token'] = newKakaoAccessToken;
-  });
 
   // 프로필 아이콘 보여주기
   const viewProfileIcon = ref(true)
@@ -125,12 +108,11 @@ export const useUserStore = defineStore('user', () => {
   // 카카오 회원가입
   const kakaoSignUp = function(payload){
     console.log("카카오 회원가입 요청")
-    console.log(kakaoAccessToken.value)
     axios({
       method: 'post',
       url: `${USER_API}/social-signup`,
       data: payload,
-      headers: kakaoHeaders
+      headers: { 'kakao-access-token': kakaoAccessToken.value }
     })
     .then((response)=>{
       const res = response.data
@@ -151,7 +133,7 @@ export const useUserStore = defineStore('user', () => {
     axios({
       method: 'post',
       url: `${USER_API}/logout`,
-      headers: authHeaders
+      headers: { 'access-token': accessToken.value }
     })  
     .then(res => {
       console.log('로그아웃 성공!!')
@@ -171,7 +153,7 @@ export const useUserStore = defineStore('user', () => {
       method: 'post',
       url: `${USER_API}/social`,
       data: { authorizationCode },
-      headers: authHeaders
+      headers: { 'access-token': accessToken.value }
     })
     .then(res => {
       console.log('카카오 연동 성공!');
@@ -215,7 +197,7 @@ export const useUserStore = defineStore('user', () => {
     axios({
       method: 'delete',
       url: `${USER_API}/members`,
-      headers: authHeaders
+      headers: { 'access-token': accessToken.value }
     })
     .then(res => {
       console.log('회원탈퇴 성공')
@@ -309,9 +291,8 @@ export const useUserStore = defineStore('user', () => {
     axios({
       method:'get',
       url: `${MEMBERS_API}/profile/${nickname}`,
-      headers: {
-        "access-token": accessToken.value
-      }
+      headers: { 'access-token': accessToken.value }
+
     })
     .then(res => {
       console.log("프로필 정보 요청 결과",res);
