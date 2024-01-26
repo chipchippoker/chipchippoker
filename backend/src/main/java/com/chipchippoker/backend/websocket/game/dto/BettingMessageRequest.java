@@ -7,6 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GameReddyMessageRequest {
-	Boolean isReddy;
+public class BettingMessageRequest {
+	/*
+	DIE, BET
+	 */
+	private Integer currentRound;
+	private String action;
+	private Integer bettingCoin;
 }

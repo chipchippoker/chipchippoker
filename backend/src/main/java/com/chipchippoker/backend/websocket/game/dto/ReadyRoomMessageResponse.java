@@ -16,13 +16,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReddyRoomMessageResponse {
+public class ReadyRoomMessageResponse {
 	private Integer countOfPeople;
 	private List<MemberInfo> memberInfos = new ArrayList<>();
 	private String roomManagerNickname;
 
-	public static ReddyRoomMessageResponse create(GameManager gameManager) {
-		return ReddyRoomMessageResponse.builder()
+	public static ReadyRoomMessageResponse create(GameManager gameManager) {
+		return ReadyRoomMessageResponse.builder()
 			.countOfPeople(gameManager.getCountOfPeople())
 			.memberInfos(gameManager.getMemberManagerMap().values().stream().map(MemberManager::getMemberInfo).toList())
 			.roomManagerNickname(gameManager.getRoomManager())

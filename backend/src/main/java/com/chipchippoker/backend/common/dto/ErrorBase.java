@@ -22,7 +22,7 @@ public enum ErrorBase {
 	E400_INVALID_TOKEN(BAD_REQUEST, false, "BR106", "유효하지 않은 토큰입니다"),
 	E400_INVALID_PASSWORD(BAD_REQUEST, false, "BR107", "올바르지 않은 비밀번호입니다."),
 	E400_INVALID_AUTHORIZATION_CODE(BAD_REQUEST, false, "BR108", "올바르지 않은 인가코드입니다."),
-	E400_INVALID_NOT_REDDY(BAD_REQUEST, false, "BR109", "플레이어 전원이 준비를 해야 시작할 수 있습니다."),
+	E400_INVALID_NOT_READY(BAD_REQUEST, false, "BR109", "플레이어 전원이 준비를 해야 시작할 수 있습니다."),
 	E400_INVALID_ALREADY_DIE(BAD_REQUEST, false, "BR110", "플레이어는 DIE 상태로 배팅에 참여할 수 없습니다."),
 	E400_INVALID_ROUND_MISMATCH(BAD_REQUEST, false, "BR111", "라운드가 일치하지 않습니다."),
 	E400_INVALID_BET_COIN(BAD_REQUEST, false, "BR112", "배팅이 불가능 한 개수의 코인입니다."),

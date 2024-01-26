@@ -11,7 +11,7 @@ import java.util.Stack;
 
 import com.chipchippoker.backend.common.dto.ErrorBase;
 import com.chipchippoker.backend.common.exception.InvalidException;
-import com.chipchippoker.backend.websocket.game.dto.BettingMessage;
+import com.chipchippoker.backend.websocket.game.dto.BettingMessageRequest;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -120,11 +120,11 @@ public class GameManager {
 			// 라운드 설정
 			newRoundSetting(0);
 		} else {
-			throw new InvalidException(ErrorBase.E400_INVALID_NOT_REDDY);
+			throw new InvalidException(ErrorBase.E400_INVALID_NOT_READY);
 		}
 	}
 
-	public void betting(BettingMessage bettingMessage, MemberManager memberManager) {
+	public void betting(BettingMessageRequest bettingMessageRequest, MemberManager memberManager) {
 		// 유저가 이미 죽은 상태라면
 		if (memberManager.getMemberGameInfo().getIsState().equals("DIE")) {
 			throw new InvalidException(ErrorBase.E400_INVALID_ALREADY_DIE);
@@ -135,11 +135,11 @@ public class GameManager {
 		2. 배팅해야하는 최소 칩 이상으로 배팅을 했는가?
 		3. 배팅해야하는 최대 칩 이하로 배팅을 했는가?
 		 */
-		if (bettingMessage.getAction().equals("BET")) {
-			if (bettingMessage.getBettingCoin() > memberManager.getMemberGameInfo().getHaveCoin()
-				|| bettingMessage.getBettingCoin() <= 0
-				|| bettingMessage.getBettingCoin() < minCoin
-				|| bettingMessage.getBettingCoin() > maxCoin
+		if (bettingMessageRequest.getAction().equals("BET")) {
+			if (bettingMessageRequest.getBettingCoin() > memberManager.getMemberGameInfo().getHaveCoin()
+				|| bettingMessageRequest.getBettingCoin() <= 0
+				|| bettingMessageRequest.getBettingCoin() < minCoin
+				|| bettingMessageRequest.getBettingCoin() > maxCoin
 			) {
 				throw new InvalidException(ErrorBase.E400_INVALID_BET_COIN);
 			}
@@ -150,15 +150,15 @@ public class GameManager {
 
 			// 가진 코인 변경
 			memberManager.getMemberGameInfo()
-				.setHaveCoin(memberManager.getMemberGameInfo().getHaveCoin() - bettingMessage.getBettingCoin());
+				.setHaveCoin(memberManager.getMemberGameInfo().getHaveCoin() - bettingMessageRequest.getBettingCoin());
 			// 배팅한 코인 변경
 			memberManager.getMemberGameInfo().setBettingCoin(memberManager.getMemberGameInfo().getBettingCoin()
-				+ bettingMessage.getBettingCoin());
+				+ bettingMessageRequest.getBettingCoin());
 
 			// 최소로 배팅해야 하는 코인 업데이트
-			minCoin = bettingMessage.getBettingCoin();
+			minCoin = bettingMessageRequest.getBettingCoin();
 
-		} else if (bettingMessage.getAction().equals("DIE")) {
+		} else if (bettingMessageRequest.getAction().equals("DIE")) {
 			memberManager.getMemberGameInfo().setIsState("DIE");
 			// todo (환) 배팅 가능한 라운드 최대 칩 변경 가능성
 			// 포기한 사람이 가진 칩의 개수가 라운드에서 가장 적은 사람이었다면 배팅 가능한 칩의 개수가 늘어나야 한다.
@@ -250,10 +250,10 @@ public class GameManager {
 		}
 	}
 
-	public void playReddy(String nickname, Boolean isReddy) {
+	public void playReady(String nickname, Boolean isReady) {
 		memberManagerMap.get(nickname)
 			.getMemberInfo()
-			.setIsReady(isReddy);
+			.setIsReady(isReady);
 	}
 
 	/**
@@ -273,6 +273,7 @@ public class GameManager {
 
 	/**
 	 * 모든 인원이 레디상태인지 확인한다
+	 * 단 방장은 제외한다.
 	 */
 	private boolean isAllReady() {
 		long readyCount = memberManagerMap.values()
@@ -280,7 +281,7 @@ public class GameManager {
 			.filter(memberManager -> memberManager.getMemberInfo().getIsReady().equals(Boolean.TRUE))
 			.count();
 
-		return readyCount == memberManagerMap.values().size();
+		return readyCount == memberManagerMap.values().size() - 1;
 	}
 
 	public void banMember(String banMemberNickname) {
