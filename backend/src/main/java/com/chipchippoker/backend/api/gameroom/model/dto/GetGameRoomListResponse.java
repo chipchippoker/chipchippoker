@@ -15,18 +15,18 @@ public class GetGameRoomListResponse {
 	private Boolean isPrivate;
 	private String state;
 	private String title;
-	private Integer totalParticipantsCnt;
-	private Integer currentParticipantsCnt;
-	private Integer currentSpectatorsCnt;
+	private Integer totalParticipantCnt;
+	private Integer currentParticipantCnt;
+	private Integer currentSpectatorCnt;
 
 	public static GetGameRoomListResponse gameRoomListResponse(GameRoom gameRoom) {
 		return GetGameRoomListResponse.builder()
 			.isPrivate(gameRoom.getIsPrivate())
 			.state(gameRoom.getState())
 			.title(gameRoom.getTitle())
-			.totalParticipantsCnt(gameRoom.getTotalParticipantCnt())
-			.currentParticipantsCnt(gameRoom.getMembers().size())
-			.currentSpectatorsCnt(gameRoom.getSpectateRoom().getMembers().size())
+			.totalParticipantCnt(gameRoom.getTotalParticipantCnt())
+			.currentParticipantCnt(gameRoom.getMembers().size())
+			.currentSpectatorCnt(gameRoom.getSpectateRoom().getMembers().size())
 			.build();
 	}
 }
