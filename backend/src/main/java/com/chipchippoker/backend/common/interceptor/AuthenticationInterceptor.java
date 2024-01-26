@@ -1,5 +1,6 @@
 package com.chipchippoker.backend.common.interceptor;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -20,6 +21,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+		if (HttpMethod.OPTIONS.matches(request.getMethod())) {
+			return true;
+		}
 		try {
 			Long id = jwtUtil.getId(request.getHeader("access-token"),
 				request.getHeader("refresh-token"));
