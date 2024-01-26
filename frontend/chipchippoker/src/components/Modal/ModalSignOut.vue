@@ -8,7 +8,7 @@
         <div class="modal-body d-flex flex-column justify-content-center align-items-center gap-5">
             <h3>정말로... 탈퇴 하시겠습니까?</h3>
             <div class="d-flex gap-5">
-                <button class="btn btn-outline-secondary" @click="logOut">탈퇴하고 얻은 포인트 다 잃기</button>
+                <button class="btn btn-outline-secondary" @click="signOut">탈퇴하고 얻은 포인트 다 잃기</button>
                 <button class="btn btn-primary"  data-bs-dismiss="modal" aria-label="Close">돌아가기</button>
             </div>
         </div>
@@ -23,7 +23,7 @@ import { useUserStore } from '@/stores/user';
 import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
-const logOut = function(){
+const signOut = function(){
     console.log('회원탈퇴')
     // userStore.signOut()
 }

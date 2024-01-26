@@ -34,10 +34,10 @@
                 
                 <div class="d-flex align-items-center gap-3">
                     <span>인원</span>
-                    <select class="form-select form-select-sm" style="width: 100px;" aria-label="Small select example" v-model="totalParticipantsCnt">
-                        <option value="1">2인</option>
-                        <option value="2">3인</option>
-                        <option value="3">4인</option>
+                    <select class="form-select form-select-sm" style="width: 100px;" aria-label="Small select example" v-model="totalParticipantCnt">
+                        <option value="2">2인</option>
+                        <option value="3">3인</option>
+                        <option value="4">4인</option>
                     </select>
                 </div>
                 
@@ -56,27 +56,34 @@ import { ref } from "vue";
 import { useUserStore } from "@/stores/user";
 import { useRoomStore } from "@/stores/room";
 import { useRouter } from "vue-router";
+import { faL } from "@fortawesome/free-solid-svg-icons";
 const router = useRouter()
 
 const userStore = useUserStore()
 const roomStore = useRoomStore()
 
-const title = ref(null)
+const title = ref('')
 const isPrivate = ref(false)
 const password = ref(null)
-const totalParticipantsCnt = ref(1)
+const totalParticipantCnt = ref(2)
 
+// 방 생성하기
 const createRoom = function() {
-  const payload = {
-      title: title.value,
-      isPrivate: isPrivate.value,
-      password: password.value,
-      totalParticipantCnt: totalParticipantsCnt.value
+    const payload = {
+        title: title.value,
+        isPrivate: isPrivate.value,
+        password: password.value,
+        totalParticipantCnt: totalParticipantCnt.value
     }
-  console.log('방 생성하기!!');
+    console.log('방 생성하기!!');
     
-  roomStore.createRoom(payload)
+    roomStore.createRoom(payload)
+    title.value = null
+    isPrivate.value = false
+    password.value = null
+    totalParticipantCnt.value = null
 }
+
 </script>
 
 <style lang="scss" scoped>

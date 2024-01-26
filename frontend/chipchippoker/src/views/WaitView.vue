@@ -57,9 +57,9 @@
         <div class="my-3 me-5"><img class="small-logo ms-4 mt-1 ps-1" src="/src/assets/icons/Logo.png" alt=""></div>
         <div class="">
           <!-- 관전자 목록 -->
-          <div id="watcher-container">
+          <!-- <div id="watcher-container">
             <WaitWatcher />
-          </div>
+          </div> -->
           <!-- 채팅창 -->
           <!-- 나중에 <chat-winow />로 넘길수 있도록 해보자. -->
           <div id="chat-container">
@@ -70,7 +70,7 @@
                 </li>
               </ul>
             </div>
-            <form id="chat-write">
+            <form id="chat-write me-3">
               <input class="chat-write-input ms-4 me-3" type="text" placeholder="입력" v-model="inputMessage">
               <button class="chat-write-btn" @click="sendMessage">전송</button>
             </form>
@@ -146,7 +146,7 @@ const nickname = ref("Participant" + Math.floor(Math.random() * 100))
 
 const roomId = ref('')
 const roomTitle = ref('')
-const totalParticipantsCnt = ref('')
+const totalParticipantCnt = ref('')
 const myNickname = ref('')
 const roomManagerNickname = ref('')
 const isManager = ref(false)
@@ -161,12 +161,12 @@ if (myNickname.value === roomManagerNickname.value) {
 }
 // roomId.value = 100122
 // roomTitle.value = '싸피 다 드루와'
-// totalParticipantsCnt.value = '3'
+// totalParticipantCnt.value = '3'
 // myNickname.value = '10기김대원'
 
 // console.log(roomId.value);
 // console.log(roomTitle.value);
-// console.log(totalParticipantsCnt.value);
+// console.log(totalParticipantCnt.value);
 // console.log(myNickname.value);
 
 const startGame = function () {
@@ -470,18 +470,18 @@ onMounted(() => {
   // 방 정보 저장
   // roomId.value = route.params.roomId
   // roomTitle.value = history.state.title
-  // totalParticipantsCnt.value = history.state.totalParticipantsCnt
+  // totalParticipantCnt.value = history.state.totalParticipantCnt
   // myNickname.value = history.state.nickName
 
   roomId.value = '1001223'
   roomTitle.value = '싸피 다 드루와'
-  totalParticipantsCnt.value = 3
+  totalParticipantCnt.value = 3
   myNickname.value = '10기김대원'
   console.log(' 마운트 됐어요');
   // localStorage에 저장
   localStorage.setItem("roomId", roomId.value)
   localStorage.setItem("roomTitle", roomTitle.value)
-  localStorage.setItem("totalParticipantsCnt", totalParticipantsCnt.value)
+  localStorage.setItem("totalParticipantCnt", totalParticipantCnt.value)
   localStorage.setItem("myNickname", myNickname.value)
   
   // 메인페이지 -> 방 만들기 : 세션 생성
@@ -496,7 +496,7 @@ onUnmounted(() => {
   // localStorage에서 불러오기
   roomId.value = localStorage.getItem("roomId")
   roomTitle.value = localStorage.getItem("roomTitle")
-  totalParticipantsCnt.value = localStorage.getItem("totalParticipantsCnt")
+  totalParticipantCnt.value = localStorage.getItem("totalParticipantCnt")
   myNickname.value = localStorage.getItem("myNickname")
 
   console.log('방 정보 가져오기 성공!!');

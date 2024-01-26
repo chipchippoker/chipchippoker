@@ -3,7 +3,7 @@
         <!-- 로고와 방목록 -->
         <div class="m-3">
             <div class="d-flex align-items-center justify-content-center gap-5" style="width: 100%;" >
-                <img  class="small-logo m-0" src="/src/assets/icons/Logo.png" alt="">
+                <img @click="reLoad()" type="button" class="small-logo m-0" src="/src/assets/icons/Logo.png" alt="">
                 <div class="d-flex gap-3">
                     <button @click="changeType('경쟁전')" class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#FindRoomModal">경쟁 모드</button>
                     <button @click="changeType('친선전')" class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#FindRoomModal">친선 모드</button>
@@ -55,6 +55,11 @@
         <div class="modal fade" id="FindFriendModal" tabindex="-1" aria-labelledby="FindFriendModalLabel" aria-hidden="true">
             <ModalFindFriend/>
         </div>
+
+        <!-- 이미 있는 방 제목입니다 모달 -->
+        <div class="modal fade" id="IsExistRoomModal" tabindex="-1" aria-labelledby="IsExistRoomModalLabel" aria-hidden="true">
+            <ModalIsExistRoom/>
+        </div>
         
     </div>
     
@@ -67,17 +72,38 @@ import MainRoom from '@/components/Main/Room/MainRoom.vue'
 import ModalCreateRoom from '@/components/Modal/ModalCreateRoom.vue';
 import ModalFindFriend from '@/components/Modal/ModalFindFriend.vue';
 import ModalFindRoom from '@/components/Modal/ModalFindRoom.vue';
+import ModalIsExistRoom from '@/components/Modal/ModalIsExistRoom.vue';
 import { useFriendStore } from '@/stores/friend';
 import { useSoundStore } from '@/stores/sound';
-import { ref,onMounted,onUpdated } from 'vue';
+import { ref,onMounted, watch } from 'vue';
 import { useUserStore } from '@/stores/user';
+import { useRouter } from 'vue-router';
+import { useRoomStore } from '@/stores/room';
 
 const userStore = useUserStore()
 const soundStore = useSoundStore()
 const friendStore = useFriendStore()
+const roomStore = useRoomStore()
+const router = useRouter()
 const gameType = ref('경쟁')
 const changeType = function(type){
     gameType.value = type
+}
+
+// 방을 생성할 때 때 이미 있는 방제면
+watch(() => roomStore.isRoom, (newValue) => {
+    console.log(roomStore.isRoom)
+    if (newValue) {
+        const IsExistRoomModal = new bootstrap.Modal(document.getElementById('IsExistRoomModal'));
+        IsExistRoomModal.show()
+        roomStore.isRoom = false
+    }
+})
+
+
+// 메인 페이지 프로필 눌렀을 때 새로고침
+const reLoad = function() {
+    router.go(0)
 }
 
 onMounted(()=>{

@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-lightblue row m-0 tab-radius py-2" style="height: 350px;">
+    <div class="bg-lightblue row m-0 tab-radius-2 py-2" style="height: 350px; width: 100%;">
         <div class="col-6 h-25" v-for="item in roomStore.allRoomList" :key="item.id">
             <MainRoomItem
             :item="item"/>
@@ -19,13 +19,14 @@ const roomStore = useRoomStore()
 
 const emptyList = ref([])
 emptyList.value = Array(8 - roomStore.allRoomList.length).fill(0)
+console.log(emptyList)
 
 </script>
 
 <style scoped>
-.tab-radius {
-    border-top-left-radius: 0;
-    border-top-right-radius: 10px;
+.tab-radius-2 {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 0;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
 }

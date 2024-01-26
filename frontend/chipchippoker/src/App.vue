@@ -19,8 +19,6 @@ const gotoProfile = function(){
 
 const windowWidth = window.innerWidth;
 const windowHeight = window.innerHeight;
-console.log(windowWidth);
-console.log(windowHeight);
 function getRandomValue(max) {
   return Math.floor(Math.random() * max);
 }
@@ -121,6 +119,15 @@ for (let i = 0; i < 300; i++) {
 @import "@/assets/css/color.css";
 @import "@/assets/css/size.css";
 
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* 스크롤 없애기 */
+}
+
+#app {
+  height: 100vh; /* 화면 높이 100%로 설정 */
+}
 
 @font-face {
   font-family : 'maple';
