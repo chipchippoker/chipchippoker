@@ -50,10 +50,10 @@
   import { useRoute,useRouter } from 'vue-router'
   import { useSoundStore } from "@/stores/sound";
 
+  const userStore = useUserStore()
   const soundStore = useSoundStore()
   const route = useRoute()
   const router = useRouter()
-  const userStore = useUserStore()
   
   const memberId = ref(null)
   const password = ref(null)
@@ -76,20 +76,37 @@
     console.log('일반 로그인 요청')
     soundStore.bgmOn()
     userStore.generalLogIn(payload)
+    .then(result => {
+      console.log(result);
+      if (result) {
+        memberId.value = null
+        password.value = null
+      } else {
+        alert("로그인 실패했습니다.")
+      }
+    })
   }
   
-  // 간편 로그인
+  // 카카오 인가코드 요청
   const simpleLogIn = function () {
-    console.log('간편 로그인 요청')
+    console.log('카카오 인가코드 요청')
     userStore.getKakaoCode()
   }
 
   // 카카오 인가코드 받기
   authorizationCode.value = route.query.code
   userStore.authorizationCode = authorizationCode.value
+
   // 인가코드 받으면
   if (authorizationCode.value) {
     userStore.simpleLogInRequest(authorizationCode.value)
+    .then(result => {
+      if (result) {
+        authorizationCode.value = null
+      } else {
+        alert("간편 로그인 실패했습니다.")
+      }
+    })
   }
 
   // 회원가입으로 이동

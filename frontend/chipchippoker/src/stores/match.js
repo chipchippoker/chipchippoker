@@ -1,14 +1,12 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from './user'
-import { faL } from '@fortawesome/free-solid-svg-icons'
 
 export const useMatchStore = defineStore('match', () => {
-  const MATCH_API = 'http://i10a804.p.ssafy.io:8082/api/matching'
-
   const userStore = useUserStore()
+  const MATCH_API = `${userStore.BASE_API_URL}/matching`
   const router = useRouter()
   
   const roomId = ref(null)

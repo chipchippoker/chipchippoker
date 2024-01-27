@@ -2,7 +2,6 @@ import { ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useRoute, useRouter } from 'vue-router'
-import { faL } from '@fortawesome/free-solid-svg-icons'
 
 export const useSoundStore = defineStore('sound', () => {
     // 설정 음향 사운드
@@ -11,20 +10,12 @@ export const useSoundStore = defineStore('sound', () => {
     const isBgmPlay = ref(false)
 
     //   음향 객체
-    var bgm = new Audio('src/assets/bgm/bgm.mp3');
+    var bgm = new Audio('src/assets/bgm/bgm.mp3')
     
-    
-    
-    
-    
-   
-
-
     // 음향 실시간 적용
     watch([bgmSoundRange,effectSoundRange], () => {
     bgm.volume = bgmSoundRange.value/100
-    });
-
+    })
 
     const bgmOn = function(){
       // bgm.pause()

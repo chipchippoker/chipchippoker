@@ -1,14 +1,16 @@
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
  
-const USER_API = 'http://i10a804.p.ssafy.io:8082/api/auth'
-const MEMBERS_API = 'http://i10a804.p.ssafy.io:8082/api/members'
 const KAKAO_JAVASCRIPT_KEY = import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY
 const REDIRECT_URI = 'http://localhost:5173/login'
 
 export const useUserStore = defineStore('user', () => {
+  const BASE_API_URL = 'https://i10a804.p.ssafy.io/api'
+  const USER_API = `${BASE_API_URL}/auth`
+  const MEMBERS_API = `${BASE_API_URL}/members`
+
   // State
   const router = useRouter()
   const accessToken = ref(null)
@@ -22,48 +24,51 @@ export const useUserStore = defineStore('user', () => {
   // 프로필 아이콘 보여주기
   const viewProfileIcon = ref(true)
 
-
   // 회원가입
-  const signUp = function (payload) {
-    console.log('회원가입 요청');
-    axios({
-      method: 'post',
-      url: `${USER_API}/signup`,
-      data: payload
-    })
-    .then((response) => {
-        console.log('회원가입 성공!')
-        const res = response.data
-        if (res.code === 200) {
-          accessToken.value = res.data.accessToken
-          refreshToken.value = res.data.refreshToken
-          myIcon.value = res.data.icon
-          myNickname.value = res.data.nickname
-          router.push({ name: 'main' })
-        }
+  const signUp = async function (payload) {
+    console.log('회원가입 요청')
+    try {
+      const response = await axios({
+        method: 'post',
+        url: `${USER_API}/signup`,
+        data: payload
       })
-      .catch(err => console.log(err))
+      console.log('회원가입 성공!')
+      const res = response.data
+      accessToken.value = res.data.accessToken
+      refreshToken.value = res.data.refreshToken
+      myIcon.value = res.data.icon
+      myNickname.value = res.data.nickname
+      router.push({ name: 'main' })
+      return true
+    } catch (err) {
+      console.log(err)
+      return false
+    }
     }
     
   // 일반 로그인
-  const generalLogIn = function (payload) {
+  const generalLogIn = async function (payload) {
     console.log('일반 로그인 요청');
-    axios({
-      method: 'post',
-      url: `${USER_API}/login`,
-      data: payload
-    })
-      .then(response => {
-        const res = response.data
-        console.log('일반 로그인 성공!!')
-        console.log(res.data);
-        accessToken.value = res.data.accessToken
-        refreshToken.value = res.data.refreshToken
-        myIcon.value = res.data.icon
-        myNickname.value = res.data.nickname
-        router.push({ name: 'main' })
+    try {
+      const response = await axios({
+        method: 'post',
+        url: `${USER_API}/login`,
+        data: payload
       })
-      .catch(err => console.log(err))
+      const res = response.data
+      console.log('일반 로그인 성공!!')
+      console.log(res.data)
+      accessToken.value = res.data.accessToken
+      refreshToken.value = res.data.refreshToken
+      myIcon.value = res.data.icon
+      myNickname.value = res.data.nickname
+      router.push({ name: 'main' })
+      return true
+    } catch (err) {
+      console.log(err)
+      return false
+    }
   }
 
   // 카카오 인가코드 받기
@@ -76,17 +81,17 @@ export const useUserStore = defineStore('user', () => {
   }
 
   // 간편 로그인
-  const simpleLogInRequest = function (authorizationCode) {
+  const simpleLogInRequest = async function (authorizationCode) {
     console.log('간편 로그인 요청');
     // 인가코드로 로그인 요청
-    axios({
-      method: 'post',
-      url: `${USER_API}/authorization`,
-      data: {authorizationCode}
-    })
-    .then(response => {
+    try {
+      const response = await axios({
+        method: 'post',
+        url: `${USER_API}/authorization`,
+        data: { authorizationCode }
+      })
       const res = response.data
-      console.log(res.data);
+      console.log(res.data)
       if (res.data.code === 200) {
         console.log("카카오 로그인 성공!!")
         accessToken.value = res.data.accessToken
@@ -97,34 +102,41 @@ export const useUserStore = defineStore('user', () => {
 
       } else if (res.data.code === 202) {
         console.log("카카오 로그인 성공, 닉네임 설정!!")
-        console.log(res.data);
+        console.log(res.data)
         kakaoAccessToken.value = res.data.kakaoAccessToken
         router.push({ name: 'kakaosignup' })
       }
-    })
-    .catch(err => console.log(err))
+      return true
+    } catch (err) {
+      console.log(err)
+      return false
+    }
   }
 
   // 카카오 회원가입
-  const kakaoSignUp = function(payload){
+  const kakaoSignUp = async function(payload){
     console.log("카카오 회원가입 요청")
-    axios({
-      method: 'post',
-      url: `${USER_API}/social-signup`,
-      data: payload,
-      headers: { 'kakao-access-token': kakaoAccessToken.value }
-    })
-    .then((response)=>{
+    console.log(payload);
+    try {
+      const response = await axios({
+        method: 'post',
+        url: `${MEMBERS_API}/social-signup`,
+        data: payload,
+        headers: { 'kakao-access-token': kakaoAccessToken.value }
+      })
       const res = response.data
-      console.log('카카오 회원가입 성공');
-      console.log(res.data);
+      console.log('카카오 회원가입 성공')
+      console.log(res.data)
       accessToken.value = res.data.accessToken
       refreshToken.value = res.data.refreshToken
       myIcon.value = res.data.icon
       myNickname.value = res.data.nickname
       router.push({ name: 'main' })
-    })
-    .catch(err => console.log(err))
+      return true
+    } catch (err) {
+      console.log(err)
+      return false
+    }
   }
 
   // 로그아웃
@@ -147,62 +159,66 @@ export const useUserStore = defineStore('user', () => {
   }  
 
   // 카카오 연동
-  const kakaoConnect = function () {
-    console.log('카카오 연동 요청!');
-    axios({
-      method: 'post',
-      url: `${USER_API}/social`,
-      data: { authorizationCode },
-      headers: { 'access-token': accessToken.value }
-    })
-    .then(res => {
-      console.log('카카오 연동 성공!');
-    })
-    .catch(err => console.log(err))
+  const kakaoConnect = async function () {
+    console.log('카카오 연동 요청!')
+    try {
+      await axios({
+        method: 'post',
+        url: `${USER_API}/social`,
+        data: { authorizationCode },
+        headers: { 'access-token': accessToken.value }
+      })
+      console.log('카카오 연동 성공!')
+      return true
+    } catch (err) {
+      console.log(err)
+      return false
+    }
   }
 
   // 닉네임 중복확인
-  const checkNickname = function (nickname){
+  const checkNickname = async function (nickname){
     console.log("닉네임 중복 확인 요청")
-    axios({
-      method: 'post',
-      url: `${USER_API}/duplication/nickname`,
-      data: { nickname }
-    })
-    .then((res)=>{
-      console.log('닉네임 중복 확인 성공');
+    try {
+      const res = await axios({
+        method: 'post',
+        url: `${USER_API}/duplication/nickname`,
+        data: { nickname }
+      })
+      console.log('닉네임 중복 확인 성공')
       return res.data.data
-    })
-    .catch(err => console.log(err))
+    } catch (err) {console.log(err)}
   }
 
   // 아이디 중복확인
-  const checkMemberId = function (memberId){
+  const checkMemberId = async function (memberId){
     console.log("아이디 중복 확인 요청")
-    axios({
-      method: 'post',
-      url: `${USER_API}/duplication/id`,
-      data: { memberId }
-    })
-    .then((res)=>{
+    try {
+      const res = await axios({
+        method: 'post',
+        url: `${USER_API}/duplication/id`,
+        data: { memberId }
+      })
       console.log('아이디 중복 확인 성공')
       return res.data.data
-    })
-    .catch(err => console.log(err))
+    } catch (err) {console.log(err)}
   }
-
+    
   // 회원탈퇴
-  const signOut = function () {
+  const signOut = async function () {
     console.log('회원탈퇴 요청!')
-    axios({
-      method: 'delete',
-      url: `${USER_API}/members`,
-      headers: { 'access-token': accessToken.value }
-    })
-    .then(res => {
+    try {
+      await axios({
+        method: 'delete',
+        url: `${USER_API}/members`,
+        headers: { 'access-token': accessToken.value }
+      })
       console.log('회원탈퇴 성공')
-    })
-    .catch(err => console.log(err))
+      return true
+    } catch (err) {
+      console.log(err)
+      return false
+    }
   }
   
   // 아이디 유효성 검사
@@ -301,8 +317,10 @@ export const useUserStore = defineStore('user', () => {
     })
   }
 
-
   return {
+    // 베이스 url
+    BASE_API_URL,
+
     // 로그인, 로그아웃, 회원가입, 회원탈퇴, 카카오 연동
     generalLogIn, getKakaoCode, simpleLogInRequest, kakaoSignUp,
     logOut, signUp, signOut, checkMemberId, checkNickname, validateId, validatePassword, validateNickname, kakaoConnect, 
