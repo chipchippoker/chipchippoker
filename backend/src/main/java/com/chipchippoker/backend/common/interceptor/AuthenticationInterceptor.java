@@ -13,15 +13,20 @@ import com.chipchippoker.backend.common.util.jwt.dto.TokenResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class AuthenticationInterceptor implements HandlerInterceptor {
 	private final JwtUtil jwtUtil;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 		if (HttpMethod.OPTIONS.matches(request.getMethod())) {
+			return true;
+		}
+		if (request.getHeader("kakao-access-token") != null) {
 			return true;
 		}
 		try {

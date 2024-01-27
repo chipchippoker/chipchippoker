@@ -26,7 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
 		registry.addMapping("/**")
 			.allowedOrigins("http://localhost:5173")
 			.allowedMethods("*")
-			.allowedHeaders("access-token", "refresh-token", "Content-Type")
+			.allowedHeaders("access-token", "refresh-token", "Content-Type", "kakao-access-token")
 			.allowCredentials(true)
 			.maxAge(3600);
 	}
