@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,14 +15,12 @@ import com.chipchippoker.backend.api.auth.model.dto.request.DuplicationConfirmId
 import com.chipchippoker.backend.api.auth.model.dto.request.DuplicationConfirmNicknameRequest;
 import com.chipchippoker.backend.api.auth.model.dto.request.LoginRequest;
 import com.chipchippoker.backend.api.auth.model.dto.request.SignupRequest;
-import com.chipchippoker.backend.api.auth.model.dto.request.SimpleSignupRequest;
 import com.chipchippoker.backend.api.auth.model.dto.response.AuthorizationCodeAlreadyAccountResponse;
 import com.chipchippoker.backend.api.auth.model.dto.response.AuthorizationCodeMoreInformationResponse;
 import com.chipchippoker.backend.api.auth.model.dto.response.AuthorizationInformationResponse;
 import com.chipchippoker.backend.api.auth.model.dto.response.LoginResponse;
 import com.chipchippoker.backend.api.auth.model.dto.response.SignupResponse;
 import com.chipchippoker.backend.api.auth.model.dto.response.SimpleLoginResponse;
-import com.chipchippoker.backend.api.auth.model.dto.response.SimpleSignupResponse;
 import com.chipchippoker.backend.api.auth.service.AuthService;
 import com.chipchippoker.backend.common.dto.ApiResponse;
 import com.chipchippoker.backend.common.dto.ErrorBase;
@@ -31,7 +28,6 @@ import com.chipchippoker.backend.common.exception.InvalidException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -104,14 +100,4 @@ public class AuthController {
 			}
 		}
 	}
-
-	@Operation(summary = "소셜 회원가입")
-	@PostMapping("/social-signup")
-	public ResponseEntity<ApiResponse<SimpleSignupResponse>> signUp(
-		@Valid @RequestBody SimpleSignupRequest simpleSignupRequest,
-		@RequestHeader(value = "kakao-access-token") String token) throws Exception {
-		SimpleSignupResponse socialSignUpResponse = authService.signUp(simpleSignupRequest, token);
-		return ResponseEntity.ok(ApiResponse.success(socialSignUpResponse));
-	}
-
 }

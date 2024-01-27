@@ -5,11 +5,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chipchippoker.backend.api.auth.model.dto.Token;
 import com.chipchippoker.backend.api.auth.model.dto.request.AuthorizationCodeRequest;
+import com.chipchippoker.backend.api.auth.model.dto.request.SimpleSignupRequest;
+import com.chipchippoker.backend.api.auth.model.dto.response.SimpleSignupResponse;
 import com.chipchippoker.backend.api.auth.service.AuthService;
 import com.chipchippoker.backend.api.member.dto.model.ProfilePageResponse;
 import com.chipchippoker.backend.api.member.service.MemberService;
@@ -20,6 +23,7 @@ import com.chipchippoker.backend.common.exception.InvalidException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,6 +59,15 @@ public class MemberController {
 		}
 
 		return ResponseEntity.ok(ApiResponse.success());
+	}
+	
+	@Operation(summary = "소셜 회원가입")
+	@PostMapping("/social-signup")
+	public ResponseEntity<ApiResponse<SimpleSignupResponse>> signUp(
+		@Valid @RequestBody SimpleSignupRequest simpleSignupRequest,
+		@RequestHeader(value = "kakao-access-token") String token) throws Exception {
+		SimpleSignupResponse socialSignUpResponse = authService.signUp(simpleSignupRequest, token);
+		return ResponseEntity.ok(ApiResponse.success(socialSignUpResponse));
 	}
 
 	@Operation(summary = "프로필 페이지 조회")
