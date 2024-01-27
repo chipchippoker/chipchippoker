@@ -49,30 +49,41 @@
 import { ref,watch } from "vue";
 import { useUserStore } from "@/stores/user";
 import ModalIconList from "@/components/Modal/ModalIconList.vue";
+import { icon } from "@fortawesome/fontawesome-svg-core";
 
 const userStore = useUserStore()
-const isNickDuplicated = ref(true)
+const isNickDuplicated = ref(false)
 const isValidNickname = ref(false)
-const nickname = ref('')
+const nickname = ref(null)
 
 watch([nickname], () => {
   isValidNickname.value = userStore.validateNickname(nickname.value);
 });
 
-// 닉네임 중복 확인 함수 -> userStore의 닉네임 중복 체크 함수 호출
+// 닉네임 중복 확인
 const checkNickname = function () {
-  isNickDuplicated.value = userStore.checkNickname(nickname.value)
+  userStore.checkNickname(nickname.value)
+  .then(result => {
+    isNickDuplicated.value = result
+  })
+  .catch(err => alert(err))
 }
 
 // 회원가입 함수 -> userStore의 카카오 회원가입 함수 호출
 const signUp = function(){
-  console.log('회원가입 요청');
   const payload = ref({
     nickname: nickname.value,
     icon: userStore.myIcon
   })
-  console.log(payload.value);
   userStore.kakaoSignUp(payload.value)
+  .then(result => {
+    if (result) {
+      nickname.value = null
+      userStore.myIcon = '1'
+    } else {
+      alert("회원가입 실패했습니다.")
+    }
+  })
 }
 </script>
 

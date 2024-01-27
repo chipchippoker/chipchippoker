@@ -4,10 +4,11 @@ import axios from 'axios'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from './user'
 
-const FRIEND_API = 'https://i10a804.p.ssafy.io/api/friends'
-const RANK_API = 'https://i10a804.p.ssafy.io/api/ranks'
+
 export const useFriendStore = defineStore('friend', () => {
   const userStore = useUserStore()
+  const FRIEND_API = `${userStore.BASE_API_URL}/friends`
+  const RANK_API = `${userStore.BASE_API_URL}/ranks`
   
   // 친구 API에서 사용되는 변수
   const searchedPerson = ref({})

@@ -3,11 +3,15 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from './user'
-import { useGameStore } from '@/stores/game'
+import { useGameStore } from './game'
 
 
 export const useRoomStore = defineStore('room', () => {
-  const ROOM_API = 'http://i10a804.p.ssafy.io:8082/api/rooms'
+  const userStore = useUserStore()
+  const ROOM_API = `${userStore.BASE_API_URL}/rooms`
+
+  const router = useRouter()
+
   const roomType = ref('친선')
   const allRoomList = ref([])
 
@@ -35,8 +39,6 @@ export const useRoomStore = defineStore('room', () => {
   const isEmpty = ref(false) // 데이터가 없는가?
   const pageArray = ref([1]) // 페이지네이션 배열
   
-  const router = useRouter()
-  const userStore = useUserStore()
 
   // 방 생성 변수
   const roomManagerNickname = ref('')

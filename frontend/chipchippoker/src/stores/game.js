@@ -8,71 +8,69 @@ import { useUserStore } from './user'
 import { useRoomStore } from './room'  
 
 
+export const useGameStore = defineStore('game', () => {
 
-const useStore = useUserStore()
-const roomStore = useRoomStore()
-const router = useRouter()
+  const userStore = useUserStore()
+  const roomStore = useRoomStore()
+  const router = useRouter()
 
+  const url = "wss://i10a804.p.ssafy.io/chipchippoker"
 
+  const stompClient = webstomp.client(url)
 
-const url = "wss://i10a804.p.ssafy.io/chipchippoker"
+  const gameRoomTitle = ref('')
+  const roomInfo = ref({})
+  const player = ref([])
+  const myId = ref('')
 
-const stompClient = webstomp.client(url)
+  stompClient.connect({'access-token': userStore.accessToken}, (frame) => {
+    console.log("Connect success", gameRoomTitle.value)
 
-const gameRoomTitle = ref('')
-const roomInfo = ref({})
-const player = ref([])
-const myId = ref(null)
-
-
-
-stompClient.connect({'access-token': userStore.accessToken}, (frame) => {
-  console.log("Connect success", gameRoomTitle.value)
-
-
-    stompClient.subscribe(`/from/chipchippoker/checkConnect/`, (message) => {
-      console.log('기본 토픽 구독 성공')
-      const response = JSON.parse(message.body)
-      console.log(response.body.data)
+      stompClient.subscribe(`/from/chipchippoker/checkConnect/`, (message) => {
+        console.log('기본 토픽 구독 성공')
+        const response = JSON.parse(message.body)
+        console.log(response.body.data)
+      })
     })
-  })
 
-  // 구독 핸들러
-  const subscribeHandler = (gameRoomTitle) => {
+    // 구독 핸들러
+    const subscribeHandler = (gameRoomTitle) => {
 
-    // 토픽 구독 및 수신
-    const mySubscribtion = stompClient.subscribe(`/from/chipchippoker/checkConnect/${gameRoomTitle}`, (message) => {
-      console.log("subscribe success")
-      // 구독 아이디 추출
-      console.log(message.headers);
-      // 내 구독 아이디 저장 
-      myId.value = message.headers.subscription
+      // 토픽 구독 및 수신
+      const mySubscribtion = stompClient.subscribe(`/from/chipchippoker/checkConnect/${gameRoomTitle}`, (message) => {
+        console.log("subscribe success")
+        // 구독 아이디 추출
+        console.log(message.headers);
+        // 내 구독 아이디 저장 
+        myId.value = message.headers.subscription
 
 
-      switch (response.body.code) {
-        case "성공": // 방 생성
-          receiveCreateRoom()
-          break
-        case "MS002": // 방 입장
-          receiveJoinRoom()
-          break
-        case "MS003": // 방 나가기
-          receiveExitRoom()
-          break     
-        case "MS004": // 강퇴(타인)
-          // 발행자(방장), 구독자
-          // 어느 사용자가 강퇴되었는지 보여줌
-          recieveBanYou(response)
-          console.log('강퇴 함 ',response)
-          break
-        case "MS005": // 강퇴(본인)
-          // 강퇴되었음을 보여줌
-          // unsubscribe 시켜줌
-          recieveBanMe(response)
-          console.log('강퇴 당함 ',response)
-        
-          break
-
+        switch (response.body.code) {
+          case "성공": // 방 생성
+            receiveCreateRoom()
+            break
+          case "MS002": // 방 입장
+            receiveJoinRoom()
+            break
+          case "MS003": // 방 나가기
+            receiveExitRoom()
+            break     
+          case "MS004": // 강퇴(타인)
+            // 발행자(방장), 구독자
+            // 어느 사용자가 강퇴되었는지 보여줌
+            recieveBanYou(response)
+            console.log('강퇴 함 ',response)
+            break
+          case "MS005": // 강퇴(본인)
+            // 강퇴되었음을 보여줌
+            // unsubscribe 시켜줌
+            recieveBanMe(response)
+            console.log('강퇴 당함 ',response)
+          
+            break
+        }
+      })
+  // 
   const sendCreateRoom = function(title, countOfPeople){
     const message = { countOfPeople }
     stompClient.send(`/to/game/create/${title}`, JSON.stringify(message), {'access-token': userStore.accessToken})
@@ -173,7 +171,7 @@ stompClient.connect({'access-token': userStore.accessToken}, (frame) => {
     myId.value = null
     router.push('main')
   }
-
+  
   return {
     rooms: ref([]),
     sendCreateRoom, receiveCreateRoom,
@@ -187,5 +185,6 @@ stompClient.connect({'access-token': userStore.accessToken}, (frame) => {
     kickUser,
     subscribeHandler,
     stompClient,
-  }}}
-  )}
+  }
+}
+},{persist:true})

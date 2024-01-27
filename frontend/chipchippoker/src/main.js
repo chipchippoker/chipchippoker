@@ -12,8 +12,6 @@ import "./style.css";
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-// window.Kakao.init("e38b60d9d4f380ee6e87b6deeebf7a0a")
-
 const app = createApp(App)
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)

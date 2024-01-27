@@ -88,8 +88,8 @@ const password1 = ref(null)
 const password2 = ref(null)
 const nickname = ref(null)
 
-const isNickDuplicated = ref(null)
-const isIdDuplicated = ref(null)
+const isNickDuplicated = ref(false)
+const isIdDuplicated = ref(false)
 const isValidMemberId = ref(true)
 const isValidPassword1 = ref(true)
 const isValidPassword2 = ref(true)
@@ -105,17 +105,34 @@ const signUp = function () {
     icon: userStore.myIcon
   }
   userStore.signUp(payload)
-  router.push({ name: 'main' })
+  .then(result => {
+    if (result) {
+      memberId.value = null
+      password1.value = null
+      password2.value = null
+      nickname.value = null
+    } else {
+      alert("회원가입 실패했습니다.")
+    }
+  })
 }
 
 // 닉네임 중복 확인
 const checkNickname = function () {
-  isNickDuplicated.value = userStore.checkNickname(nickname.value);
+  userStore.checkNickname(nickname.value)
+  .then(result => {
+    isNickDuplicated.value = result
+  })
+  .catch(err => alert(err))
 }
 
 // 아이디 중복 확인
 const checkMemberId = function () {
-  isIdDuplicated.value = userStore.checkMemberId(memberId.value);
+  userStore.checkMemberId(memberId.value)
+  .then(result => {
+    isIdDuplicated.value = result
+  })
+  .catch(err => alert(err))
 }
 
 // 유효성 검사
