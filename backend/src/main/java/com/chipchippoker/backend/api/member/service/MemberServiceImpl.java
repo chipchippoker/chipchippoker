@@ -20,7 +20,10 @@ import com.chipchippoker.backend.common.entity.Friend;
 import com.chipchippoker.backend.common.entity.FriendRequest;
 import com.chipchippoker.backend.common.entity.Member;
 import com.chipchippoker.backend.common.entity.Point;
+import com.chipchippoker.backend.common.exception.InvalidException;
 import com.chipchippoker.backend.common.exception.NotFoundException;
+import com.chipchippoker.backend.common.util.jwt.JwtUtil;
+import com.chipchippoker.backend.common.util.jwt.dto.TokenResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +37,7 @@ public class MemberServiceImpl implements MemberService {
 	private final GameResultRepository gameResultRepository;
 	private final FriendRepository friendRepository;
 	private final FriendRequestRepository friendRequestRepository;
+	private final JwtUtil jwtUtil;
 
 	@Override
 	public ProfilePageResponse getProfilePage(Long id, String nickname) {
@@ -90,6 +94,19 @@ public class MemberServiceImpl implements MemberService {
 		return memberRepository.getProfilePage(searchMember, myTotalRank, myFriendRank, isMine, isFriend, isSent,
 			recentPlayList);
 
+	}
+
+	@Override
+	public TokenResponse reissueToken(String originToken, Long id) {
+		Member member = memberRepository.findById(id)
+			.orElseThrow(() -> new InvalidException(ErrorBase.E404_NOT_EXISTS_MEMBER));
+		if (!member.getRefreshToken().equals(originToken)) {
+			throw new InvalidException(ErrorBase.E400_INVALID_TOKEN);
+		}
+		String accessToken = jwtUtil.createAccessToken(member.getId(), member.getNickname());
+		String refreshToken = jwtUtil.createRefreshToken(member.getId(), member.getNickname());
+		member.updateRefreshToken(refreshToken);
+		return new TokenResponse(accessToken, refreshToken);
 	}
 
 	private static List<RecentPlayListResponse> getRecentPlayList(List<GameResult> list, String nickname) {

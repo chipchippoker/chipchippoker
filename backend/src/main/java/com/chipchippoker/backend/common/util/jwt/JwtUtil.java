@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 import com.chipchippoker.backend.common.dto.ErrorBase;
 import com.chipchippoker.backend.common.exception.InvalidException;
 import com.chipchippoker.backend.common.exception.UnAuthorizedException;
-import com.chipchippoker.backend.common.util.jwt.dto.TokenResponse;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
@@ -60,32 +60,44 @@ public class JwtUtil {
 			.compact(); //signature 부분
 	}
 
-	/*
-	JWT에서 userIdx 추출
-	@return int
-	@throws BaseException
-	 */
 	public Long getId(String accessToken, String refreshToken) {
-		//1. JWT 추출
-		if (accessToken == null || accessToken.isEmpty()) {
-			if (isValidateToken(refreshToken)) {
-				throw new UnAuthorizedException(ErrorBase.E401_UNAUTHORIZED_ACCESS_TOKEN);
-			} else {
-				throw new InvalidException(ErrorBase.E400_INVALID_TOKEN);
-			}
-		} else {
-			if (isValidateToken(accessToken)) {
+		try {
+			if (refreshToken == null) {
 				return Jwts.parser()
 					.setSigningKey(secretKey)
-					.parseClaimsJws(accessToken).getBody().get("id", Long.class);
-			} else {
-				if (isValidateToken(refreshToken)) {
-					throw new UnAuthorizedException(ErrorBase.E401_UNAUTHORIZED_ACCESS_TOKEN);
-				} else {
-					throw new InvalidException(ErrorBase.E400_INVALID_TOKEN);
-				}
+					.parseClaimsJws(accessToken)
+					.getBody()
+					.get("id", Long.class);
 			}
+			// 토큰 재발급의 경우 access,refresh 토큰 둘다 검사함
+			Jwts.parser()
+				.setSigningKey(secretKey)
+				.parseClaimsJws(accessToken);
+
+			return Jwts.parser()
+				.setSigningKey(secretKey)
+				.parseClaimsJws(refreshToken)
+				.getBody()
+				.get("id", Long.class);
+		} catch (ExpiredJwtException e) {
+			if (refreshToken == null) {
+				throw new UnAuthorizedException(ErrorBase.E401_UNAUTHORIZED_ACCESS_TOKEN_EXPIRED);
+			}
+			try {
+				return Jwts.parser()
+					.setSigningKey(secretKey)
+					.parseClaimsJws(refreshToken)
+					.getBody()
+					.get("id", Long.class);
+			} catch (ExpiredJwtException ex) {
+				throw new UnAuthorizedException(ErrorBase.E401_UNAUTHORIZED_REFRESH_TOKEN_EXPIRED);
+			} catch (Exception exception) {
+				throw new InvalidException(ErrorBase.E400_INVALID_TOKEN);
+			}
+		} catch (Exception e) {
+			throw new InvalidException(ErrorBase.E400_INVALID_TOKEN);
 		}
+
 	}
 
 	public String getNickName(String accessToken, String refreshToken) {
@@ -109,18 +121,6 @@ public class JwtUtil {
 				}
 			}
 		}
-	}
-
-	public TokenResponse reissuanceTokens(String refreshToken) {
-		Long id = Jwts.parser()
-			.setSigningKey(secretKey)
-			.parseClaimsJws(refreshToken).getBody().get("id", Long.class);
-		String nickname = Jwts.parser()
-			.setSigningKey(secretKey)
-			.parseClaimsJws(refreshToken).getBody().get("nickname", String.class);
-		String newAccessToken = createAccessToken(id, nickname);
-		String newRefreshToken = createRefreshToken(id, nickname);
-		return new TokenResponse(newAccessToken, newRefreshToken);
 	}
 
 	public boolean isValidateToken(String token) {

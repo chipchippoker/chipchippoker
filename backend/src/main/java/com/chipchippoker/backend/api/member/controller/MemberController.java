@@ -19,6 +19,7 @@ import com.chipchippoker.backend.api.member.service.MemberService;
 import com.chipchippoker.backend.common.dto.ApiResponse;
 import com.chipchippoker.backend.common.dto.ErrorBase;
 import com.chipchippoker.backend.common.exception.InvalidException;
+import com.chipchippoker.backend.common.util.jwt.dto.TokenResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -60,7 +61,7 @@ public class MemberController {
 
 		return ResponseEntity.ok(ApiResponse.success());
 	}
-	
+
 	@Operation(summary = "소셜 회원가입")
 	@PostMapping("/social-signup")
 	public ResponseEntity<ApiResponse<SimpleSignupResponse>> signUp(
@@ -76,6 +77,14 @@ public class MemberController {
 		@PathVariable(value = "nickname") String nickname) {
 		Long id = (Long)httpServletRequest.getAttribute("id");
 		return ResponseEntity.ok(ApiResponse.success(memberService.getProfilePage(id, nickname)));
+	}
+
+	@Operation(summary = "액세스 토큰, 리프레쉬 토큰 재발급")
+	@PostMapping("/reissueToken")
+	public ResponseEntity<ApiResponse<TokenResponse>> getToken() {
+		Long id = (Long)httpServletRequest.getAttribute("id");
+		String originToken = httpServletRequest.getHeader("refresh-token");
+		return ResponseEntity.ok(ApiResponse.success(memberService.reissueToken(originToken, id)));
 	}
 }
 
