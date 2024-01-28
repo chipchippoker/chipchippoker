@@ -32,6 +32,8 @@ public enum ErrorBase {
 	E401_UNAUTHORIZED(UNAUTHORIZED, false, "UA000", "세션이 만료되었습니다. 다시 로그인 해주세요"),
 	E401_UNAUTHORIZED_ACCESS_TOKEN(UNAUTHORIZED, false, "UA001", "access-token을 재발급 하였습니다. 다시 요청해 주세요"),
 	E401_UNAUTHORIZED_ACCESS_TOKEN_NOT_EQUAL(UNAUTHORIZED, false, "UA002", "구독할 수 없는 메시지 큐입니다."),
+	E401_UNAUTHORIZED_ACCESS_TOKEN_EXPIRED(UNAUTHORIZED, false, "UA003", "만료된 액세스 토큰입니다. 재발행 요청해 주세요"),
+	E401_UNAUTHORIZED_REFRESH_TOKEN_EXPIRED(UNAUTHORIZED, false, "UA004", "만료된 리프레쉬 토큰입니다. 재로그인 해주세요"),
 
 	/**
 	 * 403 Forbidden (권한 등의 이유로 허용하지 않는 요청)
