@@ -22,12 +22,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
-		registry
-			.setApplicationDestinationPrefixes("/to")
-			.enableSimpleBroker("/from")
-			.setHeartbeatValue(new long[] {10000L, 10000L});
-		// .setTaskScheduler(heartBeatScheduler());
-
+		registry.setApplicationDestinationPrefixes("/to");
+		registry.enableSimpleBroker("/from");
 	}
 
 	@Override
