@@ -2,11 +2,13 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+
 // import SockJS from 'sockjs-client'
 import webstomp from 'webstomp-client'
 import { useUserStore } from './user'
 import { useRoomStore } from './room'
 import { useMatchStore } from './match'  
+
 
 
 export const useGameStore = defineStore('game', () => {
@@ -22,6 +24,9 @@ export const useGameStore = defineStore('game', () => {
 
   // 게임 정보
   const gameRoomTitle = ref('')
+
+  const receiveMessage = ref('')
+
   // const totalParticipantCnt = ref(0)
   const roomInfo = ref({})
   const player = ref([])  // 방에 있는 플레이어들 정보
@@ -30,15 +35,52 @@ export const useGameStore = defineStore('game', () => {
   const myId = ref('')
   const isMatch = ref(false)
 
-  stompClient.connect({'access-token': userStore.accessToken}, (frame) => {
+
+  // 게임 관련 데이터 -> 라운드상태, 최근라운드, 턴, 게임 멤버 정보
+  const roundState = ref(false)
+  const currentRound = ref(0)
+  const yourTurn = ref(null)
+  const gameMemberInfos = ref([])
+
+  stompClient.connect({ 'access-token': userStore.accessToken }, (frame) => {
     console.log("Connect success", gameRoomTitle.value)
 
-      stompClient.subscribe(`/from/chipchippoker/checkConnect/`, (message) => {
-        console.log('기본 토픽 구독 성공')
-        const response = JSON.parse(message.body)
-        console.log(response.body.data)
-      })
+    // 개인 메세지함 구독(기본구독)
+    stompClient.subscribe(`/from/chipchippoker/member/${userStore.myNickname}`, (message) => {
+
+      console.log('개인 메세지함 구독 성공')
+      receiveMessage.value = JSON.parse(message.body).body
+      console.log(receiveMessage.value)
+
+      switch (receiveMessage.value?.code) {
+
+        case "MS007": // 게임 진행
+          // 게임 데이터 저장 -> 5초건 텀 두고 데이터 받기..
+          setTimeout(()=>{
+            roundState.value = receiveMessage.value?.data?.roundState
+            currentRound.value = receiveMessage.value?.data?.currentRound
+            yourTurn.value = receiveMessage.value?.data?.yourTurn
+            gameMemberInfos.value = receiveMessage.value?.data?.gameMemberInfos
+            console.log('게임시작');
+            console.log("roundState", roundState.value);
+            console.log("currentRound", currentRound.value);
+            console.log("yourTurn", yourTurn.value);
+            console.log("gameMemberInfos", gameMemberInfos.value);
+          },5000)
+          break
+
+        case "ME002": // 모두 준비상태가 아닙니다
+          console.log("모두 준비상태가 아닙니다");
+          break
+        
+        case "ME003": // 방장이 아닌사람이 start 한다면
+          console.log("님은 방장이 아님");
+          break
+      }
     })
+
+  })
+
     // stompClient.reconnect_delay = 1000
     stompClient.heartbeat.outgoing = 0;
 		stompClient.heartbeat.incoming = 0;
@@ -55,7 +97,7 @@ export const useGameStore = defineStore('game', () => {
         myId.value = message.headers.subscription
         console.log(myId.value);
         console.log(message.headers);
-
+        receiveMessage.value = JSON.parse(message.body).body
         const response = JSON.parse(message.body)
         console.log(response.body);
         switch (response.body.code) {
@@ -72,26 +114,30 @@ export const useGameStore = defineStore('game', () => {
             receiveExitRoom(response.body.data) 
             break     
           case "MS004": // 강퇴(타인)
-            // 발행자(방장), 구독자
-            // 어느 사용자가 강퇴되었는지 보여줌
-            console.log(response.body.message);
-            recieveBanYou(response)
-            console.log('강퇴 함 ',response)
-            break
-          case "MS005": // 강퇴(본인)
-            // 강퇴되었음을 보여줌
-            // unsubscribe 시켜줌
-            console.log(response.body.message);
-            recieveBanMe(response)
-            console.log('강퇴 당함 ',response)
-            break
-          case "MS006": // 게임 준비
-            console.log(response.body.message);
-            receiveReady(response.body.data)
-          case "200": // 매칭 완료
-            console.log(response.body.message);
-            receiveMatching(response.body.data)
-        }
+          // 발행자(방장), 구독자
+          // 어느 사용자가 강퇴되었는지 보여줌
+          recieveBanYou(receiveMessage.value?.data)
+          console.log('강퇴 함 ', receiveMessage.value?.data)
+          break
+        case "MS005": // 강퇴(본인)
+          // 강퇴되었음을 보여줌
+          // unsubscribe 시켜줌
+          console.log('강퇴 당함 ', receiveMessage.value?.data)
+          recieveBanMe(receiveMessage.value?.data)
+          mySubscribtion.unsubscribe(myId.value, headers)
+          myId.value = null
+          router.push('main')
+          break
+        case "MS006": // 
+
+          break
+        case "MS008": // 라운드 종료
+          receiveGameFinish(receiveMessage.value?.data)
+          break
+        case "200": // 매칭 완료
+          console.log(response.body.message);
+          receiveMatching(response.body.data)
+      }
       })
     }
 
@@ -140,8 +186,6 @@ export const useGameStore = defineStore('game', () => {
         }
       })
     }
-  }
-
   // 게임방 입장 SEND
   const sendJoinRoom = function(gameRoomTitle){
     isMatch.value = false
@@ -167,8 +211,8 @@ export const useGameStore = defineStore('game', () => {
   }
 
   // 게임방 나가기 SEND
-  const sendExitRoom = function(gameRoomTitle){
-    stompClient.send(`/to/game/exit/${gameRoomTitle}`, JSON.stringify({}), {'access-token': userStore.accessToken})
+  const sendExitRoom = function (gameRoomTitle) {
+    stompClient.send(`/to/game/exit/${gameRoomTitle}`, JSON.stringify({}), { 'access-token': userStore.accessToken })
   }
 
   // 게임방 나가기 RECEIVE
@@ -184,9 +228,11 @@ export const useGameStore = defineStore('game', () => {
   }
 
   // 게임 준비 SEND
-  const sendReady = function(gameRoomTitle, isReady){
-    stompClient.send(`/to/game/reddy/${gameRoomTitle}`, JSON.stringify({ isReady }), {'access-token': userStore.accessToken})
+  const sendReady = function (gameRoomTitle) {
+    const message = { 'isReady': true }
+    stompClient.send(`/to/game/ready/${gameRoomTitle}`, JSON.stringify(message), { 'access-token': userStore.accessToken })
   }
+
 
   // 게임 준비 RECEIVE
   const receiveReady = function(data){
@@ -194,65 +240,83 @@ export const useGameStore = defineStore('game', () => {
     player.value = data.memberInfos
     roomManagerNickname.value = data.roomManagerNickname
 
-    console.log(data);
+
   }
 
   // 게임 시작 SEND
-  const sendStartGame = function(gameRoomTitle){
-    stompClient.send("/startGame", JSON.stringify({}), {'access-token': userStore.accessToken})
+  const sendStartGame = function (gameRoomTitle) {
+    console.log('게임시작');
+    stompClient.send(`/to/game/start/${gameRoomTitle}`, JSON.stringify({}), { 'access-token': userStore.accessToken })
   }
 
   // 게임 시작 RECEIVE
-  const receiveStartGame = function(gameRoomTitle){
-    stompClient.send("/startGame", JSON.stringify({}), {'access-token': userStore.accessToken})
+  const receiveStartGame = function (gameRoomTitle) {
+    console.log('게임 시작')
   }
 
   // 배팅
-  const bet = function(gameRoomTitle, amount){
+  const bet = function (gameRoomTitle, action, bettingCoin ) {
     const message = {
-      action: "bet",
-      amount,
+      currentRound:currentRound.value,
+      action: action,
+      bettingCoin:bettingCoin
     }
-    stompClient.send("/bet", JSON.stringify(message), {'access-token': userStore.accessToken})
+    stompClient.send(`/to/game/betting/${gameRoomTitle}`, JSON.stringify(message), { 'access-token': userStore.accessToken })
   }
 
 
-  const kickUser = function(gameRoomTitle, nickname){
-    stompClient.send(`/to/game/ban/${gameRoomTitle}`, nickname, headers)
+  const kickUser = function (gameRoomTitle, nickname) {
+    stompClient.send(`/to/game/ban/${gameRoomTitle}`, nickname, { 'access-token': userStore.accessToken })
   }
 
 
   // 강퇴 타인
-  const recieveBanYou = function(response){
+  const recieveBanYou = function (response) {
     const countOfPeople = response.body.countOfPeople
     const memberInfos = response.body.memberInfos
     const roomManagerNickname = response.body.roomManagerNickname
     // 플레이어배열에서 강퇴당한 사람을 삭제합니다
     player.value.forEach((item, index) => {
-      if ( item.nickname === memberInfos.nickname) {
+      if (item.nickname === memberInfos.nickname) {
         player.value.splice(index, 1);
       }
-    })
+    }
+    )
+  }
+
+  // 라운드 종료
+  const receiveGameFinish = function(data){
+    console.log('라운드 종료');
+    roundState.value = data?.roundState
+    currentRound.value = data?.currentRound
+    yourTurn.value = data?.yourTurn
+    gameMemberInfos.value = data?.gameMemberInfos
+    console.log("roundState", roundState.value);
+    console.log("currentRound", currentRound.value);
+    console.log("yourTurn", yourTurn.value);
+    console.log("gameMemberInfos", gameMemberInfos.value);
   }
 
 
-  // 강퇴 본인
-  const recieveBanMe = function(response){
-    mySubscribtion.unsubscribe(myId.value,headers)
-    myId.value = null
-    router.push('main')
-  }
-  
+
+
   return {
     rooms: ref([]),
+    receiveMessage,
     sendMatching, receiveMatching,
     sendCreateRoom, receiveCreateRoom,
-    sendJoinRoom, receiveJoinRoom, 
-    sendExitRoom, receiveExitRoom, 
+    sendJoinRoom, receiveJoinRoom,
+    sendExitRoom, receiveExitRoom,
     sendReady, receiveReady,
+    sendStartGame,
     bet,
     kickUser,
     subscribeHandler,
     stompClient,
+    roundState,
+    currentRound,
+    yourTurn,
+    gameMemberInfos,
   }
-},{persist:true})
+  }
+}, { persist: true }) 
