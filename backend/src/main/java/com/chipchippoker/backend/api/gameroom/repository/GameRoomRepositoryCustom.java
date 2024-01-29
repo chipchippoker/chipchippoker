@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import com.chipchippoker.backend.common.entity.GameRoom;
 
 public interface GameRoomRepositoryCustom {
+	GameRoom findByTitleAndState(String title);
+
 	Page<GameRoom> findBySearchOption(String type, String title, Boolean isTwo, Boolean isThree, Boolean isFour,
 		Boolean isEmpty, Pageable pageable);
 

@@ -9,15 +9,21 @@ import com.chipchippoker.backend.common.entity.GameRoom;
 import com.chipchippoker.backend.common.entity.MemberGameRoomBlackList;
 import com.chipchippoker.backend.common.exception.DuplicateException;
 import com.chipchippoker.backend.common.exception.ForbiddenException;
+import com.chipchippoker.backend.common.exception.NotFoundException;
 
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class GameRoomServiceHelper {
 	public static void isDuplicatedGameRoom(GameRoomRepository gameRoomRepository, String title) {
-		if (gameRoomRepository.findByTitle(title).isPresent()) {
+		if (gameRoomRepository.findByTitleAndState(title) != null) {
 			throw new DuplicateException(ErrorBase.E409_DUPLICATE_ROOM_TITLE);
 		}
+	}
+
+	public static void isExistGameRoom(GameRoom gameRoom) {
+		if (gameRoom == null)
+			throw new NotFoundException(ErrorBase.E404_NOT_EXISTS);
 	}
 
 	public static void isCorrectGameRoomPassword(Integer userPassword, Integer gameRoomPassword) {

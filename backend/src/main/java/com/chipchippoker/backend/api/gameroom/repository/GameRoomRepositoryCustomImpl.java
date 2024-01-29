@@ -19,6 +19,14 @@ import lombok.RequiredArgsConstructor;
 public class GameRoomRepositoryCustomImpl implements GameRoomRepositoryCustom {
 	private final JPAQueryFactory queryFactory;
 
+	@Override
+	public GameRoom findByTitleAndState(String title) {
+		return queryFactory
+			.selectFrom(gameRoom)
+			.where(gameRoom.title.eq(title), gameRoom.state.eq("종료").not())
+			.fetchOne();
+	}
+
 	public Page<GameRoom> findBySearchOption(String type, String title, Boolean isTwo, Boolean isThree,
 		Boolean isFour,
 		Boolean isEmpty, Pageable pageable) {
