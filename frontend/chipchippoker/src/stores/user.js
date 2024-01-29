@@ -24,21 +24,44 @@ export const useUserStore = defineStore('user', () => {
   // 프로필 아이콘 보여주기
   const viewProfileIcon = ref(true)
 
-  // 토큰 재발행 요청
-  const renewToken = function () {
-    axios({
-      method: 'post',
-      headers: {
-        'access-token': accessToken.value,
-        'refresh-token': accessToken.value
+  // axios 응답을 인터셉트하여 특정 응답 코드가 반환될 때 토큰을 갱신하고 API를 재시도하는 함수
+  const interceptResponse = function (accessToken, refreshToken) {
+    axios.interceptors.response.use((response) => {
+      console.log("인터셉트 성공");
+      if (response.data.code === 'UA003') {
+        renewToken(accessToken.value, refreshToken.value)
+        .then(() => {
+          const originalRequest = response.config
+          originalRequest.headers['access-token'] = `Bearer ${accessToken.value}`
+        })
+        .catch(err => alert(err))
+      } else {
+        return response
       }
     })
-    .then(res => {
+  }
+
+  interceptResponse(accessToken.value, refreshToken.value)
+  
+  // 토큰 재발행 요청
+  const renewToken = async function (accessToken, refreshToken) {
+    const headers = {
+      'access-token': accessToken,
+      'refresh-token': refreshToken
+    }
+    try {
+      const res = await axios({
+        method: 'post',
+        headers,
+      })
       console.log(res)
       accessToken.value = res.data.accessToken
-      refreshToken.value =res.data.refreshToken
-    })
-    .catch(err => console.log(err))
+      refreshToken.value = res.data.refreshToken
+      return true // 토큰 재발급 성공
+    } catch (err) {
+      console.log(err)
+      return false  // 토큰 재발급 실패
+    }
   }
 
   // 회원가입
@@ -73,6 +96,7 @@ export const useUserStore = defineStore('user', () => {
         url: `${USER_API}/login`,
         data: payload
       })
+      console.log(response);
       const res = response.data
       console.log('일반 로그인 성공!!')
       console.log(res.data)
@@ -164,7 +188,8 @@ export const useUserStore = defineStore('user', () => {
       url: `${USER_API}/logout`,
       headers: { 'access-token': accessToken.value }
     })  
-    .then(res => {
+    .then(response => {
+      const res = response.data
       console.log('로그아웃 성공!!')
       accessToken.value = ''
       refreshToken.value = ''
@@ -179,12 +204,13 @@ export const useUserStore = defineStore('user', () => {
   const kakaoConnect = async function () {
     console.log('카카오 연동 요청!')
     try {
-      await axios({
+      const response = await axios({
         method: 'post',
         url: `${USER_API}/social`,
         data: { authorizationCode },
         headers: { 'access-token': accessToken.value }
       })
+      const res = response.data
       console.log('카카오 연동 성공!')
       return true
     } catch (err) {
@@ -225,11 +251,12 @@ export const useUserStore = defineStore('user', () => {
   const signOut = async function () {
     console.log('회원탈퇴 요청!')
     try {
-      await axios({
+      const response = await axios({
         method: 'delete',
         url: `${USER_API}/members`,
         headers: { 'access-token': accessToken.value }
       })
+      const res = response.data
       console.log('회원탈퇴 성공')
       return true
     } catch (err) {
@@ -326,13 +353,13 @@ export const useUserStore = defineStore('user', () => {
       method:'get',
       url: `${MEMBERS_API}/profile/${nickname}`,
       headers: { 'access-token': accessToken.value }
-
     })
-    .then(res => {
+    .then(response => {
+      const res = response.data
       console.log("프로필 정보 요청 결과",res);
       profileInfo.value = res.data.data
       console.log("profileInfo",profileInfo.value)
-    })
+    }).catch(err => console.log(err))
   }
 
   return {
@@ -340,7 +367,7 @@ export const useUserStore = defineStore('user', () => {
     BASE_API_URL,
 
     // 로그인, 로그아웃, 회원가입, 회원탈퇴, 카카오 연동
-    generalLogIn, getKakaoCode, simpleLogInRequest, kakaoSignUp,
+    renewToken, interceptResponse, generalLogIn, getKakaoCode, simpleLogInRequest, kakaoSignUp,
     logOut, signUp, signOut, checkMemberId, checkNickname, validateId, validatePassword, validateNickname, kakaoConnect, 
     accessToken, refreshToken, authorizationCode, kakaoAccessToken,
 

@@ -126,6 +126,7 @@ export const useFriendStore = defineStore('friend', () => {
     })
     
     .then(res => {
+      console.log(res);
       allRankList.value = res.data.data
       // 내가 전체 랭킹에 존재하는지 판단하는 함수
       isContainedinAll.value = allRankList.value.filter((rank) => rank.nickname === userStore.myNickname).length > 0
