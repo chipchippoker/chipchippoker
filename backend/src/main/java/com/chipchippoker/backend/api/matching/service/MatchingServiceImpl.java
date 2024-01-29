@@ -63,7 +63,7 @@ public class MatchingServiceImpl implements MatchingService {
 					new CompleteMatchingMessageRequest(gameRoom.getTotalParticipantCnt()), member.getNickname());
 			}
 		} else { // 입장 가능한 게임방이 없다면
-			// 새로운 게임방 생성
+			// 새로운 경쟁전 게임방 생성
 			String title = "경쟁전 " + (gameRoomRepository.findAll().size() + 1);
 			gameRoom = GameRoom.createGameRoom(title, null, totalParticipantCnt, Boolean.FALSE, "경쟁", null);
 			gameRoomRepository.save(gameRoom);

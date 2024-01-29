@@ -1,7 +1,5 @@
 package com.chipchippoker.backend.api.gameroom.model.dto;
 
-import com.chipchippoker.backend.common.entity.GameRoom;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,14 +17,15 @@ public class GetGameRoomListResponse {
 	private Integer currentParticipantCnt;
 	private Integer currentSpectatorCnt;
 
-	public static GetGameRoomListResponse gameRoomListResponse(GameRoom gameRoom) {
+	public static GetGameRoomListResponse gameRoomListResponse(Boolean isPrivate, String state, String title,
+		Integer totalParticipantCnt, Integer currentParticipantCnt, Integer currentSpectatorCnt) {
 		return GetGameRoomListResponse.builder()
-			.isPrivate(gameRoom.getIsPrivate())
-			.state(gameRoom.getState())
-			.title(gameRoom.getTitle())
-			.totalParticipantCnt(gameRoom.getTotalParticipantCnt())
-			.currentParticipantCnt(gameRoom.getMembers().size())
-			.currentSpectatorCnt(gameRoom.getSpectateRoom().getMembers().size())
+			.isPrivate(isPrivate)
+			.state(state)
+			.title(title)
+			.totalParticipantCnt(totalParticipantCnt)
+			.currentParticipantCnt(currentParticipantCnt)
+			.currentSpectatorCnt(currentSpectatorCnt)
 			.build();
 	}
 }
