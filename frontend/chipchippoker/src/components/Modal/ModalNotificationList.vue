@@ -20,9 +20,8 @@
 </template>
 
 <script setup>
-import ModalNotificationItem from './ModalNotificationItem.vue';
+import ModalNotificationItem from '@/components/Modal/ModalNotificationItem.vue';
 import { useFriendStore } from '@/stores/friend';
-import { onMounted } from 'vue';
 import { useUserStore } from '@/stores/user';
 const friendStore = useFriendStore()
 const userStore = useUserStore()

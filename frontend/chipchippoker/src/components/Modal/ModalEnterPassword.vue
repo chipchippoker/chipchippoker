@@ -33,8 +33,9 @@ import { useRoomStore } from '@/stores/room';
 const friendStore = useFriendStore()
 const password = ref(null)
 
-defineProps({
-    roomData:Object
+const props = defineProps({
+    roomData:Object,
+    userType:String
 })
 
 const roomStore = useRoomStore()
@@ -43,7 +44,16 @@ const enterRoomPrivate = function () {
         title: roomData.title,
         password: password
     }
-    roomStore.enterRoomPrivate(payload)
+    if (props.userType === '플레이어') {
+        roomStore.isWatcher = false
+        roomStore.enterRoomPrivate(payload)
+    } else if (props.userType === '관전자' && roomStore.state === '대기') {
+        roomStore.isWatcher = true
+        roomStore.enterWatchPrivate(payload)
+    } else {
+        roomStore.isWatcher = true
+        roomStore.enterWatchPrivateProgress(payload)
+    }
 }
 
 </script>

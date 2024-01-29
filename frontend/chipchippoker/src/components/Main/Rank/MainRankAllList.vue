@@ -1,5 +1,5 @@
 <template>
-    <div class="rank-scroll tab-radius bg-lightblue">
+    <div class="rank-scroll tab-radius bg-lightblue py-1">
         <MainRankItemItem 
         v-for="item in friendStore?.allRankList" 
         :class="{'sticky-top sticky-bottom myrank':item?.nickname==userStore.myNickName}"

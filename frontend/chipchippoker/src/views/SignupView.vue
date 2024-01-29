@@ -21,7 +21,7 @@
             <div v-if="isNickDuplicated" class="form-text text-danger">이미 사용 중인 닉네임입니다.</div>
             <div v-if="!isValidNickname" id="nickname" class="fw-lgitighter x-little-text text-danger">한글 또는 영어 또는 숫자 또는
               (_)의 4 ~ 16 글자이어야 합니다.</div>
-            <div v-if="isNickDuplicated===null" id="nickname" class="fw-lgitighter x-little-text text-danger">닉네임 중복확인을 해주세요.</div>
+            <div v-if="nickname!==null && isNickDuplicated===null" id="nickname" class="fw-lgitighter x-little-text text-danger">닉네임 중복확인을 해주세요.</div>
           </div>
           <!-- 아이디 -->
           <div class="mb-3">
@@ -34,7 +34,7 @@
             <div v-if="isIdDuplicated" class="form-text text-danger">이미 사용 중인 아이디입니다.</div>
             <div v-if="!isValidMemberId" id="id" class="fw-lgitighter x-little-text text-danger">영어 또는 숫자의 6 ~ 16 글자이어야
               합니다.</div>
-            <div v-if="isIdDuplicated===null" id="id" class="fw-lgitighter x-little-text text-danger">아이디 중복확인을 해주세요.</div>
+            <div v-if="memberId!==null && isIdDuplicated===null" id="id" class="fw-lgitighter x-little-text text-danger">아이디 중복확인을 해주세요.</div>
           </div>
           <!-- 비밀번호 -->
           <div class="mb-3">
@@ -88,8 +88,8 @@ const password1 = ref(null)
 const password2 = ref(null)
 const nickname = ref(null)
 
-const isNickDuplicated = ref(false)
-const isIdDuplicated = ref(false)
+const isNickDuplicated = ref(null)
+const isIdDuplicated = ref(null)
 const isValidMemberId = ref(true)
 const isValidPassword1 = ref(true)
 const isValidPassword2 = ref(true)

@@ -2,101 +2,178 @@
   <div class="w-100 h-100">
     <!-- 플레이어 감정, 동영상, 카드 -->
     <div class="w-100 h-100 position-relative">
-      <div class="position-absolute top-0 start-0 d-flex flex-column h-50" id="player1" style="width: 500px;">
-        <div class="text-white align-self-center ">{{ myNickname }} / 
-        <!-- 보유코인 연결 -->
-          <div v-if="gameStore.player.length > 0">보유코인: {{gameStore?.gameMemberInfos[0]?.havingCoin}}</div>
-        </div>
-        <div class="d-flex m-2 mt-0 h-100">
-          <div>
-            <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
-          </div>
-          <!-- 캠활성화, 음소거 버튼 -->
-          <!-- <button id="camera-activate" @click="handleCameraBtn()">캠 비활성화</button>
-          <button id="mute-activate" @click="handleMuteBtn()">음소거 활성화</button> -->
-          <!-- <div>
-            <select name="cameras" @change="handleCameraChange">
-              <option disabled>사용할 카메라를 선택하세요</option>
-            </select>
-            <select name="audios" @change="handleAudioChange">
-              <option disabled>사용할 마이크를 선택하세요</option>
-            </select>
-          </div> -->
-          <div class="bg-black m-2" style="width: 300px; height: 210px;">
-            <UserVideoVue
-            :stream-manager="publisherComputed"
-            view="playView"
-            />
-          </div>
-          <!-- 내 카드는 뒷면을 기본적으로 보여주기 -->
-          <img class="object-fit-contain" style="width: 150px;" :src=getBackCardUrl() alt="?">
-          
-        </div>
-      </div>
-      <div v-if="subscribersComputed.length > 0" class="position-absolute top-0 end-0 d-flex flex-column h-50" id="player2" style="width: 500px;">
-        <div class="text-white align-self-center " v-if="subscribersComputed.length > 0" >{{ player1 }} / 
-        <!-- 보유코인 연결 -->
-          <div v-if="gameStore.player.length > 1">보유코인: {{gameStore?.gameMemberInfos[0]?.havingCoin}}</div>
-        
-        </div>
-        <div class="d-flex flex-row-reverse h-100 m-2 mt-0">
-          <div>
-            <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
-          </div>
-          <div class="bg-black m-2" style="width: 300px; height: 210px;">
-            <UserVideoVue
-            v-if="subscribersComputed.length > 0"
-            :stream-manager="subscribersComputed[0]"
-            view="playView"
-            @client-data="fPlayer1"
-            />
-          </div>
-          <img class="object-fit-contain" style="width: 150px;" :src=getCardUrl(1,gameStore?.gameMemberInfos[1].cardNumber) alt="?">
-          
-        </div>
-      </div>
-      <div v-if="subscribersComputed.length > 1" class="position-absolute bottom-0 start-0 d-flex flex-column h-50" id="player3" style="width: 500px;">
-        <div class="text-white align-self-center ">{{ player2 }} / 
-        <!-- 보유코인 연결 -->
-          <div v-if="gameStore.player.length > 2">보유코인: {{gameStore?.gameMemberInfos[0]?.havingCoin}}</div>
-        
-        </div>
-        <div class="d-flex m-2 mt-0 h-100">
-          <div>
-            <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
-          </div>
-          <div class="bg-black m-2" style="width: 300px; height: 210px;">
-            <UserVideoVue
-            v-if="subscribersComputed.length > 1"
-            :stream-manager="subscribersComputed[1]"
-            view="playView"
-            @client-data="fPlayer2"
-            />
-          </div>
-          <img class="object-fit-contain" style="width: 150px;" :src=getCardUrl(1,gameStore?.gameMemberInfos[2].cardNumber) alt="?">
-        </div>
-      </div>
-      <div v-if="subscribersComputed.length > 2" class="position-absolute bottom-0 end-0 d-flex flex-column h-50" id="player4" style="width: 500px;">
-        <div class="text-white align-self-center">{{ player3 }} / 
-        <!-- 보유코인 연결 -->
-          <div v-if="gameStore.player.length > 3">보유코인: {{gameStore?.gameMemberInfos[0]?.havingCoin}}</div>
-        
-        </div>
-        <div class="d-flex flex-row-reverse m-2 h-100 mt-0">
-          <div>
-            <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
-          </div>
-          <div class="bg-black m-2" style="width: 300px; height: 210px;">
-            <UserVideoVue
-            v-if="subscribersComputed.length > 2"
-            :stream-manager="subscribersComputed[2]"
-            view="playView"
-            @client-data="fPlayer3"
-            />
-          </div>
+      <!-- 관전 중이 아니고 게임하는 플레이어일 때 -->
+      <div v-if="roomStore.isWatcher===false">
+        <div class="position-absolute top-0 start-0 d-flex flex-column h-50" id="player1" style="width: 500px;">
+          <div class="text-white align-self-center ">{{ myNickname }} / 
+          <!-- 보유코인 연결 -->
+            <div v-if="gameStore.player.length > 0">보유코인: {{gameStore?.gameMemberInfos[0]?.havingCoin}}</div>
 
-          <img class="object-fit-contain" style="width: 150px;" :src=getCardUrl(1,gameStore?.gameMemberInfos[3].cardNumber) alt="?">
+          </div>
+          <div class="d-flex m-2 mt-0 h-100">
+            <div>
+              <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
+            </div>
+            <div class="bg-black m-2" style="width: 300px; height: 210px;">
+              <UserVideoVue
+              :stream-manager="publisherComputed"
+              view="playView"
+              />
+            </div>
+            <!-- 내 카드는 뒷면을 기본적으로 보여주기 -->
+            <img class="object-fit-contain" style="width: 150px;" :src=getBackCardUrl() alt="?">
+            
+          </div>
+        </div>
+        <div v-if="playersComputed.length > 0" class="position-absolute top-0 end-0 d-flex flex-column h-50" id="player2" style="width: 500px;">
+          <div class="text-white align-self-center " v-if="subscribersComputed.length > 0" >{{ player1 }} / 
+          <!-- 보유코인 연결 -->
+            <div v-if="gameStore.player.length > 1">보유코인: {{gameStore?.gameMemberInfos[1]?.havingCoin}}</div>
           
+          </div>
+          <div class="d-flex flex-row-reverse h-100 m-2 mt-0">
+            <div>
+              <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
+            </div>
+            <div class="bg-black m-2" style="width: 300px; height: 210px;">
+              <UserVideoVue
+              v-if="playersComputed.length > 0"
+              :stream-manager="playersComputed[0]"
+              view="playView"
+              @client-data="fPlayer1"
+              />
+            </div>
+            <img class="object-fit-contain" style="width: 150px;" :src=getCardUrl(1,gameStore?.gameMemberInfos[1].cardNumber) alt="?">
+            
+          </div>
+        </div>
+        <div v-if="playersComputed.length > 1" class="position-absolute bottom-0 start-0 d-flex flex-column h-50" id="player3" style="width: 500px;">
+          <div class="text-white align-self-center ">{{ player2 }} / 
+          <!-- 보유코인 연결 -->
+            <div v-if="gameStore.player.length > 2">보유코인: {{gameStore?.gameMemberInfos[2]?.havingCoin}}</div>
+          
+          </div>
+          <div class="d-flex m-2 mt-0 h-100">
+            <div>
+              <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
+            </div>
+            <div class="bg-black m-2" style="width: 300px; height: 210px;">
+              <UserVideoVue
+              v-if="playersComputed.length > 1"
+              :stream-manager="playersComputed[1]"
+              view="playView"
+              @client-data="fPlayer2"
+              />
+            </div>
+            <img class="object-fit-contain" style="width: 150px;" :src=getCardUrl(1,gameStore?.gameMemberInfos[2].cardNumber) alt="?">
+          </div>
+        </div>
+        <div v-if="playersComputed.length > 2" class="position-absolute bottom-0 end-0 d-flex flex-column h-50" id="player4" style="width: 500px;">
+          <div class="text-white align-self-center">{{ player3 }} / 
+          <!-- 보유코인 연결 -->
+            <div v-if="gameStore.player.length > 3">보유코인: {{gameStore?.gameMemberInfos[3]?.havingCoin}}</div>
+          
+          </div>
+          <div class="d-flex flex-row-reverse m-2 h-100 mt-0">
+            <div>
+              <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
+            </div>
+            <div class="bg-black m-2" style="width: 300px; height: 210px;">
+              <UserVideoVue
+              v-if="playersComputed.length > 2"
+              :stream-manager="playersComputed[2]"
+              view="playView"
+              @client-data="fPlayer3"
+              />
+            </div>
+
+            <img class="object-fit-contain" style="width: 150px;" :src=getCardUrl(1,gameStore?.gameMemberInfos[3].cardNumber) alt="?">
+            
+          </div>
+        </div>
+      </div>
+      <!-- 관전 중일 때 -->
+      <div v-else>
+        <div v-if="playersComputed.length > 0" class="position-absolute top-0 start-0 d-flex flex-column h-50" id="player1" style="width: 500px;">
+          <div class="text-white align-self-center ">{{ gameStore?.gameMemberInfos[0]?.nickname }} / 
+          <!-- 보유코인 연결 -->
+            <div v-if="gameStore.player.length > 0">보유코인: {{gameStore?.gameMemberInfos[0]?.havingCoin}}</div>
+
+          </div>
+          <div class="d-flex m-2 mt-0 h-100">
+            <div>
+              <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
+            </div>
+            <div class="bg-black m-2" style="width: 300px; height: 210px;">
+              <UserVideoVue
+              :stream-manager="playersComputed[0]"
+              view="playView"
+              />
+            </div>
+            <img class="object-fit-contain" style="width: 150px;" :src=getBackCardUrl(1,gameStore?.gameMemberInfos[0].cardNumber) alt="?">         
+          </div>
+        </div>
+        <div v-if="playersComputed.length > 1" class="position-absolute top-0 end-0 d-flex flex-column h-50" id="player2" style="width: 500px;">
+          <div class="text-white align-self-center " >{{ gameStore?.gameMemberInfos[1]?.nickname }} / 
+          <!-- 보유코인 연결 -->
+            <div v-if="gameStore.player.length > 1">보유코인: {{gameStore?.gameMemberInfos[1]?.havingCoin}}</div>
+          
+
+          </div>
+          <div class="d-flex flex-row-reverse h-100 m-2 mt-0">
+            <div>
+              <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
+            </div>
+            <div class="bg-black m-2" style="width: 300px; height: 210px;">
+              <UserVideoVue
+              :stream-manager="playersComputed[1]"
+              view="playView"
+              @client-data="fPlayer1"
+              />
+            </div>
+            <img class="object-fit-contain" style="width: 150px;" :src=getCardUrl(1,gameStore?.gameMemberInfos[1].cardNumber) alt="?">
+          </div>
+        </div>
+        <div v-if="playersComputed.length > 2" class="position-absolute bottom-0 start-0 d-flex flex-column h-50" id="player3" style="width: 500px;">
+          <div class="text-white align-self-center ">{{ gameStore?.gameMemberInfos[2]?.nickname }} / 
+          <!-- 보유코인 연결 -->
+            <div v-if="gameStore.player.length > 2">보유코인: {{gameStore?.gameMemberInfos[2]?.havingCoin}}</div>
+          
+
+          </div>
+          <div class="d-flex m-2 mt-0 h-100">
+            <div>
+              <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
+            </div>
+            <div class="bg-black m-2" style="width: 300px; height: 210px;">
+              <UserVideoVue
+              :stream-manager="playersComputed[2]"
+              view="playView"
+              @client-data="fPlayer2"
+              />
+            </div>
+            <img class="object-fit-contain" style="width: 150px;" :src=getCardUrl(1,gameStore?.gameMemberInfos[2].cardNumber) alt="?">
+          </div>
+        </div>
+        <div v-if="playersComputed.length > 3" class="position-absolute bottom-0 end-0 d-flex flex-column h-50" id="player4" style="width: 500px;">
+          <div class="text-white align-self-center">{{ gameStore?.gameMemberInfos[3]?.nickname }} / 
+          <!-- 보유코인 연결 -->
+            <div v-if="gameStore.player.length > 3">보유코인: {{gameStore?.gameMemberInfos[3]?.havingCoin}}</div>
+          
+          </div>
+          <div class="d-flex flex-row-reverse m-2 h-100 mt-0">
+            <div>
+              <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
+            </div>
+            <div class="bg-black m-2" style="width: 300px; height: 210px;">
+              <UserVideoVue
+              :stream-manager="playersComputed[3]"
+              view="playView"
+              @client-data="fPlayer3"
+              />
+            </div>
+            <img class="object-fit-contain" style="width: 150px;" :src=getCardUrl(1,gameStore?.gameMemberInfos[3].cardNumber) alt="?">
+          </div>
         </div>
       </div>
       <!-- 배팅보드 -->
@@ -146,8 +223,11 @@
   import axios from 'axios'
   import { OpenVidu } from "openvidu-browser";
   import { useGameStore } from "@/stores/game";
+  import { useRoomStore } from "@/stores/room";
 
   const gameStore = useGameStore()
+  const roomStore = useRoomStore()
+
   // 앞장 카드 가져오기
   const getCardUrl = function (setnum, cardnum) {
       return new URL(`/src/assets/cards/set${setnum}/card${cardnum}.png`, import.meta.url).href;
@@ -155,8 +235,7 @@
   // 뒷장 카드 가져오기
   const getBackCardUrl = function () {
       return new URL(`/src/assets/cards/back.png`, import.meta.url).href;
-  };
-
+  }
 
   const router = useRouter()
 
@@ -181,12 +260,7 @@
   const publisher = ref(undefined)
   const subscribers = ref([])
 
-  ///////////////////카메라 및 오디오 설정을 위한 부분임
-  const muted = ref(false)       // 기본은 음소거 비활성화
-  const camerOff = ref(false)    // 기본 카메라 활성화
-  const selectedCamera = ref("")  // 카메라 변경시 사용할 변수 
-  const selectedAudio  = ref("")  // 오디오 변경시 사용할 변수
-
+  
   ////다시그려내기 위해 computed 작성
   const mainStreamManagerComputed = computed(() => mainStreamManager.value);
   const publisherComputed = computed(() => publisher.value);
@@ -220,18 +294,11 @@
       gameStore.player.push(player3.value)
     }
   }
-
-  const showControls = ref(false);
-
-  function toggleMute() {
-    // 오디오 상태를 토글합니다.
-    
-  }
-
-  function toggleVideo() {
-    // 비디오 상태를 토글합니다.
-    
-  }
+  
+  /// 관전을 위한 변수들 크헝헝
+  const players = ref([])
+  const watchers = ref([])
+  const playersComputed = computed(() => players.value);
 
   // vue2에서의 methods 부분을 vue3화 시키기
   function joinSession() {
@@ -245,8 +312,29 @@
     // On every new Stream received...
     session.value.on("streamCreated", ( {stream} )=> {
       // const subscriber = session.subscribe(stream)
-      const subscriber = session.value.subscribe(stream)
+      const subscriber = session.value.subscribe(stream)// 닉네임과 watcher 얻기
+      function getConnectionData() {
+          const { connection } = stream;
+          return JSON.parse(connection.data);
+      }
+      const clientData = computed(() => {
+        const { clientData } = getConnectionData();
+        return clientData;
+      });
+      const isWatcher = computed(() => {
+        const { isWatcher } = getConnectionData();
+        return isWatcher;
+      });
+
       subscribers.value.push(subscriber)
+      // 플레이어, 관전자 리스트에도 추가
+      if (isWatcher === false) {
+        players.value.push(subscriber)
+      } else {
+        watchers.value.push(subscriber)
+        // 관전자 이름들도 추가
+        roomStore.watchersNickname.push(clientData)
+      }
     })
 
     // On every Stream destroyed...
@@ -254,6 +342,36 @@
       const index = subscribers.value.indexOf(stream.streamManager, 0)
       if(index >= 0){
         subscribers.value.splice(index, 1)
+      }
+      // 플레이어, 관전자 리스트에도 삭제
+      if (players.value.includes(stream.streamManager)) {
+        const index1 = players.value.indexOf(stream.streamManager, 0)
+        if(index1 >= 0){
+          players.value.splice(index1, 1)
+        }      
+      }
+      if (watchers.value.includes(stream.streamManager)) {
+        const index2 = watchers.value.indexOf(stream.streamManager, 0)
+        if(index2 >= 0){
+          watchers.value.splice(index2, 1)
+        }      
+      }
+      // 관전자 이름도 삭제
+      function getConnectionData() {
+        const { connection } = stream;
+        return JSON.parse(connection.data);
+      }
+      const clientData = computed(() => {
+        const { clientData } = getConnectionData();
+        return clientData;
+      });
+      
+      
+      if (roomStore.watchersNickname.includes(clientData)) {
+        const index3 = roomStore.watchersNickname.indexOf(clientData, 0)
+        if(index3 >= 0){
+          roomStore.watchersNickname.splice(index3, 1)
+        }      
       }
     })
 
@@ -289,7 +407,7 @@
       // First param is the token. Second param can be retrieved by every user on event
       // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
       // session.value.connect(token, {clientData: myUserName})
-      session.value.connect(token, {clientData: myNickname.value})
+      session.value.connect(token, {clientData: myNickname.value, isWatcher: roomStore.isWatcher})
       .then(() => {
           // --- 5) Get your own camera stream with the desired properties ---
 
@@ -305,8 +423,8 @@
             // videoSource: cameraSelect.value, // The source of video. If undefined default webcam
             // publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
             // publishVideo: true, // Whether you want to start publishing with your video enabled or not
-            publishAudio: !muted.value, // Whether you want to start publishing with your audio unmuted or not
-            publishVideo: !camerOff.value, // Whether you want to start publishing with your video enabled or not
+            // publishAudio: !muted.value, // Whether you want to start publishing with your audio unmuted or not
+            // publishVideo: !camerOff.value, // Whether you want to start publishing with your video enabled or not
             resolution: "300x210", // The resolution of your video
             frameRate: 30, // The frame rate of your video
             insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
@@ -320,7 +438,7 @@
           // --- 6) Publish your stream ---
           // session.publish(publisher)
           session.value.publish(publisher.value)
-          getMedia()  // 세션이 만들어졌을때 미디어 불러옴
+          // getMedia()  // 세션이 만들어졌을때 미디어 불러옴
         })
         .catch((error) => {
           console.log("There was an error connecting to the session:", error.code, error.message);
@@ -343,6 +461,9 @@
     mainStreamManager.value = undefined;
     publisher.value = undefined;
     subscribers.value = [];
+    players.value = []
+    watchers.value = []
+    roomStore.watchersNickname = []
     OV.value = undefined;
 
     // Remove beforeunload listener
@@ -374,131 +495,6 @@
       headers: { 'Content-Type': 'application/json', },
     });
     return response.data; // The token
-  }
-
-    // 캠, 오디오 등 기기와 관련된 함수
-  // 카메라와 오디오를 가져옴.
-  async function getMedia() {
-    try {
-      const devices = await navigator.mediaDevices.enumerateDevices();
-      const cameras = devices.filter((device) => device.kind === 'videoinput');
-      const audios = devices.filter((device) => device.kind === 'audioinput');
-      // const audios = undefined
-
-      const cameraSelect = document.querySelector('select[name="cameras"]');
-      const audioSelect = document.querySelector('select[name="audios"]');
-      
-      // 카메라 및 오디오 선택기 요소가 존재하는지 확인
-      // if (cameraSelect && audioSelect) {
-      if (cameras) {
-        cameras.forEach((camera) => {
-          const option = document.createElement('option');
-          option.value = camera.deviceId;
-          option.text = camera.label;
-          cameraSelect.appendChild(option);
-        });
-      } else {
-        const notCamera = cameraSelect.querySelector('option:disabled');
-        notCamera.innerText = '사용 가능한 카메라가 없습니다.'
-        // console.error('Camera selector not found');
-      }
-      if(audios){
-        audios.forEach((audio) => {
-          const option = document.createElement('option');
-          option.value = audio.deviceId;
-          option.text = audio.label;
-          audioSelect.appendChild(option);
-        });
-      } else {
-        const notAudio = audioSelect.querySelector('option:disabled');
-        notAudio.innerText = '사용 가능한 마이크가 없습니다.'
-        // console.error('Audio selector not found');
-      }
-    } catch (error) {
-      console.error('Error getting media devices:', error);
-    }
-  }
-
-
-  // // 음소거, 캠 활성화 버튼 작동
-  // function handleCameraBtn() {
-  //   console.log(publisher.value)
-  //   if (!publisher.value) return;
-  //   // 카메라 상태 토글
-  //   camerOff.value = !camerOff.value;
-  //   const cameraActivate = document.getElementById('camera-activate')
-  //   if(camerOff.value){   //카메라 비활성화상태
-  //     cameraActivate.innerText = '카메라 활성화'
-  //   }else{                //카메라 활성화상태
-  //     cameraActivate.innerText = '카메라 비활성화'
-  //   }
-    
-  //   // 카메라 작동 상태를 적용
-  //   publisher.value.publishVideo(!camerOff.value);
-  // }
-
-  // function handleMuteBtn() {
-  //   if (!publisher.value) return;
-
-  //   // 음소거 상태 토글
-  //   muted.value = !muted.value;
-  //   const muteActivate = document.getElementById('mute-activate')
-  //   if(muted.value){   //음소거 활성화상태
-  //     muteActivate.innerText = '음소거 비활성화'
-  //   }else{                //음소거 비활성화상태
-  //     muteActivate.innerText = '음소거 활성화'
-  //   }
-  //   // 음소거 설정을 적용
-  //   publisher.value.publishAudio(!muted.value);
-  // }
-  
-  // select태그에서 사용할 기기를 선택했을때
-  async function handleCameraChange(event) {
-    selectedCamera.value = event.target.value;
-    await replaceCameraTrack(selectedCamera.value);
-  }
-
-  async function handleAudioChange(event) {
-    selectedAudio.value = event.target.value;
-    await replaceAudioTrack(selectedAudio.value);
-  }
-
-  async function replaceCameraTrack(deviceId) {
-    if (!publisher.value) return;
-
-    const newConstraints = {
-        audio: false,
-        video: {
-            deviceId: { exact: deviceId },
-        },
-    };
-
-    try {
-        const newStream = await navigator.mediaDevices.getUserMedia(newConstraints);
-        const newVideoTrack = newStream.getVideoTracks()[0];
-        await publisher.value.replaceTrack(newVideoTrack);
-    } catch (error) {
-        console.error("Error replacing video track:", error);
-    }
-  }
-
-  async function replaceAudioTrack(deviceId) {
-    if (!publisher.value) return;
-
-    const newConstraints = {
-        audio: {
-            deviceId: { exact: deviceId },
-        },
-        video: false,
-    };
-
-    try {
-        const newStream = await navigator.mediaDevices.getUserMedia(newConstraints);
-        const newAudioTrack = newStream.getAudioTracks()[0];
-        await publisher.value.replaceTrack(newAudioTrack);
-    } catch (error) {
-        console.error("Error replacing audio track:", error);
-    }
   }
 
   onMounted (() => {
