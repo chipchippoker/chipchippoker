@@ -15,7 +15,6 @@ export const useRoomStore = defineStore('room', () => {
   const roomType = ref('친선')
   const allRoomList = ref([])
 
-
   const pageData = ref(
     {
       "pageNumber": 0, // 현재 내가 요청한 페이지
@@ -39,7 +38,6 @@ export const useRoomStore = defineStore('room', () => {
   const isEmpty = ref(false) // 데이터가 없는가?
   const pageArray = ref([1]) // 페이지네이션 배열
   
-
   // 방 생성 변수
   const roomManagerNickname = ref('')
   const roomId = ref('')
@@ -47,14 +45,13 @@ export const useRoomStore = defineStore('room', () => {
   const totalParticipantCnt = ref('')
   const isRoom = ref(false)
 
-
   // 웹소켓
   const gameStore = useGameStore()
   
   // 방 생성
   const createRoom = function(payload){
     console.log('방 생성 요청!!');
-    console.log(payload);
+    console.log(payload)
     // 방 생성 API 호출
     axios({
       method: 'post',
@@ -66,17 +63,15 @@ export const useRoomStore = defineStore('room', () => {
     .then(response => {
       console.log('방 생성 성공')
       const res = response.data
-      console.log(res.data);
       roomManagerNickname.value = res.data.roomManagerNickname
       roomId.value = res.data.roomId
       title.value = res.data.title
       totalParticipantCnt.value = res.data.totalParticipantCnt
-      console.log(title.value);
       gameStore.subscribeHandler(title.value)
       return res.data
     })
     // 방 생성 SEND
-    .then(data => {
+    .then(() => {
       gameStore.sendCreateRoom(title.value, totalParticipantCnt.value)
     })
     .catch(err => {
@@ -88,6 +83,7 @@ export const useRoomStore = defineStore('room', () => {
 
   // 방 리스트
   const getRoomList = function(payload){
+    console.log('방 목록 요청');
     axios({
       method: 'get',
       url: `${ROOM_API}`,
@@ -101,10 +97,10 @@ export const useRoomStore = defineStore('room', () => {
         isEmpty:payload.isEmpty,
         page:payload.page,
         size:payload.size,
-
       }
     })
     .then(res => {
+      console.log('방목록 가져오기 성공');
       console.log(res)
       allRoomList.value = res.data.data.content
       pageData.value = res.data.data.pageable
@@ -180,14 +176,8 @@ export const useRoomStore = defineStore('room', () => {
       }
     })
     .then(res => {
-      console.log('방 나가기 성공')
-      return res.data
-    })
-    .then(() => {
-      // 메인 페이지로 이동
-      router.push({
-        name:'main'
-      })
+      console.log(res.data)
+      gameStore.sendExitRoom(title.value)
     })
     .catch(err => console.log(err))
   }
