@@ -3,7 +3,10 @@
     <!-- 플레이어 감정, 동영상, 카드 -->
     <div class="w-100 h-100 position-relative">
       <div class="position-absolute top-0 start-0 d-flex flex-column h-50" id="player1" style="width: 500px;">
-        <div class="text-white align-self-center ">{{ myNickname }} / 보유코인: 10개</div>
+        <div class="text-white align-self-center ">{{ myNickname }} / 
+        <!-- 보유코인 연결 -->
+          <div v-if="gameStore.player.length > 0">보유코인: {{gameStore?.gameMemberInfos[0]?.havingCoin}}</div>
+        </div>
         <div class="d-flex m-2 mt-0 h-100">
           <div>
             <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
@@ -25,11 +28,17 @@
             view="playView"
             />
           </div>
-          <div class="m-2 bg-white align-self-center" style="width: 100px; height: 150px;">카드</div>
+          <!-- 내 카드는 뒷면을 기본적으로 보여주기 -->
+          <img class="object-fit-contain" style="width: 150px;" :src=getBackCardUrl() alt="?">
+          
         </div>
       </div>
       <div v-if="subscribersComputed.length > 0" class="position-absolute top-0 end-0 d-flex flex-column h-50" id="player2" style="width: 500px;">
-        <div class="text-white align-self-center " v-if="subscribersComputed.length > 0" >{{ player1 }} / 보유코인: 10개</div>
+        <div class="text-white align-self-center " v-if="subscribersComputed.length > 0" >{{ player1 }} / 
+        <!-- 보유코인 연결 -->
+          <div v-if="gameStore.player.length > 1">보유코인: {{gameStore?.gameMemberInfos[0]?.havingCoin}}</div>
+        
+        </div>
         <div class="d-flex flex-row-reverse h-100 m-2 mt-0">
           <div>
             <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
@@ -42,11 +51,16 @@
             @client-data="fPlayer1"
             />
           </div>
-          <div class="m-2 bg-white align-self-center" style="width: 100px; height: 150px;">카드</div>
+          <img class="object-fit-contain" style="width: 150px;" :src=getCardUrl(1,gameStore?.gameMemberInfos[1].cardNumber) alt="?">
+          
         </div>
       </div>
       <div v-if="subscribersComputed.length > 1" class="position-absolute bottom-0 start-0 d-flex flex-column h-50" id="player3" style="width: 500px;">
-        <div class="text-white align-self-center ">{{ player2 }} / 보유코인: 10개</div>
+        <div class="text-white align-self-center ">{{ player2 }} / 
+        <!-- 보유코인 연결 -->
+          <div v-if="gameStore.player.length > 2">보유코인: {{gameStore?.gameMemberInfos[0]?.havingCoin}}</div>
+        
+        </div>
         <div class="d-flex m-2 mt-0 h-100">
           <div>
             <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
@@ -59,11 +73,15 @@
             @client-data="fPlayer2"
             />
           </div>
-          <div class="m-2 bg-white align-self-center" style="width: 100px; height: 150px;">카드</div>
+          <img class="object-fit-contain" style="width: 150px;" :src=getCardUrl(1,gameStore?.gameMemberInfos[2].cardNumber) alt="?">
         </div>
       </div>
       <div v-if="subscribersComputed.length > 2" class="position-absolute bottom-0 end-0 d-flex flex-column h-50" id="player4" style="width: 500px;">
-        <div class="text-white align-self-center">{{ player3 }} / 보유코인: 10개</div>
+        <div class="text-white align-self-center">{{ player3 }} / 
+        <!-- 보유코인 연결 -->
+          <div v-if="gameStore.player.length > 3">보유코인: {{gameStore?.gameMemberInfos[0]?.havingCoin}}</div>
+        
+        </div>
         <div class="d-flex flex-row-reverse m-2 h-100 mt-0">
           <div>
             <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
@@ -76,7 +94,9 @@
             @client-data="fPlayer3"
             />
           </div>
-          <div class="m-2 bg-white align-self-center" style="width: 100px; height: 150px;">카드</div>
+
+          <img class="object-fit-contain" style="width: 150px;" :src=getCardUrl(1,gameStore?.gameMemberInfos[3].cardNumber) alt="?">
+          
         </div>
       </div>
       <!-- 배팅보드 -->
@@ -125,6 +145,18 @@
   import { useRoute, useRouter } from 'vue-router';
   import axios from 'axios'
   import { OpenVidu } from "openvidu-browser";
+  import { useGameStore } from "@/stores/game";
+
+  const gameStore = useGameStore()
+  // 앞장 카드 가져오기
+  const getCardUrl = function (setnum, cardnum) {
+      return new URL(`/src/assets/cards/set${setnum}/card${cardnum}.png`, import.meta.url).href;
+  };
+  // 뒷장 카드 가져오기
+  const getBackCardUrl = function () {
+      return new URL(`/src/assets/cards/back.png`, import.meta.url).href;
+  };
+
 
   const router = useRouter()
 
@@ -166,14 +198,27 @@
   const player2 = ref(null)
   const player3 = ref(null)
 
+  // 플레이어 배열 초기화
+  gameStore.player = [myNickname.value]
+  
   const fPlayer1 = function(clientData) {
     player1.value = clientData
+    // 게임 store 에서 player 저장
+    if (player1.value != null){
+      gameStore.player.push(player1.value)
+    }
   }
   const fPlayer2 = function(clientData) {
     player2.value = clientData
+    if (player2.value != null){
+      gameStore.player.push(player2.value)
+    }
   }
   const fPlayer3 = function(clientData) {
     player3.value = clientData
+    if (player3.value != null){
+      gameStore.player.push(player3.value)
+    }
   }
 
   const showControls = ref(false);
@@ -470,7 +515,6 @@
 </script>
 
 <style scoped>
-
 .custom-btn {
   width: 60px;
   height: 40px;
