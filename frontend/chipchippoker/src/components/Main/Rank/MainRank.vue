@@ -24,9 +24,11 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
 import MainRankAllList from '../Rank/MainRankAllList.vue';
 import MainRankFriendList from '../Rank/MainRankFriendList.vue';
 import { useFriendStore } from '@/stores/friend';
+
 const friendStore = useFriendStore()
 
 const getRankDataAll = function (){
@@ -38,6 +40,10 @@ const getRankDataFriend = function(){
     friendStore.getFriendRankList()
     friendStore.getMyRankList()
 }
+
+onMounted(()=>{
+    getRankDataAll()
+})
 
 </script>
 

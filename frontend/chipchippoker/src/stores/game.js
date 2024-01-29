@@ -145,9 +145,12 @@ export const useGameStore = defineStore('game', () => {
           myId.value = null
           router.push('main')
           break
-        case "MS006": // 
-
+        case "MS006": // 게임 준비 완료
+          receiveReady(response.body.data)
           break
+        // case "MS007": // 게임 시작 성공
+        //   receiveStartGame(response.body.data, response.body.code)
+        //   break
         case "MS008": // 라운드 종료
           receiveGameFinish(receiveMessage.value?.data)
           break
@@ -262,19 +265,26 @@ export const useGameStore = defineStore('game', () => {
     countOfPeople.value = data.countOfPeople
     player.value = data.memberInfos
     roomManagerNickname.value = data.roomManagerNickname
-
-
   }
 
   // 게임 시작 SEND
   const sendStartGame = function (gameRoomTitle) {
-    console.log('게임시작');
+    console.log('게임시작 send');
+    gameRoomTitle.value = gameRoomTitle
     stompClient.send(`/to/game/start/${gameRoomTitle}`, JSON.stringify({}), { 'access-token': userStore.accessToken })
   }
 
   // 게임 시작 RECEIVE
-  const receiveStartGame = function (gameRoomTitle) {
-    console.log('게임 시작')
+  const receiveStartGame = function (data) {
+    console.log('게임 시작 receive')
+    roundState.value = data.roundState
+    currentRound.value = data.currentRound
+    yourTurn.value = data.yourTurn
+    gameMemberInfos.value = data.gameMemberInfos
+    router.push({
+      name:'play',
+      params: { roomId: roomStore.roomId }
+    })    
   }
 
   // 배팅
@@ -319,9 +329,6 @@ export const useGameStore = defineStore('game', () => {
     console.log("yourTurn", yourTurn.value);
     console.log("gameMemberInfos", gameMemberInfos.value);
   }
-
-
-
 
   return {
     rooms: ref([]),

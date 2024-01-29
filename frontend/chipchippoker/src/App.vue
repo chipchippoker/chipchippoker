@@ -92,7 +92,6 @@ for (let i = 0; i < 300; i++) {
         <img v-if="userStore.viewProfileIcon" type="button" @click="goProfile()" :src='userStore.getIconUrl(userStore.myIcon)' style="width: 60px; height: 60px; border-radius: 50%;">
       </div>
 
-
     
       <div id="app" class="bg-gradation-blue d-flex justify-content-center ">
         <RouterView />

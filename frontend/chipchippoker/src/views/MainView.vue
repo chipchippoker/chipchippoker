@@ -107,6 +107,8 @@ const reLoad = function() {
 }
 
 onMounted(()=>{
+    console.log(userStore.myNickname)
+    console.log(userStore.myIcon)
     friendStore.RequestAlarm(userStore.myNickname)
     // friendStore.getFriendRankList()
     // friendStore.getMyRankList()

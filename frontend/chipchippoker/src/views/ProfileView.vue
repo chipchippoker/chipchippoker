@@ -56,8 +56,6 @@
 </script>
 
 <style scoped>
-
-
   .button-radius {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;

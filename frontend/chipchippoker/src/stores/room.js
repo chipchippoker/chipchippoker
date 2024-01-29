@@ -215,20 +215,23 @@ export const useRoomStore = defineStore('room', () => {
       headers: { 'access-token': userStore.accessToken },
       data: payload
     })
-    .then(res => {
+    .then(response => {
+      const res = response.data
+      console.log(res);
       console.log('게임 시작 성공')
+      gameStore.sendStartGame(title.value)
     })
-    .then(() => {
-      // 플레이 페이지로 이동
-      router.push({
-        name:'play',
-        params: { roomId: roomId.value },
-        state: {
-          title: title.value,
-          totalParticipantCnt: totalParticipantCnt.value
-        }
-      })
-    })
+    // .then(() => {
+    //   // 플레이 페이지로 이동
+    //   router.push({
+    //     name:'play',
+    //     params: { roomId: roomId.value },
+    //     state: {
+    //       title: title.value,
+    //       totalParticipantCnt: totalParticipantCnt.value
+    //     }
+    //   })
+    // })
     .catch(err => console.log(err))
   }
 

@@ -10,14 +10,18 @@ import WaitView from '../views/WaitView.vue'
 import GameTest from '@/components/Game/GameTest.vue'
 import animation from '@/views/animation.vue'
 
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+			path: '/',
+			redirect: '/login',
+		},
+    {
       path: '/main',
       name: 'main',
-      component: MainView
+      component: MainView,
+      meth: { auth: true }
     },
     {
       path: '/login',
@@ -36,7 +40,7 @@ const router = createRouter({
       component: KakaoSignupView
     },
     {
-      path: '/profile',
+      path: '/profile/:nickname?',
       name: 'profile',
       component: ProfileView
     },
@@ -62,5 +66,18 @@ const router = createRouter({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  import('@/stores/user').then(({ useUserStore }) => {
+  const userStore = useUserStore()
+
+  if (!userStore.accessToken && to.name !== 'login' && to.name !== 'signup' && to.name !== 'kakaosignup') {
+    alert('로그인이 필요합니다.')
+    console.log('로그인이 필요합니다.');
+    return { name: 'login'}
+  }
+    next();
+  });
+});
 
 export default router
