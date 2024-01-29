@@ -16,23 +16,22 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GameEndMessageResponse {
+public class NormalGameEndMessageResponse {
 	List<MemberEndGameInfo> memberEndGameInfos = new ArrayList<>();
 
-	public static GameEndMessageResponse create(Collection<MemberManager> memberManagers) {
+	public static NormalGameEndMessageResponse create(Collection<MemberManager> memberManagers) {
 		List<MemberEndGameInfo> result = new ArrayList<>();
 
 		for (MemberManager manager : memberManagers) {
 			MemberEndGameInfo memberEndGameInfo = new MemberEndGameInfo(manager.getMemberInfo().getNickname(),
 				manager.getMemberGameInfo().getHaveCoin() == 25 ? "무" :
 					manager.getMemberGameInfo().getHaveCoin() > 25 ? "승" : "패",
-				((manager.getMemberGameInfo().getHaveCoin() / 25) * 10) +
-					(manager.getMemberGameInfo().getHaveCoin() - 25)
+				null
 			);
 			result.add(memberEndGameInfo);
 		}
 
-		return GameEndMessageResponse.builder()
+		return NormalGameEndMessageResponse.builder()
 			.memberEndGameInfos(result)
 			.build();
 	}

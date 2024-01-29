@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class PointServiceImpl {
+public class PointServiceImpl implements PointService {
 	private final PointRepository pointRepository;
 	private final MemberRepository memberRepository;
 

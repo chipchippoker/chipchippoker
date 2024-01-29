@@ -239,8 +239,16 @@ public class GameManager {
 		if (currentRound > gameEndRound)
 			throw new RuntimeException();
 
-		int leftMember = 0;
 		Collection<MemberManager> memberManagers = memberManagerMap.values();
+		
+		long leftMember = memberManagers.stream()
+			.filter(memberManager -> memberManager.getMemberGameInfo().getHaveCoin() >= 1)
+			.count();
+
+		// 코인이 남은 사람이 1명이면 게임 종료
+		if (leftMember == 1)
+			throw new RuntimeException();
+
 		for (MemberManager manager : memberManagers) {
 			// 코인이 남은 사람만 남은 라운드에 진출할 수 있다.
 			if (manager.getMemberGameInfo().getHaveCoin() >= 1) {
@@ -253,9 +261,6 @@ public class GameManager {
 				manager.getMemberGameInfo().setBettingCoin(1);
 			}
 		}
-		// 코인이 남은 사람이 1명이면 게임 종료
-		if (leftMember == 1)
-			throw new RuntimeException();
 	}
 
 	public void playReady(String nickname, Boolean isReady) {
