@@ -29,20 +29,23 @@ export const useMatchStore = defineStore('match', () => {
     .then(response => {
       console.log('경쟁전 매치 성공')
       const res = response.data
+      console.log(res);
       roomId.value = res.data.roomId
       title.value = res.data.title
       totalParticipantCnt.value = res.data.totalParticipantCnt
       isMatch.value = true
       // 첫 입장(방 생성)
+      console.log(res.data.isFirstParticipant);
       gameStore.subscribeHandler(title.value)
-      if (res.data.isFirst) {
+      if (res.data.isFirstParticipant) {
         return true
       } else {
         return false
       }
     })
-    .then((isFirst)=>{
-      gameStore.sendMatching(title.value, totalParticipantCnt.value, isFirst)
+    .then((isFirstParticipant)=>{
+      console.log(isFirstParticipant);
+      gameStore.sendMatching(title.value, totalParticipantCnt.value, isFirstParticipant)
     })
     .catch(err => console.log(err))
   } 

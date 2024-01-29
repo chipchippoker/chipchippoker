@@ -9,8 +9,6 @@ import { useUserStore } from './user'
 import { useRoomStore } from './room'
 import { useMatchStore } from './match'  
 
-
-
 export const useGameStore = defineStore('game', () => {
   const userStore = useUserStore()
   const roomStore = useRoomStore()
@@ -41,10 +39,25 @@ export const useGameStore = defineStore('game', () => {
   const currentRound = ref(0)
   const yourTurn = ref(null)
   const gameMemberInfos = ref([])
+  console.log(stompClient.ws);
+  // stompClient.ws.onclose = event => {
+  //   alert("WebSocket connection closed");
+  //   console.log("WebSocket connection closed");
+  //   stompClient = webstomp.client("wss://i10a804.p.ssafy.io/chipchippoker")
 
-  stompClient.connect({ 'access-token': userStore.accessToken }, (frame) => {
+  //   // 재연결 로직
+  //   setTimeout(function() {
+  //     stompClient.connect({ 'access-token': userStore.accessToken, 'heart-beat':'2000,5000' }, (frame) => {console.log('재연결 성공');})
+  //   }, 100); // 0.1초 후에 다시 연결을 시도합니다.
+  // }
+
+  stompClient.connect({ 'access-token': userStore.accessToken}, (frame) => {
     console.log("Connect success", gameRoomTitle.value)
 
+    stompClient.reconnect_delay = 2000
+    // stompClient.heartbeat.outgoing = 2000;
+    // stompClient.heartbeat.incoming = 0;
+    console.log(stompClient);
     // 개인 메세지함 구독(기본구독)
     stompClient.subscribe(`/from/chipchippoker/member/${userStore.myNickname}`, (message) => {
 
@@ -81,10 +94,6 @@ export const useGameStore = defineStore('game', () => {
 
   })
 
-    // stompClient.reconnect_delay = 1000
-    stompClient.heartbeat.outgoing = 0;
-		stompClient.heartbeat.incoming = 0;
-
 
     // 구독 핸들러
     const subscribeHandler = (gameRoomTitle) => {
@@ -99,7 +108,7 @@ export const useGameStore = defineStore('game', () => {
         console.log(message.headers);
         receiveMessage.value = JSON.parse(message.body).body
         const response = JSON.parse(message.body)
-        console.log(response.body);
+        console.log(response.body)
         switch (response.body.code) {
           case "MS001": // 방 생성
             console.log(response.body.message);
@@ -137,15 +146,16 @@ export const useGameStore = defineStore('game', () => {
         case "200": // 매칭 완료
           console.log(response.body.message);
           receiveMatching(response.body.data)
-      }
+        }
       })
     }
-
+  
   // 게임 매칭 SEND
-  const sendMatching = function(title, totalParticipantCnt, isFirst){
+  const sendMatching = function(title, countOfPeople, isFirst){
     isMatch.value = true
+    console.log(title, countOfPeople, isFirst)
     if (isFirst) {
-      stompClient.send(`/to/game/create/${title}`, JSON.stringify({totalParticipantCnt}), {'access-token': userStore.accessToken})
+      stompClient.send(`/to/game/create/${title}`, JSON.stringify({countOfPeople}), {'access-token': userStore.accessToken})
     } else {
       stompClient.send(`/to/game/enter/${title}`, JSON.stringify({}), {'access-token': userStore.accessToken})
     }
@@ -166,6 +176,8 @@ export const useGameStore = defineStore('game', () => {
   // 방 생성 SEND
   const sendCreateRoom = function(title, countOfPeople){
     isMatch.value = false
+    console.log(title);
+    console.log(countOfPeople);
     const message = { countOfPeople }
     stompClient.send(`/to/game/create/${title}`, JSON.stringify(message), {'access-token': userStore.accessToken})
   }
@@ -186,9 +198,12 @@ export const useGameStore = defineStore('game', () => {
         }
       })
     }
+  }
+
   // 게임방 입장 SEND
   const sendJoinRoom = function(gameRoomTitle){
     isMatch.value = false
+    console.log(gameRoomTitle);
     stompClient.send(`/to/game/enter/${gameRoomTitle}`, JSON.stringify({}), {'access-token': userStore.accessToken})
   }
 
@@ -317,6 +332,5 @@ export const useGameStore = defineStore('game', () => {
     currentRound,
     yourTurn,
     gameMemberInfos,
-  }
   }
 }, { persist: true }) 

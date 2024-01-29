@@ -50,7 +50,7 @@
                 <div class="modal-footer border-0">
                     <button data-bs-dismiss="modal" @click="createRoom()" type="button" class="btn-outline-yellow rounded-2">방만들기</button>
                 </div>
-
+              </form>
             </div>
         </div>
     </div>

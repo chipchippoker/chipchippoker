@@ -108,22 +108,23 @@ export const useRoomStore = defineStore('room', () => {
         size:payload.size,
       }
     })
-    .then(res => {
+    .then(response => {
       console.log('방목록 가져오기 성공');
-      console.log(res)
-      allRoomList.value = res.data.data.content
-      pageData.value = res.data.data.pageable
-      isLast.value = res.data.data.last
-      totalElements.value = res.data.data.totalElements
-      totalPages.value = res.data.data.totalPages
-      isfirst.value = res.data.data.first
-      nowElements.value = res.data.data.numberOfElements
-      nowPage.value = res.data.data.number
-      isEmpty.value = res.data.data.empty
-      pageArray.value = Array.from({ length: res.data.data.totalPages }, (_, i) => i + 1)
+      const res = response.data
+      console.log(res.data);
+      allRoomList.value = res.data.content
+      pageData.value = res.data.pageable
+      isLast.value = res.data.last
+      totalElements.value = res.data.totalElements
+      totalPages.value = res.data.totalPages
+      isfirst.value = res.data.first
+      nowElements.value = res.data.numberOfElements
+      nowPage.value = res.data.number
+      isEmpty.value = res.data.empty
+      pageArray.value = Array.from({ length: res.data.totalPages }, (_, i) => i + 1)
       if (totalPages.value === 0) {
         pageArray.value = Array.from({ length: 1 }, (_, i) => i + 1)
-      }
+    }
     })
     .catch(err => console.log(err))
   }
@@ -145,6 +146,7 @@ export const useRoomStore = defineStore('room', () => {
       title.value = res.data.title
       totalParticipantCnt.value = res.data.totalParticipantCnt
       gameStore.subscribeHandler(title.value)
+
     })
     // 방 입장 SEND
     .then(() => {
@@ -191,7 +193,15 @@ export const useRoomStore = defineStore('room', () => {
     })
     .then(res => {
       console.log(res.data)
-      gameStore.sendExitRoom(title.value)
+      if (res.code === 'UA003') { // 토큰 만료 시
+        renewToken(accessToken.value, refreshToken.value)
+        .then(() => {
+          leaveRoom()
+        })
+        .catch(err => console.log(err))
+      } else {
+        gameStore.sendExitRoom(title.value)
+      }
     })
     .catch(err => console.log(err))
   }
@@ -206,7 +216,6 @@ export const useRoomStore = defineStore('room', () => {
     })
     .then(res => {
       console.log('게임 시작 성공')
-      return res.data
     })
     .then(() => {
       // 플레이 페이지로 이동
@@ -232,7 +241,6 @@ export const useRoomStore = defineStore('room', () => {
     })
     .then(res => {
       console.log('강제 퇴장 성공')
-      return res.data
     })
     .catch(err => console.log(err))
   } 

@@ -230,7 +230,8 @@ function joinSession() {
     console.log('세션 생성!!!!');
     subscribers.value.push(subscriber)
     // 플레이어, 관전자 리스트에도 추가
-    if (roomStore.isWatcher = false) {
+    console.log(roomStore.isWatcher);
+    if (roomStore.isWatcher === false) {
       players.value.push(subscriber)
     } else {
       watchers.value.push(subscriber)
@@ -315,14 +316,15 @@ function joinSession() {
   // Get a token from the OpenVidu deployment
   getToken(String(roomId.value)).then((token) => {
     console.log("토큰 만들어지나");
+    console.log(myNickname.value);
     session.value.connect(token, {clientData: myNickname.value})
     .then(() => {
         // Get your own camera stream with the desired properties ---
         let publisher_tmp = OV.value.initPublisher(undefined, {
           audioSource: undefined, // The source of audio. If undefined default microphone
           videoSource: undefined, // The source of video. If undefined default webcam
-          publishAudio: !muted.value, // Whether you want to start publishing with your audio unmuted or not
-          publishVideo: !camerOff.value, // Whether you want to start publishing with your video enabled or not
+          // publishAudio: !muted.value, // Whether you want to start publishing with your audio unmuted or not
+          // publishVideo: !camerOff.value, // Whether you want to start publishing with your video enabled or not
           resolution: "400x300", // The resolution of your video
           frameRate: 30, // The frame rate of your video
           insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
