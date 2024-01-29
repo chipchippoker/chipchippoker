@@ -110,7 +110,8 @@ public class AuthServiceImpl implements AuthService {
 		if (token == null || token.isEmpty()) {
 			throw new InvalidException(ErrorBase.E400_INVALID_AUTH_TOKEN);
 		}
-		Long socialId = authProvider.getSocialId(token);
+		String decodingToken = jwtUtil.decodingToken(token);
+		Long socialId = authProvider.getSocialId(decodingToken);
 		if (validateExistsUser(socialId)) {
 			throw new DuplicateException(ErrorBase.E409_DUPLICATE_MEMBER);
 		}
@@ -141,6 +142,11 @@ public class AuthServiceImpl implements AuthService {
 		Member member = memberRepository.findById(id)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
 		member.connectSocialId(kakaoSocialId);
+	}
+
+	@Override
+	public String encryptionToken(String accessToken) {
+		return jwtUtil.encryptionToken(accessToken);
 	}
 
 	@Override
