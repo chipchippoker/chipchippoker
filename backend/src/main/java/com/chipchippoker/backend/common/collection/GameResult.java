@@ -8,21 +8,33 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Document(collection = "game_result")
 @Getter
+@Builder
 public class GameResult {
-    @Id
-    private String id;
+	@Id
+	private String id;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
+	@CreatedDate
+	private LocalDateTime createdAt;
 
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
-    private List<String> memberList;
-    private List<Integer> resultCoinList;
-    private Integer gameRoomId;
-    private String gameMode;
+	@LastModifiedDate
+	private LocalDateTime updatedAt;
+	private List<String> memberList;
+	private List<Integer> resultCoinList;
+	private Integer gameRoomId;
+	private String gameMode;
+
+	public static GameResult newGameResult(List<String> memberList, List<Integer> resultCoinList, Integer gameRoomId,
+		String gameMode) {
+		return GameResult.builder()
+			.memberList(memberList)
+			.resultCoinList(resultCoinList)
+			.gameRoomId(gameRoomId)
+			.gameMode(gameMode)
+			.build();
+	}
 }

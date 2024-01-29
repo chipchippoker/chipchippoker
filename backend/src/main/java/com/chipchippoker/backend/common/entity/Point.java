@@ -44,31 +44,31 @@ public class Point extends BaseEntity {
 			.build();
 	}
 
-	public static String tierByPoint(Integer pointScore){
-		if(pointScore<800){
+	public static String tierByPoint(Integer pointScore) {
+		if (pointScore < 800) {
 			return "bronze";
-		}else if(pointScore<1200){
+		} else if (pointScore < 1200) {
 			return "silver";
-		}else if(pointScore<1600){
+		} else if (pointScore < 1600) {
 			return "gold";
-		}else if(pointScore<2000){
+		} else if (pointScore < 2000) {
 			return "platinum";
-		}else{
+		} else {
 			return "diamond";
 		}
 	}
 
-	public static Integer calculatePoint(Integer coin){
+	public static Integer calculatePoint(Integer coin) {
 		Integer initialCoin = 25;
-		Integer base = coin/initialCoin;
+		Integer base = coin / initialCoin;
 		Integer point = 0;
-		point+= base > 0 ? base * 10 : (base - 1) * 10;
-		point+= coin-initialCoin;
+		point += base > 0 ? base * 10 : (base - 1) * 10;
+		point += coin - initialCoin;
 		return point;
 	}
 
 	//테스트용
-	public static Point createPoint(Member member,Integer pointScore) {
+	public static Point createPoint(Member member, Integer pointScore) {
 		return Point.builder()
 			.win(0)
 			.draw(0)
@@ -80,4 +80,20 @@ public class Point extends BaseEntity {
 			.build();
 	}
 
+	public void updateResult(Integer coin) {
+		this.pointScore += calculatePoint(coin);
+		if (coin > 25) {
+			this.win++;
+			this.currentWinningStreak++;
+			if (this.currentWinningStreak > this.maxWin) {
+				this.maxWin = this.currentWinningStreak;
+			}
+		} else if (coin == 25) {
+			this.draw++;
+			this.currentWinningStreak = 0;
+		} else {
+			this.lose++;
+			this.currentWinningStreak = 0;
+		}
+	}
 }
