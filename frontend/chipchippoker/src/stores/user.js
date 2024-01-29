@@ -24,6 +24,23 @@ export const useUserStore = defineStore('user', () => {
   // 프로필 아이콘 보여주기
   const viewProfileIcon = ref(true)
 
+  // 토큰 재발행 요청
+  const renewToken = function () {
+    axios({
+      method: 'post',
+      headers: {
+        'access-token': accessToken.value,
+        'refresh-token': accessToken.value
+      }
+    })
+    .then(res => {
+      console.log(res)
+      accessToken.value = res.data.accessToken
+      refreshToken.value =res.data.refreshToken
+    })
+    .catch(err => console.log(err))
+  }
+
   // 회원가입
   const signUp = async function (payload) {
     console.log('회원가입 요청')
@@ -304,6 +321,7 @@ export const useUserStore = defineStore('user', () => {
   
   // 프로필 정보 요청
   const getProfileInfo = function(nickname) {
+    console.log(nickname)
     axios({
       method:'get',
       url: `${MEMBERS_API}/profile/${nickname}`,

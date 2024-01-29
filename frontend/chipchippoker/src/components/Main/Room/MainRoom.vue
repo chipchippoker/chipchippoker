@@ -37,7 +37,7 @@
         </div>
     </div>
     
-    <div class="">
+    <div class="w-100">
         <!-- 경쟁전 탭, 친선전 탭 버튼-->
         <ul class="nav nav-tabs nav-justified border-0"  id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
@@ -89,7 +89,7 @@
 <script setup>
 import MainRoomRankList from './MainRoomRankList.vue';
 import MainRoomFriendList from './MainRoomFriendList.vue';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoomStore } from '@/stores/room';
 
 const roomStore = useRoomStore()
@@ -128,11 +128,12 @@ const refreshRoom = function(){
     console.log('새로고침 검색')
     const payload = {
         type:roomType.value,
+        title: title.value, 
         isTwo:isTwo.value,
         isThree:isThree.value,
         isFour:isFour.value,
         isEmpty:isEmpty.value,
-        page:roomStore.nowPage,
+        page:0,
         size:8
     }
     
@@ -161,6 +162,7 @@ const pageRoom = function(pagenum){
     console.log('페이지네이션 검색')
     const payload = {
         type:roomType.value,
+        title: title.value,
         isTwo:isTwo.value,
         isThree:isThree.value,
         isFour:isFour.value,
@@ -171,6 +173,10 @@ const pageRoom = function(pagenum){
     console.log(payload)
     roomStore.getRoomList(payload)
     }
+
+onMounted (() => {
+    refreshRoom()
+})
 
 </script>
 

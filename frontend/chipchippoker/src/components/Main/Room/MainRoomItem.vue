@@ -40,16 +40,20 @@ import { ref } from "vue";
 
 const roomStore = useRoomStore()
 
-defineProps({
+const props = defineProps({
     item:Object
 })
 
 
 const enterRoomPublic = function (title) {
-    const payload = {
-        title: title
+    if (props.item.currentParticipantCnt < props.item.totalParticipantCnt) {
+        const payload = {
+            title: title
+        }
+        roomStore.enterRoomPublic(payload)
+    } else {
+        alert("방이 꽉 찼습니다.")
     }
-    roomStore.enterRoomPublic(payload)
 }
 
 // "isPrivate": false,
