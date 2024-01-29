@@ -82,6 +82,7 @@ export const useRoomStore = defineStore('room', () => {
       gameStore.sendCreateRoom(title.value, totalParticipantCnt.value)
     })
     .catch(err => {
+      console.log(err)
       if (err.response.data.code === 'CF005') {
         isRoom.value = true
         console.log(isRoom.value)
@@ -221,7 +222,7 @@ export const useRoomStore = defineStore('room', () => {
       // 플레이 페이지로 이동
       router.push({
         name:'play',
-        params: { roomId: roomId.value.toString() + 'p' },
+        params: { roomId: roomId.value },
         state: {
           title: title.value,
           totalParticipantCnt: totalParticipantCnt.value
@@ -245,6 +246,26 @@ export const useRoomStore = defineStore('room', () => {
     .catch(err => console.log(err))
   } 
 
+  // 관전 공개방 대기중 입장
+  const enterWatchPublic = function (payload) {
+    
+  }
+
+  // 관전 공개방 진행중 입장
+  const enterWatchPublicProgress = function (payload) {
+
+  }
+
+  // 관전 비공개방 대기중 입장
+  const enterWatchPrivate = function (payload) {
+
+  }
+
+  // 관전 비공개방 진행중 입장
+  const enterWatchPrivateProgress = function (payload) {
+
+  }
+
   return {
     // 방 목록
     getRoomList,
@@ -259,5 +280,7 @@ export const useRoomStore = defineStore('room', () => {
     startGame,
     // 사용자 강제 퇴장
     forceMemberOut,
+    // 관전
+    enterWatchPublic, enterWatchPublicProgress, enterWatchPrivate, enterWatchPrivateProgress
   }
 },{persist:true})

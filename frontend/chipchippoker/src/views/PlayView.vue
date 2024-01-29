@@ -7,8 +7,15 @@
       <div v-else class="btn-outline-weightyellow py-2 px-4"><p class="fw-bold fs-3 m-0">Round {{ gameStore.currentRound }}</p></div>
 
       <div class="d-flex align-items-center position-absolute top-50 start-100 translate-middle me-3">
-        <font-awesome-icon :icon="['fas', 'eye']" size="lg" style="color: #ffffff;" />
-        <div class="text-white ms-3" style="width: 40px;">3 명</div>
+        <h3 class="text-white">{{ roomTitle }}</h3>
+        <!-- Watchers List -->
+        <div v-if="showWatchersList" class="text-white">
+          <ul>
+            <li v-for="watcher in watchersNickname" :key="watcher">{{ watcher }}</li>
+          </ul>
+        </div>
+        <font-awesome-icon type="button" @click="toggleWatchersList" :icon="['fas', 'eye']" size="lg" style="color: #ffffff;" />
+        <div class="text-white ms-3" style="width: 40px;">{{ watchersCount }}명</div>
       </div>
     </div>
     <!-- players -->
@@ -47,18 +54,36 @@
   import PlayTalkVue from "../components/Play/PlayTalk.vue";
   import { ref, computed, onMounted, onUnmounted } from 'vue'
   import { useRoute, useRouter } from 'vue-router';
+  import { useRoomStore } from "@/stores/room";
   import { useGameStore } from "@/stores/game";
 
   const router = useRouter()
   const userStore = useUserStore()
+  const roomStore = useRoomStore()
+  const route = useRoute()
   const gameStore = useGameStore()
 
   // Join form
-  const roomId = ref("SessionCrome")
-  const myNickname = ref("Participant" + Math.floor(Math.random() * 100))
+  const roomId = ref('')
+  const myNickname = ref('')
+  const roomTitle = ref('')
+  const totalParticipantCnt = ref('')
   
-  const route = useRoute()
+  roomId.value = route.params.roomId
+  myNickname.value = userStore.myNickname
+  roomTitle.value = roomStore.title
+  totalParticipantCnt.value = roomStore.totalParticipantCnt
+  console.log(roomTitle)
+
+  const watchersNickname = computed(() => roomStore.watchersNickname)
+  const watchersCount = computed(() => watchersNickname.value.length)
   
+  const showWatchersList = ref(false)
+
+  const toggleWatchersList = () => {
+    showWatchersList.value = !showWatchersList.value
+  }
+
   onMounted(() => {
     // 프로필 아이콘 안보이기
     userStore.viewProfileIcon = false

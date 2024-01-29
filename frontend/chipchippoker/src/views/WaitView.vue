@@ -34,7 +34,7 @@
             </div>
             <div
               class="col-6 mb-5"
-              v-for="sub in subscribersComputed"
+              v-for="sub in playersComputed"
               :key="sub.stream.connection.connectionId">
               <div style="width: 400px; height: 300px;">
                 <!-- 다른 사람 캠 -->
@@ -134,7 +134,7 @@
 </template>
 
 <script setup>
-// import WaitWatcher from "@/components/Wait/WaitWatcher.vue";
+import WaitWatcher from "@/components/Wait/WaitWatcher.vue";
 import UserVideo from "@/components/Cam/UserVideo.vue";
 
 import { ref, computed, onMounted, onUnmounted } from 'vue'
@@ -147,7 +147,7 @@ import axios from 'axios'
 
 const userStore = useUserStore()
 const roomStore = useRoomStore()
-const gameStore = useGameStore() 
+const gameStore = useGameStore()
 const router = useRouter()
 const route = useRoute()
 
@@ -174,6 +174,9 @@ const isReady = ref(false)
 roomId.value = roomStore.roomId
 roomTitle.value = roomStore.title
 roomManagerNickname.value = roomStore.roomManagerNickname
+myNickname.value = userStore.myNickname
+console.log(myNickname.value)
+console.log(roomManagerNickname.value)
 if (myNickname.value === roomManagerNickname.value) {
   isManager.value = true
 }
@@ -217,8 +220,7 @@ const subscribersComputed = computed(() => subscribers.value);
 /// 관전을 위한 변수들 크헝헝
 const players = ref([])
 const watchers = ref([])
-const plyersComputed = computed(() => players.value);
-const watchersComputed = computed(() => watchers.value);
+const playersComputed = computed(() => players.value);
 
 function joinSession() {
   OV.value = new OpenVidu()
@@ -228,23 +230,30 @@ function joinSession() {
   session.value.on("streamCreated", ( {stream} )=> {
     const subscriber = session.value.subscribe(stream)
     console.log('세션 생성!!!!');
+    console.log(stream);
+
+    // 닉네임과 watcher 얻기
+    function getConnectionData() {
+        const { connection } = stream;
+        return JSON.parse(connection.data);
+    }
+    const clientData = computed(() => {
+      const { clientData } = getConnectionData();
+      return clientData;
+    });
+    const isWatcher = computed(() => {
+      const { isWatcher } = getConnectionData();
+      return isWatcher;
+    });
+
     subscribers.value.push(subscriber)
     // 플레이어, 관전자 리스트에도 추가
-    console.log(roomStore.isWatcher);
-    if (roomStore.isWatcher === false) {
+    if (isWatcher === false) {
+
       players.value.push(subscriber)
     } else {
       watchers.value.push(subscriber)
       // 관전자 이름들도 추가
-      const clientData = computed(() => {
-        const { clientData } = getConnectionData();
-        return clientData;
-      });
-      
-      function getConnectionData() {
-        const { connection } = stream;
-        return JSON.parse(connection.data);
-      }
       roomStore.watchersNickname.push(clientData)
     }
   })
@@ -269,20 +278,20 @@ function joinSession() {
       }      
     }
     // 관전자 이름도 삭제
+    function getConnectionData() {
+      const { connection } = stream;
+      return JSON.parse(connection.data);
+    }
     const clientData = computed(() => {
       const { clientData } = getConnectionData();
       return clientData;
     });
     
-    function getConnectionData() {
-      const { connection } = stream;
-      return JSON.parse(connection.data);
-    }
     
-    if (roomStore.watchersNickname.value.includes(clientData)) {
-      const index3 = roomStore.watchersNickname.value.indexOf(clientData, 0)
+    if (roomStore.watchersNickname.includes(clientData)) {
+      const index3 = roomStore.watchersNickname.indexOf(clientData, 0)
       if(index3 >= 0){
-        roomStore.watchersNickname.value.splice(index3, 1)
+        roomStore.watchersNickname.splice(index3, 1)
       }      
     }    
   })
@@ -316,8 +325,8 @@ function joinSession() {
   // Get a token from the OpenVidu deployment
   getToken(String(roomId.value)).then((token) => {
     console.log("토큰 만들어지나");
-    console.log(myNickname.value);
-    session.value.connect(token, {clientData: myNickname.value})
+    session.value.connect(token, {clientData: myNickname.value, isWatcher: roomStore.isWatcher})
+
     .then(() => {
         // Get your own camera stream with the desired properties ---
         let publisher_tmp = OV.value.initPublisher(undefined, {
@@ -360,7 +369,7 @@ function leaveSession(){
   subscribers.value = [];
   players.value = []
   watchers.value = []
-  roomStore.watchersNickname.value = []
+  roomStore.watchersNickname = []
   OV.value = undefined;
 
   // Remove beforeunload listener
@@ -412,6 +421,13 @@ function sendMessage(event) {
 
 
 onMounted(() => {
+  navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+    .then((stream) => {
+      // 카메라 및 마이크에 대한 성공적인 액세스 처리
+    })
+    .catch((error) => {
+      console.error('카메라 및 마이크 액세스 오류:', error);
+    });
   // 프로필 아이콘 안보이기
   userStore.viewProfileIcon = false
 

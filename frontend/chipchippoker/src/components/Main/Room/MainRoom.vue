@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex flex-column gap-3" style="height: 530px;">
+    <div class="d-flex flex-column gap-3" style="height: 530px; width: 750px;">
         <div class="d-flex justify-content-between align-items-center w-100 gap-3">
         <!-- 인원수 필터 선택 -->
         <div class="d-flex">
@@ -59,7 +59,7 @@
     </div>
     <div>
         
-        <nav aria-label="Page navigation example ">
+        <nav aria-label="Page navigation example">
         <ul class="pagination pagination-sm justify-content-center gap-1" type="button">
             <!-- 이전 버튼 -->
             <!-- <li v-if="roomStore.isFirst" class="page-item xx-little-text">
