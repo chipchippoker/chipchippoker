@@ -100,7 +100,14 @@ public class GameRoomServiceImpl implements GameRoomService {
 		Page<GameRoom> gameRoomList = gameRoomRepository.findBySearchOption(type, title, isTwo, isThree, isFour,
 			isEmpty, pageable);
 		return gameRoomList.map(
-			GetGameRoomListResponse::gameRoomListResponse);
+			gameRoom -> {
+				Integer currentParticipantCnt = gameRoom.getMembers().size();
+				Integer currentSpectatorCnt = type.equals("경쟁") ? 0 : gameRoom.getSpectateRoom().getMembers().size();
+
+				return GetGameRoomListResponse.gameRoomListResponse(gameRoom.getIsPrivate(), gameRoom.getState(),
+					gameRoom.getTitle(), gameRoom.getTotalParticipantCnt(), currentParticipantCnt,
+					currentSpectatorCnt);
+			});
 	}
 
 	public void leaveGameRoom(String title, Long id) {
