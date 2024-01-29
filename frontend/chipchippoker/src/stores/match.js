@@ -3,16 +3,20 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from './user'
+import { useGameStore } from './game'
+import { MagicString } from 'vue/compiler-sfc'
+
 
 export const useMatchStore = defineStore('match', () => {
   const userStore = useUserStore()
+  const gameStore = useGameStore()
   const MATCH_API = `${userStore.BASE_API_URL}/matching`
   const router = useRouter()
   
   const roomId = ref(null)
   const title = ref(null)
   const totalParticipantCnt = ref(null)
-  const isMatch = ref(null)
+  const isMatch = ref(false)
 
   // 경쟁전 빠른 시작
   const matchCompete = function(payload) {
@@ -22,13 +26,23 @@ export const useMatchStore = defineStore('match', () => {
       headers: { 'access-token': userStore.accessToken },
       data: payload
     })
-    .then(res => {
+    .then(response => {
       console.log('경쟁전 매치 성공')
+      const res = response.data
       roomId.value = res.data.roomId
       title.value = res.data.title
       totalParticipantCnt.value = res.data.totalParticipantCnt
       isMatch.value = true
-      return res.data
+      // 첫 입장(방 생성)
+      gameStore.subscribeHandler(title.value)
+      if (res.data.isFirst) {
+        return true
+      } else {
+        return false
+      }
+    })
+    .then((isFirst)=>{
+      gameStore.sendMatching(title.value, totalParticipantCnt.value, isFirst)
     })
     .catch(err => console.log(err))
   } 

@@ -6,17 +6,17 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body d-flex justify-content-center">
-            <div class="d-flex align-items-center gap-3">
+            <form class="d-flex align-items-center gap-3">
                 <div>
                     비밀번호
                 </div>
                 <div>
-                    <input v-model="password" type="password" class="form-control" id="password" >
+                    <input v-model="password" type="password" class="form-control" id="password" autocomplete="off">
                 </div>
                 <div >
                     <button @click="enterRoomPrivate()" type="submit" class="btn-outline-yellow rounded-2">입장하기</button>
                 </div>
-            </div>
+            </form>
         </div>
         
         </div>

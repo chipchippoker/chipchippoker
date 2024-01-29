@@ -5,12 +5,14 @@ import axios from 'axios'
 // import SockJS from 'sockjs-client'
 import webstomp from 'webstomp-client'
 import { useUserStore } from './user'
-import { useRoomStore } from './room'  
+import { useRoomStore } from './room'
+import { useMatchStore } from './match'  
 
 
 export const useGameStore = defineStore('game', () => {
   const userStore = useUserStore()
   const roomStore = useRoomStore()
+  const matchStore = useMatchStore()
   const router = useRouter()
 
   const url = "wss://i10a804.p.ssafy.io/chipchippoker"
@@ -20,11 +22,13 @@ export const useGameStore = defineStore('game', () => {
 
   // 게임 정보
   const gameRoomTitle = ref('')
+  // const totalParticipantCnt = ref(0)
   const roomInfo = ref({})
   const player = ref([])  // 방에 있는 플레이어들 정보
   const roomManagerNickname = ref('')
   const countOfPeople = ref(0)
   const myId = ref('')
+  const isMatch = ref(false)
 
   stompClient.connect({'access-token': userStore.accessToken}, (frame) => {
     console.log("Connect success", gameRoomTitle.value)
@@ -35,9 +39,11 @@ export const useGameStore = defineStore('game', () => {
         console.log(response.body.data)
       })
     })
-    // stompClient.reconnect_delay = 5000
-    stompClient.heartbeat.outgoing = 20000;
+    // stompClient.reconnect_delay = 1000
+    stompClient.heartbeat.outgoing = 0;
 		stompClient.heartbeat.incoming = 0;
+
+
     // 구독 핸들러
     const subscribeHandler = (gameRoomTitle) => {
       
@@ -63,7 +69,7 @@ export const useGameStore = defineStore('game', () => {
             break
           case "MS003": // 방 나가기
             console.log(response.body.message);
-            receiveExitRoom(response.body.data)
+            receiveExitRoom(response.body.data) 
             break     
           case "MS004": // 강퇴(타인)
             // 발행자(방장), 구독자
@@ -82,13 +88,38 @@ export const useGameStore = defineStore('game', () => {
           case "MS006": // 게임 준비
             console.log(response.body.message);
             receiveReady(response.body.data)
-            break
+          case "200": // 매칭 완료
+            console.log(response.body.message);
+            receiveMatching(response.body.data)
         }
       })
     }
 
+  // 게임 매칭 SEND
+  const sendMatching = function(title, totalParticipantCnt, isFirst){
+    isMatch.value = true
+    if (isFirst) {
+      stompClient.send(`/to/game/create/${title}`, JSON.stringify({totalParticipantCnt}), {'access-token': userStore.accessToken})
+    } else {
+      stompClient.send(`/to/game/enter/${title}`, JSON.stringify({}), {'access-token': userStore.accessToken})
+    }
+  }
+
+  // 게임 매칭 RECEIVE ( 매칭이 완료 됐을 때!! )
+  const receiveMatching = function(){
+    router.push({
+      name:'play',
+      params: { roomId: matchStore.roomId },
+      state: {
+        title: matchStore.title,
+        totalParticipantCnt: matchStore.totalParticipantCnt
+      }
+    })
+  }
+
   // 방 생성 SEND
   const sendCreateRoom = function(title, countOfPeople){
+    isMatch.value = false
     const message = { countOfPeople }
     stompClient.send(`/to/game/create/${title}`, JSON.stringify(message), {'access-token': userStore.accessToken})
   }
@@ -99,35 +130,40 @@ export const useGameStore = defineStore('game', () => {
     player.value = data.memberInfos
     roomManagerNickname.value = data.roomManagerNickname
 
-    router.push({
-      name:'wait',
-      params: { roomId: roomStore.roomId },
-      state: {
-        title: roomStore.title,
-        totalParticipantCnt: roomStore.totalParticipantCnt
-      }
-    })
+    if (!isMatch.value) {
+      router.push({
+        name:'wait',
+        params: { roomId: roomStore.roomId },
+        state: {
+          title: roomStore.title,
+          totalParticipantCnt: roomStore.totalParticipantCnt
+        }
+      })
+    }
   }
 
   // 게임방 입장 SEND
   const sendJoinRoom = function(gameRoomTitle){
+    isMatch.value = false
     stompClient.send(`/to/game/enter/${gameRoomTitle}`, JSON.stringify({}), {'access-token': userStore.accessToken})
   }
 
   // 게임방 입장 RECEIVE
-  const receiveJoinRoom = function(){
+  const receiveJoinRoom = function(data){
     countOfPeople.value = data.countOfPeople
     player.value = data.memberInfos
     roomManagerNickname.value = data.roomManagerNickname
 
-    router.push({
-      name:'wait',
-      params: { roomId: roomStore.roomId },
-      state: {
-        title: roomStore.title,
-        totalParticipantCnt: roomStore.totalParticipantCnt
-      }
-    })
+    if (!isMatch.value) {
+      router.push({
+        name:'wait',
+        params: { roomId: roomStore.roomId },
+        state: {
+          title: roomStore.title,
+          totalParticipantCnt: roomStore.totalParticipantCnt
+        }
+      })
+    }
   }
 
   // 게임방 나가기 SEND
@@ -209,6 +245,7 @@ export const useGameStore = defineStore('game', () => {
   
   return {
     rooms: ref([]),
+    sendMatching, receiveMatching,
     sendCreateRoom, receiveCreateRoom,
     sendJoinRoom, receiveJoinRoom, 
     sendExitRoom, receiveExitRoom, 

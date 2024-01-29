@@ -19,7 +19,7 @@
             <div class="mb-3">
               <label for="password" class="form-label">비밀번호</label>
               <div>
-                <input type="password" class="form-control" id="password" placeholder="비밀번호" v-model="password">
+                <input type="password" class="form-control" id="password" placeholder="비밀번호" autocomplete="on" v-model="password">
               </div>
             <div class="text-danger  little-text" v-if="isValidPassword === false">비밀번호 형식이 맞지 않습니다.</div>
 

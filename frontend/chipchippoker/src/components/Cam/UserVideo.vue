@@ -3,6 +3,7 @@
     <ov-video :stream-manager="streamManager"/>
     <!-- {{ clientData }}이게 내 현재 이름임 이거 지우면 실행 안됨, 안보이게 투명하게 해야하나? -->
     <div><p class="opacity-0">{{ clientData }}</p></div>
+    <p style="color: white;">{{ clientData }}</p>
     <div v-if="showControls" class="position-absolute top-0 end-0 d-flex flex-column">
       <button id="camera-activate" @click="handleCameraBtn()">Video Off</button>
       <button id="mute-activate" @click="handleMuteBtn()">Sound Off</button>

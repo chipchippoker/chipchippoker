@@ -12,8 +12,8 @@ const userStore = useUserStore()
 const friendStore = useFriendStore()
 
 const router = useRouter()
-const gotoProfile = function(){
-  router.push({name:'profile',query:{nickname:userStore.myNickname}})
+const goProfile = function(){
+  router.push({name:'profile',params:{nickname:userStore.myNickname}})
 }
 
 
@@ -55,15 +55,15 @@ for (let i = 0; i < 300; i++) {
 <template>
   <div class="maple">
     <div>
-      <RouterLink to="login">로그인</RouterLink> /
-      <RouterLink to="signup">회원가입</RouterLink> / 
-      <RouterLink to="kakaosignup">카카오 회원가입</RouterLink> /
-      <RouterLink :to="{ name: 'profile', query: { nickname: userStore.myNickname }}">프로필 나의정보</RouterLink> /
-      <RouterLink to="main">메인페이지</RouterLink>  /
-      <RouterLink to="play">플레이페이지</RouterLink> /
-      <RouterLink to="wait">대기페이지</RouterLink> /
-      <RouterLink to="game">소켓테스트</RouterLink> /
-      <RouterLink to="animation">애니메이션</RouterLink> /
+      <RouterLink to="/login">로그인</RouterLink> /
+      <RouterLink to="/signup">회원가입</RouterLink> / 
+      <RouterLink to="/kakaosignup">카카오 회원가입</RouterLink> /
+      <RouterLink :to="{ name: 'profile', params: { nickname: userStore.myNickname }}">프로필 나의정보</RouterLink> /
+      <RouterLink to="/main">메인페이지</RouterLink>  /
+      <RouterLink to="/play">플레이페이지</RouterLink> /
+      <RouterLink to="/wait">대기페이지</RouterLink> /
+      <RouterLink to="/game">소켓테스트</RouterLink> /
+      <RouterLink to="/animation">애니메이션</RouterLink> /
     </div>
     
     <div class="position-relative">   
@@ -89,7 +89,7 @@ for (let i = 0; i < 300; i++) {
           </button>
         </div>
         <!-- 유저 아이콘 -->
-        <img v-if="userStore.viewProfileIcon" type="button" @click="gotoProfile()" :src='userStore.getIconUrl(userStore.myIcon)' style="width: 60px; height: 60px; border-radius: 50%;">
+        <img v-if="userStore.viewProfileIcon" type="button" @click="goProfile()" :src='userStore.getIconUrl(userStore.myIcon)' style="width: 60px; height: 60px; border-radius: 50%;">
       </div>
 
 

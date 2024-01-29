@@ -68,7 +68,6 @@ export const useRoomStore = defineStore('room', () => {
       title.value = res.data.title
       totalParticipantCnt.value = res.data.totalParticipantCnt
       gameStore.subscribeHandler(title.value)
-      return res.data
     })
     // 방 생성 SEND
     .then(() => {
@@ -125,9 +124,10 @@ export const useRoomStore = defineStore('room', () => {
       headers: { 'access-token': userStore.accessToken },
       data: payload
     })
-    // 공개방 입장 API 응당 & 방 구독 SEND
-    .then(res => {
+    // 공개방 입장 API 응답 & 방 구독 SEND
+    .then(response => {
       console.log('방 입장 성공')
+      const res = response.data
       roomId.value = res.data.roomId
       title.value = res.data.title
       totalParticipantCnt.value = res.data.totalParticipantCnt
@@ -151,8 +151,9 @@ export const useRoomStore = defineStore('room', () => {
         password: payload.password
       }
     })
-    .then(res => {
+    .then(response => {
       console.log('방 입장 성공')
+      const res = response.data
       roomId.value = res.data.roomId
       title.value = res.data.title
       totalParticipantCnt.value = res.data.totalParticipantCnt
