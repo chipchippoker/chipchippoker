@@ -15,12 +15,15 @@ public class StartFriendlyMatchingResponse {
 	private Long roomId;
 	private String title;
 	private Integer totalParticipantCnt;
+	private Boolean isFirstParticipant;
 
-	public static StartFriendlyMatchingResponse startFriendlyMatchingResponse(GameRoom gameRoom) {
+	public static StartFriendlyMatchingResponse startFriendlyMatchingResponse(GameRoom gameRoom,
+		Boolean isFirstParticipant) {
 		return StartFriendlyMatchingResponse.builder()
 			.roomId(gameRoom.getId())
 			.title(gameRoom.getTitle())
 			.totalParticipantCnt(gameRoom.getTotalParticipantCnt())
+			.isFirstParticipant(isFirstParticipant)
 			.build();
 	}
 }
