@@ -20,6 +20,7 @@ public enum MessageBase {
 	S200_GAME_ROOM_MEMBER_READY(OK, false, "MS006", "회원이 준비를 마쳤습니다."),
 	S200_GAME_ROOM_IN_PLAY_INFO(OK, false, "MS007", "진행중인 게임의 메시지입니다."),
 	S200_GAME_ROOM_ROUND_END(OK, false, "MS008", "라운드가 종료되었습니다."),
+	S200_GAME_ROOM_MATCH_END(OK, false, "MS009", "매치가 종료되었습니다."),
 
 	/**
 	 * 400 Bad Request (잘못된 요청)
@@ -30,7 +31,8 @@ public enum MessageBase {
 	E400_CAN_NOT_BET_ROUND_MISMATCH(BAD_REQUEST, false, "ME004", "베팅 라운드가 잘못되었습니다."),
 	E400_CAN_NOT_BET_TURN_MISMATCH(BAD_REQUEST, false, "ME005", "해당 멤버의 베팅 턴이 아닙니다."),
 	E400_CAN_NOT_BET_BET_COIN_MISMATCH(BAD_REQUEST, false, "ME006", "베팅이 불가능 한 코인 개수입니다."),
-	;
+	E400_CAN_NOT_START_ALREADY_START(BAD_REQUEST, false, "ME007", "이미 시작한 게임방입니다."),
+	E400_CAN_NOT_START_ALONE(BAD_REQUEST, false, "ME008", "혼자서는 게임할 수 없습니다.");
 
 	private final HttpStatusCode statusCode;
 	private final boolean sendNotification;

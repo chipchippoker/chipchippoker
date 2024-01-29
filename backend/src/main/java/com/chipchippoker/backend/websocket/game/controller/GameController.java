@@ -14,6 +14,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chipchippoker.backend.api.gameroom.repository.GameRoomRepository;
+import com.chipchippoker.backend.api.membergameroomblacklist.respository.MemberGameRoomBlackListRepository;
 import com.chipchippoker.backend.common.dto.ApiResponse;
 import com.chipchippoker.backend.common.dto.MessageBase;
 import com.chipchippoker.backend.common.exception.InvalidException;
@@ -21,6 +22,7 @@ import com.chipchippoker.backend.common.util.jwt.JwtUtil;
 import com.chipchippoker.backend.websocket.game.dto.BanMemberMessageRequest;
 import com.chipchippoker.backend.websocket.game.dto.BettingMessageRequest;
 import com.chipchippoker.backend.websocket.game.dto.CreateGameRoomMessageRequest;
+import com.chipchippoker.backend.websocket.game.dto.GameEndMessageResponse;
 import com.chipchippoker.backend.websocket.game.dto.GameReadyMessageRequest;
 import com.chipchippoker.backend.websocket.game.dto.GameRoomMessageResponse;
 import com.chipchippoker.backend.websocket.game.dto.ReadyRoomMessageResponse;
@@ -36,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GameController {
 	private final GameRoomRepository gameRoomRepository;
+	private final MemberGameRoomBlackListRepository memberGameRoomBlackListRepository;
 	private final JwtUtil jwtUtil;
 	private final SimpMessagingTemplate template;
 
@@ -170,10 +173,11 @@ public class GameController {
 				log.info("게임방 게임 시작 성공");
 			} catch (InvalidException e) {
 				// 모두 준비완료 상태가 아니라 시작 불가
+				// 이미 진행중인 게임방이라 시작 불가
 				broadcastToMember(gameManager.getRoomManager(),
 					ResponseEntity.badRequest()
-						.body(ApiResponse.messageError(MessageBase.E400_CAN_NOT_START_NOT_READY)));
-				log.info("게임방 게임 시작 실패(NOT READY)");
+						.body(ApiResponse.messageError(e.getMessageBase())));
+				log.info(e.getMessage());
 			}
 		} else {
 			broadcastToMember(nickname,
@@ -250,12 +254,22 @@ public class GameController {
 						gameManager.getMemberManagerMap().values()))));
 			try {
 				// 새로운 라운드 세팅
-				// todo 혼자 남았으면 게임종료
 				gameManager.newRoundSetting(bettingMessageRequest.getCurrentRound());
-			} catch (Exception e) {
+			} catch (RuntimeException e) {
 				// 게임 전체 종료
-				// todo 게임이 전체 종료되었으니 전체종료 메시지를 보내준다.
-				deliveryAnotherMessage(gameRoomTitle, gameManager);
+				// 라운드 종료 메시지는 이미 보내짐.
+				// 아래에는 게임 전체종료 메시지를 내려준다.
+				/*
+				1. 유저의 닉네임
+				2. 승/무/패 여부
+				3. 포인트 변동
+				 */
+				broadcastAllConnected(gameRoomTitle, ResponseEntity.ok(
+					ApiResponse.messageSuccess(
+						MessageBase.S200_GAME_ROOM_MATCH_END,
+						GameEndMessageResponse.create(gameManager.getMemberManagerMap().values())
+					)
+				));
 				return;
 			}
 			// 새로운 라운드 시작
@@ -321,15 +335,6 @@ public class GameController {
 						isNotTurnMemberManager,
 						isTurnMemberManager))
 			));
-	}
-
-	/**
-	 * todo (환) 게임결과 시 각자의 승무패 여부, 점수계산 된 경기결과를 전달해준다.
-	 * 게임이 종료되면 호출되는 메시지이다.
-	 */
-	private void broadcastGameEnd(String gameRoomTitle) {
-		broadcastAllConnected(gameRoomTitle,
-			ResponseEntity.ok(ApiResponse.success()));
 	}
 
 	/**
