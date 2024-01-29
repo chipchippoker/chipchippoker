@@ -2,7 +2,10 @@
   <div class="position-absolute d-flex flex-column align-items-center w-100 h-100">
     <!-- round, 관전 -->
     <div class="m-3 d-flex justify-content-center position-relative" style="width: 90%;">
-      <div class="btn-outline-weightyellow py-2 px-4"><p class="fw-bold fs-3 m-0">round 1</p></div>
+      <!-- 라운드 시작 전이면 대기중 아니면 라운드 수 -->
+      <div v-if="gameStore.currentRound === 0" class="btn-outline-weightyellow py-2 px-4"><p class="fw-bold fs-3 m-0">대기중</p></div>
+      <div v-else class="btn-outline-weightyellow py-2 px-4"><p class="fw-bold fs-3 m-0">Round {{ gameStore.currentRound }}</p></div>
+
       <div class="d-flex align-items-center position-absolute top-50 start-100 translate-middle me-3">
         <font-awesome-icon :icon="['fas', 'eye']" size="lg" style="color: #ffffff;" />
         <div class="text-white ms-3" style="width: 40px;">3 명</div>
@@ -44,11 +47,12 @@
   import PlayTalkVue from "../components/Play/PlayTalk.vue";
   import { ref, computed, onMounted, onUnmounted } from 'vue'
   import { useRoute, useRouter } from 'vue-router';
-  
+  import { useGameStore } from "@/stores/game";
 
   const router = useRouter()
   const userStore = useUserStore()
- 
+  const gameStore = useGameStore()
+
   // Join form
   const roomId = ref("SessionCrome")
   const myNickname = ref("Participant" + Math.floor(Math.random() * 100))

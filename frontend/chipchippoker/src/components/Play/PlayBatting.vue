@@ -4,40 +4,42 @@
       <div class="position-relative w-100 h-100 d-flex">
         <!-- 왼쪽 플레이어들 -->
         <div class="w-50 h-100">
-          <div class="h-50 d-flex justify-content-evenly align-items-center flex-column">
+          <div v-if="gameStore.player.length >0" class="h-50 d-flex justify-content-evenly align-items-center flex-column">
             <div class="text-white">코인들</div>
-            <div class="text-white fw-bold">배팅 코인: 4</div>
+            <div class="text-white fw-bold">배팅 코인: {{gameStore?.gameMemberInfos[0]?.bettingCoin}}</div>
           </div>
-          <div class="h-50 d-flex justify-content-evenly align-items-center flex-column">
+          <div v-if="gameStore.player.length >1" class="h-50 d-flex justify-content-evenly align-items-center flex-column">
             <div class="text-white">코인들</div>
-            <div class="text-white fw-bold">배팅 코인: 3</div>
+            <div class="text-white fw-bold">배팅 코인: {{gameStore?.gameMemberInfos[2]?.bettingCoin}}</div>
           </div>
         </div>
         <!-- 오른쪽 플레이어들 -->
         <div class="w-50 h-100">
-          <div class="h-50 d-flex justify-content-evenly align-items-center flex-column">
+          <div v-if="gameStore.player.length >2" class="h-50 d-flex justify-content-evenly align-items-center flex-column">
             <div class="text-white">코인들</div>
-            <div class="text-white fw-bold">배팅 코인: 5</div>
+            <div class="text-white fw-bold">배팅 코인: {{gameStore?.gameMemberInfos[1]?.bettingCoin}}</div>
           </div>
-          <div class="h-50 d-flex justify-content-evenly align-items-center flex-column">
+          <div v-if="gameStore.player.length >3" class="h-50 d-flex justify-content-evenly align-items-center flex-column">
             <div class="text-white">코인들</div>
-            <div class="text-white fw-bold">배팅 코인: 9</div>
+            <div class="text-white fw-bold">배팅 코인: {{gameStore?.gameMemberInfos[3]?.bettingCoin}}</div>
           </div>
         </div>
-        
+
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-  import { ref, onMounted, computed, } from 'vue';
-  const props = defineProps({
-    session: Object,
-  })
-  console.log(props.session)
+import { useGameStore } from '@/stores/game';
+import { ref, onMounted, computed, } from 'vue';
+const props = defineProps({
+  session: Object,
+})
+console.log(props.session)
+
+const gameStore = useGameStore()
+
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

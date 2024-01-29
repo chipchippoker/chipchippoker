@@ -27,7 +27,7 @@ export const useGameStore = defineStore('game', () => {
 
   // const totalParticipantCnt = ref(0)
   const roomInfo = ref({})
-  const player = ref([])  // 방에 있는 플레이어들 정보
+  const player = ref([])  // 방에 있는 플레이어들 닉네임 순서
   const roomManagerNickname = ref('')
   const countOfPeople = ref(0)
   const myId = ref('')
@@ -73,7 +73,15 @@ export const useGameStore = defineStore('game', () => {
             roundState.value = receiveMessage.value?.data?.roundState
             currentRound.value = receiveMessage.value?.data?.currentRound
             yourTurn.value = receiveMessage.value?.data?.yourTurn
-            gameMemberInfos.value = receiveMessage.value?.data?.gameMemberInfos
+
+            for (let i = 0; i < player.value.length; i++) {
+              // 플레이어 순서에 맞게 데이터 넣기
+              const item = receiveMessage.value?.data?.gameMemberInfos.filter((p)=>
+              {p.nickname === player.value[i]})
+              gameMemberInfos.value.push(item)
+            }
+
+            
             console.log('게임시작');
             console.log("roundState", roundState.value);
             console.log("currentRound", currentRound.value);
@@ -270,7 +278,7 @@ export const useGameStore = defineStore('game', () => {
   }
 
   // 배팅
-  const bet = function (gameRoomTitle, action, bettingCoin ) {
+  const bet = function (gameRoomTitle,action, bettingCoin ) {
     const message = {
       currentRound:currentRound.value,
       action: action,
