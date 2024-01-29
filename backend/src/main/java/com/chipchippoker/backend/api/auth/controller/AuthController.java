@@ -94,7 +94,7 @@ public class AuthController {
 			} else {
 				// 계정이 없는 유저
 				AuthorizationCodeMoreInformationResponse authorizationCodeMoreInformationResponse = new AuthorizationCodeMoreInformationResponse(
-					202, "추가 정보가 필요합니다.", token.getAccess_token());
+					202, "추가 정보가 필요합니다.", authService.encryptionToken(token.getAccess_token()));
 				return new ResponseEntity<>(ApiResponse.success(authorizationCodeMoreInformationResponse),
 					HttpStatus.valueOf(202));
 			}

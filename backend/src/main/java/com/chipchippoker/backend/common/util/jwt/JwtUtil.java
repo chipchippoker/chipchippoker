@@ -133,4 +133,24 @@ public class JwtUtil {
 			return false;
 		}
 	}
+
+	public String encryptionToken(String token) {
+		return Jwts.builder()
+			.claim("token", token)
+			.setExpiration(new Date(new Date().getTime() + accessTokenExpirationPeriod))
+			.signWith(SignatureAlgorithm.HS256, secretKey)
+			.compact();
+	}
+
+	public String decodingToken(String token) {
+		try {
+			return Jwts.parser()
+				.setSigningKey(secretKey)
+				.parseClaimsJws(token)
+				.getBody()
+				.get("token", String.class);
+		} catch (Exception e) {
+			throw new InvalidException(ErrorBase.E400_INVALID_TOKEN);
+		}
+	}
 }
