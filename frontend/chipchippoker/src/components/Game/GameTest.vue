@@ -29,19 +29,20 @@
 <script setup>
   import { ref } from 'vue'
   import { useGameStore } from '@/stores/game'
-  import { useUserStore } from '@/stores/user';
+  import { useUserStore } from '@/stores/user'
 
   const gameStore = useGameStore()
   const gameRoomTitle = ref('')
   const countOfPeople = ref(undefined)
   const errorText = ref('')
+  const nickname = ref('')
 
   // 방생성 버튼 클릭시 호출되는 함수
   const onCreatRoom = function(){
     if (!validateConditions()) {
       return
     }
-
+    console.log('방 생성 요청');
     // 게임방 생성
     gameStore.sendCreateRoom(gameRoomTitle.value, countOfPeople.value)
     gameStore.subscribeHandler(gameRoomTitle.value)

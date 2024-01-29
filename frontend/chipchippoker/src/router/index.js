@@ -47,11 +47,10 @@ const router = createRouter({
       component: PlayView
     },
     {
-      path: '/wait',
-      // /:roomId
+      path: '/wait/:roomId',
       name: 'wait',
       component: WaitView
-    },
+    },  
     {
       path: '/game',
       name: 'game',

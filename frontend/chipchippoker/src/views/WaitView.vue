@@ -10,7 +10,7 @@
     >
       <!-- 방제 -->
       <div class="position-absolute top-50 start-50 translate-middle">
-        <h3 class="room-title">어서오세요. 싸피의 세계로!!</h3>
+        <h3 class="room-title">{{ roomTitle }}</h3>
       </div>
     </div>
 
@@ -101,7 +101,7 @@
                   </div>
                   <div class="mt-5 d-flex justify-content-around">
                       <button class="custom-btn btn-2" data-bs-dismiss="modal" style="width: 50px;"><span>안 나가?</span><span>아니요</span></button>
-                      <button class="custom-btn btn-3" data-bs-dismiss="modal" @click="leaveSession()"><span>나가?</span><span>나가기</span></button>
+                      <button class="custom-btn btn-3" data-bs-dismiss="modal" @click="leaveRoom()"><span>나가?</span><span>나가기</span></button>
                   </div>
                 </div>
             
@@ -114,18 +114,20 @@
 </template>
 
 <script setup>
-import WaitWatcher from "@/components/Wait/WaitWatcher.vue";
+// import WaitWatcher from "@/components/Wait/WaitWatcher.vue";
 import UserVideo from "@/components/Cam/UserVideo.vue";
 
-import { ref, computed, watch, onMounted, onUnmounted, watchEffect } from 'vue'
-import { useUserStore } from '@/stores/user'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from "vue-router";
 import { OpenVidu } from "openvidu-browser";
+import { useUserStore } from '@/stores/user'
 import { useRoomStore } from "@/stores/room";
+import { useGameStore } from '@/stores/game'
 import axios from 'axios'
 
 const userStore = useUserStore()
 const roomStore = useRoomStore()
+const gameStore = useGameStore() 
 const router = useRouter()
 const route = useRoute()
 
@@ -140,18 +142,14 @@ let mainStreamManager = ref(undefined)
 const publisher = ref(undefined)
 const subscribers = ref([])
 
-// Join form
-const title = ref("SessionCrome")
-const nickname = ref("Participant" + Math.floor(Math.random() * 100))
-
 const roomId = ref('')
 const roomTitle = ref('')
 const totalParticipantCnt = ref('')
 const myNickname = ref('')
+
 const roomManagerNickname = ref('')
 const isManager = ref(false)
 const isReady = ref(false)
-
 
 roomId.value = roomStore.roomId
 roomTitle.value = roomStore.title
@@ -159,16 +157,15 @@ roomManagerNickname.value = roomStore.roomManagerNickname
 if (myNickname.value === roomManagerNickname.value) {
   isManager.value = true
 }
-// roomId.value = 100122
-// roomTitle.value = '싸피 다 드루와'
-// totalParticipantCnt.value = '3'
-// myNickname.value = '10기김대원'
 
-// console.log(roomId.value);
-// console.log(roomTitle.value);
-// console.log(totalParticipantCnt.value);
-// console.log(myNickname.value);
 
+// 방 나가기
+const leaveRoom = function() {
+  roomStore.leaveRoom()
+  leaveSession()
+}
+
+// 게임 시작
 const startGame = function () {
   const payload = {
     title: roomTitle.value
@@ -176,8 +173,10 @@ const startGame = function () {
   roomStore.startGame(payload)
 }
 
+// 게임 준비
 const readyGame = function () {
-  isReady.value === !isReady.value
+  isReady.value = !isReady.value
+  gameStore.sendReady(title.value, isReady.value)
 }
 
 const forceDisconnect = function(clientData) {
@@ -190,6 +189,7 @@ const forceDisconnect = function(clientData) {
 /////////////////////채팅창을 위한 부분
 const inputMessage = ref("")
 const messages = ref([])
+
 ///////////////////카메라 및 오디오 설정을 위한 부분
 const muted = ref(false)       // 기본은 음소거 비활성화
 const camerOff = ref(false)    // 기본 카메라 활성화
@@ -198,12 +198,12 @@ const selectedAudio  = ref("")  // 오디오 변경시 사용할 변수
 const mainStreamManagerComputed = computed(() => mainStreamManager.value);
 const publisherComputed = computed(() => publisher.value);
 const subscribersComputed = computed(() => subscribers.value);
-////
 
 //
 function joinSession() {
   OV.value = new OpenVidu()
   session.value = OV.value.initSession()
+  console.log('조인 세션!');
 
   session.value.on("streamCreated", ( {stream} )=> {
     const subscriber = session.value.subscribe(stream)
@@ -225,14 +225,14 @@ function joinSession() {
   });
 
   session.value.on('reconnecting', () => console.warn('Oops! Trying to reconnect to the session'));
-    session.value.on('reconnected', () => console.log('Hurray! You successfully reconnected to the session'));
-    session.value.on('sessionDisconnected', (event) => {
-        if (event.reason === 'networkDisconnect') {
-            console.warn('Dang-it... You lost your connection to the session');
-        } else {
-            // Disconnected from the session for other reason than a network drop
-        }
-    });
+  session.value.on('reconnected', () => console.log('Hurray! You successfully reconnected to the session'));
+  session.value.on('sessionDisconnected', (event) => {
+      if (event.reason === 'networkDisconnect') {
+          console.warn('Dang-it... You lost your connection to the session');
+      } else {
+          // Disconnected from the session for other reason than a network drop
+      }
+  });
 
   // 채팅 이벤트 수신 처리 함. session.on이 addEventListenr 역할인듯.
   session.value.on('signal:chat', (event) => { // event.from.connectionId === session.value.connection.connectionId 이건 나와 보낸이가 같으면임
@@ -246,7 +246,8 @@ function joinSession() {
 
   // --- Connect to the session with a valid user token ---
   // Get a token from the OpenVidu deployment
-  getToken(roomId.value).then((token) => {
+  getToken(String(roomId.value)).then((token) => {
+    console.log("토큰 만들어지나");
     session.value.connect(token, {clientData: myNickname.value})
     .then(() => {
         // Get your own camera stream with the desired properties ---
@@ -308,6 +309,8 @@ function updateMainVideoStreamManager(stream) {
 * --------------------------------------------
 */
 async function getToken(roomId) {
+  console.log(roomId);
+  console.log(typeof(roomId));
   const sessionId = await createSession(roomId);
   return await createToken(sessionId);
 }
@@ -467,23 +470,11 @@ onMounted(() => {
   // 프로필 아이콘 안보이기
   userStore.viewProfileIcon = false
 
-  // 방 정보 저장
-  // roomId.value = route.params.roomId
-  // roomTitle.value = history.state.title
-  // totalParticipantCnt.value = history.state.totalParticipantCnt
-  // myNickname.value = history.state.nickName
+  roomId.value = roomStore.roomId
+  roomTitle.value = roomStore.title
+  totalParticipantCnt.value = roomStore.totalParticipantCnt
+  myNickname.value = userStore.myNickname
 
-  roomId.value = '1001223'
-  roomTitle.value = '싸피 다 드루와'
-  totalParticipantCnt.value = 3
-  myNickname.value = '10기김대원'
-  console.log(' 마운트 됐어요');
-  // localStorage에 저장
-  localStorage.setItem("roomId", roomId.value)
-  localStorage.setItem("roomTitle", roomTitle.value)
-  localStorage.setItem("totalParticipantCnt", totalParticipantCnt.value)
-  localStorage.setItem("myNickname", myNickname.value)
-  
   // 메인페이지 -> 방 만들기 : 세션 생성
   joinSession()
 })
@@ -493,11 +484,10 @@ onUnmounted(() => {
   // 프로필 아이콘 보이기
   userStore.viewProfileIcon = true
 
-  // localStorage에서 불러오기
-  roomId.value = localStorage.getItem("roomId")
-  roomTitle.value = localStorage.getItem("roomTitle")
-  totalParticipantCnt.value = localStorage.getItem("totalParticipantCnt")
-  myNickname.value = localStorage.getItem("myNickname")
+  roomId.value = roomStore.roomId
+  roomTitle.value = roomStore.title
+  totalParticipantCnt.value = roomStore.totalParticipantCnt
+  myNickname.value = userStore.myNickname
 
   console.log('방 정보 가져오기 성공!!');
 })

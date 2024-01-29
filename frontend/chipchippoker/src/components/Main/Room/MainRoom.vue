@@ -83,13 +83,6 @@
         </ul>
         </nav>
     </div>
-
-
-
-
-
-
-    
     </div>
 </template>
 
@@ -106,7 +99,7 @@ const changeType = function(type){
     roomType.value = type
     roomStore.roomType = type
 }
- 
+
 const title = ref('')
 const isTwo = ref(false)
 const isThree = ref(false)
@@ -147,7 +140,6 @@ const refreshRoom = function(){
     roomStore.getRoomList(payload)
 }
 
-
 // 체크박스 검색
 const updateRoomList = function () {
     const payload = {
@@ -162,7 +154,7 @@ const updateRoomList = function () {
     };
     console.log(payload)
     roomStore.getRoomList(payload);
-};
+}
     
 // 페이지네이션 검색
 const pageRoom = function(pagenum){
@@ -179,9 +171,6 @@ const pageRoom = function(pagenum){
     console.log(payload)
     roomStore.getRoomList(payload)
     }
-
-
-
 
 </script>
 
