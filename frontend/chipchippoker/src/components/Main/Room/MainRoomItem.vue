@@ -8,11 +8,13 @@
                 <!-- 친선일 때만 입장 보이기 -->
                 <div v-if="roomStore.roomType=='친선'">
                     <div v-if="item?.isPrivate" type="button" data-bs-toggle="modal" data-bs-target="#EnterPWModal" class="btn-lightred x-little-text rounded-1 px-1">입장</div>
-                    <div v-else type="button" @click="enterRoomPublic(item.title)" class="btn-lightred x-little-text rounded-1 px-1">입장</div>
+                    <div v-else type="button" @click="enterRoomPublic(item.title, '플레이어')" class="btn-lightred x-little-text rounded-1 px-1">입장</div>
                 </div>
-                <!-- <div type="button" class="btn-gray x-little-text rounded-1 px-1">관전
+                <div v-if="item?.isPrivate" type="button" data-bs-toggle="modal" data-bs-target="#EnterPWModal" class="btn-gray x-little-text rounded-1 px-1">관전
+                    <font-awesome-icon :icon="['fas', 'caret-right']" style="color: #8f8f8f;" /></div>
+                <div v-else type="button" @click="enterRoomPublic(item.title, '관전자')" class="btn-gray x-little-text rounded-1 px-1">관전
                     <font-awesome-icon :icon="['fas', 'caret-right']" style="color: #8f8f8f;" />
-                </div> -->
+                </div>
 
             </div>
         </div>
@@ -45,16 +47,21 @@ const props = defineProps({
 })
 
 
-const enterRoomPublic = function (title) {
-    if (props.item.currentParticipantCnt < props.item.totalParticipantCnt) {
-        const payload = {
-            title: title
-        }
+const enterRoomPublic = function (title, type) {
+    const payload = {
+        title: title
+    }
+    if (type === '플레이어') {
         roomStore.enterRoomPublic(payload)
+        roomStore.isWatcher = false
+        roomStore.roomState = props.item.state
     } else {
-        alert("방이 꽉 찼습니다.")
+        roomStore.enterWatchPublic(payload)
+        roomStore.isWatcher = true
+        roomStore.roomState = props.item.state
     }
 }
+
 
 // "isPrivate": false,
 // "state": "대기",

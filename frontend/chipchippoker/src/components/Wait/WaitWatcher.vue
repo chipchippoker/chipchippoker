@@ -6,6 +6,10 @@
 </template>
 
 <script setup>
+import { useRoomStore } from '@/stores/room';
+
+const roomStore = useRoomStore()
+roomStore.watchersNickname
 
 </script>
 

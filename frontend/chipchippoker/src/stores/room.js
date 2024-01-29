@@ -37,6 +37,8 @@ export const useRoomStore = defineStore('room', () => {
   const nowPage = ref(0)  // 현재 페이지 번호
   const isEmpty = ref(false) // 데이터가 없는가?
   const pageArray = ref([1]) // 페이지네이션 배열
+  const emptyList = ref([]) // 페이지에서 빈 곳들
+  emptyList.value = Array(8 - allRoomList.value.length).fill(0)
   
   // 방 생성 변수
   const roomManagerNickname = ref('')
@@ -44,6 +46,12 @@ export const useRoomStore = defineStore('room', () => {
   const title = ref('')
   const totalParticipantCnt = ref('')
   const isRoom = ref(false)
+
+  // 관전자 여부, 게임 중 여부, 관전자 닉네임들
+  const isWatcher = ref(false)
+  const roomState = ref(null)
+  const watchersNickname = ref([])
+
 
   // 웹소켓
   const gameStore = useGameStore()
@@ -74,9 +82,11 @@ export const useRoomStore = defineStore('room', () => {
       gameStore.sendCreateRoom(title.value, totalParticipantCnt.value)
     })
     .catch(err => {
-      isRoom.value = true
+      if (err.response.data.code === 'CF005') {
+        isRoom.value = true
+        console.log(isRoom.value)
+      }
       console.log(err);
-      console.log(isRoom.value)
     })
   }
 
@@ -107,10 +117,13 @@ export const useRoomStore = defineStore('room', () => {
       totalElements.value = res.data.data.totalElements
       totalPages.value = res.data.data.totalPages
       isfirst.value = res.data.data.first
-      nowElements.value = res.dat.dataa.numberOfElements
+      nowElements.value = res.data.data.numberOfElements
       nowPage.value = res.data.data.number
       isEmpty.value = res.data.data.empty
       pageArray.value = Array.from({ length: res.data.data.totalPages }, (_, i) => i + 1)
+      if (totalPages.value === 0) {
+        pageArray.value = Array.from({ length: 1 }, (_, i) => i + 1)
+      }
     })
     .catch(err => console.log(err))
   }
@@ -227,11 +240,11 @@ export const useRoomStore = defineStore('room', () => {
   return {
     // 방 목록
     getRoomList,
-    allRoomList, pageData, isLast, isfirst, totalPages, totalElements, nowElements, nowPage, isEmpty, pageArray, roomType,
+    allRoomList, pageData, isLast, isfirst, totalPages, totalElements, nowElements, nowPage, isEmpty, pageArray, roomType, emptyList,
     // 방 생성
     createRoom, roomManagerNickname, roomId, title, totalParticipantCnt, isRoom,
     // 방 입장
-    enterRoomPublic, enterRoomPrivate,
+    enterRoomPublic, enterRoomPrivate, isWatcher, roomState, watchersNickname,
     // 방 나가기
     leaveRoom,
     // 게임 시작하기

@@ -17,9 +17,10 @@
     <!--  body -->
     <div class="container row mt-5">
       <div class="col-9">
- 
+        
+        <!-- 본인이 플레이어면 -->
         <!-- 모든 캠 -->
-        <div id="video-container">
+        <div v-if="roomStore.isWatcher===false" id="video-container">
           <div class="flex-container row g-1 p-0">
             <div class="col-6">
               <div style="width: 400px; height: 300px;">
@@ -47,6 +48,25 @@
           </div>
         </div>
 
+        <!-- 본인이 관전자면 -->
+        <div v-if="roomStore.isWatcher===true" id="video-container">
+          <div class="flex-container row g-1 p-0">
+            <div
+              class="col-6 mb-5"
+              v-for="sub in playersComputed"
+              :key="sub.stream.connection.connectionId">
+              <div style="width: 400px; height: 300px;">
+                <!-- 다른 사람 캠 -->
+                <UserVideo
+                  :stream-manager="sub"
+                  :is-manager="isManager"
+                  @force-disconnect="forceDisconnect"
+                  />
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- 캠활성화, 음소거 버튼 -->
         <!-- <button id="camera-activate" @click="handleCameraBtn">캠 비활성화</button>
         <button id="mute-activate" @click="handleMuteBtn">음소거 활성화</button> -->
@@ -57,9 +77,9 @@
         <div class="my-3 me-5"><img class="small-logo ms-4 mt-1 ps-1" src="/src/assets/icons/Logo.png" alt=""></div>
         <div class="">
           <!-- 관전자 목록 -->
-          <!-- <div id="watcher-container">
+          <div id="watcher-container">
             <WaitWatcher />
-          </div> -->
+          </div>
           <!-- 채팅창 -->
           <!-- 나중에 <chat-winow />로 넘길수 있도록 해보자. -->
           <div id="chat-container">
@@ -158,7 +178,6 @@ if (myNickname.value === roomManagerNickname.value) {
   isManager.value = true
 }
 
-
 // 방 나가기
 const leaveRoom = function() {
   roomStore.leaveRoom()
@@ -186,20 +205,21 @@ const forceDisconnect = function(clientData) {
   }
   roomStore.forceMemberOut(payload)
 }
+
 /////////////////////채팅창을 위한 부분
 const inputMessage = ref("")
 const messages = ref([])
 
-///////////////////카메라 및 오디오 설정을 위한 부분
-const muted = ref(false)       // 기본은 음소거 비활성화
-const camerOff = ref(false)    // 기본 카메라 활성화
-const selectedCamera = ref("")  // 카메라 변경시 사용할 변수 
-const selectedAudio  = ref("")  // 오디오 변경시 사용할 변수
-const mainStreamManagerComputed = computed(() => mainStreamManager.value);
 const publisherComputed = computed(() => publisher.value);
 const subscribersComputed = computed(() => subscribers.value);
 
-//
+
+/// 관전을 위한 변수들 크헝헝
+const players = ref([])
+const watchers = ref([])
+const plyersComputed = computed(() => players.value);
+const watchersComputed = computed(() => watchers.value);
+
 function joinSession() {
   OV.value = new OpenVidu()
   session.value = OV.value.initSession()
@@ -209,6 +229,23 @@ function joinSession() {
     const subscriber = session.value.subscribe(stream)
     console.log('세션 생성!!!!');
     subscribers.value.push(subscriber)
+    // 플레이어, 관전자 리스트에도 추가
+    if (roomStore.isWatcher = false) {
+      players.value.push(subscriber)
+    } else {
+      watchers.value.push(subscriber)
+      // 관전자 이름들도 추가
+      const clientData = computed(() => {
+        const { clientData } = getConnectionData();
+        return clientData;
+      });
+      
+      function getConnectionData() {
+        const { connection } = stream;
+        return JSON.parse(connection.data);
+      }
+      roomStore.watchersNickname.push(clientData)
+    }
   })
 
   // On every Stream destroyed...
@@ -217,6 +254,36 @@ function joinSession() {
     if(index >= 0){
       subscribers.value.splice(index, 1)
     }
+    // 플레이어, 관전자 리스트에도 삭제
+    if (players.value.includes(stream.streamManager)) {
+      const index1 = players.value.indexOf(stream.streamManager, 0)
+      if(index1 >= 0){
+        players.value.splice(index1, 1)
+      }      
+    }
+    if (watchers.value.includes(stream.streamManager)) {
+      const index2 = watchers.value.indexOf(stream.streamManager, 0)
+      if(index2 >= 0){
+        watchers.value.splice(index2, 1)
+      }      
+    }
+    // 관전자 이름도 삭제
+    const clientData = computed(() => {
+      const { clientData } = getConnectionData();
+      return clientData;
+    });
+    
+    function getConnectionData() {
+      const { connection } = stream;
+      return JSON.parse(connection.data);
+    }
+    
+    if (roomStore.watchersNickname.value.includes(clientData)) {
+      const index3 = roomStore.watchersNickname.value.indexOf(clientData, 0)
+      if(index3 >= 0){
+        roomStore.watchersNickname.value.splice(index3, 1)
+      }      
+    }    
   })
 
   // On every asynchronous exception...
@@ -268,7 +335,6 @@ function joinSession() {
 
         // --- Publish your stream ---
         session.value.publish(publisher.value)
-        // getMedia()  // 세션이 만들어졌을때 미디어 불러옴
       })
       .catch((error) => {
         console.log("There was an error connecting to the session:", error.code, error.message);
@@ -290,6 +356,9 @@ function leaveSession(){
   mainStreamManager.value = undefined;
   publisher.value = undefined;
   subscribers.value = [];
+  players.value = []
+  watchers.value = []
+  roomStore.watchersNickname.value = []
   OV.value = undefined;
 
   // Remove beforeunload listener
@@ -298,10 +367,6 @@ function leaveSession(){
   router.push('main')
 }
 
-function updateMainVideoStreamManager(stream) {
-  if (mainStreamManager.value === stream) return
-  mainStreamManager.value = stream
-}
 
 /**
 * --------------------------------------------
@@ -343,128 +408,6 @@ function sendMessage(event) {
   }
 }
 
-// 캠, 오디오 등 기기와 관련된 함수
-// 카메라와 오디오를 가져옴.
-async function getMedia() {
-  try {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const cameras = devices.filter((device) => device.kind === 'videoinput');
-    const audios = devices.filter((device) => device.kind === 'audioinput');
-    // const audios = undefined
-
-    const cameraSelect = document.querySelector('select[name="cameras"]');
-    const audioSelect = document.querySelector('select[name="audios"]');
-    
-    // 카메라 및 오디오 선택기 요소가 존재하는지 확인
-    // if (cameraSelect && audioSelect) {
-    if (cameras) {
-      cameras.forEach((camera) => {
-        const option = document.createElement('option');
-        option.value = camera.deviceId;
-        option.text = camera.label;
-        cameraSelect.appendChild(option);
-      });
-    } else {
-      const notCamera = cameraSelect.querySelector('option:disabled');
-      notCamera.innerText = '사용 가능한 카메라가 없습니다.'
-      // console.error('Camera selector not found');
-    }
-    if(audios){
-      audios.forEach((audio) => {
-        const option = document.createElement('option');
-        option.value = audio.deviceId;
-        option.text = audio.label;
-        audioSelect.appendChild(option);
-      });
-    } else {
-      const notAudio = audioSelect.querySelector('option:disabled');
-      notAudio.innerText = '사용 가능한 마이크가 없습니다.'
-      // console.error('Audio selector not found');
-    }
-  } catch (error) {
-    console.error('Error getting media devices:', error);
-  }
-}
-
-// 음소거, 캠 활성화 버튼 작동
-function handleCameraBtn() {
-  if (!publisher.value) return;
-  // 카메라 상태 토글
-  camerOff.value = !camerOff.value;
-  const cameraActivate = document.getElementById('camera-activate')
-  if(camerOff.value){   //카메라 비활성화상태
-    cameraActivate.innerText = '카메라 활성화'
-  }else{                //카메라 활성화상태
-    cameraActivate.innerText = '카메라 비활성화'
-  }
-  
-  // 카메라 작동 상태를 적용
-  publisher.value.publishVideo(!camerOff.value);
-}
-
-function handleMuteBtn() {
-  if (!publisher.value) return;
-
-  // 음소거 상태 토글
-  muted.value = !muted.value;
-  const muteActivate = document.getElementById('mute-activate')
-  if(muted.value){   //음소거 활성화상태
-    muteActivate.innerText = '음소거 비활성화'
-  }else{                //음소거 비활성화상태
-    muteActivate.innerText = '음소거 활성화'
-  }
-  // 음소거 설정을 적용
-  publisher.value.publishAudio(!muted.value);
-}
-
-// select태그에서 사용할 기기를 선택했을때
-async function handleCameraChange(event) {
-  selectedCamera.value = event.target.value;
-  await replaceCameraTrack(selectedCamera.value);
-}
-
-async function handleAudioChange(event) {
-  selectedAudio.value = event.target.value;
-  await replaceAudioTrack(selectedAudio.value);
-}
-
-async function replaceCameraTrack(deviceId) {
-  if (!publisher.value) return;
-
-  const newConstraints = {
-      audio: false,
-      video: {
-          deviceId: { exact: deviceId },
-      },
-  };
-
-  try {
-      const newStream = await navigator.mediaDevices.getUserMedia(newConstraints);
-      const newVideoTrack = newStream.getVideoTracks()[0];
-      await publisher.value.replaceTrack(newVideoTrack);
-  } catch (error) {
-      console.error("Error replacing video track:", error);
-  }
-}
-
-async function replaceAudioTrack(deviceId) {
-  if (!publisher.value) return;
-
-  const newConstraints = {
-      audio: {
-          deviceId: { exact: deviceId },
-      },
-      video: false,
-  };
-
-  try {
-      const newStream = await navigator.mediaDevices.getUserMedia(newConstraints);
-      const newAudioTrack = newStream.getAudioTracks()[0];
-      await publisher.value.replaceTrack(newAudioTrack);
-  } catch (error) {
-      console.error("Error replacing audio track:", error);
-  }
-}
 
 onMounted(() => {
   // 프로필 아이콘 안보이기

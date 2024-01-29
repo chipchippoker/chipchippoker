@@ -4,7 +4,7 @@
             <MainRoomItem
             :item="item"/>
         </div>
-        <div class="col-6 h-25" v-for="item in emptyList" :key="item.id">
+        <div class="col-6 h-25" v-for="item in roomStore.emptyList" :key="item.id">
             
         </div>
         
@@ -17,9 +17,6 @@ import MainRoomItem from './MainRoomItem.vue';
 import { ref } from 'vue';
 const roomStore = useRoomStore()
 
-const emptyList = ref([])
-emptyList.value = Array(8 - roomStore.allRoomList.length).fill(0)
-console.log(emptyList)
 
 </script>
 
