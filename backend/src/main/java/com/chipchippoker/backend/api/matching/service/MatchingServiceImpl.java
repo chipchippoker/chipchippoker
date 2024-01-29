@@ -38,7 +38,8 @@ public class MatchingServiceImpl implements MatchingService {
 		if (!gameRoomList.isEmpty()) { // 조회된 게임방이 있는 경우
 			GameRoom gameRoom = gameRoomList.get(0);
 			member.enterGameRoom(gameRoom);
-			return StartFriendlyMatchingResponse.startFriendlyMatchingResponse(gameRoom);
+			// 게임방에 처음 들어가는 사용자인가 (친선전 빠른 시작은 무조건 처음 들어가는 사용자가 아님)
+			return StartFriendlyMatchingResponse.startFriendlyMatchingResponse(gameRoom, Boolean.FALSE);
 		} else { // 조회된 게임방이 없는 경우
 			return null;
 		}
@@ -71,7 +72,11 @@ public class MatchingServiceImpl implements MatchingService {
 			member.enterGameRoom(gameRoom);
 		}
 
-		return StartCompetitionMatchingResponse.startCompetitionMatchingResponse(gameRoom); // 응답
+		// 게임방에 처음 들어가는 사용자인가
+		Boolean isFirstParticipant = Boolean.FALSE;
+		if (gameRoom.getMembers() == null || gameRoom.getMembers().isEmpty())
+			isFirstParticipant = Boolean.TRUE;
+		return StartCompetitionMatchingResponse.startCompetitionMatchingResponse(gameRoom, isFirstParticipant); // 응답
 	}
 
 	@Override

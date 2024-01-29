@@ -15,12 +15,15 @@ public class StartCompetitionMatchingResponse {
 	private Long roomId;
 	private String title;
 	private Integer totalParticipantCnt;
+	private Boolean isFirstParticipant;
 
-	public static StartCompetitionMatchingResponse startCompetitionMatchingResponse(GameRoom gameRoom) {
+	public static StartCompetitionMatchingResponse startCompetitionMatchingResponse(GameRoom gameRoom,
+		Boolean isFirstParticipant) {
 		return StartCompetitionMatchingResponse.builder()
 			.roomId(gameRoom.getId())
 			.title(gameRoom.getTitle())
 			.totalParticipantCnt(gameRoom.getTotalParticipantCnt())
+			.isFirstParticipant(isFirstParticipant)
 			.build();
 	}
 }
