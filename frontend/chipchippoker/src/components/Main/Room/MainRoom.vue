@@ -62,11 +62,11 @@
         <nav aria-label="Page navigation example ">
         <ul class="pagination pagination-sm justify-content-center gap-1" type="button">
             <!-- 이전 버튼 -->
-            <li v-if="roomStore.isFirst" class="page-item xx-little-text">
+            <!-- <li v-if="roomStore.isFirst" class="page-item xx-little-text">
                 <a class="btn-outline-yellow rounded-1 px-1 text-black" href="#" aria-label="Previous">
                     <font-awesome-icon icon="backward" style="color: #000000;"/>
                 </a>
-            </li>
+            </li> -->
             <!-- 숫자 버튼 -->
             <li class="page-item xx-little-text" v-for="pagenum in roomStore?.pageArray" :key="pagenum">
                 <a @click="pageRoom(pagenum)" class="btn-outline-yellow rounded-1 px-1 text-black">
@@ -75,11 +75,11 @@
             </li>
             
             <!-- 이후 버튼 -->
-            <li v-if="!roomStore.isLast" class="page-item xx-little-text">
+            <!-- <li v-if="!roomStore.isLast" class="page-item xx-little-text">
             <a class="btn-outline-yellow rounded-1 px-1 text-black" href="#" aria-label="Next">
                 <font-awesome-icon icon="forward" style="color: #000000;" />
             </a>
-            </li>
+            </li> -->
         </ul>
         </nav>
     </div>
@@ -98,6 +98,7 @@ const roomType = ref('친선')
 const changeType = function(type){
     roomType.value = type
     roomStore.roomType = type
+    refreshRoom()
 }
 
 const title = ref('')
@@ -167,7 +168,7 @@ const pageRoom = function(pagenum){
         isThree:isThree.value,
         isFour:isFour.value,
         isEmpty:isEmpty.value,
-        page:pagenum,
+        page:pagenum - 1,
         size:8
     }
     console.log(payload)
@@ -175,8 +176,9 @@ const pageRoom = function(pagenum){
     }
 
 onMounted (() => {
-    refreshRoom()
+    changeType('친선')
 })
+
 
 </script>
 

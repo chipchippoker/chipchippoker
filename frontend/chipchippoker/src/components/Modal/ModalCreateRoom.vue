@@ -25,34 +25,32 @@
                             </label>
                         </div>
                         <!-- 비밀번호 -->
-                        <div class="row g-3 align-items-center">
-                            <div class="col-auto">
-                                <label for="inputPassword6" class="col-form-label">Password</label>
-                            </div>
-                            <div class="col-auto">
-                                <input type="password" id="inputPassword6" class="form-control"
-                                    aria-describedby="passwordHelpInline" v-model="password" autocomplete="inputPassword6">
-                            </div>
+                        
+                    <div class="row g-3 align-items-center">
+                        <div class="col-auto">
+                            <label for="inputPassword6" class="col-form-label" >Password</label>
                         </div>
+                        <div class="col-auto">
+                            <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline" v-model="password" autocomplete="on">
+                        </div>
+                      
+                      
                     </div>
+                </div>
+                
+                <div class="d-flex align-items-center gap-3">
+                    <span>인원</span>
+                    <select class="form-select form-select-sm" style="width: 100px;" aria-label="Small select example" v-model="totalParticipantCnt">
+                        <option value="2">2인</option>
+                        <option value="3">3인</option>
+                        <option value="4">4인</option>
+                    </select>
+                </div>
+                
+                <div class="modal-footer border-0">
+                    <button data-bs-dismiss="modal" @click="createRoom()" type="button" class="btn-outline-yellow rounded-2">방만들기</button>
+                </div>
 
-                    <!-- 인원 수 -->
-                    <div class="d-flex align-items-center gap-3">
-                        <span>인원</span>
-                        <select class="form-select form-select-sm" style="width: 100px;" aria-label="Small select example"
-                            v-model="totalParticipantCnt">
-                            <option value="2">2인</option>
-                            <option value="3">3인</option>
-                            <option value="4">4인</option>
-                        </select>
-                    </div>
-
-                    <!-- 방 만들기 버튼 -->
-                    <div class="modal-footer border-0">
-                        <button data-bs-dismiss="modal" type="button" @click="createRoom"
-                            class="btn-outline-yellow rounded-2">방만들기</button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>
@@ -85,11 +83,11 @@ const createRoom = function () {
     console.log('방 생성하기!!');
 
     roomStore.createRoom(payload)
+    title.value = ''
 
-    title.value = null
     isPrivate.value = false
     password.value = null
-    totalParticipantCnt.value = null
+    totalParticipantCnt.value = 2
 }
 
 </script>

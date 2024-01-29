@@ -20,11 +20,11 @@
       <div class="tab-content flex-grow-1">
         <div class="tab-pane fade show active" id="v-pills-my-info">
           <!-- ProfileMyInfo 컴포넌트에 memberId 전달 -->
-          <ProfileMyInfo :memberId="memberId" />
+          <ProfileMyInfo/>
         </div>
         <div class="tab-pane fade" id="v-pills-history">
           <!-- ProfileHistoryList 컴포넌트에 memberId 전달 -->
-          <ProfileHistoryList :memberId="memberId" />
+          <ProfileHistoryList/>
         </div>
       </div>
     </div>
