@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class GameResultServiceImpl implements GameResultService {
 	private final GameResultRepository gameResultRepository;
 
-	public void saveGameResult(List<String> memberList, List<Integer> resultCoinList, Integer gameRoomId,
+	public void saveGameResult(List<String> memberList, List<Integer> resultCoinList, Long gameRoomId,
 		String gameMode) {
 		GameResult gameResult = GameResult.newGameResult(memberList, resultCoinList, gameRoomId, gameMode);
 		gameResultRepository.save(gameResult);

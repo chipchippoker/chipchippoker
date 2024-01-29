@@ -20,7 +20,8 @@ public enum MessageBase {
 	S200_GAME_ROOM_MEMBER_READY(OK, false, "MS006", "회원이 준비를 마쳤습니다."),
 	S200_GAME_ROOM_IN_PLAY_INFO(OK, false, "MS007", "진행중인 게임의 메시지입니다."),
 	S200_GAME_ROOM_ROUND_END(OK, false, "MS008", "라운드가 종료되었습니다."),
-	S200_GAME_ROOM_MATCH_END(OK, false, "MS009", "매치가 종료되었습니다."),
+	S200_GAME_ROOM_RANK_MATCH_END(OK, false, "MS009", "친선 매치가 종료되었습니다."),
+	S200_GAME_ROOM_NORMAL_MATCH_END(OK, false, "MS010", "경쟁 매치가 종료되었습니다."),
 
 	/**
 	 * 400 Bad Request (잘못된 요청)

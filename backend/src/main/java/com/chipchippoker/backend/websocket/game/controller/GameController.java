@@ -13,18 +13,22 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chipchippoker.backend.api.gameresult.service.GameResultService;
 import com.chipchippoker.backend.api.gameroom.repository.GameRoomRepository;
 import com.chipchippoker.backend.api.membergameroomblacklist.respository.MemberGameRoomBlackListRepository;
+import com.chipchippoker.backend.api.point.service.PointService;
 import com.chipchippoker.backend.common.dto.ApiResponse;
 import com.chipchippoker.backend.common.dto.MessageBase;
+import com.chipchippoker.backend.common.entity.GameRoom;
 import com.chipchippoker.backend.common.exception.InvalidException;
 import com.chipchippoker.backend.common.util.jwt.JwtUtil;
 import com.chipchippoker.backend.websocket.game.dto.BanMemberMessageRequest;
 import com.chipchippoker.backend.websocket.game.dto.BettingMessageRequest;
 import com.chipchippoker.backend.websocket.game.dto.CreateGameRoomMessageRequest;
-import com.chipchippoker.backend.websocket.game.dto.GameEndMessageResponse;
 import com.chipchippoker.backend.websocket.game.dto.GameReadyMessageRequest;
 import com.chipchippoker.backend.websocket.game.dto.GameRoomMessageResponse;
+import com.chipchippoker.backend.websocket.game.dto.NormalGameEndMessageResponse;
+import com.chipchippoker.backend.websocket.game.dto.RankGameEndMessageResponse;
 import com.chipchippoker.backend.websocket.game.dto.ReadyRoomMessageResponse;
 import com.chipchippoker.backend.websocket.game.model.GameManager;
 import com.chipchippoker.backend.websocket.game.model.MemberManager;
@@ -39,6 +43,8 @@ import lombok.extern.slf4j.Slf4j;
 public class GameController {
 	private final GameRoomRepository gameRoomRepository;
 	private final MemberGameRoomBlackListRepository memberGameRoomBlackListRepository;
+	private final PointService pointService;
+	private final GameResultService gameResultService;
 	private final JwtUtil jwtUtil;
 	private final SimpMessagingTemplate template;
 
@@ -217,6 +223,7 @@ public class GameController {
 		// 게임 액션
 		GameManager gameManager = gameManagerMap.get(gameRoomTitle);
 		MemberManager memberManager = gameManager.getMemberManagerMap().get(nickname);
+		Collection<MemberManager> memberManagers = gameManager.getMemberManagerMap().values();
 
 		// 진행 라운드와 게임의 현재 라운드가 다른 경우
 		if (!gameManager.getCurrentRound().equals(bettingMessageRequest.getCurrentRound())) {
@@ -251,7 +258,7 @@ public class GameController {
 			broadcastAllConnected(gameRoomTitle,
 				ResponseEntity.ok(ApiResponse.messageSuccess(MessageBase.S200_GAME_ROOM_ROUND_END,
 					GameRoomMessageResponse.roundEnd(gameManager,
-						gameManager.getMemberManagerMap().values()))));
+						memberManagers))));
 			try {
 				// 새로운 라운드 세팅
 				gameManager.newRoundSetting(bettingMessageRequest.getCurrentRound());
@@ -264,24 +271,79 @@ public class GameController {
 				2. 승/무/패 여부
 				3. 포인트 변동
 				 */
-				broadcastAllConnected(gameRoomTitle, ResponseEntity.ok(
-					ApiResponse.messageSuccess(
-						MessageBase.S200_GAME_ROOM_MATCH_END,
-						GameEndMessageResponse.create(gameManager.getMemberManagerMap().values())
-					)
-				));
+
+				GameRoom gameRoom = gameRoomRepository.findByTitleAndState(gameRoomTitle);
+				if (gameRoom.getType().equals("경쟁")) {
+					// 1. Point 저장
+					for (MemberManager manager : memberManagers) {
+						pointService.saveGameResult(manager.getMemberInfo().getNickname(),
+							manager.getMemberGameInfo().getHaveCoin());
+					}
+					// 2. GameResult 저장
+					saveGameResult(memberManagers, gameRoom);
+					// 3. 게임방 상태 변경
+					gameRoom.updateGameRoomState("종료");
+					gameRoomRepository.save(gameRoom);
+
+					// 3. 게임종료 메시지 출력
+					broadcastAllConnected(gameRoomTitle, ResponseEntity.ok(
+						ApiResponse.messageSuccess(
+							MessageBase.S200_GAME_ROOM_RANK_MATCH_END,
+							RankGameEndMessageResponse.create(memberManagers)
+						)
+					));
+
+					// 4. GameManager 제거
+					gameManagerMap.remove(gameRoomTitle);
+				} else if (gameRoom.getType().equals("친선")) {
+					// 1. GameResult 저장
+					saveGameResult(memberManagers, gameRoom);
+
+					// 2. 게임방 상태 변경
+					gameRoom.updateGameRoomState("대기");
+					gameRoomRepository.save(gameRoom);
+
+					// 3. 게임종료 메시지 출력
+					broadcastAllConnected(gameRoomTitle, ResponseEntity.ok(
+							ApiResponse.messageSuccess(
+								MessageBase.S200_GAME_ROOM_NORMAL_MATCH_END,
+								NormalGameEndMessageResponse.create(memberManagers)
+							)
+						)
+					);
+
+					// 4. GameManager 상태 변경
+					gameManager.setGameState("대기");
+				}
 				return;
 			}
-			// 새로운 라운드 시작
-			// 메시지 내려주기
+			// 새로운 라운드 시작 메시지 출력
 			deliveryAnotherMessage(gameRoomTitle, gameManager);
+			log.info("새로운 라운드가 시작되었습니다.");
 		} else {
 			// 다음 차례로 넘어간다.
 			gameManager.nextTurn();
+			log.info("베팅 차례가 넘어갑니다.");
 			// 각각 다른 메시지 내려주기
 			deliveryAnotherMessage(gameRoomTitle, gameManager);
+			log.info("새로운 배팅 차례입니다.");
 		}
 		log.info("베팅 로직 완료");
+	}
+
+	private void saveGameResult(Collection<MemberManager> memberManagers, GameRoom gameRoom) {
+		gameResultService.saveGameResult(
+			memberManagers.stream()
+				.map(memberManager1 -> memberManager1.getMemberInfo().getNickname())
+				.collect(
+					Collectors.toList()),
+			memberManagers.stream()
+				.map(memberManager1 -> memberManager1.getMemberGameInfo().getHaveCoin())
+				.collect(
+					Collectors.toList()),
+			gameRoom.getId(),
+			gameRoom.getType()
+		);
 	}
 
 	private void deliveryAnotherMessage(String gameRoomTitle, GameManager gameManager) {

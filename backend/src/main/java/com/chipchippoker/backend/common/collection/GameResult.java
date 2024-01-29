@@ -25,10 +25,10 @@ public class GameResult {
 	private LocalDateTime updatedAt;
 	private List<String> memberList;
 	private List<Integer> resultCoinList;
-	private Integer gameRoomId;
+	private Long gameRoomId;
 	private String gameMode;
 
-	public static GameResult newGameResult(List<String> memberList, List<Integer> resultCoinList, Integer gameRoomId,
+	public static GameResult newGameResult(List<String> memberList, List<Integer> resultCoinList, Long gameRoomId,
 		String gameMode) {
 		return GameResult.builder()
 			.memberList(memberList)
