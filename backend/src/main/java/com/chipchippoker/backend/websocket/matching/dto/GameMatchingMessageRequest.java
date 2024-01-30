@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompleteMatchingMessageRequest {
+public class GameMatchingMessageRequest {
 	private Integer countOfPeople;
 }
