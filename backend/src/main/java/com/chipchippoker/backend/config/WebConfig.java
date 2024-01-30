@@ -24,7 +24,8 @@ public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
-			.allowedOrigins("http://localhost:5173")
+			.allowedOrigins("http://localhost:5173", "http://i10a804.p.ssafy.io",
+				"https://i10a804.p.ssafy.io")
 			.allowedMethods("*")
 			.allowedHeaders("access-token", "refresh-token", "Content-Type", "kakao-access-token")
 			.allowCredentials(true)
