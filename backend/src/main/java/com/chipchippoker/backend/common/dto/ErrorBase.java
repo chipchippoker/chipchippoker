@@ -48,6 +48,7 @@ public enum ErrorBase {
 	E403_FORBIDDEN_START_NOT_GAME_ROOM_MANAGER(FORBIDDEN, false, "FB006", "방장만 게임 시작을 요청할 수 있습니다."),
 	E403_ALREADY_FRIEND(FORBIDDEN, false, "FB007", "이미 친구입니다."),
 	E403_ALREADY_SENT_FRIEND_REQUEST(FORBIDDEN, false, "FB008", "대기 중인 친구 신청 요청입니다."),
+	E403_ALREADY_FULL_SPECTATE_ROOM(FORBIDDEN, false, "FB009", "인원 수가 초과했습니다."),
 
 	/**
 	 * 404 Not Found (존재하지 않는 리소스)
