@@ -14,8 +14,6 @@ import com.chipchippoker.backend.common.dto.ErrorBase;
 import com.chipchippoker.backend.common.entity.GameRoom;
 import com.chipchippoker.backend.common.entity.Member;
 import com.chipchippoker.backend.common.exception.NotFoundException;
-import com.chipchippoker.backend.websocket.matching.controller.GameMatchingManager;
-import com.chipchippoker.backend.websocket.matching.dto.CompleteMatchingMessageRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 public class MatchingServiceImpl implements MatchingService {
 	private final MemberRepository memberRepository;
 	private final GameRoomRepository gameRoomRepository;
-	private final GameMatchingManager gameMatchingManager;
 
 	@Override
 	public StartFriendlyMatchingResponse startFriendlyMatching(Long id, Integer totalParticipantCnt) {
@@ -59,8 +56,6 @@ public class MatchingServiceImpl implements MatchingService {
 
 			if (gameRoom.getMembers().size() == totalParticipantCnt - 1) { // 인원 수가 모두 충족되었다면
 				gameRoom.updateGameRoomState("진행");
-				gameMatchingManager.completeMatching(gameRoom.getTitle(),
-					new CompleteMatchingMessageRequest(gameRoom.getTotalParticipantCnt()), member.getNickname());
 			}
 		} else { // 입장 가능한 게임방이 없다면
 			// 새로운 경쟁전 게임방 생성
