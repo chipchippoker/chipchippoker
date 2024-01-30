@@ -7,7 +7,7 @@ const KAKAO_JAVASCRIPT_KEY = import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY
 const REDIRECT_URI = 'http://localhost:5173/login'
 
 export const useUserStore = defineStore('user', () => {
-  const BASE_API_URL = 'https://i10a804.p.ssafy.io/api'
+  const BASE_API_URL = 'http://i10a804.p.ssafy.io:8082/api'
   const USER_API = `${BASE_API_URL}/auth`
   const MEMBERS_API = `${BASE_API_URL}/members`
 

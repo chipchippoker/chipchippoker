@@ -15,10 +15,10 @@ export const useGameStore = defineStore('game', () => {
   const matchStore = useMatchStore()
   const router = useRouter()
 
-  const url = "wss://i10a804.p.ssafy.io/chipchippoker"
+  const url = `ws://i10a804.p.ssafy.io:8082/chipchippoker`
 
   // const sock = new SockJS("wss://i10a804.p.ssafy.io/chipchippoker")
-  const stompClient = webstomp.client("wss://i10a804.p.ssafy.io/chipchippoker")
+  const stompClient = webstomp.client(url)
 
   // 게임 정보
   const gameRoomTitle = ref('')
@@ -69,25 +69,7 @@ export const useGameStore = defineStore('game', () => {
 
         case "MS007": // 게임 진행
           // 게임 데이터 저장 -> 5초건 텀 두고 데이터 받기..
-          setTimeout(()=>{
-            roundState.value = receiveMessage.value?.data?.roundState
-            currentRound.value = receiveMessage.value?.data?.currentRound
-            yourTurn.value = receiveMessage.value?.data?.yourTurn
 
-            for (let i = 0; i < player.value.length; i++) {
-              // 플레이어 순서에 맞게 데이터 넣기
-              const item = receiveMessage.value?.data?.gameMemberInfos.filter((p)=>
-              {p.nickname === player.value[i]})
-              gameMemberInfos.value.push(item)
-            }
-
-            
-            console.log('게임시작');
-            console.log("roundState", roundState.value);
-            console.log("currentRound", currentRound.value);
-            console.log("yourTurn", yourTurn.value);
-            console.log("gameMemberInfos", gameMemberInfos.value);
-          },5000)
           break
 
         case "ME002": // 모두 준비상태가 아닙니다
@@ -253,8 +235,8 @@ export const useGameStore = defineStore('game', () => {
   }
 
   // 게임 준비 SEND
-  const sendReady = function (gameRoomTitle) {
-    const message = { 'isReady': true }
+  const sendReady = function (gameRoomTitle, isReady) {
+    const message = { isReady }
     stompClient.send(`/to/game/ready/${gameRoomTitle}`, JSON.stringify(message), { 'access-token': userStore.accessToken })
   }
 
@@ -275,15 +257,33 @@ export const useGameStore = defineStore('game', () => {
 
   // 게임 시작 RECEIVE
   const receiveStartGame = function (data) {
-    console.log('게임 시작 receive')
-    roundState.value = data.roundState
-    currentRound.value = data.currentRound
-    yourTurn.value = data.yourTurn
-    gameMemberInfos.value = data.gameMemberInfos
-    router.push({
-      name:'play',
-      params: { roomId: roomStore.roomId }
-    })    
+    if (currentRound.value === 0) {
+      router.push({
+        name:'play',
+        params: { roomId: roomStore.roomId }
+      }) 
+    }
+
+    setTimeout(()=>{
+      roundState.value = receiveMessage.value?.data?.roundState
+      currentRound.value = receiveMessage.value?.data?.currentRound
+      yourTurn.value = receiveMessage.value?.data?.yourTurn
+
+      for (let i = 0; i < player.value.length; i++) {
+        // 플레이어 순서에 맞게 데이터 넣기
+        const item = receiveMessage.value?.data?.gameMemberInfos.filter((p)=>
+        {p.nickname === player.value[i]})
+        gameMemberInfos.value.push(item)
+      }
+
+      console.log('게임시작');
+      console.log("roundState", roundState.value);
+      console.log("currentRound", currentRound.value);
+      console.log("yourTurn", yourTurn.value);
+      console.log("gameMemberInfos", gameMemberInfos.value);
+    },5000)
+
+   
   }
 
   // 배팅
@@ -330,7 +330,19 @@ export const useGameStore = defineStore('game', () => {
   }
 
   return {
+    // State
     rooms: ref([]),
+    stompClient,
+    roundState,
+    currentRound,
+    yourTurn,
+    gameMemberInfos,
+    player,
+
+
+
+    // Action
+
     receiveMessage,
     sendMatching, receiveMatching,
     sendCreateRoom, receiveCreateRoom,
@@ -341,10 +353,6 @@ export const useGameStore = defineStore('game', () => {
     bet,
     kickUser,
     subscribeHandler,
-    stompClient,
-    roundState,
-    currentRound,
-    yourTurn,
-    gameMemberInfos,
+
   }
 }, { persist: true }) 
