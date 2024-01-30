@@ -33,10 +33,6 @@
 <script setup>
 import { useGameStore } from '@/stores/game';
 import { ref, onMounted, computed, } from 'vue';
-const props = defineProps({
-  session: Object,
-})
-console.log(props.session)
 
 const gameStore = useGameStore()
 
