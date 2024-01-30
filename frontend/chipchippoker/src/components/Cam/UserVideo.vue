@@ -1,9 +1,23 @@
 <template>
   <div class="position-relative" v-if="streamManager" @mouseover="showControls = true" @mouseleave="showControls = false">
-    <ov-video :stream-manager="streamManager"/>
+    <ov-video :stream-manager="streamManager" @sendEmotion="sendEmotion"/>
     <!-- {{ clientData }}이게 내 현재 이름임 이거 지우면 실행 안됨, 안보이게 투명하게 해야하나? -->
     <div><p class="opacity-0">{{ clientData }}</p></div>
     <p style="color: white;">{{ clientData }}</p>
+    
+
+    <!-- 감정 이모지 -->
+    <div class="position-absolute top-0 start-0 p-3 text-white">
+      <i v-if="maxEmotion == 'angry'" class="fa-solid fa-face-angry fa-2xl" style="color: #ff0000;"></i>
+      <i v-if="maxEmotion == 'disgusted'" class="fa-solid fa-face-dizzy fa-2xl" style="color: #009e37;"></i>
+      <i v-if="maxEmotion == 'fearful'" class="fa-solid fa-face-flushed fa-2xl" style="color: #74C0FC;"></i>
+      <i v-if="maxEmotion == 'happy'" class="fa-solid fa-face-laugh-squint fa-2xl" style="color: #FFD43B;"></i>
+      <i v-if="maxEmotion == 'neutral'" class="fa-solid fa-face-meh fa-2xl" style="color: #FFD43B;"></i>
+      <i v-if="maxEmotion == 'sad'" class="fa-solid fa-face-sad-tear fa-2xl" style="color: #FFD43B;"></i>
+      <i v-if="maxEmotion == 'surprised'" class="fa-solid fa-face-surprise fa-2xl" style="color: #74C0FC;"></i>
+    </div>
+
+
     <div v-if="showControls" class="position-absolute top-0 end-0 d-flex flex-column">
       <button id="camera-activate" @click="handleCameraBtn()">Video Off</button>
       <button id="mute-activate" @click="handleMuteBtn()">Sound Off</button>
@@ -32,6 +46,12 @@
     roomManagerNickname:String,
   })
 
+  // emit으로 올라온 감정 추출
+  const maxEmotion = ref(null)
+  const sendEmotion = function (...args){
+    maxEmotion.value = args[0]
+    console.log(maxEmotion.value);
+  }
   const showControls = ref(false);
 
 
