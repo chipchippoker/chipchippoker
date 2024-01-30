@@ -22,9 +22,9 @@
         <!-- 모든 캠 -->
         <div v-if="roomStore.isWatcher===false" id="video-container">
           <div class="flex-container row g-1 p-0">
+            <!-- 내 캠 -->
             <div class="col-6">
               <div style="width: 400px; height: 300px;">
-                <!-- 내 캠 -->
                 <UserVideo 
                 :stream-manager="publisherComputed" 
                 :is-manager="isManager"
@@ -32,12 +32,12 @@
                 />
               </div>
             </div>
+            <!-- 다른 사람 캠 -->
             <div
               class="col-6 mb-5"
-              v-for="sub in playersComputed"
-              :key="sub.stream.connection.connectionId">
+              v-for="(sub, index) in playersComputed"
+              :key="index">
               <div style="width: 400px; height: 300px;">
-                <!-- 다른 사람 캠 -->
                 <UserVideo
                   :stream-manager="sub"
                   :is-manager="isManager"
@@ -96,13 +96,18 @@
             </form>
           </div>
         </div>
-          <!-- 여러 버튼들 -->
+          <!-- 시작(준비), 초대, 나가기 버튼 -->
           <div class="d-flex flex-column justify-content-center align-items-center box-btns m-0 pb-4 mt-5">
             <div>
-              <button v-if="myNickname===roomManagerNickname" @click="startGame()" class="custom-btn btn-1 m-1"><span>시작해?</span><span>시작</span></button>
-              <button v-else-if="myNickname!==roomManagerNickname && isReady===false" @click="readyGame()" class="custom-btn btn-1 m-1"><span>준비해?</span><span>준비</span></button>
-              <button v-else-if="myNickname!==roomManagerNickname && isReady===true" @click="readyGame()" class="custom-btn btn-1 m-1"><span>준비취소</span><span>준비완료</span></button>
+              <!-- 시작 -->
+              <button v-if="myNickname === roomManagerNickname" @click="startGame()" class="custom-btn btn-1 m-1"><span>시작해?</span><span>시작</span></button>
+              <!-- 준비 -->
+              <button v-else-if="myNickname !== roomManagerNickname && isReady === false" @click="readyGame()" class="custom-btn btn-1 m-1"><span>준비해?</span><span>준비</span></button>
+              <!-- 준비 취소 -->
+              <button v-else-if="myNickname !== roomManagerNickname && isReady === true" @click="readyGame()" class="custom-btn btn-1 m-1"><span>준비취소</span><span>준비완료</span></button>
+              <!-- 초대 -->
               <button class="custom-btn btn-2 m-1"><span>초대해?</span><span>초대</span></button>
+              <!-- 나가기 -->
               <button class="custom-btn btn-3 m-1" data-bs-toggle="modal" data-bs-target="#roomOutModal"><span>나가?</span><span>나가기</span></button>
             </div>
           </div>
@@ -197,6 +202,7 @@ const startGame = function () {
 
 // 게임 준비
 const readyGame = function () {
+  // 해당 플레이어 준비 상태 반전
   isReady.value = !isReady.value
   gameStore.sendReady(title.value, isReady.value)
 }

@@ -36,6 +36,10 @@
 <script setup>
   import { ref, onMounted, computed, } from 'vue';
   import OvVideo from '@/components/Cam/OvVideo.vue';
+  import { useGameStore } from '@/stores/game';
+
+  const gameStore = useGameStore()
+
   ///////////////////카메라 및 오디오 설정을 위한 부분임
   const muted = ref(false)       // 기본은 음소거 비활성화
   const camerOff = ref(false)    // 기본 카메라 활성화
@@ -63,6 +67,15 @@
   });
   // console.log(clientData)
   
+  const isReady = computed(() => {
+    console.log(gameStore.player);
+    console.log(clientData);
+    const memberInfo = gameStore.player.find(info => info.nickname === clientData.value);
+    console.log(memberInfo);
+    console.log(memberInfo.isReady);
+    return memberInfo ? memberInfo.isReady : false;
+  })
+
   const emit = defineEmits(['clientData', 'forceDisconnect'])
   
   function getConnectionData() {
@@ -118,4 +131,10 @@
   }
   
 </script>
+
+<style scope>
+.ready-border {
+  border: 3px solid #ffcc00; /* 두껍고 밝은 색상 테두리 */
+}
+</style>
   

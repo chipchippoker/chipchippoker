@@ -4,7 +4,7 @@
     @mouseover="soundStore.hoverSound()"
      type="button" class="d-flex m-2 rounded-2 p-1 overflow-hidden" 
     :class="[{'myrank':item?.nickname===userStore.myNickname},{'otherrank':item?.nickname!=userStore.myNickname}]"
-    @click="gotoProfile(item?.nickname)">
+    @click="goProfile(item?.nickname)">
 
     <!-- {{ item }} -->
 
@@ -34,10 +34,10 @@ const soundStore = useSoundStore()
 const router = useRouter()
 defineProps({item:Object})
 
-const gotoProfile = function(nickname){
+const goProfile = function(nickname){
     console.log(`${nickname} 페이지로 이동`)
     
-    router.push({name:'profile',query:{nickname}})
+    router.push({name:'profile',params:{nickname}})
 }
 
 </script>
