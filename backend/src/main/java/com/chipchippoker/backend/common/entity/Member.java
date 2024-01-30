@@ -112,4 +112,12 @@ public class Member extends BaseEntity {
 		this.kakaoLinkState = Boolean.TRUE;
 		this.kakaoSocialId = socialId;
 	}
+
+	public void enterSpectateRoom(SpectateRoom spectateRoom) {
+		this.spectateRoom = spectateRoom;
+	}
+
+	public void leaveSpectateRoom() {
+		this.spectateRoom = null;
+	}
 }
