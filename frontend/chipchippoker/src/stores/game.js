@@ -34,12 +34,19 @@ export const useGameStore = defineStore('game', () => {
   const isMatch = ref(false)
 
 
-  // 게임 관련 데이터 -> 라운드상태, 최근라운드, 턴, 게임 멤버 정보
+  // 게임 관련 데이터 -> 라운드상태, 최근라운드, 턴, 게임 멤버 정보, 배팅 정보
   const roundState = ref(false)
   const currentRound = ref(0)
   const yourTurn = ref(null)
   const gameMemberInfos = ref([])
+  const bettingCoin = ref(0)
   console.log(stompClient.ws);
+
+  // 배팅 잘못했을 때 모달
+  const notMatchRound = ref(false)
+  const notYourTurn = ref(false)
+  const cannotBat = ref(false)
+
   // stompClient.ws.onclose = event => {
   //   alert("WebSocket connection closed");
   //   console.log("WebSocket connection closed");
@@ -66,6 +73,21 @@ export const useGameStore = defineStore('game', () => {
       console.log(receiveMessage.value)
 
       switch (receiveMessage.value?.code) {
+
+        case "MS004":
+          console.log('현재 진행 중인 라운드와 일치하지 않습니다.')
+          notMatchRound.value = true
+          break
+
+        case "MS005":
+          console.log('본인의 차례가 아닙니다.')
+          notYourTurn.value = true
+          break
+
+        case "MS006":
+          console.log('배팅이 불가능합니다.')
+          cannotBat.value = true
+          break
 
         case "MS007": // 게임 진행
           // 게임 데이터 저장 -> 5초건 텀 두고 데이터 받기..
@@ -287,7 +309,7 @@ export const useGameStore = defineStore('game', () => {
   }
 
   // 배팅
-  const bet = function (gameRoomTitle,action, bettingCoin ) {
+  const bet = function (gameRoomTitle, action, bettingCoin ) {
     const message = {
       currentRound:currentRound.value,
       action: action,
@@ -353,6 +375,15 @@ export const useGameStore = defineStore('game', () => {
     bet,
     kickUser,
     subscribeHandler,
-
+    stompClient,
+    roundState,
+    currentRound,
+    yourTurn,
+    gameMemberInfos,
+    bettingCoin,
+    // 배팅 시 오류 메세지
+    notMatchRound,
+    notYourTurn,
+    cannotBat,
   }
 }, { persist: true }) 
