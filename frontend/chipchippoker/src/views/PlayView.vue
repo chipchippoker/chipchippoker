@@ -6,16 +6,18 @@
       <div v-if="gameStore.currentRound === 0" class="btn-outline-weightyellow py-2 px-4"><p class="fw-bold fs-3 m-0">대기중</p></div>
       <div v-else class="btn-outline-weightyellow py-2 px-4"><p class="fw-bold fs-3 m-0">Round {{ gameStore.currentRound }}</p></div>
 
-      <div class="d-flex align-items-center position-absolute top-50 start-100 translate-middle me-3">
-        <h3 class="text-white">{{ roomTitle }}</h3>
-        <!-- Watchers List -->
-        <div v-if="showWatchersList" class="text-white">
-          <ul>
-            <li v-for="watcher in watchersNickname" :key="watcher">{{ watcher }}</li>
-          </ul>
+      <div class="position-absolute top-50 end-0 translate-middle-y">
+        <div class="d-flex align-items-center">
+          <h3 class="text-white me-5 mb-0">{{ roomTitle }}</h3>
+          <!-- Watchers List -->
+          <div v-if="showWatchersList" class="text-white">
+            <ul>
+              <li v-for="watcher in watchersNickname" :key="watcher">{{ watcher }}</li>
+            </ul>
+          </div>
+          <font-awesome-icon type="button" @click="toggleWatchersList" :icon="['fas', 'eye']" size="lg" style="color: #ffffff;" />
+          <div class="text-white ms-3" style="width: 40px;">{{ watchersCount }}명</div>
         </div>
-        <font-awesome-icon type="button" @click="toggleWatchersList" :icon="['fas', 'eye']" size="lg" style="color: #ffffff;" />
-        <div class="text-white ms-3" style="width: 40px;">{{ watchersCount }}명</div>
       </div>
     </div>
     <!-- players -->
@@ -62,7 +64,6 @@
   const roomStore = useRoomStore()
   const route = useRoute()
   const gameStore = useGameStore()
-
   // Join form
   const roomId = ref('')
   const myNickname = ref('')

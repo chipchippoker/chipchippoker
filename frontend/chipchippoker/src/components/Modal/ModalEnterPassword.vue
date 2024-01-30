@@ -49,6 +49,7 @@ const enterRoomPrivate = function () {
         roomStore.enterRoomPrivate(payload)
     } else if (props.userType === '관전자' && roomStore.state === '대기') {
         roomStore.isWatcher = true
+        roomStore.watchersNickname.push(userStore.myNickname)
         roomStore.enterWatchPrivate(payload)
     } else {
         roomStore.isWatcher = true

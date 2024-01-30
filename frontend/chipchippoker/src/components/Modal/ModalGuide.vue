@@ -45,11 +45,11 @@
 </template>
 
 <script setup>
-import guide1 from './Guide/guide1.vue';
-import guide2 from './Guide/guide2.vue';
-import guide3 from './Guide/guide3.vue';
-import guide4 from './Guide/guide4.vue';
-import guide5 from './Guide/guide5.vue';
+import guide1 from '@/components/Modal/Guide/guide1.vue';
+import guide2 from '@/components/Modal/Guide/guide2.vue';
+import guide3 from '@/components/Modal/Guide/guide3.vue';
+import guide4 from '@/components/Modal/Guide/guide4.vue';
+import guide5 from '@/components/Modal/Guide/guide5.vue';
 
 </script>
 
