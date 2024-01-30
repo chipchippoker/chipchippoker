@@ -98,7 +98,6 @@
           <div class="text-white align-self-center ">{{ gameStore?.gameMemberInfos[0]?.nickname }} / 
           <!-- 보유코인 연결 -->
             <div v-if="gameStore.player.length > 0">보유코인: {{gameStore?.gameMemberInfos[0]?.havingCoin}}</div>
-
           </div>
           <div class="d-flex m-2 mt-0 h-100">
             <div>
@@ -117,8 +116,6 @@
           <div class="text-white align-self-center " >{{ gameStore?.gameMemberInfos[1]?.nickname }} / 
           <!-- 보유코인 연결 -->
             <div v-if="gameStore.player.length > 1">보유코인: {{gameStore?.gameMemberInfos[1]?.havingCoin}}</div>
-          
-
           </div>
           <div class="d-flex flex-row-reverse h-100 m-2 mt-0">
             <div>
@@ -138,8 +135,6 @@
           <div class="text-white align-self-center ">{{ gameStore?.gameMemberInfos[2]?.nickname }} / 
           <!-- 보유코인 연결 -->
             <div v-if="gameStore.player.length > 2">보유코인: {{gameStore?.gameMemberInfos[2]?.havingCoin}}</div>
-          
-
           </div>
           <div class="d-flex m-2 mt-0 h-100">
             <div>
@@ -227,7 +222,6 @@
 
   const gameStore = useGameStore()
   const roomStore = useRoomStore()
-
   // 앞장 카드 가져오기
   const getCardUrl = function (setnum, cardnum) {
       return new URL(`/src/assets/cards/set${setnum}/card${cardnum}.png`, import.meta.url).href;
@@ -357,7 +351,7 @@
         }      
       }
       // 관전자 이름도 삭제
-      function getConnectionData() {
+      function getConnectionData() {   
         const { connection } = stream;
         return JSON.parse(connection.data);
       }

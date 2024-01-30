@@ -76,6 +76,7 @@ const totalParticipantCnt = ref(2)
 
 // 방 생성하기
 const createRoom = function () {
+    roomStore.isWatcher = false
   const payload = {
       title: title.value,
       isPrivate: isPrivate.value,

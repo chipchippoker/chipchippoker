@@ -210,7 +210,6 @@ export const useGameStore = defineStore('game', () => {
       })
     }
   }
-
   // 게임방 입장 SEND
   const sendJoinRoom = function(gameRoomTitle){
     isMatch.value = false

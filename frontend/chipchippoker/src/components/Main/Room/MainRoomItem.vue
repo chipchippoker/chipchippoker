@@ -49,8 +49,10 @@
 import ModalEnterPassword from '@/components/Modal/ModalEnterPassword.vue';
 import ModalIsPlayingRoomVue from '../../Modal/ModalIsPlayingRoom.vue';
 import { useRoomStore } from '@/stores/room';
+import { useUserStore } from '@/stores/user'
 import { ref } from "vue";
 
+const userStore = useUserStore()
 const roomStore = useRoomStore()
 
 const props = defineProps({
@@ -69,9 +71,12 @@ const enterRoomPublic = function (title, type) {
         roomStore.enterRoomPublic(payload)
     } else if (type === '관전자' && props.item.state === '진행') {
         roomStore.isWatcher = true
+
+        roomStore.watchersNickname.push(userStore.myNickname)
         roomStore.enterWatchPublicProgress(payload)
     } else {
         roomStore.isWatcher = true
+        roomStore.watchersNickname.push(userStore.myNickname)
         roomStore.enterWatchPublic(payload)
     }
 }

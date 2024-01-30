@@ -87,6 +87,7 @@ const roomStore = useRoomStore()
 const router = useRouter()
 const gameType = ref('경쟁')
 const changeType = function(type){
+    roomStore.isWatcher = false
     gameType.value = type
 }
 
