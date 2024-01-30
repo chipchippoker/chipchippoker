@@ -16,13 +16,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompleteMatchingMessageResponse {
-	private Integer countOfPeople;
+public class GameMatchingMessageResponse {
 	private List<MemberInfo> memberInfos = new ArrayList<>();
 
-	public static CompleteMatchingMessageResponse create(GameManager gameManager) {
-		return CompleteMatchingMessageResponse.builder()
-			.countOfPeople(gameManager.getCountOfPeople())
+	public static GameMatchingMessageResponse create(GameManager gameManager) {
+		return GameMatchingMessageResponse.builder()
 			.memberInfos(gameManager.getMemberManagerMap().values().stream().map(MemberManager::getMemberInfo).toList())
 			.build();
 	}
