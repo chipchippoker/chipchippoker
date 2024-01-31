@@ -5,8 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClient;
 
 import com.chipchippoker.backend.api.friend.repository.FriendRepository;
 import com.chipchippoker.backend.api.friendrequest.repository.FriendRequestRepository;
@@ -38,6 +43,9 @@ public class MemberServiceImpl implements MemberService {
 	private final FriendRepository friendRepository;
 	private final FriendRequestRepository friendRequestRepository;
 	private final JwtUtil jwtUtil;
+
+	@Value("${kakao.app_admin_key}")
+	private String kakaoAppAdminKey;
 
 	@Override
 	public ProfilePageResponse getProfilePage(Long id, String nickname) {
@@ -137,5 +145,30 @@ public class MemberServiceImpl implements MemberService {
 		Member member = memberRepository.findById(id)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
 		member.updateRefreshToken(null);
+	}
+
+	@Override
+	public void withdraw(Long id) {
+		Member member = memberRepository.findById(id)
+			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
+
+		// 카카오 연동한 경우, 연동 해제
+		if (member.getKakaoLinkState()) {
+			RestClient restClient = RestClient.create();
+
+			MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
+			formData.add("target_id_type", "user_id");
+			formData.add("target_id", member.getKakaoSocialId());
+
+			restClient.post()
+				.uri("https://kapi.kakao.com/v1/user/unlink")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.header("Authorization", kakaoAppAdminKey)
+				.body(formData)
+				.retrieve();
+		}
+
+		// 회원 테이블에서 해당 회원 삭제
+		memberRepository.deleteById(id);
 	}
 }

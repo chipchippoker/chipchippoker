@@ -94,5 +94,13 @@ public class MemberController {
 		memberService.logout(id);
 		return ResponseEntity.ok(ApiResponse.success());
 	}
+
+	@Operation(summary = "회원 탈퇴")
+	@PostMapping("/withdraw")
+	public ResponseEntity<ApiResponse<Void>> withdraw() {
+		Long id = (Long)httpServletRequest.getAttribute("id");
+		memberService.withdraw(id);
+		return ResponseEntity.ok(ApiResponse.success());
+	}
 }
 

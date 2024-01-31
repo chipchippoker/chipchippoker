@@ -61,7 +61,10 @@ public class Member extends BaseEntity {
 	private SpectateRoom spectateRoom;
 
 	@OneToMany(mappedBy = "memberA", cascade = CascadeType.ALL)
-	private List<Friend> friends = new ArrayList<>();
+	private List<Friend> friendsA = new ArrayList<>();
+
+	@OneToMany(mappedBy = "memberB", cascade = CascadeType.ALL)
+	private List<Friend> friendsB = new ArrayList<>();
 
 	@OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
 	private Point point;
