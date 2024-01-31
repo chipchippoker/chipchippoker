@@ -26,6 +26,7 @@ import com.chipchippoker.backend.common.entity.Member;
 import com.chipchippoker.backend.common.entity.MemberGameRoomBlackList;
 import com.chipchippoker.backend.common.entity.SpectateRoom;
 import com.chipchippoker.backend.common.exception.DuplicateException;
+import com.chipchippoker.backend.common.exception.ForbiddenException;
 import com.chipchippoker.backend.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -77,6 +78,10 @@ public class GameRoomServiceImpl implements GameRoomService {
 		GameRoom gameRoom = gameRoomRepository.findByTitleAndState(enterGameRoomRequest.getTitle());
 		GameRoomServiceHelper.isExistGameRoom(gameRoom); // 게임방이 존재하지 않는 경우
 
+		// 게임방에 이미 들어가 있는 사용자인 경우
+		if (member.getGameRoom() != null) {
+			throw new ForbiddenException(ErrorBase.E403_FORBIDDEN_ALREADY_IN_GAME_ROOM);
+		}
 		// 블랙리스트 사용자인 경우
 		GameRoomBlackList gameRoomBlackList = gameRoomBlackListRepository.findByGameRoomId(gameRoom.getId())
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS));

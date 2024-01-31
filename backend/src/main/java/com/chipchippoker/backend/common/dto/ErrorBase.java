@@ -49,6 +49,7 @@ public enum ErrorBase {
 	E403_ALREADY_FRIEND(FORBIDDEN, false, "FB007", "이미 친구입니다."),
 	E403_ALREADY_SENT_FRIEND_REQUEST(FORBIDDEN, false, "FB008", "대기 중인 친구 신청 요청입니다."),
 	E403_ALREADY_FULL_SPECTATE_ROOM(FORBIDDEN, false, "FB009", "인원 수가 초과했습니다."),
+	E403_FORBIDDEN_ALREADY_IN_GAME_ROOM(FORBIDDEN, false, "FB010", "이미 특정 방에 입장한 상태입니다."),
 
 	/**
 	 * 404 Not Found (존재하지 않는 리소스)
