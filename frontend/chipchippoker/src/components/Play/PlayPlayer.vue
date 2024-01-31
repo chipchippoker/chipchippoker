@@ -26,7 +26,7 @@
           </div>
         </div>
         <div v-if="playersComputed.length > 0" class="position-absolute top-0 end-0 d-flex flex-column h-50" id="player2" style="width: 500px;">
-          <div class="text-white align-self-center " v-if="subscribersComputed.length > 0" >{{ player1 }} / 
+          <div class="text-white align-self-center ">{{ player1 }} / 
           <!-- 보유코인 연결 -->
             <div v-if="gameStore.player.length > 1">보유코인: {{gameStore?.gameMemberInfos[1]?.havingCoin}}</div>
           
@@ -92,6 +92,7 @@
           </div>
         </div>
       </div>
+
       <!-- 관전 중일 때 -->
       <div v-else>
         <div v-if="playersComputed.length > 0" class="position-absolute top-0 start-0 d-flex flex-column h-50" id="player1" style="width: 500px;">
@@ -172,13 +173,11 @@
         </div>
       </div>
       <!-- 배팅보드 -->
-      <PlayBattingVue 
-      :session="session"
-      />
+      <PlayBattingVue />
       <!-- 남은 시간, 총 배팅 코인 -->
       <div class="position-absolute top-0 start-50 translate-middle mt-4 d-flex flex-column align-items-center">
-        <div class="text-white fs-3 fw-bold">12 초</div>
-        <div class="text-white fw-bold">총 배팅: 21</div>
+        <div class="text-white fs-3 fw-bold">{{ time }} 초</div>
+        <div class="text-white fw-bold">총 배팅: {{ totalBettingCoin }}</div>
       </div>
     </div>
     <!-- 나가기 -->
@@ -213,15 +212,17 @@
 <script setup>
   import PlayBattingVue from "@/components/Play/PlayBatting.vue";
   import UserVideoVue from "../Cam/UserVideo.vue";
-  import { ref, defineProps, computed, onMounted } from 'vue';
+  import { ref, defineProps, computed, onMounted, watch } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import axios from 'axios'
   import { OpenVidu } from "openvidu-browser";
   import { useGameStore } from "@/stores/game";
   import { useRoomStore } from "@/stores/room";
+  import { useOpenviduStore } from "@/stores/openvidu";
 
   const gameStore = useGameStore()
   const roomStore = useRoomStore()
+  const openviduStore = useOpenviduStore()
   // 앞장 카드 가져오기
   const getCardUrl = function (setnum, cardnum) {
       return new URL(`/src/assets/cards/set${setnum}/card${cardnum}.png`, import.meta.url).href;
@@ -243,23 +244,10 @@
   roomId.value = props.roomId
   myNickname.value = props.myNickname
 
-  axios.defaults.headers.post["Content-Type"] = "application/json";
-
-  const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/';
-
-  // OpenVidu objects
-  const OV = ref(undefined)
-  const session = ref(undefined)
-  let mainStreamManager = ref(undefined)
-  const publisher = ref(undefined)
-  const subscribers = ref([])
-
   
   ////다시그려내기 위해 computed 작성
-  const mainStreamManagerComputed = computed(() => mainStreamManager.value);
-  const publisherComputed = computed(() => publisher.value);
-  // const subscribersComputed = computed(() => subscribers);
-  const subscribersComputed = computed(() => subscribers.value);
+  const publisherComputed = computed(() => openviduStore.publisher);
+  const subscribersComputed = computed(() => openviduStore.subscribers);
   
   // 자신을 제외한 다른 player들
   const player1 = ref(null)
@@ -268,7 +256,63 @@
 
   // 플레이어 배열 초기화
   gameStore.player = [myNickname.value]
+
+
+  // 시간 15초에서 줄어들기
+  const yourTurn = ref(null)
+  const time = ref(15)
+
+  const handleYourTurnChange = () => {
+    yourTurn.value = gameStore.yourTurn; // yourTurn 업데이트
+
+    if (yourTurn.value !== null) {
+      // yourTurn 값이 존재하면 타이머 시작
+      startCountdownTimer();
+    } else {
+      // yourTurn 값이 null이면 타이머 중지
+      stopCountdownTimer();
+    }
+  };
+
+  // 카운트다운 타이머 변수
+  let countdownTimer;
+
+  // 타이머 시작 함수
+  const startCountdownTimer = function()  {
+    time.value = 15; // 초기 남은 시간 15초
+
+    // 1초마다 실행되는 타이머 함수
+    countdownTimer = setInterval(() => {
+      time.value--;
+
+      if (time.value >= 0) {
+        // 남은 시간이 0보다 크면 업데이트
+        console.log('남은 시간:', time.value);
+      } else {
+        // 남은 시간이 0이면 "die"로 응답 보내고 타이머 중지
+        console.log('남은 시간: 0, die로 응답 보내기');
+        gameStore.bet(roomStore.title,"DIE", gameStore.bettingCoin)
+        stopCountdownTimer();
+        // 여기에서 "die"로 응답 보내는 로직 추가
+      }
+    }, 1000);
+  };
+
+  // 타이머 중지 함수
+  const stopCountdownTimer = () => {
+    clearInterval(countdownTimer);
+  };
+
+  // yourTurn 값이 변경될 때 호출되는 함수 등록
+  watch(() =>gameStore.yourTurn, handleYourTurnChange)
+
+
+  // 합
+  const totalBettingCoin = computed(() => {
+    return gameStore.gameMemberInfos.reduce((total, member) => total + member.bettingCoin, 0);
+  });
   
+  // 플레이어
   const fPlayer1 = function(clientData) {
     player1.value = clientData
     // 게임 store 에서 player 저장
@@ -290,206 +334,8 @@
   }
   
   /// 관전을 위한 변수들 크헝헝
-  const players = ref([])
-  const watchers = ref([])
-  const playersComputed = computed(() => players.value);
-
-  // vue2에서의 methods 부분을 vue3화 시키기
-  function joinSession() {
-    // --- 1) Get an OpenVidu object ---
-    OV.value = new OpenVidu()
-    
-    // --- 2) Init a session ---
-    session.value = OV.value.initSession()
-
-    // --- 3) Specify the actions when events take place in the session ---
-    // On every new Stream received...
-    session.value.on("streamCreated", ( {stream} )=> {
-      // const subscriber = session.subscribe(stream)
-      const subscriber = session.value.subscribe(stream)// 닉네임과 watcher 얻기
-      function getConnectionData() {
-          const { connection } = stream;
-          return JSON.parse(connection.data);
-      }
-      const clientData = computed(() => {
-        const { clientData } = getConnectionData();
-        return clientData;
-      });
-      const isWatcher = computed(() => {
-        const { isWatcher } = getConnectionData();
-        return isWatcher;
-      });
-
-      subscribers.value.push(subscriber)
-      // 플레이어, 관전자 리스트에도 추가
-      if (isWatcher === false) {
-        players.value.push(subscriber)
-      } else {
-        watchers.value.push(subscriber)
-        // 관전자 이름들도 추가
-        roomStore.watchersNickname.push(clientData)
-      }
-    })
-
-    // On every Stream destroyed...
-    session.value.on("streamDestroyed", ( {stream} ) => {
-      const index = subscribers.value.indexOf(stream.streamManager, 0)
-      if(index >= 0){
-        subscribers.value.splice(index, 1)
-      }
-      // 플레이어, 관전자 리스트에도 삭제
-      if (players.value.includes(stream.streamManager)) {
-        const index1 = players.value.indexOf(stream.streamManager, 0)
-        if(index1 >= 0){
-          players.value.splice(index1, 1)
-        }      
-      }
-      if (watchers.value.includes(stream.streamManager)) {
-        const index2 = watchers.value.indexOf(stream.streamManager, 0)
-        if(index2 >= 0){
-          watchers.value.splice(index2, 1)
-        }      
-      }
-      // 관전자 이름도 삭제
-      function getConnectionData() {   
-        const { connection } = stream;
-        return JSON.parse(connection.data);
-      }
-      const clientData = computed(() => {
-        const { clientData } = getConnectionData();
-        return clientData;
-      });
-      
-      
-      if (roomStore.watchersNickname.includes(clientData)) {
-        const index3 = roomStore.watchersNickname.indexOf(clientData, 0)
-        if(index3 >= 0){
-          roomStore.watchersNickname.splice(index3, 1)
-        }      
-      }
-    })
-
-    // On every asynchronous exception...
-    session.value.on("exception", ({ exception }) => {
-      console.warn(exception);
-    });
-
-    session.value.on('reconnecting', () => console.warn('Oops! Trying to reconnect to the session'));
-    session.value.on('reconnected', () => console.log('Hurray! You successfully reconnected to the session'));
-    session.value.on('sessionDisconnected', (event) => {
-        if (event.reason === 'networkDisconnect') {
-            console.warn('Dang-it... You lost your connection to the session');
-        } else {
-            // Disconnected from the session for other reason than a network drop
-        }
-    });
-
-    // 채팅 이벤트 수신 처리 함. session.on이 addEventListenr 역할인듯.
-    session.value.on('signal:chat', (event) => { // event.from.connectionId === session.value.connection.connectionId 이건 나와 보낸이가 같으면임
-      const messageData = JSON.parse(event.data);
-      if(event.from.connectionId === session.value.connection.connectionId){
-        messageData['username'] = '나'
-      }
-      messages.value.push(messageData);
-    });
-
-
-    // --- 4) Connect to the session with a valid user token ---
-    // Get a token from the OpenVidu deployment
-    // getToken(mySessionId).then((token) => {
-    getToken(roomId.value).then((token) => {
-      // First param is the token. Second param can be retrieved by every user on event
-      // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
-      // session.value.connect(token, {clientData: myUserName})
-      session.value.connect(token, {clientData: myNickname.value, isWatcher: roomStore.isWatcher})
-      .then(() => {
-          // --- 5) Get your own camera stream with the desired properties ---
-
-          // const cameraSelect = document.querySelector('select[name="cameras"]');
-          // const audioSelect = document.querySelector('select[name="audios"]');
-
-          // Init a publisher passing undefined as targetElement (we don't want OpenVidu to insert a video
-          // element: we will manage it on our own) and with the desired properties
-          let publisher_tmp = OV.value.initPublisher(undefined, {
-            audioSource: undefined, // The source of audio. If undefined default microphone
-            videoSource: undefined, // The source of video. If undefined default webcam
-            // audioSource: audioSelect.value, // The source of audio. If undefined default microphone
-            // videoSource: cameraSelect.value, // The source of video. If undefined default webcam
-            // publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-            // publishVideo: true, // Whether you want to start publishing with your video enabled or not
-            // publishAudio: !muted.value, // Whether you want to start publishing with your audio unmuted or not
-            // publishVideo: !camerOff.value, // Whether you want to start publishing with your video enabled or not
-            resolution: "300x210", // The resolution of your video
-            frameRate: 30, // The frame rate of your video
-            insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-            mirror: false, // Whether to mirror your local video or not
-          });
-
-          // Set the main video in the page to display our webcam and store our Publisher
-          mainStreamManager.value = publisher_tmp
-          publisher.value = publisher_tmp
-
-          // --- 6) Publish your stream ---
-          // session.publish(publisher)
-          session.value.publish(publisher.value)
-          // getMedia()  // 세션이 만들어졌을때 미디어 불러옴
-        })
-        .catch((error) => {
-          console.log("There was an error connecting to the session:", error.code, error.message);
-        })
-    })
-
-    window.addEventListener("beforeunload", (event) => {
-      leaveSession();
-      // Uncomment the line below if you want to show a confirmation message
-      // event.returnValue = "Are you sure you want to leave?";
-    });
-  }
-
-  function leaveSession(){
-    // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
-    if(session.value) session.value.disconnect()
-    
-    // Empty all properties...
-    session.value = undefined;
-    mainStreamManager.value = undefined;
-    publisher.value = undefined;
-    subscribers.value = [];
-    players.value = []
-    watchers.value = []
-    roomStore.watchersNickname = []
-    OV.value = undefined;
-
-    // Remove beforeunload listener
-    window.removeEventListener("beforeunload", leaveSession)
-    router.push(
-      {name: 'main'}
-    )
-  }
-
-  function updateMainVideoStreamManager(stream) {
-    if (mainStreamManager.value === stream) return
-    mainStreamManager.value = stream
-  }
-
-  async function getToken(roomId) {
-    const sessionId = await createSession(roomId);
-    return await createToken(sessionId);
-  }
-
-  async function createSession(sessionId) {
-    const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId, userNo: 53, endHour: 1, endMinute: 30, quota: 16, isPrivacy: false}, {
-      headers: { 'Content-Type': 'application/json', },
-    });
-    return response.data; // The sessionId
-  }
-
-  async function createToken(sessionId) {
-    const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
-      headers: { 'Content-Type': 'application/json', },
-    });
-    return response.data; // The token
-  }
+  const playersComputed = computed(() => openviduStore.players);
+  const watchersComputed = computed(() => openviduStore.watchers);
 
   onMounted (() => {
     navigator.mediaDevices.getUserMedia({ video: true, audio: true })
@@ -500,7 +346,7 @@
         console.error('카메라 및 마이크 액세스 오류:', error);
       });
 
-    joinSession()
+      openviduStore.joinSession()
   })
 </script>
 
