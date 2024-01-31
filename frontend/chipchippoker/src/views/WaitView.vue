@@ -81,6 +81,7 @@
             <WaitWatcher />
           </div>
           <!-- 채팅창 -->
+
           <!-- 나중에 <chat-winow />로 넘길수 있도록 해보자. -->
           <div id="chat-container">
             <div id="chat-window" scrollTop>
@@ -96,45 +97,45 @@
             </form>
           </div>
         </div>
-          <!-- 시작(준비), 초대, 나가기 버튼 -->
-          <div class="d-flex flex-column justify-content-center align-items-center box-btns m-0 pb-4 mt-5">
-            <div>
-              <!-- 시작 -->
-              <button v-if="myNickname === roomManagerNickname" @click="startGame()" class="custom-btn btn-1 m-1"><span>시작해?</span><span>시작</span></button>
-              <!-- 준비 -->
-              <button v-else-if="myNickname !== roomManagerNickname && isReady === false" @click="readyGame()" class="custom-btn btn-1 m-1"><span>준비해?</span><span>준비</span></button>
-              <!-- 준비 취소 -->
-              <button v-else-if="myNickname !== roomManagerNickname && isReady === true" @click="readyGame()" class="custom-btn btn-1 m-1"><span>준비취소</span><span>준비완료</span></button>
-              <!-- 초대 -->
-              <button class="custom-btn btn-2 m-1"><span>초대해?</span><span>초대</span></button>
-              <!-- 나가기 -->
-              <button class="custom-btn btn-3 m-1" data-bs-toggle="modal" data-bs-target="#roomOutModal"><span>나가?</span><span>나가기</span></button>
-            </div>
-          </div>
 
-          <!-- 나가기 모달 -->
-          <div class="modal fade" id="roomOutModal" tabindex="-1" aria-labelledby="IconModalLabel" aria-hidden="true">
-            <!-- 나가기 모달 -->
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content" style="background-color: #ffde76;">
-                <div class="modal-header border-0">
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <div class="text-center fw-bold fs-3 bg-modal-yellow">
-                    정말 나가시겠습니까?
-                  </div>
-                  <div class="mt-5 d-flex justify-content-around">
-                      <button class="custom-btn btn-2" data-bs-dismiss="modal" style="width: 50px;"><span>안 나가?</span><span>아니요</span></button>
-                      <button class="custom-btn btn-3" data-bs-dismiss="modal" @click="leaveRoom()"><span>나가?</span><span>나가기</span></button>
-                  </div>
-                </div>
-            
-              </div>
-            </div>  
+        <!-- 시작(준비), 초대, 나가기 버튼 -->
+        <div class="d-flex flex-column justify-content-center align-items-center box-btns m-0 pb-4 mt-5">
+          <div>
+            <!-- 시작 -->
+            <button v-if="myNickname === roomManagerNickname" @click="startGame()" class="custom-btn btn-1 m-1"><span>시작해?</span><span>시작</span></button>
+            <!-- 준비 -->
+            <button v-else-if="myNickname !== roomManagerNickname && isReady === false" @click="readyGame()" class="custom-btn btn-1 m-1"><span>준비해?</span><span>준비</span></button>
+            <!-- 준비 취소 -->
+            <button v-else-if="myNickname !== roomManagerNickname && isReady === true" @click="readyGame()" class="custom-btn btn-1 m-1"><span>준비취소</span><span>준비완료</span></button>
+            <!-- 초대 -->
+            <button class="custom-btn btn-2 m-1"><span>초대해?</span><span>초대</span></button>
+            <!-- 나가기 -->
+            <button class="custom-btn btn-3 m-1" data-bs-toggle="modal" data-bs-target="#roomOutModal"><span>나가?</span><span>나가기</span></button>
           </div>
         </div>
+
+        <!-- 나가기 모달 -->
+        <div class="modal fade" id="roomOutModal" tabindex="-1" aria-labelledby="IconModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background-color: #ffde76;">
+              <div class="modal-header border-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="text-center fw-bold fs-3 bg-modal-yellow">
+                  정말 나가시겠습니까?
+                </div>
+                <div class="mt-5 d-flex justify-content-around">
+                    <button class="custom-btn btn-2" data-bs-dismiss="modal" style="width: 50px;"><span>안 나가?</span><span>아니요</span></button>
+                    <button class="custom-btn btn-3" data-bs-dismiss="modal" @click="leaveRoom()"><span>나가?</span><span>나가기</span></button>
+                </div>
+              </div>
+            </div>
+          </div>  
+        </div>
+
       </div>
+    </div>
   </div>
 </template>
 
