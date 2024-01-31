@@ -54,7 +54,7 @@ export const useFriendStore = defineStore('friend', () => {
   }
 
   // 친구 신청 알람 리스트
-  const RequestAlarm = function(nickname){
+  const RequestAlarm = function(){
     axios({
       method: 'get',
       url: `${FRIEND_API}/request/list`,
