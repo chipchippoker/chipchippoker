@@ -37,18 +37,10 @@ export const useMatchStore = defineStore('match', () => {
       title.value = res.data.title
       totalParticipantCnt.value = res.data.totalParticipantCnt
       isMatch.value = true
-      // 첫 입장(방 생성)
-      console.log(res.data.isFirstParticipant);
       gameStore.subscribeHandler(title.value)
-      if (res.data.isFirstParticipant) {
-        return true
-      } else {
-        return false
-      }
     })
-    .then((isFirstParticipant)=>{
-      console.log(isFirstParticipant);
-      gameStore.sendMatching(title.value, totalParticipantCnt.value, isFirstParticipant)
+    .then(()=>{
+      gameStore.sendMatching(title.value, totalParticipantCnt.value, true)
     })
     .catch(err => console.log(err))
   } 
@@ -62,7 +54,8 @@ export const useMatchStore = defineStore('match', () => {
       headers: { 'access-token': userStore.accessToken },
       data: payload
     })
-    .then(res => {
+    .then(response => {
+      const res = response.data
       if (Object.keys(res.data).length === 0) {
         console.log('생성된 친선방 X')
         isMatch.value = false
@@ -73,8 +66,12 @@ export const useMatchStore = defineStore('match', () => {
         roomStore.roomId = res.data.roomId
         totalParticipantCnt.value = res.data.totalParticipantCnt
         isMatch.value = true
+        gameStore.subscribeHandler(title.value)
       }
       return res.data
+    })
+    .then(()=>{
+      gameStore.sendMatching(title.value, totalParticipantCnt.value, false)
     })
     .catch(err => console.log(err))
   }  

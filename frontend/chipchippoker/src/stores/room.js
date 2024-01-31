@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref, computed, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useRoute, useRouter } from 'vue-router'
@@ -44,7 +44,7 @@ export const useRoomStore = defineStore('room', () => {
   const roomManagerNickname = ref('')
   const roomId = ref('')
   const title = ref('')
-  const totalParticipantCnt = ref('')
+  const totalParticipantCnt = ref(0)
   const isRoom = ref(false)
 
   // 관전자 여부, 게임 중 여부, 관전자 닉네임들
@@ -59,7 +59,6 @@ export const useRoomStore = defineStore('room', () => {
   // 방 생성
   const createRoom = function(payload){
     console.log('방 생성 요청!!');
-    console.log(payload)
     // 방 생성 API 호출
     axios({
       method: 'post',
@@ -86,6 +85,7 @@ export const useRoomStore = defineStore('room', () => {
       if (err.response.data.code === 'CF005') {
         isRoom.value = true
         console.log(isRoom.value)
+        alert('이미 등록된 방 제목입니다.')
       }
       console.log(err);
     })
@@ -141,17 +141,33 @@ export const useRoomStore = defineStore('room', () => {
     })
     // 공개방 입장 API 응답 & 방 구독 SEND
     .then(response => {
-      console.log('방 입장 성공')
       const res = response.data
-      roomId.value = res.data.roomId
-      title.value = res.data.title
-      totalParticipantCnt.value = res.data.totalParticipantCnt
-      gameStore.subscribeHandler(title.value)
-
+      if (res.code === 200) {
+        console.log(res.message)
+        roomId.value = res.data.roomId
+        title.value = res.data.title
+        totalParticipantCnt.value = res.data.totalParticipantCnt
+        gameStore.subscribeHandler(title.value)
+      } else if (res.code === 'FB001') {
+        console.log(res.message)
+        alert(res.message)
+      } else if (res.code === 'FB002') {
+        console.log(res.message)        
+        alert(res.message)
+      } else if (res.code === 'FB003') {
+        console.log(res.message)        
+        alert(res.message)
+      } else if (res.code === 'FB000') {
+        console.log(res.message)
+        alert(res.message)
+      }
+      return res.code
     })
     // 방 입장 SEND
-    .then(() => {
-      gameStore.sendJoinRoom(title.value)
+    .then((code) => {
+      if (code === 200) {
+        gameStore.sendJoinRoom(title.value)
+      }
     })
     .catch(err => console.log(err))
   }
@@ -168,31 +184,33 @@ export const useRoomStore = defineStore('room', () => {
       }
     })
     .then(response => {
-      console.log('방 입장 성공')
       const res = response.data
-      
-      // 방입장 성공일 때
-      if (res.code === "성공"){
+      if (res.code === 200) {
+        console.log(res.message)
         roomId.value = res.data.roomId
         title.value = res.data.title
         totalParticipantCnt.value = res.data.totalParticipantCnt
         gameStore.subscribeHandler(title.value)
-      }
-      
-      return res
-    })
-    .then((res) => {
-      // 방 입장 SEND
-      if (res.code == "성공"){
-        gameStore.sendJoinRoom(title.value)
-      } 
-      // 블랙리스트에 포함된 경우
-      else if ( res.code === "FB000"){
-        alert('들어갈 수 없는 방입니다')
-      } else {
-        // 못들어가는 방인 경우 메세지를 보내줌
+      } else if (res.code === 'FB001') {
+        console.log(res.message)
         alert(res.message)
-      } 
+      } else if (res.code === 'FB002') {
+        console.log(res.message)        
+        alert(res.message)
+      } else if (res.code === 'FB003') {
+        console.log(res.message)        
+        alert(res.message)
+      } else if (res.code === 'FB000') {
+        console.log(res.message)
+        alert('들어갈 수 없는 방입니다')
+      }
+      return res.code
+    })
+    .then((code) => {
+      // 방 입장 SEND
+      if (code === 200) {
+        gameStore.sendJoinRoom(title.value)
+      }   
     })
     .catch(err => console.log(err))
   }
@@ -209,15 +227,11 @@ export const useRoomStore = defineStore('room', () => {
     })
     .then(res => {
       console.log(res.data)
-      if (res.code === 'UA003') { // 토큰 만료 시
-        renewToken(accessToken.value, refreshToken.value)
-        .then(() => {
-          leaveRoom()
-        })
-        .catch(err => console.log(err))
-      } else {
-        gameStore.sendExitRoom(title.value)
-      }
+      roomId.value = ''
+      title.value = ''
+      totalParticipantCnt.value = 0
+      isRoom.value = false
+      gameStore.sendExitRoom(title.value)
     })
     .catch(err => console.log(err))
   }
@@ -236,17 +250,6 @@ export const useRoomStore = defineStore('room', () => {
       console.log('게임 시작 성공')
       gameStore.sendStartGame(title.value)
     })
-    // .then(() => {
-    //   // 플레이 페이지로 이동
-    //   router.push({
-    //     name:'play',
-    //     params: { roomId: roomId.value },
-    //     state: {
-    //       title: title.value,
-    //       totalParticipantCnt: totalParticipantCnt.value
-    //     }
-    //   })
-    // })
     .catch(err => console.log(err))
   }
 
@@ -258,8 +261,14 @@ export const useRoomStore = defineStore('room', () => {
       headers: { 'access-token': userStore.accessToken },
       data: payload
     })
-    .then(res => {
-      console.log('강제 퇴장 성공')
+    .then(response => {
+      const res = response.data
+      console.log(response.message)
+      if (res.code === 200) {
+        gameStore.sendBan(title.value, userStore.myNickname)
+      } else if (res.code === 'FB005') {
+        alert(res.message)
+      }
     })
     .catch(err => console.log(err))
   } 

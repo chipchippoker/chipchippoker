@@ -15,6 +15,7 @@ export const useOpenviduStore = defineStore('openvidu', () => {
   const roomStore = useRoomStore()
   const gameStore = useGameStore()
   const route = useRoute()
+  const router = useRouter()
 
   axios.defaults.headers.post["Content-Type"] = "application/json";
   const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/';
@@ -34,11 +35,11 @@ export const useOpenviduStore = defineStore('openvidu', () => {
   const players = ref([])
   const watchers = ref([])
 
-  function joinSession() {
+  async function joinSession() {
     OV.value = new OpenVidu()
     session.value = OV.value.initSession()
     console.log('조인 세션!');
-  
+
     session.value.on("streamCreated", ( {stream} )=> {
       const subscriber = session.value.subscribe(stream)
       console.log('세션 생성!!!!');
@@ -160,6 +161,7 @@ export const useOpenviduStore = defineStore('openvidu', () => {
   
           // --- Publish your stream ---
           session.value.publish(publisher.value)
+          console.log(players);
         })
         .catch((error) => {
           console.log("There was an error connecting to the session:", error.code, error.message);
@@ -192,7 +194,6 @@ export const useOpenviduStore = defineStore('openvidu', () => {
     router.push('main')
   }
   
-  
   /**
   * --------------------------------------------
   * GETTING A TOKEN FROM YOUR APPLICATION SERVER
@@ -209,6 +210,7 @@ export const useOpenviduStore = defineStore('openvidu', () => {
     const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId, userNo: 53, endHour: 1, endMinute: 30, quota: 16, isPrivacy: false}, {
       headers: { 'Content-Type': 'application/json', },
     });
+    console.log('세션 생성 성공');
     return response.data; // The sessionId
   }
   
