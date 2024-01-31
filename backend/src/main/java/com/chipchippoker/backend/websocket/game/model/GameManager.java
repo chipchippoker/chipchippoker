@@ -51,7 +51,7 @@ public class GameManager {
 	private Integer currentRound;
 	private final Integer gameEndRound = 10;
 	private final Integer bettingLimitTime = 15;
-	private Stack<Integer> cardStack;
+	private Stack<CardInfo> cardStack;
 	private List<String> order;
 	private Integer turnNumber;
 	private String roomManager;
@@ -87,26 +87,22 @@ public class GameManager {
 		return false;
 	}
 
-	private Stack<Integer> makeCardStack(int countOfPeople) {
-		List<Integer> numbers = new ArrayList<>();
-		for (int i = 1; i <= 10; i++) {
-			numbers.add(i);
-		}
-
-		// Stack 생성
-		Stack<Integer> stack = new Stack<>();
-
-		// 각 세트에 대해 랜덤으로 숫자를 섞어서 Stack에 삽입
+	private Stack<CardInfo> makeCardStack(int countOfPeople) {
+		List<CardInfo> numbers = new ArrayList<>();
 		for (int set = 1; set <= countOfPeople; set++) {
-			// 리스트를 섞기
-			Collections.shuffle(numbers, new Random());
-
-			// 리스트를 Stack에 삽입
-			for (int num : numbers) {
-				stack.push(num);
+			for (int i = 1; i <= 10; i++) {
+				numbers.add(new CardInfo(set, i));
 			}
 		}
 
+		// Stack 생성
+		// 각 세트에 대해 랜덤으로 숫자를 섞어서 Stack에 삽입
+		Stack<CardInfo> stack = new Stack<>();
+		// 리스트를 섞기
+		Collections.shuffle(numbers, new Random());
+		for (CardInfo cardInfo : numbers) {
+			stack.push(cardInfo);
+		}
 		return stack;
 	}
 
@@ -214,9 +210,9 @@ public class GameManager {
 
 		// 승리한 사람과 카드 넘버 저장
 		for (MemberManager manager : notDie) {
-			if (manager.getMemberGameInfo().getCardNumber() > cardNum) {
+			if (manager.getMemberGameInfo().getCardInfo().getCardNumber() > cardNum) {
 				winner = manager.getMemberInfo().getNickname();
-				cardNum = manager.getMemberGameInfo().getCardNumber();
+				cardNum = manager.getMemberGameInfo().getCardInfo().getCardNumber();
 			}
 		}
 
@@ -240,7 +236,7 @@ public class GameManager {
 			throw new RuntimeException();
 
 		Collection<MemberManager> memberManagers = memberManagerMap.values();
-		
+
 		long leftMember = memberManagers.stream()
 			.filter(memberManager -> memberManager.getMemberGameInfo().getHaveCoin() >= 1)
 			.count();
@@ -254,7 +250,7 @@ public class GameManager {
 			if (manager.getMemberGameInfo().getHaveCoin() >= 1) {
 				leftMember++;
 				// 카드를 받는다.
-				manager.getMemberGameInfo().setCardNumber(cardStack.pop());
+				manager.getMemberGameInfo().setCardInfo(cardStack.pop());
 				// 한 개의 기본베팅을 한다.
 				manager.getMemberGameInfo().setHaveCoin(manager.getMemberGameInfo().getHaveCoin() - 1);
 				// 베팅 코인이 1개가 된다.

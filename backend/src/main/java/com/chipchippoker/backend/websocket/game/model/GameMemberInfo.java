@@ -16,7 +16,7 @@ public class GameMemberInfo {
 	private String nickname;
 	private Integer haveCoin;
 	private Integer bettingCoin;
-	private Integer cardNumber;
+	private CardInfo cardInfo;
 
 	public static ArrayList<GameMemberInfo> createListInRoundProceed(ArrayList<MemberManager> isNotTurnMemberManagers,
 		MemberManager isTurnMemberManager) {
@@ -25,13 +25,13 @@ public class GameMemberInfo {
 			result.add(new GameMemberInfo(isNotTurnMemberManager.getMemberInfo().getNickname()
 				, isNotTurnMemberManager.getMemberGameInfo().getHaveCoin(),
 				isNotTurnMemberManager.getMemberGameInfo().getBettingCoin(),
-				isNotTurnMemberManager.getMemberGameInfo().getCardNumber()));
+				isNotTurnMemberManager.getMemberGameInfo().getCardInfo()));
 		}
 
 		result.add(new GameMemberInfo(isTurnMemberManager.getMemberInfo().getNickname(),
 			isTurnMemberManager.getMemberGameInfo().getHaveCoin(),
 			isTurnMemberManager.getMemberGameInfo().getBettingCoin(),
-			0));
+			new CardInfo(0, 0)));
 
 		return result;
 	}
@@ -42,7 +42,7 @@ public class GameMemberInfo {
 			result.add(new GameMemberInfo(memberManager.getMemberInfo().getNickname(),
 				memberManager.getMemberGameInfo().getHaveCoin(),
 				memberManager.getMemberGameInfo().getBettingCoin(),
-				memberManager.getMemberGameInfo().getCardNumber()));
+				memberManager.getMemberGameInfo().getCardInfo()));
 		}
 
 		return result;
@@ -53,7 +53,7 @@ public class GameMemberInfo {
 			.nickname(memberManager.getMemberInfo().getNickname())
 			.haveCoin(memberManager.getMemberGameInfo().getHaveCoin())
 			.bettingCoin(memberManager.getMemberGameInfo().getBettingCoin())
-			.cardNumber(memberManager.getMemberGameInfo().getCardNumber())
+			.cardInfo(memberManager.getMemberGameInfo().getCardInfo())
 			.build();
 	}
 }

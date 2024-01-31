@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberGameInfo {
-	private Integer cardNumber;
+	private CardInfo cardInfo;
 	private Integer haveCoin;
 	private Integer bettingCoin;
 	private String isState;
 
 	public static MemberGameInfo create() {
 		return MemberGameInfo.builder()
-			.cardNumber(0)
+			.cardInfo(new CardInfo(0, 0))
 			.haveCoin(25)
 			.bettingCoin(0)
 			.isState("BET")
