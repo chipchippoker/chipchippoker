@@ -7,4 +7,6 @@ public interface MemberService {
 	ProfilePageResponse getProfilePage(Long id, String nickname);
 
 	TokenResponse reissueToken(String originToken, Long id);
+
+	void logout(Long id);
 }

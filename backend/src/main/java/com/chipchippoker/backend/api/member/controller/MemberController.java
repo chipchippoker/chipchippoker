@@ -86,5 +86,13 @@ public class MemberController {
 		String originToken = httpServletRequest.getHeader("refresh-token");
 		return ResponseEntity.ok(ApiResponse.success(memberService.reissueToken(originToken, id)));
 	}
+
+	@Operation(summary = "로그아웃")
+	@PostMapping("/logout")
+	public ResponseEntity<ApiResponse<Void>> logout() {
+		Long id = (Long)httpServletRequest.getAttribute("id");
+		memberService.logout(id);
+		return ResponseEntity.ok(ApiResponse.success());
+	}
 }
 
