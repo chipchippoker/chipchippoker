@@ -9,4 +9,6 @@ public interface MemberService {
 	TokenResponse reissueToken(String originToken, Long id);
 
 	void logout(Long id);
+
+	void withdraw(Long id);
 }
