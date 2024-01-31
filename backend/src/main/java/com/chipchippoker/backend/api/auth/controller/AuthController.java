@@ -88,7 +88,8 @@ public class AuthController {
 				SimpleLoginResponse loginResponse = authService.kakaoLogin(token);
 				AuthorizationCodeAlreadyAccountResponse authorizationCodeAlreadyAccountResponse = new AuthorizationCodeAlreadyAccountResponse(
 					200, "로그인을 완료했습니다.",
-					loginResponse.getAccessToken(), loginResponse.getRefreshToken(), loginResponse.getNickname());
+					loginResponse.getAccessToken(), loginResponse.getRefreshToken(), loginResponse.getIcon(),
+					loginResponse.getNickname());
 				return new ResponseEntity<>(ApiResponse.success(authorizationCodeAlreadyAccountResponse),
 					HttpStatus.valueOf(200));
 			} else {

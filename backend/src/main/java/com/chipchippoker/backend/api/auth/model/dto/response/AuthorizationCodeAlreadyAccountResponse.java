@@ -9,10 +9,11 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthorizationCodeAlreadyAccountResponse implements AuthorizationInformationResponse{
+public class AuthorizationCodeAlreadyAccountResponse implements AuthorizationInformationResponse {
 	private Integer code;
 	private String message;
 	private String accessToken;
 	private String refreshToken;
+	private String icon;
 	private String nickname;
 }
