@@ -99,7 +99,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public TokenResponse reissueToken(String originToken, Long id) {
 		Member member = memberRepository.findById(id)
-			.orElseThrow(() -> new InvalidException(ErrorBase.E404_NOT_EXISTS_MEMBER));
+			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
 		if (!member.getRefreshToken().equals(originToken)) {
 			throw new InvalidException(ErrorBase.E400_INVALID_TOKEN);
 		}
@@ -130,5 +130,12 @@ public class MemberServiceImpl implements MemberService {
 			recentPlayList.add(recentPlayListResponse);
 		}
 		return recentPlayList;
+	}
+
+	@Override
+	public void logout(Long id) {
+		Member member = memberRepository.findById(id)
+			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
+		member.updateRefreshToken(null);
 	}
 }
