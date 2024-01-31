@@ -38,7 +38,7 @@
       </div>
       <!-- 이모지 or 로로 -->
       <div class="h-100 w-25 d-flex justify-content-center align-items-center">
-        <div class="d-flex justify-content-around w-100">
+        <div class="d-flex justify-content-around w-100 animate__jackInTheBox ">
           <font-awesome-icon :icon="['fas', 'face-angry']" class="fa-5x" style="color: #9f0909;"/>
           <font-awesome-icon :icon="['fas', 'face-sad-cry']" class="fa-5x" style="color: #ece513;"/>
           <font-awesome-icon :icon="['fas', 'face-grin-tongue-wink']" class="fa-5x" style="color: #ffffff;"/>
@@ -89,7 +89,7 @@
   myNickname.value = userStore.myNickname
   roomTitle.value = roomStore.title
   totalParticipantCnt.value = roomStore.totalParticipantCnt
-  console.log(roomTitle)
+  console.log(roomTitle.value)
 
   const watchersNickname = computed(() => roomStore.watchersNickname)
   const watchersCount = computed(() => watchersNickname.value.length)
