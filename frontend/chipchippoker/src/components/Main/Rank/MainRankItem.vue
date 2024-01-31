@@ -1,18 +1,20 @@
 <template>
     <!-- 각각의 사용자 -->
     <div 
-    @mouseover="soundStore.hoverSound()"
      type="button" class="d-flex m-2 rounded-2 p-1 overflow-hidden" 
-    :class="[{'myrank':item?.nickname===userStore.myNickname},{'otherrank':item?.nickname!=userStore.myNickname}]"
+    :class="[{'sticky-bottom sticky-top myrank':item?.nickname===userStore.myNickname},{'otherrank':item?.nickname!=userStore.myNickname},
+{'rainbow-box':item?.rank ===1}]"
     @click="goProfile(item?.nickname)">
 
-    <!-- {{ item }} -->
 
         <div class="d-flex gap-1 align-items-center">
             <div class="text-overflow" style="width:35px;">{{ item?.rank }}등</div>
+            <!-- 1등은 레어 아이콘 -->
             <img class="x-small-icon"  :src='userStore.getIconUrl(item?.icon)'>
             <div class="text-overflow" style="width:100px;">{{ item?.nickname }}</div>
-            <img class="xx-small-icon"  :src='friendStore.getTierIconUrl(item?.tier)'>
+            <img v-if="item?.rank === 1" class="xx-small-icon"  :src='friendStore.getTierIconUrl("rare")'>
+            <img v-else class="xx-small-icon"  :src='friendStore.getTierIconUrl(item?.tier)'>
+            
             <div  class="text-overflow text-end" style="width:50px;">{{ item?.point }}</div>
             <div class="me-2">pt</div>
             

@@ -25,7 +25,7 @@
         </div>
 
         <!-- 친구 목록 -->
-        <button class="btn-outline-yellow fixed-left" type="button" data-bs-toggle="offcanvas" data-bs-target="#friendList" aria-controls="friendList" >
+        <button @click="friendStore.getFriendList('')" class="btn-outline-yellow fixed-left" type="button" data-bs-toggle="offcanvas" data-bs-target="#friendList" aria-controls="friendList" >
             <font-awesome-icon :icon="['fas', 'caret-left']" style="color: #ffffff;" />
         </button>
 
@@ -108,10 +108,7 @@ const reLoad = function() {
 }
 
 onMounted(()=>{
-    console.log(userStore.myNickname)
-    console.log(userStore.myIcon)
-    friendStore.RequestAlarm(userStore.myNickname)
-    // friendStore.getFriendRankList()
+    friendStore.getAllRankList()
     // friendStore.getMyRankList()
     // soundStore.bgmOn()
 })
