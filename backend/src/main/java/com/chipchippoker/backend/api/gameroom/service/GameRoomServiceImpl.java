@@ -104,8 +104,8 @@ public class GameRoomServiceImpl implements GameRoomService {
 				Integer currentParticipantCnt = gameRoom.getMembers().size();
 				Integer currentSpectatorCnt = type.equals("경쟁") ? 0 : gameRoom.getSpectateRoom().getMembers().size();
 
-				return GetGameRoomListResponse.gameRoomListResponse(gameRoom.getIsPrivate(), gameRoom.getState(),
-					gameRoom.getTitle(), gameRoom.getTotalParticipantCnt(), currentParticipantCnt,
+				return GetGameRoomListResponse.gameRoomListResponse(gameRoom.getId(), gameRoom.getIsPrivate(),
+					gameRoom.getState(), gameRoom.getTitle(), gameRoom.getTotalParticipantCnt(), currentParticipantCnt,
 					currentSpectatorCnt);
 			});
 	}

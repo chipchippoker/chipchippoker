@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class GetGameRoomListResponse {
+	private Long roomId;
 	private Boolean isPrivate;
 	private String state;
 	private String title;
@@ -17,9 +18,11 @@ public class GetGameRoomListResponse {
 	private Integer currentParticipantCnt;
 	private Integer currentSpectatorCnt;
 
-	public static GetGameRoomListResponse gameRoomListResponse(Boolean isPrivate, String state, String title,
+	public static GetGameRoomListResponse gameRoomListResponse(Long roomId, Boolean isPrivate, String state,
+		String title,
 		Integer totalParticipantCnt, Integer currentParticipantCnt, Integer currentSpectatorCnt) {
 		return GetGameRoomListResponse.builder()
+			.roomId(roomId)
 			.isPrivate(isPrivate)
 			.state(state)
 			.title(title)
