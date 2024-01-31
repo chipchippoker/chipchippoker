@@ -100,37 +100,29 @@ public class JwtUtil {
 
 	}
 
-	public String getNickName(String accessToken, String refreshToken) {
-		//1. JWT 추출
-		if (accessToken == null || accessToken.isEmpty()) {
-			if (isValidateToken(refreshToken)) {
-				throw new UnAuthorizedException(ErrorBase.E401_UNAUTHORIZED_ACCESS_TOKEN);
-			} else {
-				throw new InvalidException(ErrorBase.E400_INVALID_TOKEN);
-			}
-		} else {
-			if (isValidateToken(accessToken)) {
-				return Jwts.parser()
-					.setSigningKey(secretKey)
-					.parseClaimsJws(accessToken).getBody().get("nickname", String.class);
-			} else {
-				if (isValidateToken(refreshToken)) {
-					throw new UnAuthorizedException(ErrorBase.E401_UNAUTHORIZED_ACCESS_TOKEN);
-				} else {
-					throw new InvalidException(ErrorBase.E400_INVALID_TOKEN);
-				}
-			}
+	public String getNickname(String accessToken) {
+		try {
+			return Jwts.parser()
+				.setSigningKey(secretKey)
+				.parseClaimsJws(accessToken)
+				.getBody()
+				.get("nickname", String.class);
+		} catch (ExpiredJwtException e) {
+			throw new UnAuthorizedException(ErrorBase.E401_UNAUTHORIZED_ACCESS_TOKEN_EXPIRED);
+		} catch (Exception e) {
+			throw new InvalidException(ErrorBase.E400_INVALID_TOKEN);
 		}
 	}
 
-	public boolean isValidateToken(String token) {
+	public void isValidateAccessToken(String token) {
 		try {
 			Jwts.parser()
 				.setSigningKey(secretKey)
 				.parseClaimsJws(token);
-			return true;
+		} catch (ExpiredJwtException e) {
+			throw new UnAuthorizedException(ErrorBase.E401_UNAUTHORIZED_ACCESS_TOKEN_EXPIRED);
 		} catch (Exception e) {
-			return false;
+			throw new InvalidException(ErrorBase.E400_INVALID_TOKEN);
 		}
 	}
 
