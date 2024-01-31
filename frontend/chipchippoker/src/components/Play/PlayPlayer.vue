@@ -5,7 +5,7 @@
       <!-- 관전 중이 아니고 게임하는 플레이어일 때 -->
       <div v-if="roomStore.isWatcher===false">
         <div class="position-absolute top-0 start-0 d-flex flex-column h-50" id="player1" style="width: 500px;">
-          <div class="text-white align-self-center ">{{ myNickname }} / 
+          <div class="text-white align-self-center ">{{ userStore.myNickname }} / 
           <!-- 보유코인 연결 -->
             <div v-if="gameStore.player.length > 0">보유코인: {{gameStore?.gameMemberInfos[0]?.havingCoin}}</div>
 
@@ -212,16 +212,18 @@
 <script setup>
   import PlayBattingVue from "@/components/Play/PlayBatting.vue";
   import UserVideoVue from "../Cam/UserVideo.vue";
-  import { ref, defineProps, computed, onMounted, watch } from 'vue';
+  import { ref, computed, onMounted, watch } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import axios from 'axios'
   import { OpenVidu } from "openvidu-browser";
   import { useGameStore } from "@/stores/game";
   import { useRoomStore } from "@/stores/room";
+  import { useUserStore } from "@/stores/user";
   import { useOpenviduStore } from "@/stores/openvidu";
 
   const gameStore = useGameStore()
   const roomStore = useRoomStore()
+  const userStore = useUserStore()
   const openviduStore = useOpenviduStore()
   // 앞장 카드 가져오기
   const getCardUrl = function (setnum, cardnum) {
@@ -236,13 +238,9 @@
 
   const roomId = ref(null)
   const myNickname = ref(null)
-  const props = defineProps({
-    roomId: String,
-    myNickname: String
-  });
 
-  roomId.value = props.roomId
-  myNickname.value = props.myNickname
+  roomId.value = roomStore.roomId
+  myNickname.value = userStore.myNickname
 
   
   ////다시그려내기 위해 computed 작성
@@ -337,6 +335,7 @@
   const playersComputed = computed(() => openviduStore.players);
   const watchersComputed = computed(() => openviduStore.watchers);
 
+  
   onMounted (() => {
     navigator.mediaDevices.getUserMedia({ video: true, audio: true })
       .then((stream) => {
