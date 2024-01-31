@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div class="text-white">
         <!-- 카드 뒤집기 -->
-        <!-- <p class="text-white">카드 클릭시 뒤집기 효과</p>
+        <p >카드 클릭시 뒤집기 효과</p>
       <div class="flip-card" @click="flip">
         <div class="flip-card-inner">
             <div class="flip-card-front">
@@ -11,34 +11,36 @@
                 <img :src="getBackCardUrl()" alt="카드">
             </div>
         </div>
-    </div> -->
+    </div>
 
-        <!-- 코인 개수에 따른 추가 -->
-        <!-- <div>
-            <p class="text-white">input에 따른 코인 추가</p>
+        
+        <div>
+            <p >input에 따른 코인 추가</p>
             <input v-model="coinNum" type="number" name="" id="">
-        </div> -->
+        </div>
 
 
-        <!-- <div class="coin-list flex-wrap" style="width: 160px;">
+        <div class="coin-list flex-wrap" style="width: 160px;">
             
             <img style="width: 50px;" v-for="index in 10" :key="index" class="coin-overlap" :src="getCoinUrl(1)" alt="">
 
             
             <img style="width: 50px;" class="coin-overlap opacity-75" v-for="index in coinNum" :key="index"
                 :src="getCoinUrl(1)" alt="">
+        </div>
+
+
+        <!-- <div class="position-relative">
+            <div @click="move">
+                <img class="position-absolute card-back1 move1" :src="getBackCardUrl()" alt="카드">
+                <img class="position-absolute card-back2 move2" :src="getBackCardUrl()" alt="카드">
+                <img class="position-absolute card-back3 move3" :src="getBackCardUrl()" alt="카드">
+                <img class="position-absolute card-back4 move4" :src="getBackCardUrl()" alt="카드">
+            </div>
         </div> -->
 
-        <!-- <div @click="move">
-            <img class="position-absolute card-back1 move1" :src="getBackCardUrl()" alt="카드">
-            <img class="position-absolute card-back2 move2" :src="getBackCardUrl()" alt="카드">
-            <img class="position-absolute card-back3 move3" :src="getBackCardUrl()" alt="카드">
-            <img class="position-absolute card-back4 move4" :src="getBackCardUrl()" alt="카드">
-        </div> -->
-
-        <!-- 코인 모으기 -->
-        <div style="width: 500px; height: 300px;"></div>
-        <div @click="joinCoin" class="position-relative" style="width: 500px; height: 500px;">
+        <p>코인 모으기</p>
+        <div @click="joinCoin" class="position-relative" style="width: 200px; height: 200px;">
             <div id="coin1" class="coin-list coin-unmove1 flex-wrap position-absolute" style="width: 160px; ">
                 <div v-for="index in 10" :key="index">
                     <img  style="width: 50px;"  class="coin-overlap" :src="getCoinUrl(1)" alt="">
@@ -60,7 +62,18 @@
                 </div>
             </div>
         </div>
-    </div>
+
+
+        <P >부르르 진동</P>
+        <div id="box" class="box" @click="vibration()">Click</div>
+
+        
+        <P >코인 촤라락</P>
+        <div @click="coinSlide()">
+            <img style="width: 50px;" v-for="index in 10" :key="index" :id="`coinslide${index}`" class="coin-overlap" :src="getCoinUrl(1)" alt="">
+        </div>
+        
+    </div>  
 </template>
   
 <script setup>
@@ -110,9 +123,61 @@ const joinCoin = function(){
     const coin4 = document.querySelector('#coin4');
     coin4.classList.toggle('coin-move4');
 }
+
+
+// 부르르
+const vibration = () => {
+    const box = document.querySelector('#box')
+    box.classList.add("vibration");
+
+  setTimeout(function() {
+    box.classList.remove("vibration");
+  }, 400);
+}
+
+// 코인 정렬
+const coinSlide = function(){
+    for (let i = 1; i < 11; i++) {
+        setTimeout(()=>{
+            const coin  = document.querySelector(`#coinslide${i}`)
+            coin.classList.add('coin-slide')
+        } ,100 * (i + 1))
+    }
+}
+
 </script>
   
 <style scoped>
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+
+
+.coin-slide{
+    transform: translateY(50px);
+    transition: 0.2s;
+}
+
+
+
+.box {
+  width: 50px;
+  height:50px;
+  background: #febf00;
+  cursor: pointer;
+}
+.box.vibration {
+  animation: vibration .1s infinite;
+}
+
+@keyframes vibration {
+  from {
+    transform: rotate(10deg);
+  }
+  to {
+    transform: rotate(-10deg);
+  }
+}
+
+
 .flip-card {
     width: 160px;
     height: 224px;

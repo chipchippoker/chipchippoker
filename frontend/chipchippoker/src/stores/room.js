@@ -170,14 +170,29 @@ export const useRoomStore = defineStore('room', () => {
     .then(response => {
       console.log('방 입장 성공')
       const res = response.data
-      roomId.value = res.data.roomId
-      title.value = res.data.title
-      totalParticipantCnt.value = res.data.totalParticipantCnt
-      gameStore.subscribeHandler(title.value)
+      
+      // 방입장 성공일 때
+      if (res.code === "성공"){
+        roomId.value = res.data.roomId
+        title.value = res.data.title
+        totalParticipantCnt.value = res.data.totalParticipantCnt
+        gameStore.subscribeHandler(title.value)
+      }
+      
+      return res
     })
-    .then(() => {
+    .then((res) => {
       // 방 입장 SEND
-      gameStore.sendJoinRoom(title.value)
+      if (res.code == "성공"){
+        gameStore.sendJoinRoom(title.value)
+      } 
+      // 블랙리스트에 포함된 경우
+      else if ( res.code === "FB000"){
+        alert('들어갈 수 없는 방입니다')
+      } else {
+        // 못들어가는 방인 경우 메세지를 보내줌
+        alert(res.message)
+      } 
     })
     .catch(err => console.log(err))
   }
