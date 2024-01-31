@@ -49,15 +49,10 @@ export const useOpenviduStore = defineStore('openvidu', () => {
           const { connection } = stream;
           return JSON.parse(connection.data);
       }
-      const clientData = computed(() => {
-        const { clientData } = getConnectionData();
-        return clientData;
-      });
-      const isWatcher = computed(() => {
-        const { isWatcher } = getConnectionData();
-        return isWatcher;
-      });
-  
+      const { clientData } = getConnectionData()
+      console.log(clientData);
+      const { isWatcher } = getConnectionData()
+      console.log(isWatcher);
       subscribers.value.push(subscriber)
       // 플레이어, 관전자 리스트에도 추가
       if (isWatcher === false) {
@@ -67,6 +62,8 @@ export const useOpenviduStore = defineStore('openvidu', () => {
         // 관전자 이름들도 추가
         roomStore.watchersNickname.push(clientData)
       }
+      console.log(subscribers.value);
+      console.log(players.value);
     })
   
     // On every Stream destroyed...
