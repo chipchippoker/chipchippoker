@@ -9,6 +9,7 @@ import { useGameStore } from './game'
 export const useRoomStore = defineStore('room', () => {
   const userStore = useUserStore()
   const ROOM_API = `${userStore.BASE_API_URL}/rooms`
+  const SPECTATE_API = `${userStore.BASE_API_URL}/spectate`
 
   const router = useRouter()
 
@@ -273,24 +274,38 @@ export const useRoomStore = defineStore('room', () => {
     .catch(err => console.log(err))
   } 
 
-  // 관전 공개방 대기중 입장
-  const enterWatchPublic = function (payload) {
-    
+  // 관전 대기중 입장
+  const enterWatch = function (payload) {
+    axios({
+      method: 'post',
+      url: `${SPECTATE_API}/enter/`,
+      headers: { 'access-token': userStore.accessToken },
+      data: payload
+    })
+    .then(res => {
+      console.log('관전 대기중 입장');
+      roomId.value = res.data.roomId
+      title.value = res.data.title
+      roomState.value = res.data.state
+    })
+    .catch(err => console.log(err))
   }
 
-  // 관전 공개방 진행중 입장
-  const enterWatchPublicProgress = function (payload) {
-
-  }
-
-  // 관전 비공개방 대기중 입장
-  const enterWatchPrivate = function (payload) {
-
-  }
-
-  // 관전 비공개방 진행중 입장
-  const enterWatchPrivateProgress = function (payload) {
-
+  // 관전 진행중 입장
+  const enterWatchProgress = function (payload) {
+    axios({
+      method: 'post',
+      url: `${SPECTATE_API}/enter/`,
+      headers: { 'access-token': userStore.accessToken },
+      data: payload
+    })
+    .then(res => {
+      console.log('관전 진행중 입장');
+      roomId.value = res.data.roomId
+      title.value = res.data.title
+      roomState.value = res.data.state
+    })
+    .catch(err => console.log(err))
   }
 
   return {
@@ -308,6 +323,6 @@ export const useRoomStore = defineStore('room', () => {
     // 사용자 강제 퇴장
     forceMemberOut,
     // 관전
-    enterWatchPublic, enterWatchPublicProgress, enterWatchPrivate, enterWatchPrivateProgress
+    enterWatch, enterWatchProgress,
   }
 },{persist:true})

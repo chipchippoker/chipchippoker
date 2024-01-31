@@ -28,9 +28,11 @@ import { ref } from 'vue';
 import { useFriendStore } from '@/stores/friend'
 import { useRouter } from 'vue-router'
 import { useRoomStore } from '@/stores/room';
+import { useUserStore } from '@/stores/user';
 
 
 const friendStore = useFriendStore()
+const userStore = useUserStore()
 const password = ref(null)
 
 const props = defineProps({
@@ -53,10 +55,11 @@ const enterRoomPrivate = function () {
     } else if (props.userType === '관전자' && roomStore.state === '대기') {
         roomStore.isWatcher = true
         roomStore.watchersNickname.push(userStore.myNickname)
-        roomStore.enterWatchPrivate(payload)
+        roomStore.enterWatch(payload)
     } else {
         roomStore.isWatcher = true
-        roomStore.enterWatchPrivateProgress(payload)
+        roomStore.watchersNickname.push(userStore.myNickname)
+        roomStore.enterWatchProgress(payload)
     }
     deletePW()
 }

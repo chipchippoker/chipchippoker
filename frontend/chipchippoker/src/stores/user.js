@@ -161,7 +161,7 @@ export const useUserStore = defineStore('user', () => {
     console.log('로그아웃 요청!');
     axios({
       method: 'post',
-      url: `${USER_API}/logout`,
+      url: `${MEMBERS_API}/logout`,
       headers: { 'access-token': accessToken.value }
     })  
     .then(res => {
@@ -227,7 +227,7 @@ export const useUserStore = defineStore('user', () => {
     try {
       await axios({
         method: 'delete',
-        url: `${USER_API}/members`,
+        url: `${MEMBERS_API}/withdraw`,
         headers: { 'access-token': accessToken.value }
       })
       console.log('회원탈퇴 성공')

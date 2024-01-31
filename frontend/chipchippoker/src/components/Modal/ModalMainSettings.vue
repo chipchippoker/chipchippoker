@@ -24,13 +24,13 @@
                     </div>
                 </div>
                 <!-- 카메라 -->
-                <div class="d-flex flex-column gap-2">
+                <!-- <div class="d-flex flex-column gap-2">
                     <h4 class="fw-bold">카메라</h4>
                     <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-                    <label class="form-check-label" for="flexSwitchCheckChecked">관전 카메라 허용</label>
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                        <label class="form-check-label" for="flexSwitchCheckChecked">관전 카메라 허용</label>
                     </div>
-                </div>
+                </div> -->
                 <!-- 문의 -> 구글폼으로 연결 -->
                 <div>
                     <h4 class="fw-bold">문의하기

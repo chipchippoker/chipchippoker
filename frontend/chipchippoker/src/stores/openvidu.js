@@ -223,12 +223,12 @@ export const useOpenviduStore = defineStore('openvidu', () => {
   
   // 채팅창 구현을 위한 함수 제작
   ///////////////////////////
-  function sendMessage(event) {
-    event.preventDefault();
-    if(inputMessage.value.trim()){
+  function sendMessage(input) {
+    console.log(input);
+    if(input.trim()){
       // 다른 참가원에게 메시지 전송하기
       session.value.signal({
-        data: JSON.stringify({username: userStore.myNickname, message: inputMessage.value}), // 메시지 데이터를 문자열로 변환해서 전송
+        data: JSON.stringify({username: userStore.myNickname, message: input}), // 메시지 데이터를 문자열로 변환해서 전송
         type: 'chat' // 신호 타입을 'chat'으로 설정
       });
       inputMessage.value = '';

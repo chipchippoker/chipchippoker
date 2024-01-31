@@ -8,8 +8,8 @@
         <div class="modal-body d-flex flex-column justify-content-center align-items-center gap-5">
             <h3>로그아웃 하시겠습니까?</h3>
             <div class="d-flex gap-5">
-                <button class="btn btn-outline-secondary" @click="logOut">로그아웃</button>
-                <button class="btn btn-primary"  data-bs-dismiss="modal" aria-label="Close">돌아가기</button>
+                <button class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">돌아가기</button>
+                <button class="btn btn-outline-secondary" data-bs-dismiss="modal" @click="logOut">로그아웃</button>
             </div>
         </div>
         
@@ -25,7 +25,7 @@ import { useRouter } from 'vue-router'
 const userStore = useUserStore()
 const logOut = function(){
     console.log('로그아웃')
-    // userStore.logOut()
+    userStore.logOut()
 }
 
 </script>
