@@ -50,8 +50,7 @@ public class InboundChannelInterceptor implements ChannelInterceptor {
 		else if (StompCommand.CONNECT.equals(accessor.getCommand())) {
 			log.info("CONNECT");
 			log.info(accessor.getFirstNativeHeader("access-token"));
-			String nickname = jwtUtil.getNickName(accessor.getFirstNativeHeader("access-token"),
-				accessor.getFirstNativeHeader("refresh-token"));
+			String nickname = jwtUtil.getNickname(accessor.getFirstNativeHeader("access-token"));
 			sessionMap.put(sessionId, nickname);
 			log.info(nickname.concat("이 연결된 세션 ID는 ").concat(sessionId).concat(" 입니다."));
 		}

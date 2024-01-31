@@ -67,7 +67,7 @@ public class GameController {
 	) {
 		log.info("게임방 생성 시작");
 		log.info("닉네임 찍어보기");
-		String nickname = jwtUtil.getNickName(accessToken, null);
+		String nickname = jwtUtil.getNickname(accessToken);
 
 		makeGameManager(gameRoomTitle,
 			createGameRoomMessageRequest.getCountOfPeople(),
@@ -90,7 +90,7 @@ public class GameController {
 	) {
 		log.info("게임방 입장 시작");
 		// todo 블랙리스트라면 들어가지 못하게 만들기
-		String nickname = jwtUtil.getNickName(accessToken, null);
+		String nickname = jwtUtil.getNickname(accessToken);
 		GameManager gameManager = gameManagerMap.get(gameRoomTitle);
 		gameManager.insertMember(nickname, Boolean.FALSE);
 		broadcastAllMemberInfoInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_NEW_MEMBER_ENTER,
@@ -107,7 +107,7 @@ public class GameController {
 		@DestinationVariable(value = "gameRoomTitle") String gameRoomTitle
 	) {
 		log.info("게임방 퇴장 시작");
-		String nickname = jwtUtil.getNickName(accessToken, null);
+		String nickname = jwtUtil.getNickname(accessToken);
 		GameManager gameManager = gameManagerMap.get(gameRoomTitle);
 		gameManager.deleteMember(nickname);
 		// 게임방 가져오기 REST API 연결시
@@ -127,7 +127,7 @@ public class GameController {
 		BanMemberMessageRequest banMemberMessageRequest
 	) {
 		log.info("게임방 강퇴 시작");
-		String nickname = jwtUtil.getNickName(accessToken, null);
+		String nickname = jwtUtil.getNickname(accessToken);
 		GameManager gameManager = gameManagerMap.get(gameRoomTitle);
 		String roomManager = gameManager.getRoomManager();
 		if (nickname.equals(roomManager)) {
@@ -152,7 +152,7 @@ public class GameController {
 		GameReadyMessageRequest gameReadyMessageRequest
 	) {
 		log.info("게임방 레디 시작");
-		String nickname = jwtUtil.getNickName(accessToken, null);
+		String nickname = jwtUtil.getNickname(accessToken);
 		GameManager gameManager = gameManagerMap.get(gameRoomTitle);
 		gameManager.playReady(nickname, gameReadyMessageRequest.getIsReady());
 		broadcastAllMemberInfoInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_MEMBER_READY,
@@ -169,7 +169,7 @@ public class GameController {
 		@DestinationVariable(value = "gameRoomTitle") String gameRoomTitle
 	) {
 		log.info("게임방 게임 시작");
-		String nickname = jwtUtil.getNickName(accessToken, null);
+		String nickname = jwtUtil.getNickname(accessToken);
 		GameManager gameManager = gameManagerMap.get(gameRoomTitle);
 		if (gameManager.getRoomManager().equals(nickname)) {
 			try {
@@ -218,7 +218,7 @@ public class GameController {
 		배팅을 했다면 다음 차례에 배팅 차례를 넘겨준다.
 		 */
 		log.info("베팅 로직 시작");
-		String nickname = jwtUtil.getNickName(accessToken, null);
+		String nickname = jwtUtil.getNickname(accessToken);
 
 		// 게임 액션
 		GameManager gameManager = gameManagerMap.get(gameRoomTitle);

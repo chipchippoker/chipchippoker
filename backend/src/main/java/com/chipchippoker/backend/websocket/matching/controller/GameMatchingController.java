@@ -34,7 +34,7 @@ public class GameMatchingController {
 		GameMatchingMessageRequest gameMatchingMessageRequest
 	) {
 		log.info("매칭 시작");
-		String nickname = jwtUtil.getNickName(accessToken, null);
+		String nickname = jwtUtil.getNickname(accessToken);
 		GameManager gameManager = gameManagerMap.get(gameRoomTitle);
 		if (gameManager == null) {
 			gameManager = new GameManager(gameRoomTitle, gameMatchingMessageRequest.getCountOfPeople(), null);
