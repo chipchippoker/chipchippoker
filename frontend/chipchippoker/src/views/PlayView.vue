@@ -23,7 +23,7 @@
     <!-- players -->
     <div class="w-100" style="height: 70%;">
       <!-- 플레이어 화면 / 카드 / 감정 / 정보 -->
-      <PlayPlayerVue :roomId="roomId" :myNickname="myNickname" />
+      <PlayPlayerVue />
     </div>
     <!-- 채팅, 카드, 컨트롤러 -->
     <div class="d-flex align-items-center mb-3" style="width: 100%; height: 20%;">
@@ -85,7 +85,7 @@
   const roomTitle = ref('')
   const totalParticipantCnt = ref('')
   
-  roomId.value = route.params.roomId
+  roomId.value = roomStore.roomId
   myNickname.value = userStore.myNickname
   roomTitle.value = roomStore.title
   totalParticipantCnt.value = roomStore.totalParticipantCnt
