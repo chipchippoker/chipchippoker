@@ -5,9 +5,10 @@ import { useRouter } from 'vue-router'
  
 const KAKAO_JAVASCRIPT_KEY = import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY
 const REDIRECT_URI = 'http://localhost:5173/login'
+// const REDIRECT_URI = 'https://i10a804.p.ssafy.io/login'
 
 export const useUserStore = defineStore('user', () => {
-  const BASE_API_URL = 'http://i10a804.p.ssafy.io:8082/api'
+  const BASE_API_URL = 'https://i10a804.p.ssafy.io/api'
   const USER_API = `${BASE_API_URL}/auth`
   const MEMBERS_API = `${BASE_API_URL}/members`
 
@@ -40,6 +41,19 @@ export const useUserStore = defineStore('user', () => {
     })
     .catch(err => console.log(err))
   }
+
+  // 토큰 재발행 관련 인터셉터
+  axios.interceptors.response.use(
+    function (response) {
+      if (response.data.code === 'UA003') {
+        return renewToken().then(()=>{
+          response.config.headers['access-token'] = accessToken.value
+          return axios(response.config)
+        })
+      }
+      return response
+    }
+  )
 
   // 회원가입
   const signUp = async function (payload) {
@@ -107,8 +121,9 @@ export const useUserStore = defineStore('user', () => {
         url: `${USER_API}/authorization`,
         data: { authorizationCode }
       })
+
       const res = response.data
-      console.log(res.data)
+      console.log(response)
       if (res.data.code === 200) {
         console.log("카카오 로그인 성공!!")
         accessToken.value = res.data.accessToken
@@ -311,6 +326,7 @@ export const useUserStore = defineStore('user', () => {
 
   //  아이콘 변수, 아이콘 가져오기 함수  
   const getIconUrl = function(number){
+    console.log('아이콘 가져오기');
     return new URL(`/src/assets/profile_icons/icon${number}.jpg`,import.meta.url).href;
   }
 
@@ -335,6 +351,22 @@ export const useUserStore = defineStore('user', () => {
     })
   }
 
+  // 아이콘 변경
+  const changeIcon = function (number) {
+    console.log(number)
+    axios({
+      method:'post',
+      url: `${MEMBERS_API}/icon`,
+      headers: { 'access-token': accessToken.value },
+      data: {icon: number}
+    })
+    .then(res => {
+      console.log("아이콘 변경 완료");
+      myIcon.value = number
+    })
+    .catch(err => console.log(err))
+  }
+
   return {
     // 베이스 url
     BASE_API_URL,
@@ -345,7 +377,7 @@ export const useUserStore = defineStore('user', () => {
     accessToken, refreshToken, authorizationCode, kakaoAccessToken,
 
     // 프로필 아이콘, 프로필 정보 받아오기
-    getIconUrl, getTierIconUrl, getProfileInfo, 
+    getIconUrl, getTierIconUrl, getProfileInfo, changeIcon,
     myIcon, myNickname, profileInfo, viewProfileIcon,
     }
 },{persist:true})

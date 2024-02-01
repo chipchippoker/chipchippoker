@@ -8,8 +8,10 @@ import { useRouter } from 'vue-router';
 import { ref, computed } from 'vue';
 import { useUserStore } from '@/stores/user'
 import { useFriendStore } from './stores/friend';
+import { useGameStore } from './stores/game';
 const userStore = useUserStore()
 const friendStore = useFriendStore()
+const gameStore = useGameStore()
 
 const router = useRouter()
 const goProfile = function(){
@@ -50,6 +52,10 @@ for (let i = 0; i < 300; i++) {
   stars.value.push({ x, y, className });
 }
 
+  const checkAlarm = function(){
+    friendStore.RequestAlarm()
+    gameStore.isAlarmArrive = false
+  }
 </script>
 
 <template>
@@ -75,9 +81,9 @@ for (let i = 0; i < 300; i++) {
 
         <div class="d-flex flex-row justify-content-between" style="width: 10%;">
           <!-- 알림 모달 아이콘 -->
-          <button @click="friendStore.RequestAlarm()" class="mx-3 z-3 btn-transparency position-relative">
+          <button @click="checkAlarm()" class="mx-3 z-3 btn-transparency position-relative">
             <font-awesome-icon icon="bell"  shake size="lg" data-bs-toggle="modal" data-bs-target="#alarmModal" style="color: #ffffff;" />
-            <div v-if="friendStore.alarmList.length > 0" class="alarm-on"></div>
+            <div v-if="gameStore.isAlarmArrive" class="alarm-on"></div>
           </button>
           <!-- 설정 모달 아이콘 -->
           <button class="mx-3 z-3 btn-transparency">
@@ -89,7 +95,7 @@ for (let i = 0; i < 300; i++) {
           </button>
         </div>
         <!-- 유저 아이콘 -->
-        <img v-if="userStore.viewProfileIcon" type="button" @click="goProfile()" :src='userStore.getIconUrl(userStore.myIcon)' style="width: 60px; height: 60px; border-radius: 50%;">
+        <img v-if="userStore.viewProfileIcon" type="button" class="z-3" @click="goProfile()" :src='userStore.getIconUrl(userStore.myIcon)' style="width: 60px; height: 60px; border-radius: 50%;">
       </div>
 
     
