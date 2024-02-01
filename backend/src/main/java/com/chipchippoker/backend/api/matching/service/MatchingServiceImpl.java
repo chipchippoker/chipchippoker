@@ -10,9 +10,11 @@ import com.chipchippoker.backend.api.matching.model.dto.QuitMatchingResponse;
 import com.chipchippoker.backend.api.matching.model.dto.StartCompetitionMatchingResponse;
 import com.chipchippoker.backend.api.matching.model.dto.StartFriendlyMatchingResponse;
 import com.chipchippoker.backend.api.member.repository.MemberRepository;
+import com.chipchippoker.backend.api.membergameroomblacklist.respository.MemberGameRoomBlackListRepository;
 import com.chipchippoker.backend.common.dto.ErrorBase;
 import com.chipchippoker.backend.common.entity.GameRoom;
 import com.chipchippoker.backend.common.entity.Member;
+import com.chipchippoker.backend.common.entity.MemberGameRoomBlackList;
 import com.chipchippoker.backend.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class MatchingServiceImpl implements MatchingService {
 	private final MemberRepository memberRepository;
 	private final GameRoomRepository gameRoomRepository;
+	private final MemberGameRoomBlackListRepository memberGameRoomBlackListRepository;
 
 	@Override
 	public StartFriendlyMatchingResponse startFriendlyMatching(Long id, Integer totalParticipantCnt) {
@@ -33,13 +36,19 @@ public class MatchingServiceImpl implements MatchingService {
 		List<GameRoom> gameRoomList = gameRoomRepository.findByStartFriendlyMatchingSearchOption(totalParticipantCnt);
 
 		if (!gameRoomList.isEmpty()) { // 조회된 게임방이 있는 경우
-			GameRoom gameRoom = gameRoomList.get(0);
-			member.enterGameRoom(gameRoom);
-			// 게임방에 처음 들어가는 사용자인가 (친선전 빠른 시작은 무조건 처음 들어가는 사용자가 아님)
-			return StartFriendlyMatchingResponse.startFriendlyMatchingResponse(gameRoom, Boolean.FALSE);
-		} else { // 조회된 게임방이 없는 경우
-			return null;
+			for (GameRoom gameRoom : gameRoomList) {
+				// 블랙리스트 사용자인가
+				MemberGameRoomBlackList memberGameRoomBlackList = memberGameRoomBlackListRepository.findByMemberAndGameRoom(
+					member, gameRoom);
+				if (memberGameRoomBlackList == null) { // 해당 방의 블랙리스트에 등록되지 않는 사용자의 경우
+					member.enterGameRoom(gameRoom);
+					return StartFriendlyMatchingResponse.startFriendlyMatchingResponse(gameRoom,
+						Boolean.FALSE); // 게임방에 처음 들어가는 사용자인가 (친선전 빠른 시작은 무조건 처음 들어가는 사용자가 아님)
+				}
+			}
 		}
+		// 블랙리스트에 등록되어 조회된 모든 방에 입장할 수 없는 사용자의 경우, 조회된 게임방이 없는 경우
+		return null;
 	}
 
 	@Override

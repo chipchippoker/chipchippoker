@@ -43,8 +43,8 @@ public class GameRoom extends BaseEntity {
 	@OneToMany(mappedBy = "gameRoom", cascade = CascadeType.ALL)
 	private List<Member> members = new ArrayList<>();
 
-	@OneToOne(mappedBy = "gameRoom", cascade = CascadeType.ALL)
-	private GameRoomBlackList gameRoomBlackLists;
+	@OneToMany(mappedBy = "gameRoom", cascade = CascadeType.ALL)
+	private List<MemberGameRoomBlackList> memberGameRoomBlackLists = new ArrayList<>();
 
 	@OneToOne(mappedBy = "gameRoom", cascade = CascadeType.ALL)
 	private SpectateRoom spectateRoom;

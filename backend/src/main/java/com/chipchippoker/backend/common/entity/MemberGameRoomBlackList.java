@@ -20,14 +20,14 @@ public class MemberGameRoomBlackList extends BaseEntity {
 	private Member member;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "game_room_black_list_id")
-	private GameRoomBlackList gameRoomBlackList;
+	@JoinColumn(name = "game_room_id")
+	private GameRoom gameRoom;
 
 	public static MemberGameRoomBlackList createMemberGameRoomBlackList(Member member,
-		GameRoomBlackList gameRoomBlackList) {
+		GameRoom gameRoom) {
 		return MemberGameRoomBlackList.builder()
 			.member(member)
-			.gameRoomBlackList(gameRoomBlackList)
+			.gameRoom(gameRoom)
 			.build();
 	}
 }
