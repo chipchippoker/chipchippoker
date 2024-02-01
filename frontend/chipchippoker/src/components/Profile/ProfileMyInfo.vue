@@ -7,7 +7,7 @@
         <div class="d-flex align-items-end fs-3">
           <!-- 프로필 사진 -->
           <div
-          class="d-flex justify-content-center mx-5 fade-in"
+          class="d-flex justify-content-center ms-5 fade-in"
           style="position: relative;">
             <!-- 내프로필 -->
             <img v-if="userStore?.profileInfo?.isMine" 
@@ -30,66 +30,71 @@
           </div>
 
           <!-- 닉네임 티어, 포인트 -->
-          <div class="d-flex align-items-end gap-5 fw-bold">
-            <div>
-              {{ userStore?.profileInfo?.nickname }}
-            </div>
-            <div style="width: 56px; height: 50px;">
-              <img class=""  :src='friendStore.getTierIconUrl(userStore?.profileInfo?.tier)' style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-            <div>
-              {{ userStore?.profileInfo?.point }}pt
+          <div class="w-75 d-flex justify-content-center">
+            <div class="d-flex align-items-center gap-5 fw-bold">
+              <div>
+                {{ userStore?.profileInfo?.nickname }}
+              </div>
+              <div style="width: 56px; height: 50px;">
+                <img class=""  :src='friendStore.getTierIconUrl(userStore?.profileInfo?.tier)' style="width: 100%; height: 100%; object-fit: cover;">
+              </div>
+              <div>
+                {{ userStore?.profileInfo?.point }}pt
+              </div>
             </div>
           </div>
         </div>
 
         
         <!-- 상세 정보 -->
-        <div class="row profile-outline-darkblue m-3">
+        <div class="row profile-outline-darkblue m-3 text-center">
           <!-- 왼쪽 -->
-          <div class="col-6 row p-3 m-1">
-            <!-- 랭킹 친구 -->
-            <div v-if="userStore?.profileInfo?.isMine===true" 
-            class="col-6 mb-3">
-              <strong>랭킹(친구)</strong>
+          <div class="col-6 row m-1">
+            <!-- 랭킹 전체 / 친구 -->
+            <div class="mx-auto col-12 row my-3" v-if="userStore?.profileInfo?.isMine===true">
+              <div class="col-6">
+                <strong>랭킹(전체 / 친구)</strong>
+              </div>
+              <div class="col-6">{{ userStore?.profileInfo?.rank }}위 / {{ userStore?.profileInfo?.rankFriend }}위</div>
             </div>
-            <div v-if="userStore?.profileInfo?.isMine===true"
-             class="col-6 mb-3">{{ userStore?.profileInfo?.rank }}위</div>
-            <!-- 랭킨(전체) -->
-            <div class="col-6 mb-3">
-              <strong>랭킹(전체)</strong>
+            <!-- 랭킹(전체) -->
+            <div class="col-12 row my-3" v-else>
+              <div class="col-6">
+                <strong>랭킹(전체)</strong>
+              </div>
+              <div 
+               class="col-6">{{ userStore?.profileInfo?.rank }}위</div>
             </div>
-            <div 
-             class="col-6 mb-3">{{ userStore?.profileInfo?.rank }}위</div>
             <!-- 게임 수 -->
-            <div class="col-6 mb-3">
-              <strong>게임 수</strong>
+            <div class="col-6 my-3">
+              <strong>게임 수(경쟁 / 친선)</strong>
             </div>
-            <div class="col-6 mb-3">{{ userStore?.profileInfo?.total }}전</div>
+            <div class="col-6 my-3">{{ userStore?.profileInfo?.competitiveTotal }}전 / {{ userStore?.profileInfo?.friendlyTotal }}전</div>
             <!-- 승패 -->
-            <div class="col-6">
-              <strong>승패</strong>
+            <div class="col-6 my-3">
+              <strong>승패(경쟁 / 친선)</strong>
             </div>
-            <div class="col-6">{{ userStore?.profileInfo?.win }}승 {{ userStore?.profileInfo?.draw }}무 {{ userStore?.profileInfo?.lose }}패</div>
+            <div class="col-6 my-3">{{ userStore?.profileInfo?.friendlyWin }}승 {{ userStore?.profileInfo?.friendlyDraw }}무 {{ userStore?.profileInfo?.friendlyLose }}패 / 
+              {{ userStore?.profileInfo?.competitiveWin }}승 {{ userStore?.profileInfo?.competitiveDraw }}무 {{ userStore?.profileInfo?.competitiveLose }}패</div>
           </div>
 
           <!-- 오른쪽 -->
           <div class="col-6 row ms-1">
             <!-- 승률 -->
             <div class="col-6 my-3">
-              <strong>승률</strong>
+              <strong>승률(경쟁 / 친선)</strong>
             </div>
-            <div class="col-6 my-3">{{ userStore?.profileInfo?.winningRate }}%</div>
+            <div class="col-6 my-3">{{ userStore?.profileInfo?.competitiveWinningRate }}% / {{ userStore?.profileInfo?.friendlyWinningRate }}%</div>
             <!-- 포인트 -->
-            <div class="col-6 mb-3">
+            <div class="col-6 my-3">
               <strong>포인트</strong>
             </div>
-            <div class="col-6 mb-3">{{ userStore?.profileInfo?.point }}pt</div>
+            <div class="col-6 my-3">{{ userStore?.profileInfo?.point }}pt</div>
             <!-- 최대 연승 -->
-            <div class="col-6">
+            <div class="col-6 my-3">
               <strong>최대연승</strong>
             </div>
-            <div class="col-6 mb-3">{{ userStore?.profileInfo?.maxWin }}연승</div>
+            <div class="col-6 my-3">{{ userStore?.profileInfo?.maxWin }}연승</div>
           </div>
         </div>
 
@@ -97,7 +102,7 @@
         <div v-if="userStore?.profileInfo?.isMine" class="d-flex flex-row-reverse">
           <button class="btn btn-signout" data-bs-toggle="modal" data-bs-target="#SignOutModal">회원탈퇴</button>
           <button class="btn btn-logout" data-bs-toggle="modal" data-bs-target="#LogOutModal">로그아웃</button>
-          <button class="btn btn-kakao">
+          <button v-if="userStore.kakaoAccessToken === null" class="btn btn-kakao">
             <img class="kakao-logo" @click="userStore.kakaoConnect" src="/src/assets/icons/kakaologo.png" alt="">
             카카오 연동하기
           </button>
