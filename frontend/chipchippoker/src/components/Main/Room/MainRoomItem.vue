@@ -43,7 +43,7 @@
             <ModalIsPlayingRoomVue/>
         </div>
         <!-- 꽉찬 방 모달 -->
-        <div class="modal fade" id="IsFullModal" tabindex="-1" aria-labelledby="IsFullModal" aria-hidden="true">
+        <div class="modal fade" :id="`IsFullModal${item?.roomId}`" tabindex="-1" :aria-labelledby="`IsFullModal${item?.roomId}`" aria-hidden="true">
             <ModalIsFullRoomVue/>
         </div>
     </div>
@@ -72,8 +72,8 @@ const enterRoomPublic = function (title, type) {
     userType.value = type
     roomStore.roomState = props.item.state
     // 꽉찬 방이면
-    if ((type === '플레이어' && props.item?.currentParticipantCnt === props.item?.totalParticipantCnt) || (type === '관전자' && props.item?.currentSpectatorCnt === 6)) {
-        const isFullModal = new bootstrap.Modal(document.getElementById('IsFullModal'));
+    if (type === '관전자' && props.item?.currentSpectatorCnt === 6) {
+        const isFullModal = new bootstrap.Modal(document.getElementById(`IsFullModal${props.item?.roomId}`));
         isFullModal.show()
     } else {
 
@@ -81,8 +81,11 @@ const enterRoomPublic = function (title, type) {
             roomStore.isWatcher = false
             // 게임 진행 중이면
             if (props.item.state === '진행') {
-                const isPlayingModal = new bootstrap.Modal(document.getElementById('IsPlayingModal'));
+                const isPlayingModal = new bootstrap.Modal(document.getElementById(`IsPlayingModal${props.item?.roomId}`));
                 isPlayingModal.show()
+            } else if (props.item?.currentParticipantCnt === props.item?.totalParticipantCnt) { // 플레이어 꽉 찬 방이면
+                const isFullModal = new bootstrap.Modal(document.getElementById(`IsFullModal${props.item?.roomId}`));
+                isFullModal.show()
             } else {
                 roomStore.enterRoomPublic(payload)
             }
@@ -103,19 +106,22 @@ const showEnterPWModal = function (type) {
     roomStore.roomState = props.item.state
     userType.value = type
     // 꽉찬 방이면
-    if ((type === '플레이어' && props.item?.currentParticipantCnt === props.item?.totalParticipantCnt) || (type === '관전자' && props.item?.currentSpectatorCnt === 6)) {
-        const isFullModal = new bootstrap.Modal(document.getElementById('IsFullModal'));
+    if (type === '관전자' && props.item?.currentSpectatorCnt === 6) {
+        const isFullModal = new bootstrap.Modal(document.getElementById(`IsFullModal${props.item?.roomId}`));
         isFullModal.show()
     } else {
 
         // 플레이어고 진행중이면 진행 중인 게임 들어가지 못하게
         if (type === '플레이어' && props.item.state === '진행') {
             roomStore.isWatcher = false
-            const isPlayingModal = new bootstrap.Modal(document.getElementById('IsPlayingModal'));
+            const isPlayingModal = new bootstrap.Modal(document.getElementById(`IsPlayingModal${props.item?.roomId}`));
             isPlayingModal.show()
+        } else if (type === '플레이어' && props.item?.currentParticipantCnt === props.item?.totalParticipantCnt) { // 플레이어 꽉 찬 방이면
+            const isFullModal = new bootstrap.Modal(document.getElementById(`IsFullModal${props.item?.roomId}`));
+            isFullModal.show()
         } else {
-            const enterPWModal = new bootstrap.Modal(document.getElementById('EnterPWModal'));
-            enterPWModal.show()
+        const enterPWModal = new bootstrap.Modal(document.getElementById(`EnterPWModal${props.item?.roomId}`));
+        enterPWModal.show()
         }
 
     }

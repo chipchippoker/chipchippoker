@@ -192,8 +192,14 @@
   const publisherComputed = computed(() => openviduStore.publisher)
   console.log(playersComputed.value);
   const leaveRoom = function() {
-    gameStore.sendExitRoom()
-    openviduStore.leaveSession()
+    // 관전자면
+    if (roomStore.isWatcher === true) {
+      roomStore.leaveWatcher()
+      roomStore.isWatcher = false
+    } else {
+      gameStore.sendExitRoom()
+    }
+      openviduStore.leaveSession()
   }
 
   onMounted (() => {

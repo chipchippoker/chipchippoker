@@ -136,60 +136,60 @@ export const useGameStore = defineStore('game', () => {
     subscriptions.value.push(subscription)
   })
 
-    // 구독 핸들러
-    const subscribeHandler = (gameRoomTitle) => {
+  // 구독 핸들러
+  const subscribeHandler = (gameRoomTitle) => {
+    
+    // 토픽 구독 및 수신
+    const subscribtion = stompClient.subscribe(`/from/chipchippoker/checkConnect/${gameRoomTitle}`, (message) => {
+      console.log('방 구독하기');
+      console.log("subscribe success")
+      // 내 구독 아이디 저장 
       
-      // 토픽 구독 및 수신
-      const subscribtion = stompClient.subscribe(`/from/chipchippoker/checkConnect/${gameRoomTitle}`, (message) => {
-        console.log('방 구독하기');
-        console.log("subscribe success")
-        // 내 구독 아이디 저장 
-        
-        myId.value = message.headers.subscription
-        console.log(myId.value);
-        console.log(message.headers);
-        const response = JSON.parse(message.body).body
-        console.log(response.body)
+      myId.value = message.headers.subscription
+      console.log(myId.value);
+      console.log(message.headers);
+      const response = JSON.parse(message.body).body
+      console.log(response.body)
 
-        switch (response.code) {
-          case "MS001": // 방 생성
-            console.log(response.message);
-            receiveCreateRoom(response.data)
-            break
-          case "MS002": // 방 입장
-            console.log(response.message);
-            receiveJoinRoom(response.data)
-            break
-          case "MS003": // 방 나가기
-            console.log(response.message);
-            receiveExitRoom(response.data) 
-            break     
-          case "MS004": // 강퇴(타인)
-            console.log(response.member)
-            receiveBanYou(response.data)
-            break
-          case "MS005": // 강퇴(본인)
-            console.log(response.member);
-            receiveBanMe(response.data)
-            break
-        case "MS006": // 게임 준비 완료
-          receiveReady(response.data)
+      switch (response.code) {
+        case "MS001": // 방 생성
+          console.log(response.message);
+          receiveCreateRoom(response.data)
           break
-        case "MS007": // 게임 시작 성공
-        case "ME002": // 모두 준비상태가 아님
-        case "ME003": // 방장이 아님
-          receiveStartGame(response)
+        case "MS002": // 방 입장
+          console.log(response.message);
+          receiveJoinRoom(response.data)
           break
-        case "MS008": // 라운드 종료
-          receiveGameFinish(receiveMessage.value?.data)
+        case "MS003": // 방 나가기
+          console.log(response.message);
+          receiveExitRoom(response.data) 
+          break     
+        case "MS004": // 강퇴(타인)
+          console.log(response.member)
+          receiveBanYou(response.data)
           break
-        case "MS011": // 매칭
-          console.log(response.message)
-          receiveMatching(response.data)
-        }
-      })
-      subscriptions.value.push(subscribtion)
-    }
+        case "MS005": // 강퇴(본인)
+          console.log(response.member);
+          receiveBanMe(response.data)
+          break
+      case "MS006": // 게임 준비 완료
+        receiveReady(response.data)
+        break
+      case "MS007": // 게임 시작 성공
+      case "ME002": // 모두 준비상태가 아님
+      case "ME003": // 방장이 아님
+        receiveStartGame(response)
+        break
+      case "MS008": // 라운드 종료
+        receiveGameFinish(receiveMessage.value?.data)
+        break
+      case "MS011": // 매칭
+        console.log(response.message)
+        receiveMatching(response.data)
+      }
+    })
+    subscriptions.value.push(subscribtion)
+  }
   
   // 게임 매칭 SEND
   const sendMatching = function(title, countOfPeople){

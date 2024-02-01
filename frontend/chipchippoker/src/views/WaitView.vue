@@ -176,7 +176,13 @@ if (myNickname.value === roomManagerNickname.value) {
 
 // 방 나가기
 const leaveRoom = function() {
-  roomStore.leaveRoom()
+  // 관전자면
+  if (roomStore.isWatcher === true) {
+    roomStore.leaveWatcher()
+    roomStore.isWatcher = false
+  } else {
+    roomStore.leaveRoom()
+  }
   openviduStore.leaveSession()
 }
 

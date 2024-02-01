@@ -22,6 +22,7 @@ export const useMatchStore = defineStore('match', () => {
 
   // 경쟁전 빠른 시작
   const matchCompete = function(payload) {
+    console.log(payload);
     axios({
       method: 'post',
       url: `${MATCH_API}/competition`,
