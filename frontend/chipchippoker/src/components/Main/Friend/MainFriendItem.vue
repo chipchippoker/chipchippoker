@@ -1,6 +1,6 @@
 <template>
     <!-- 각각의 사용자 -->
-    <div type="button" @mouseover="soundStore.hoverSound" @click="gotoProfile(item?.nickname)" class="bg-modal">
+    <div type="button" @click="gotoProfile(item?.nickname)" class="bg-modal">
         <div class="friend-item d-flex align-items-center gap-2 friend-list rounded-2 mx-3">
             <!-- 아이콘 - 내용 d-flex  -->
             <img  class="x-small-icon"  :src='userStore.getIconUrl(item?.icon)'>
@@ -49,7 +49,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter()
 const gotoProfile = function(nickname){
     console.log(`${nickname}의 페이지로 이동`);
-    // router.push({name:'profile',params:{nickname:nickname}})
+    router.push({name:'profile',params:{nickname:nickname}})
 }
 </script>
 
