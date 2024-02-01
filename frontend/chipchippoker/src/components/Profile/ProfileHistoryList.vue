@@ -1,6 +1,6 @@
 <template>
     <!-- 나의 정보, 게임 프로필 -->
-    <div class="mainstyle d-flex flex-row" >
+    <div class="container mainstyle d-flex flex-row" >
       
 
       <!-- 정보 -->
@@ -9,7 +9,7 @@
         <div class="d-flex align-items-end fs-3">
           <!-- 프로필 사진 -->
           <div
-          class="d-flex justify-content-center mx-5 fade-in"
+          class="d-flex justify-content-center ms-5 fade-in"
           style="position: relative;">
             <!-- 내프로필 -->
             <img v-if="userStore?.profileInfo?.isMine" 
@@ -32,15 +32,17 @@
           </div>
 
           <!-- 닉네임 티어, 포인트 -->
-          <div class="d-flex align-items-end gap-5 fw-bold">
-            <div>
-              {{ userStore?.profileInfo?.nickname }}
-            </div>
-            <div style="width: 56px; height: 50px;">
-              <img class=""  :src='friendStore.getTierIconUrl(userStore?.profileInfo?.tier)' style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-            <div>
-              {{ userStore?.profileInfo?.point }}pt
+          <div class="w-75 d-flex justify-content-center">
+            <div class="d-flex align-items-center gap-5 fw-bold">
+              <div>
+                {{ userStore?.profileInfo?.nickname }}
+              </div>
+              <div style="width: 56px; height: 50px;">
+                <img class=""  :src='friendStore.getTierIconUrl(userStore?.profileInfo?.tier)' style="width: 100%; height: 100%; object-fit: cover;">
+              </div>
+              <div>
+                {{ userStore?.profileInfo?.point }}pt
+              </div>
             </div>
           </div>
         </div>
