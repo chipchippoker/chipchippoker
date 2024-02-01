@@ -10,19 +10,19 @@
                 <!-- 인원수 선택 -->
                 <div class="d-flex align-items-center gap-3">
                     <div class="form-check ">
-                        <input v-model="checkedOptions" class="form-check-input " type="radio" value="2" id="two">
+                        <input v-model="checkedOptions" class="form-check-input " type="radio" value=2 id="two">
                         <label class="form-check-label" for="two">
                             2인
                         </label>
                     </div>
                     <div class="form-check ">
-                        <input v-model="checkedOptions" class="form-check-input " type="radio" value="3" id="three">
+                        <input v-model="checkedOptions" class="form-check-input " type="radio" value=3 id="three">
                         <label class="form-check-label" for="three">
                             3인
                         </label>
                     </div>
                     <div class="form-check ">
-                        <input v-model="checkedOptions" class="form-check-input " type="radio" value="4" id="four">
+                        <input v-model="checkedOptions" class="form-check-input " type="radio" value=4 id="four">
                         <label class="form-check-label" for="four">
                             4인
                         </label>
@@ -52,62 +52,32 @@ import ModalNotExistRoomVue from './ModalNotExistRoom.vue';
 import { useMatchStore } from '@/stores/match';
 import { isMemoSame, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useGameStore } from '@/stores/game'
 
 const matchStore = useMatchStore()
+const gameStore = useGameStore()
 const router = useRouter()
 
 const props = defineProps({
     type:String
 })
 
-const checkedOptions = ref('2'); // 초기 상태 설정
+const checkedOptions = ref(2); // 초기 상태 설정
 
 const showFindGameModal = function () {
-    const findGameModal = new bootstrap.Modal(document.getElementById('FindGame'));
-    findGameModal.show()
-    
-    // 3초 동안은 게임 찾기
-    setTimeout(() => {
-      console.log(checkedOptions.value);
-        const payload = {
-            totalParticipantCnt: Number(checkedOptions.value)
-        }
-        console.log(payload);
-        if (props.type === '경쟁전') {
-            matchStore.matchCompete(payload)
-            // 매치 잡히면 넘어가기
-            if (matchStore.isMatch === true) {
-                findGameModal.hide()
-                router.push({
-                    name:'play',
-                    params: { roomId: matchStore.roomId },
-                    state: {
-                    title: matchStore.title,
-                    totalParticipantCnt: matchStore.totalParticipantCnt
-                    }
-                })
-            }
-        } else {
-            matchStore.matchFriend(payload)
-            // 매치 잡히면 넘어가기
-            if (matchStore.isMatch === true) {
-                findGameModal.hide()
-                console.log(payload)
-                router.push({
-                    name:'wait',
-                    params: { roomId: matchStore.roomId },
-                    state: {
-                    title: matchStore.title,
-                    totalParticipantCnt: matchStore.totalParticipantCnt
-                    }
-                })
-            } else if (matchStore.isMatch === false)  { // 생성된 친선 방이 없으면
-                findGameModal.hide()
-                const notExistRoom = new bootstrap.Modal(document.getElementById('NotExistRoom'));
-                notExistRoom.show()
-            }
-        }
-    }, 3000)
+  const findGameModal = new bootstrap.Modal(document.getElementById('FindGame'));
+  findGameModal.show()
+  const payload = {
+    totalParticipantCnt: checkedOptions.value
+  }
+  if (props.type === '경쟁전') {
+      matchStore.matchCompete(payload)
+  } else {
+    matchStore.matchFriend(payload)
+    findGameModal.hide()
+    const notExistRoom = new bootstrap.Modal(document.getElementById('NotExistRoom'));
+    notExistRoom.show()
+}
 }
 
 
