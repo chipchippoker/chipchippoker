@@ -4,7 +4,8 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
  
 const KAKAO_JAVASCRIPT_KEY = import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY
-const REDIRECT_URI = 'https://i10a804.p.ssafy.io/login'
+const REDIRECT_URI = 'http://localhost:5173/login'
+// const REDIRECT_URI = 'https://i10a804.p.ssafy.io/login'
 
 export const useUserStore = defineStore('user', () => {
   const BASE_API_URL = 'https://i10a804.p.ssafy.io/api'
@@ -40,6 +41,19 @@ export const useUserStore = defineStore('user', () => {
     })
     .catch(err => console.log(err))
   }
+
+  // 토큰 재발행 관련 인터셉터
+  axios.interceptors.response.use(
+    function (response) {
+      if (response.data.code === 'UA003') {
+        return renewToken().then(()=>{
+          response.config.headers['access-token'] = accessToken.value
+          return axios(response.config)
+        })
+      }
+      return response
+    }
+  )
 
   // 회원가입
   const signUp = async function (payload) {
@@ -107,8 +121,9 @@ export const useUserStore = defineStore('user', () => {
         url: `${USER_API}/authorization`,
         data: { authorizationCode }
       })
+
       const res = response.data
-      console.log(res.data)
+      console.log(response)
       if (res.data.code === 200) {
         console.log("카카오 로그인 성공!!")
         accessToken.value = res.data.accessToken
@@ -311,6 +326,7 @@ export const useUserStore = defineStore('user', () => {
 
   //  아이콘 변수, 아이콘 가져오기 함수  
   const getIconUrl = function(number){
+    console.log('아이콘 가져오기');
     return new URL(`/src/assets/profile_icons/icon${number}.jpg`,import.meta.url).href;
   }
 
