@@ -1,6 +1,6 @@
 <template>
     <div>
-      <img class="small-icon m-3" :class="{'selected':number === userStore.myIcon }" :src='userStore.getIconUrl(number)' :alt="number">
+      <img class="small-icon m-3" type="button" :class="{'selected':number === userStore.myIcon }" :src='userStore.getIconUrl(number)' :alt="number">
       
     </div>
   </template>

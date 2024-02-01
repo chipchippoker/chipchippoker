@@ -14,7 +14,7 @@
             class="profile-icon-mine" 
             type="button"
             data-bs-toggle="modal" data-bs-target="#IconModal" 
-            :src='userStore.getIconUrl(userStore?.profileInfo?.icon)' :alt="userStore?.profileInfo?.icon">
+            :src='userStore.getIconUrl(userStore?.myIcon)' :alt="userStore?.myIcon">
 
             <font-awesome-icon
             v-if="userStore?.profileInfo?.isMine"
@@ -47,7 +47,7 @@
         <!-- 상세 정보 -->
         <div class="row profile-outline-darkblue m-3">
           <!-- 왼쪽 -->
-          <div class="col-6 row p-3">
+          <div class="col-6 row p-3 m-1">
             <!-- 랭킹 친구 -->
             <div v-if="userStore?.profileInfo?.isMine===true" 
             class="col-6 mb-3">
@@ -70,11 +70,11 @@
             <div class="col-6">
               <strong>승패</strong>
             </div>
-            <div class="col-6" style="width: 40%;">{{ userStore?.profileInfo?.win }}승 {{ userStore?.profileInfo?.draw }}무 {{ userStore?.profileInfo?.lose }}패</div>
+            <div class="col-6">{{ userStore?.profileInfo?.win }}승 {{ userStore?.profileInfo?.draw }}무 {{ userStore?.profileInfo?.lose }}패</div>
           </div>
 
           <!-- 오른쪽 -->
-          <div class="col-6 row">
+          <div class="col-6 row ms-1">
             <!-- 승률 -->
             <div class="col-6 my-3">
               <strong>승률</strong>
@@ -94,25 +94,25 @@
         </div>
 
         <!-- 나의 프로필 -->
-        <!-- <div v-if="userStore?.profileInfo?.isMine" class="d-flex flex-row-reverse"> -->
+        <div v-if="userStore?.profileInfo?.isMine" class="d-flex flex-row-reverse">
           <button class="btn btn-signout" data-bs-toggle="modal" data-bs-target="#SignOutModal">회원탈퇴</button>
           <button class="btn btn-logout" data-bs-toggle="modal" data-bs-target="#LogOutModal">로그아웃</button>
           <button class="btn btn-kakao">
             <img class="kakao-logo" @click="userStore.kakaoConnect" src="/src/assets/icons/kakaologo.png" alt="">
             카카오 연동하기
           </button>
-        <!-- </div> -->
+        </div>
         <!-- 친구의 프로필 -->
-        <!-- <div v-else class="d-flex flex-row-reverse">
+        <div v-else class="d-flex flex-row-reverse">
           <button class="btn btn-signout">
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdQLmWHJoz263PcrL3G_SLOzQUY28fVmG2wXJUtObYnEK-_WQ/viewform?usp=sf_link">신고하기</a> -->
-          <!-- </button> -->
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdQLmWHJoz263PcrL3G_SLOzQUY28fVmG2wXJUtObYnEK-_WQ/viewform?usp=sf_link">신고하기</a>
+          </button>
           <!-- 버튼 누르고 바뀜 -->
-        <!-- <div v-if="isSent===true || profileInfo?.isSent" class="btn-signout rounded-2 p-1 bg-secondary text-white text-center border-0">
+        <div v-if="isSent===true || profileInfo?.isSent" class="btn-signout rounded-2 p-1 bg-secondary text-white text-center border-0">
             대기중
         </div>
           <button v-else @click="friendRequest" class="btn btn-signout primary">친구 신청</button>
-        </div> -->
+        </div>
       </div>
              
       <!-- 아이콘 모달 팝업 -->

@@ -127,7 +127,7 @@ export const useGameStore = defineStore('game', () => {
           break
       }
     })
-    subscriptions.push(subscription)
+    subscriptions.value.push(subscription)
   })
 
     // 구독 핸들러
@@ -181,7 +181,7 @@ export const useGameStore = defineStore('game', () => {
           receiveMatching(response.data)
         }
       })
-      subscriptions.push(subscribtion)
+      subscriptions.value.push(subscribtion)
     }
   
   // 게임 매칭 SEND
