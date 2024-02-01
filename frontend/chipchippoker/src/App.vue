@@ -82,7 +82,8 @@ for (let i = 0; i < 300; i++) {
         <div class="d-flex flex-row justify-content-between" style="width: 10%;">
           <!-- 알림 모달 아이콘 -->
           <button @click="checkAlarm()" class="mx-3 z-3 btn-transparency position-relative">
-            <font-awesome-icon icon="bell"  shake size="lg" data-bs-toggle="modal" data-bs-target="#alarmModal" style="color: #ffffff;" />
+            <!-- <p class="text-white">{{ gameStore.isAlarmArrive }}</p> -->
+            <font-awesome-icon icon="bell" :class="{'fa-shake':gameStore.isAlarmArrive==true}"  size="lg" data-bs-toggle="modal" data-bs-target="#alarmModal" style="color: #ffffff;" />
             <div v-if="gameStore.isAlarmArrive" class="alarm-on"></div>
           </button>
           <!-- 설정 모달 아이콘 -->
