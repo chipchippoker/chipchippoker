@@ -1,11 +1,20 @@
 <template>
+    <div class="text-center">
+    <h3 class="fw-bold ">게임 룰</h3>
+    <h5 class="fw-bold">총 라운드 수</h5>
     <div>
-        <h3 class="fw-bold text-center">카드 서열</h3>
-        <p>A는 1로 취급됩니다. </p>
-        <p>카드는 1 ~ 10 까지 존재하며, </p>
-        <p>기본적으로 높은 숫자가 높은 서열을 가지고 있습니다</p>
-        <p>하지만 A는 10보다 높은 서열을 가집니다</p>
-        <p class="text-danger fw-bold">※ TIP! 상대방이 A라고 방심하지 마세요!, 내가 10일수도 있거든요</p>
+        <div>인디언 포커는 총 10라운드로 이루어져 있지만, </div>
+        <div>그 전에 한 사람이 모든 코인을 획득하게 된다면 게임이 종료됩니다</div>
+    </div>
+    <h5 class="fw-bold">행동</h5>
+    <p>플레이시 플레이어가 가능한 행동은 두 가지 입니다</p>
+    <div class="d-flex justify-content-evenly">
+        <h4 class="fw-bold">배팅</h4>
+        <h4 class="fw-bold">폴드</h4>
+    </div>
+    
+    
+
     </div>
 </template>
 
