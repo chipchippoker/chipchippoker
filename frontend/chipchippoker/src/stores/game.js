@@ -53,6 +53,9 @@ export const useGameStore = defineStore('game', () => {
   const notMatchRound = ref(false)
   const notYourTurn = ref(false)
   const cannotBat = ref(false)
+  
+  // 친구신청 알림
+  const isAlarmArrive = ref(false)
 
   // stompClient.ws.onclose = event => {
   //   alert("WebSocket connection closed");
@@ -116,6 +119,9 @@ export const useGameStore = defineStore('game', () => {
             console.log("yourTurn", yourTurn.value);
             console.log("gameMemberInfos", gameMemberInfos.value);
           },5000)
+          break
+        case "MS012": // 친구요청 받음
+          isAlarmArrive.value = true
           break
 
         case "ME002": // 모두 준비상태가 아닙니다
@@ -334,7 +340,7 @@ export const useGameStore = defineStore('game', () => {
   const sendBan = function (gameRoomTitle, nickname) {
     stompClient.send(`/to/game/ban/${gameRoomTitle}`, JSON.stringify({nickname}), { 'access-token': userStore.accessToken })
   } 
-
+  
   // 강퇴 타인
   const receiveBanYou = function (data) {
     countOfPeople.value = data.countOfPeople
@@ -350,7 +356,7 @@ export const useGameStore = defineStore('game', () => {
     myId.value = null
     router.push('main')
   }
-
+  
   // 라운드 종료
   const receiveGameFinish = function(data){
     console.log('라운드 종료');
@@ -363,7 +369,12 @@ export const useGameStore = defineStore('game', () => {
     console.log("yourTurn", yourTurn.value);
     console.log("gameMemberInfos", gameMemberInfos.value);
   }
-
+  
+  // 친구신청 Send
+  const sendFriendRequest = function(nickname){
+    stompClient.send("/to/friend/request", JSON.stringify({"nickname":nickname}), { 'access-token': userStore.accessToken })
+  }
+  
   return {
     // State
     rooms: ref([]),
@@ -386,6 +397,7 @@ export const useGameStore = defineStore('game', () => {
     sendReady, receiveReady,
     sendBan, receiveBanMe, receiveBanYou,
     sendStartGame, receiveStartGame,
+    sendFriendRequest,
     bet,
     subscribeHandler,
     stompClient,
@@ -394,6 +406,7 @@ export const useGameStore = defineStore('game', () => {
     yourTurn,
     gameMemberInfos,
     bettingCoin,
+    isAlarmArrive,
     // 배팅 시 오류 메세지
     notMatchRound,
     notYourTurn,
