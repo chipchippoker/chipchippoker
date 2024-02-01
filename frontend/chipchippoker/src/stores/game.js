@@ -17,9 +17,8 @@ export const useGameStore = defineStore('game', () => {
   const url = `wss://i10a804.p.ssafy.io/chipchippoker`
 
   const stompClient = webstomp.client(url)
-  // const subscriptions = ref({
-  //   'messenger': []
-  // })
+
+  // 구독 정보
   const subscriptionGame = ref(undefined)
   const subscriptionPrivate = ref(undefined)
 
@@ -33,10 +32,10 @@ export const useGameStore = defineStore('game', () => {
   const countOfPeople = ref(0)
   const totalCountOfPeople = ref(0)
 
-  // const totalParticipantCnt = ref(0)
   const myOrder = ref(0)
   const roomManagerNickname = ref('')
-  const myId = ref('')
+  const myPrivateSubId = ref('')
+  const myGameSubId = ref('')
   const isMatch = ref(false)
 
   const indexing = function (nickname) {
@@ -87,6 +86,9 @@ export const useGameStore = defineStore('game', () => {
       console.log('개인 메세지함 구독 성공')
       const response = JSON.parse(message.body).body
       console.log(response)
+
+      // 개인메세지함 구독 아이디
+      myPrivateSubId.value = message.headers.subscription
 
       switch (response.code) {
 
@@ -150,8 +152,7 @@ export const useGameStore = defineStore('game', () => {
       console.log("subscribe success")
       // 내 구독 아이디 저장 
       
-      myId.value = message.headers.subscription
-      console.log(myId.value);
+      myGameSubId.value = message.headers.subscription
       console.log(message.headers);
       const response = JSON.parse(message.body).body
       console.log(response)
@@ -186,7 +187,7 @@ export const useGameStore = defineStore('game', () => {
         receiveStartGame(response)
         break
       case "MS008": // 라운드 종료
-        receiveGameFinish(receiveMessage.value?.data)
+        receiveGameFinish(response.data)
         break
       case "MS011": // 매칭
         console.log(response.message)
@@ -214,13 +215,15 @@ export const useGameStore = defineStore('game', () => {
     console.log(data.memberInfos.length, totalCountOfPeople.value);
     if (data.memberInfos.length === totalCountOfPeople.value) {
       isMatch.value = true
-      console.log('매치 성공!!');
+      roomStore.isSearching = false
+      console.log('매치 성공!!')
       router.push({
         name:'play',
         params: { roomId: matchStore.roomId },
       })
     } else {
-     console.log('매치 실패'); 
+     console.log('매치 실패')
+     roomStore.isSearching = false
     }
   }
 
@@ -274,7 +277,7 @@ export const useGameStore = defineStore('game', () => {
       gameRoomTitle.value = ''
       roomManagerNickname.value = ''
       countOfPeople.value = 0
-      myId.value = ''
+      myGameSubId.value = ''
       isMatch.value = false
       roundState.value = false
       currentRound.value = 0
@@ -282,7 +285,7 @@ export const useGameStore = defineStore('game', () => {
       gameMemberInfos.value = []
       bettingCoin.value = 0
       // 구독 취소하고 메인페이지로 보내기
-      subscriptions[-1].unsubscribe(myId.value)
+      subscriptionGame.unsubscribe(myGameSubId.value)
       router.push('main')
     } else {
       countOfPeople.value = data.countOfPeople
@@ -360,8 +363,8 @@ export const useGameStore = defineStore('game', () => {
     countOfPeople.value = 0
     memberInfos.value = []
     roomManagerNickname.value = ''
-    mySubscribtion.unsubscribe(myId.value)
-    myId.value = null
+    subscriptionGame.unsubscribe(myGameSubId.value)
+    myGameSubId.value = null
     router.push('main')
   }
   
@@ -392,6 +395,9 @@ export const useGameStore = defineStore('game', () => {
     yourTurn,
     gameMemberInfos,
     memberInfos,
+
+    // 구독 정보
+    subscriptionGame, myGameSubId,
 
 
 
