@@ -24,6 +24,7 @@ public enum MessageBase {
 	S200_GAME_ROOM_NORMAL_MATCH_END(OK, false, "MS010", "경쟁 매치가 종료되었습니다."),
 	S200_GAME_MATCHING(OK, false, "MS011", "게임 매칭 중입니다."),
 	S200_FRIEND_REQUEST(OK, false, "MS012", "친구 요청을 받았습니다."),
+	S200_GAME_ROOM_NEW_SPECTATOR_ENTER(OK, false, "MS013", "새로운 관전자가 방에 입장했습니다."),
 
 	/**
 	 * 400 Bad Request (잘못된 요청)
