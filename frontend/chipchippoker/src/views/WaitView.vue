@@ -74,7 +74,7 @@
       <!-- 로고, 관전자 목록, 채팅창, 버튼 -->
       <div class="col-3">
         <!-- 로고 -->
-        <div class="my-3 me-5"><img class="small-logo ms-4 mt-1 ps-1" src="/src/assets/icons/Logo.png" alt=""></div>
+        <div class="mb-3 me-5"><img class="small-logo m-0" src="/src/assets/icons/Logo.png" alt=""></div>
         <div class="">
           <!-- 관전자 목록 -->
           <div id="watcher-container">
@@ -84,17 +84,17 @@
 
           <!-- 나중에 <chat-winow />로 넘길수 있도록 해보자. -->
           <div id="chat-container">
-            <div id="chat-window" scrollTop>
-              <ul id="chat-history">
-                <li v-for="(message, index) in messages" :key="index">
+            <div class="bg-lightblue rounded-4 w-100 h-100 d-flex flex-column justify-content-end fs-5">
+              <ul id="messageList" class="overflow-y-auto m-0 chat_ul">
+                <li v-for="(message, index) in messages.value" :key="index">
                   <strong>{{message.username}}:</strong> {{message.message}}
                 </li>
               </ul>
+              <div class="input-group ">
+                <input class="form-control" type="text" placeholder="입력" v-model="inputMessage">
+                <button class="btn btn-outline-secondary" @click="sendMessage(inputMessage)">전송</button>
+              </div>
             </div>
-            <form id="chat-write me-3">
-              <input class="chat-write-input ms-4 me-3" type="text" placeholder="입력" v-model="inputMessage">
-              <button class="chat-write-btn" @click="openviduStore.sendMessage">전송</button>
-            </form>
           </div>
         </div>
 
@@ -216,6 +216,19 @@ const messages = ref([])
 openviduStore.inputMessage = computed(() => inputMessage.value)
 openviduStore.messages = computed(() => messages.value)
 
+const sendMessage = function(input) {
+    openviduStore.sendMessage(input)
+    inputMessage.value = ''
+    window.setTimeout(scrollUl, 50);
+  }
+
+// scroll 함수
+function scrollUl() {
+  // 채팅창 form 안의 ul 요소, (ul 요소 안에 채팅 내용들이 li 요소로 입력된다.)
+  let chatUl = document.querySelector('.chat_ul');
+  chatUl.scrollTop = chatUl.scrollHeight; // 스크롤의 위치를 최하단으로
+}
+
 
 /// 플레이어, 관전을 위한 변수들 크헝헝
 const publisherComputed = computed(() => openviduStore.publisher);
@@ -328,7 +341,7 @@ onUnmounted(() => {
 
 #watcher-container {
   width: 100%;
-  height: 100px;
+  height: 150px;
 }
 
 .box-btns {

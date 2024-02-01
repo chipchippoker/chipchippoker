@@ -181,10 +181,14 @@ export const useUserStore = defineStore('user', () => {
     })  
     .then(res => {
       console.log('로그아웃 성공!!')
-      accessToken.value = ''
-      refreshToken.value = ''
-      myIcon.value = ''
+      accessToken.value = null
+      refreshToken.value = null
+      authorizationCode.value = null
+      kakaoAccessToken.value = null
+      profileInfo.value = {}
+      myIcon.value = '1'
       myNickname.value = ''
+      localStorage.clear()
       router.push({ name: 'login'})
     })  
     .catch(err => console.log(err))
@@ -241,11 +245,20 @@ export const useUserStore = defineStore('user', () => {
     console.log('회원탈퇴 요청!')
     try {
       await axios({
-        method: 'delete',
+        method: 'post',
         url: `${MEMBERS_API}/withdraw`,
         headers: { 'access-token': accessToken.value }
       })
       console.log('회원탈퇴 성공')
+      accessToken.value = null
+      refreshToken.value = null
+      authorizationCode.value = null
+      kakaoAccessToken.value = null
+      profileInfo.value = {}
+      myIcon.value = '1'
+      myNickname.value = ''
+      localStorage.clear()
+      router.push({ name: 'login'})
       return true
     } catch (err) {
       console.log(err)
