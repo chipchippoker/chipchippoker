@@ -4,8 +4,8 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
  
 const KAKAO_JAVASCRIPT_KEY = import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY
-const REDIRECT_URI = 'http://localhost:5173/login'
-// const REDIRECT_URI = 'https://i10a804.p.ssafy.io/login'
+// const REDIRECT_URI = 'http://localhost:5173/login'
+const REDIRECT_URI = 'https://i10a804.p.ssafy.io/login'
 
 export const useUserStore = defineStore('user', () => {
   const BASE_API_URL = 'https://i10a804.p.ssafy.io/api'
