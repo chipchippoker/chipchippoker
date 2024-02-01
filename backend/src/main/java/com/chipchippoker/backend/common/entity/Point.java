@@ -16,12 +16,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class Point extends BaseEntity {
-	@Column(name = "win")
-	private Integer win;
-	@Column(name = "draw")
-	private Integer draw;
-	@Column(name = "lose")
-	private Integer lose;
+	@Column(name = "friendlyWin")
+	private Integer friendlyWin;
+	@Column(name = "friendlyDraw")
+	private Integer friendlyDraw;
+	@Column(name = "friendlyLose")
+	private Integer friendlyLose;
+	@Column(name = "competitiveWin")
+	private Integer competitiveWin;
+	@Column(name = "competitiveDraw")
+	private Integer competitiveDraw;
+	@Column(name = "competitiveLose")
+	private Integer competitiveLose;
 	@Column(name = "current_winning_streak")
 	private Integer currentWinningStreak;
 	@Column(name = "max_win")
@@ -34,9 +40,12 @@ public class Point extends BaseEntity {
 
 	public static Point createPoint(Member member) {
 		return Point.builder()
-			.win(0)
-			.draw(0)
-			.lose(0)
+			.friendlyWin(0)
+			.friendlyDraw(0)
+			.friendlyLose(0)
+			.competitiveWin(0)
+			.competitiveDraw(0)
+			.competitiveLose(0)
 			.currentWinningStreak(0)
 			.maxWin(0)
 			.pointScore(1000)
@@ -67,33 +76,30 @@ public class Point extends BaseEntity {
 		return point;
 	}
 
-	//테스트용
-	public static Point createPoint(Member member, Integer pointScore) {
-		return Point.builder()
-			.win(0)
-			.draw(0)
-			.lose(0)
-			.currentWinningStreak(0)
-			.maxWin(0)
-			.pointScore(pointScore)
-			.member(member)
-			.build();
-	}
-
-	public void updateResult(Integer coin) {
-		this.pointScore += calculatePoint(coin);
-		if (coin > 25) {
-			this.win++;
-			this.currentWinningStreak++;
-			if (this.currentWinningStreak > this.maxWin) {
-				this.maxWin = this.currentWinningStreak;
+	public void updateResult(Integer coin, String gameMode) {
+		if (gameMode.equals("경쟁")) {
+			this.pointScore += calculatePoint(coin);
+			if (coin > 25) {
+				this.competitiveWin++;
+				this.currentWinningStreak++;
+				if (this.currentWinningStreak > this.maxWin) {
+					this.maxWin = this.currentWinningStreak;
+				}
+			} else if (coin == 25) {
+				this.competitiveDraw++;
+				this.currentWinningStreak = 0;
+			} else {
+				this.competitiveLose++;
+				this.currentWinningStreak = 0;
 			}
-		} else if (coin == 25) {
-			this.draw++;
-			this.currentWinningStreak = 0;
 		} else {
-			this.lose++;
-			this.currentWinningStreak = 0;
+			if (coin > 25) {
+				this.friendlyWin++;
+			} else if (coin == 25) {
+				this.friendlyDraw++;
+			} else {
+				this.friendlyLose++;
+			}
 		}
 	}
 }
