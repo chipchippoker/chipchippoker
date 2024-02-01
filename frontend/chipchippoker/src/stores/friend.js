@@ -3,10 +3,11 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from './user'
-
+import { useGameStore } from './game'
 
 export const useFriendStore = defineStore('friend', () => {
   const userStore = useUserStore()
+  const gameStore = useGameStore()
   const FRIEND_API = `${userStore.BASE_API_URL}/friends`
   const RANK_API = `${userStore.BASE_API_URL}/ranks`
   
@@ -77,6 +78,7 @@ export const useFriendStore = defineStore('friend', () => {
       headers: {"access-token": userStore.accessToken}
     })
     .then(res => {
+      gameStore.sendFriendRequest(nickname)
       console.log("res.data => ",res.data)
     })
     .catch(err => console.log(err))
