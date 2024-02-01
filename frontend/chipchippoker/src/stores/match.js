@@ -17,7 +17,7 @@ export const useMatchStore = defineStore('match', () => {
   
   const roomId = ref(null)
   const title = ref(null)
-  const totalParticipantCnt = ref(null)
+  const totalParticipantCnt = ref(0)
   const isMatch = ref(false)
 
   // 경쟁전 빠른 시작
@@ -37,7 +37,6 @@ export const useMatchStore = defineStore('match', () => {
       roomStore.roomId = res.data.roomId
       title.value = res.data.title
       totalParticipantCnt.value = res.data.totalParticipantCnt
-      isMatch.value = true
       gameStore.subscribeHandler(title.value)
     })
     .then(()=>{
@@ -66,7 +65,6 @@ export const useMatchStore = defineStore('match', () => {
         title.value = res.data.title
         roomStore.roomId = res.data.roomId
         totalParticipantCnt.value = res.data.totalParticipantCnt
-        isMatch.value = true
         gameStore.subscribeHandler(title.value)
       }
       return res.data
