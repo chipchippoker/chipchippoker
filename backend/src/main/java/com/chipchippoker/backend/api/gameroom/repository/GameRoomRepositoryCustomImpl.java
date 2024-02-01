@@ -77,7 +77,7 @@ public class GameRoomRepositoryCustomImpl implements GameRoomRepositoryCustom {
 		if (!isEmpty) {
 			return null;
 		}
-		return gameRoom.members.size().lt(gameRoom.totalParticipantCnt);
+		return gameRoom.members.size().lt(gameRoom.totalParticipantCnt).and(gameRoom.state.eq("대기"));
 	}
 
 	public List<GameRoom> findByStartFriendlyMatchingSearchOption(Integer totalParticipantCnt) {
