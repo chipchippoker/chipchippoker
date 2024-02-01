@@ -335,6 +335,22 @@ export const useUserStore = defineStore('user', () => {
     })
   }
 
+  // 아이콘 변경
+  const changeIcon = function (number) {
+    console.log(number)
+    axios({
+      method:'post',
+      url: `${MEMBERS_API}/icon`,
+      headers: { 'access-token': accessToken.value },
+      data: {icon: number}
+    })
+    .then(res => {
+      console.log("아이콘 변경 완료");
+      myIcon.value = number
+    })
+    .catch(err => console.log(err))
+  }
+
   return {
     // 베이스 url
     BASE_API_URL,
@@ -345,7 +361,7 @@ export const useUserStore = defineStore('user', () => {
     accessToken, refreshToken, authorizationCode, kakaoAccessToken,
 
     // 프로필 아이콘, 프로필 정보 받아오기
-    getIconUrl, getTierIconUrl, getProfileInfo, 
+    getIconUrl, getTierIconUrl, getProfileInfo, changeIcon,
     myIcon, myNickname, profileInfo, viewProfileIcon,
     }
 },{persist:true})
