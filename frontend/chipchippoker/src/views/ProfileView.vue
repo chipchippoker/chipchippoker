@@ -2,7 +2,7 @@
   <div class="position-absolute d-flex flex-column align-items-center p-3" style="width: 100%; height: 100%;">
     <!-- 옵션, 로고, 아이콘 -->
     <div class="d-flex justify-content-between align-items-center position-relative" style="width: 100%; height: 100px;">
-      <button @click="goMainPage()" class="btn-transparency position-absolute top-50 start-50 translate-middle z-2">
+      <button @click="goMainPage()" class="btn-transparency position-absolute top-50 start-50 translate-middle">
         <img class="small-logo m-0" src="/src/assets/icons/Logo.png" alt="">
       </button>
     </div>

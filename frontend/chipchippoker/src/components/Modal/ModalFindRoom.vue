@@ -36,7 +36,8 @@
         </div>
         <!-- 게임 찾기 모달 -->
         <div class="modal fade" id="FindGame" tabindex="-1" aria-hidden="true">
-            <ModalFindGame/>
+            <ModalFindGame
+            @close="stopFindGame()"/>
         </div>
         <!-- 친선 방이 없는 것을 말해주는 모달 -->
         <div class="modal fade" id="NotExistRoom" tabindex="-1" aria-hidden="true">
@@ -105,6 +106,11 @@ const showFindGameModal = function () {
             }
         }
     }, 3000)
+}
+
+
+const stopFindGame = function() {
+    matchStore.stopFindGame()
 }
 </script>
 
