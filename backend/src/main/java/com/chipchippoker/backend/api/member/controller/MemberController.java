@@ -15,6 +15,7 @@ import com.chipchippoker.backend.api.auth.model.dto.request.SimpleSignupRequest;
 import com.chipchippoker.backend.api.auth.model.dto.response.SimpleSignupResponse;
 import com.chipchippoker.backend.api.auth.service.AuthService;
 import com.chipchippoker.backend.api.member.dto.model.ProfilePageResponse;
+import com.chipchippoker.backend.api.member.dto.model.UpdateIconRequest;
 import com.chipchippoker.backend.api.member.service.MemberService;
 import com.chipchippoker.backend.common.dto.ApiResponse;
 import com.chipchippoker.backend.common.dto.ErrorBase;
@@ -100,6 +101,14 @@ public class MemberController {
 	public ResponseEntity<ApiResponse<Void>> withdraw() {
 		Long id = (Long)httpServletRequest.getAttribute("id");
 		memberService.withdraw(id);
+		return ResponseEntity.ok(ApiResponse.success());
+	}
+
+	@Operation(summary = "회원 아이콘 변경")
+	@PostMapping("/icon")
+	public ResponseEntity<ApiResponse<Void>> updateIcon(@RequestBody UpdateIconRequest updateIconRequest) {
+		Long id = (Long)httpServletRequest.getAttribute("id");
+		memberService.updateIcon(id, updateIconRequest.getIcon());
 		return ResponseEntity.ok(ApiResponse.success());
 	}
 }

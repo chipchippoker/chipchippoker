@@ -11,4 +11,6 @@ public interface MemberService {
 	void logout(Long id);
 
 	void withdraw(Long id);
+
+	void updateIcon(Long id, String icon);
 }

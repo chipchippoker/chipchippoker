@@ -123,4 +123,8 @@ public class Member extends BaseEntity {
 	public void leaveSpectateRoom() {
 		this.spectateRoom = null;
 	}
+
+	public void updateIcon(String icon) {
+		this.icon = icon;
+	}
 }
