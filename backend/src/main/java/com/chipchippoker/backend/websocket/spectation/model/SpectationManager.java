@@ -25,4 +25,7 @@ public class SpectationManager {
 		spectatorList.add(nickname);
 	}
 
+	public void deleteMember(String nickname) {
+		spectatorList.remove(nickname);
+	}
 }

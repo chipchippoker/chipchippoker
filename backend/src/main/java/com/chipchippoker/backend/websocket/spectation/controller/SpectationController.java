@@ -14,6 +14,7 @@ import com.chipchippoker.backend.common.dto.ApiResponse;
 import com.chipchippoker.backend.common.dto.MessageBase;
 import com.chipchippoker.backend.common.util.jwt.JwtUtil;
 import com.chipchippoker.backend.websocket.spectation.dto.EnterSpectatorResponse;
+import com.chipchippoker.backend.websocket.spectation.dto.ExitSpectatorResponse;
 import com.chipchippoker.backend.websocket.spectation.model.SpectationManager;
 
 import jakarta.annotation.PostConstruct;
@@ -44,6 +45,7 @@ public class SpectationController {
 		SpectationManager spectationManager = spectationManagerMap.get(gameRoomTitle);
 		if (spectationManager == null) {
 			spectationManager = new SpectationManager(gameRoomTitle);
+			spectationManagerMap.put(gameRoomTitle, spectationManager);
 		}
 		spectationManager.insertMember(nickname);
 		broadcastAllMemberInfoInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_NEW_SPECTATOR_ENTER,
@@ -52,6 +54,23 @@ public class SpectationController {
 		broadcastAllSpectatorInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_NEW_SPECTATOR_ENTER,
 			EnterSpectatorResponse.create(nickname));
 		log.info("관전방 입장 성공");
+	}
+
+	@MessageMapping("/spectataion/exit/{gameRoomTitle}")
+	public void exitSpectationRoom(
+		@Header(name = "access-token") String accessToken,
+		@DestinationVariable(value = "gameRoomTitle") String gameRoomTitle
+	) {
+		log.info("관전방 나가기 시작");
+		String nickname = jwtUtil.getNickname(accessToken);
+		SpectationManager spectationManager = spectationManagerMap.get(gameRoomTitle);
+		spectationManager.deleteMember(nickname);
+		broadcastAllMemberInfoInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_SPECTATOR_EXIT,
+			ExitSpectatorResponse.create(nickname));
+
+		broadcastAllSpectatorInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_SPECTATOR_EXIT,
+			ExitSpectatorResponse.create(nickname));
+		log.info("관전방 나가기 성공");
 	}
 
 	private void broadcastAllMemberInfoInReadyRoom(String gameRoomTitle, MessageBase messageBase, Object object) {
