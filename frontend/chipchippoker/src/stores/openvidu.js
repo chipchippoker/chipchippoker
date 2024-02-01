@@ -18,7 +18,8 @@ export const useOpenviduStore = defineStore('openvidu', () => {
   const router = useRouter()
 
   axios.defaults.headers.post["Content-Type"] = "application/json";
-  const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/';
+  const APPLICATION_SERVER_URL = 'https://i10a804.p.ssafy.io/signal-server';
+  // const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/';
 
   // OpenVidu objects
   const OV = ref(undefined)
@@ -207,22 +208,27 @@ export const useOpenviduStore = defineStore('openvidu', () => {
   }
   
   async function createSession(sessionId) {
-    const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId, userNo: 53, endHour: 1, endMinute: 30, quota: 16, isPrivacy: false}, {
+    const response = await axios.post(APPLICATION_SERVER_URL + 'signal-server/sessions', { customSessionId: sessionId, userNo: 53, endHour: 1, endMinute: 30, quota: 16, isPrivacy: false}, {
       headers: { 'Content-Type': 'application/json', },
     });
+    // const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId, userNo: 53, endHour: 1, endMinute: 30, quota: 16, isPrivacy: false}, {
+    //   headers: { 'Content-Type': 'application/json', },
+    // });
     console.log('세션 생성 성공');
     return response.data; // The sessionId
   }
   
   async function createToken(sessionId) {
-    const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
+    const response = await axios.post(APPLICATION_SERVER_URL + 'signal-server/sessions/' + sessionId + '/connections', {}, {
       headers: { 'Content-Type': 'application/json', },
     });
+    // const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
+    //   headers: { 'Content-Type': 'application/json', },
+    // });
     return response.data; // The token
   }
   
   // 채팅창 구현을 위한 함수 제작
-  ///////////////////////////
   function sendMessage(input) {
     console.log(input);
     if(input.trim()){

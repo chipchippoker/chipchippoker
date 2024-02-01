@@ -10,7 +10,7 @@
                 <!-- 인원수 선택 -->
                 <div class="d-flex align-items-center gap-3">
                     <div class="form-check ">
-                        <input v-model="checkedOptions" class="form-check-input " type="radio" value="2" id="two" checked>
+                        <input v-model="checkedOptions" class="form-check-input " type="radio" value="2" id="two">
                         <label class="form-check-label" for="two">
                             2인
                         </label>
@@ -60,7 +60,7 @@ const props = defineProps({
     type:String
 })
 
-const checkedOptions = ref(null); // 초기 상태 설정
+const checkedOptions = ref('2'); // 초기 상태 설정
 
 const showFindGameModal = function () {
     const findGameModal = new bootstrap.Modal(document.getElementById('FindGame'));
@@ -68,9 +68,11 @@ const showFindGameModal = function () {
     
     // 3초 동안은 게임 찾기
     setTimeout(() => {
+      console.log(checkedOptions.value);
         const payload = {
             totalParticipantCnt: Number(checkedOptions.value)
         }
+        console.log(payload);
         if (props.type === '경쟁전') {
             matchStore.matchCompete(payload)
             // 매치 잡히면 넘어가기
