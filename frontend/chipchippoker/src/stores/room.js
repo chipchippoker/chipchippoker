@@ -309,7 +309,7 @@ export const useRoomStore = defineStore('room', () => {
   }
 
   // 관전 나가기
-  const leaveWatcher = function (payload) {
+  const leaveWatcher = function () {
     axios({
       method: 'post',
       url: `${SPECTATE_API}/leave`,
