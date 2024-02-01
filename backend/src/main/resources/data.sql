@@ -33,18 +33,6 @@ VALUES (NOW(), 1, NOW()),
        (NOW(), 18, NOW()),
        (NOW(), 19, NOW());
 
--- game_room_black_list
-INSERT INTO game_room_black_list (created_at, game_room_id, updated_at)
-VALUES (NOW(), 1, NOW()),
-       (NOW(), 2, NOW()),
-       (NOW(), 3, NOW()),
-       (NOW(), 4, NOW()),
-       (NOW(), 5, NOW()),
-       (NOW(), 6, NOW()),
-       (NOW(), 7, NOW()),
-       (NOW(), 18, NOW()),
-       (NOW(), 19, NOW());
-
 -- member
 INSERT INTO member (kakao_friend_list_agreement, kakao_link_state, created_at, game_room_id, kakao_social_id,
                     spectate_room_id, updated_at, icon, member_id, nickname, password, refresh_token)

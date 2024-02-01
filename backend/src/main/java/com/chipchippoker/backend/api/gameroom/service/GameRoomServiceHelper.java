@@ -6,6 +6,7 @@ import com.chipchippoker.backend.api.gameroom.repository.GameRoomRepository;
 import com.chipchippoker.backend.api.membergameroomblacklist.respository.MemberGameRoomBlackListRepository;
 import com.chipchippoker.backend.common.dto.ErrorBase;
 import com.chipchippoker.backend.common.entity.GameRoom;
+import com.chipchippoker.backend.common.entity.Member;
 import com.chipchippoker.backend.common.entity.MemberGameRoomBlackList;
 import com.chipchippoker.backend.common.exception.DuplicateException;
 import com.chipchippoker.backend.common.exception.ForbiddenException;
@@ -51,9 +52,9 @@ public class GameRoomServiceHelper {
 	}
 
 	public static void isBlackListMember(MemberGameRoomBlackListRepository memberGameRoomBlackListRepository,
-		Long gameRoomBlackListId, Long memberId) {
-		MemberGameRoomBlackList memberGameRoomBlackList = memberGameRoomBlackListRepository.findByGameRoomBlackListIdAndMemberId(
-			gameRoomBlackListId, memberId);
+		Member member, GameRoom gameRoom) {
+		MemberGameRoomBlackList memberGameRoomBlackList = memberGameRoomBlackListRepository.findByMemberAndGameRoom(
+			member, gameRoom);
 		if (memberGameRoomBlackList != null) {
 			throw new ForbiddenException(ErrorBase.E403_FORBIDDEN);
 		}

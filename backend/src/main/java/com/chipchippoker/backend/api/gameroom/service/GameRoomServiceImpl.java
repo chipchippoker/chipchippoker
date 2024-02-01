@@ -15,13 +15,11 @@ import com.chipchippoker.backend.api.gameroom.model.dto.EnterGameRoomResponse;
 import com.chipchippoker.backend.api.gameroom.model.dto.GetGameRoomListResponse;
 import com.chipchippoker.backend.api.gameroom.model.dto.MemberOutGameRoomRequest;
 import com.chipchippoker.backend.api.gameroom.repository.GameRoomRepository;
-import com.chipchippoker.backend.api.gameroomblacklist.respository.GameRoomBlackListRepository;
 import com.chipchippoker.backend.api.member.repository.MemberRepository;
 import com.chipchippoker.backend.api.membergameroomblacklist.respository.MemberGameRoomBlackListRepository;
 import com.chipchippoker.backend.api.spectateroom.repository.SpectateRoomRepository;
 import com.chipchippoker.backend.common.dto.ErrorBase;
 import com.chipchippoker.backend.common.entity.GameRoom;
-import com.chipchippoker.backend.common.entity.GameRoomBlackList;
 import com.chipchippoker.backend.common.entity.Member;
 import com.chipchippoker.backend.common.entity.MemberGameRoomBlackList;
 import com.chipchippoker.backend.common.entity.SpectateRoom;
@@ -39,7 +37,6 @@ public class GameRoomServiceImpl implements GameRoomService {
 	private final MemberRepository memberRepository;
 	private final SpectateRoomRepository spectateRoomRepository;
 	private final MemberGameRoomBlackListRepository memberGameRoomBlackListRepository;
-	private final GameRoomBlackListRepository gameRoomBlackListRepository;
 
 	public CreateGameRoomResponse createGameRoom(CreateGameRoomRequest createGameRoomRequest, Long id) {
 		Member member = memberRepository.findById(id)
@@ -65,10 +62,6 @@ public class GameRoomServiceImpl implements GameRoomService {
 		SpectateRoom spectateRoom = SpectateRoom.createSpectateRoom(gameRoom);
 		spectateRoomRepository.save(spectateRoom);
 
-		// 게임방 블랙리스트 생성
-		GameRoomBlackList gameRoomBlackList = GameRoomBlackList.createGameRoomBlackList(gameRoom);
-		gameRoomBlackListRepository.save(gameRoomBlackList);
-
 		return CreateGameRoomResponse.createGameRoomResponse(gameRoom);
 	}
 
@@ -83,9 +76,7 @@ public class GameRoomServiceImpl implements GameRoomService {
 			throw new ForbiddenException(ErrorBase.E403_FORBIDDEN_ALREADY_IN_GAME_ROOM);
 		}
 		// 블랙리스트 사용자인 경우
-		GameRoomBlackList gameRoomBlackList = gameRoomBlackListRepository.findByGameRoomId(gameRoom.getId())
-			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS));
-		GameRoomServiceHelper.isBlackListMember(memberGameRoomBlackListRepository, gameRoomBlackList.getId(), id);
+		GameRoomServiceHelper.isBlackListMember(memberGameRoomBlackListRepository, member, gameRoom);
 		// 게임 방 입장 비밀번호가 다른 경우
 		if (gameRoom.getIsPrivate())
 			GameRoomServiceHelper.isCorrectGameRoomPassword(enterGameRoomRequest.getPassword(), gameRoom.getPassword());
@@ -163,10 +154,8 @@ public class GameRoomServiceImpl implements GameRoomService {
 		memberRepository.save(leavingMember);
 
 		// blackList에 강제 퇴장 사용자 추가
-		GameRoomBlackList gameRoomBlackList = gameRoomBlackListRepository.findByGameRoomId(gameRoom.getId())
-			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS));
 		MemberGameRoomBlackList memberGameRoomBlackList = MemberGameRoomBlackList.createMemberGameRoomBlackList(
-			leavingMember, gameRoomBlackList);
+			leavingMember, gameRoom);
 		memberGameRoomBlackListRepository.save(memberGameRoomBlackList);
 	}
 
