@@ -18,7 +18,7 @@ export const useOpenviduStore = defineStore('openvidu', () => {
   const router = useRouter()
 
   axios.defaults.headers.post["Content-Type"] = "application/json";
-  const APPLICATION_SERVER_URL = 'https://i10a804.p.ssafy.io/signal-server';
+  const APPLICATION_SERVER_URL = 'https://i10a804.p.ssafy.io/signal-server/';
   // const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/';
 
   // OpenVidu objects
@@ -208,7 +208,7 @@ export const useOpenviduStore = defineStore('openvidu', () => {
   }
   
   async function createSession(sessionId) {
-    const response = await axios.post(APPLICATION_SERVER_URL + 'signal-server/sessions', { customSessionId: sessionId, userNo: 53, endHour: 1, endMinute: 30, quota: 16, isPrivacy: false}, {
+    const response = await axios.post(APPLICATION_SERVER_URL + 'sessions', { customSessionId: sessionId, userNo: 53, endHour: 1, endMinute: 30, quota: 16, isPrivacy: false}, {
       headers: { 'Content-Type': 'application/json', },
     });
     // const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId, userNo: 53, endHour: 1, endMinute: 30, quota: 16, isPrivacy: false}, {
@@ -219,7 +219,7 @@ export const useOpenviduStore = defineStore('openvidu', () => {
   }
   
   async function createToken(sessionId) {
-    const response = await axios.post(APPLICATION_SERVER_URL + 'signal-server/sessions/' + sessionId + '/connections', {}, {
+    const response = await axios.post(APPLICATION_SERVER_URL + 'sessions/' + sessionId + '/connections', {}, {
       headers: { 'Content-Type': 'application/json', },
     });
     // const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
