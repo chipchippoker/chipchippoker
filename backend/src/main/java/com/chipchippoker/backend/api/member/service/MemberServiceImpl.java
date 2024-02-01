@@ -171,4 +171,11 @@ public class MemberServiceImpl implements MemberService {
 		// 회원 테이블에서 해당 회원 삭제
 		memberRepository.deleteById(id);
 	}
+
+	@Override
+	public void updateIcon(Long id, String icon) {
+		Member member = memberRepository.findById(id)
+			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
+		member.updateIcon(icon);
+	}
 }
