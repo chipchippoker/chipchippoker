@@ -278,7 +278,7 @@ export const useRoomStore = defineStore('room', () => {
   const enterWatch = function (payload) {
     axios({
       method: 'post',
-      url: `${SPECTATE_API}/enter/`,
+      url: `${SPECTATE_API}/enter`,
       headers: { 'access-token': userStore.accessToken },
       data: payload
     })
@@ -295,7 +295,7 @@ export const useRoomStore = defineStore('room', () => {
   const enterWatchProgress = function (payload) {
     axios({
       method: 'post',
-      url: `${SPECTATE_API}/enter/`,
+      url: `${SPECTATE_API}/enter`,
       headers: { 'access-token': userStore.accessToken },
       data: payload
     })
@@ -304,6 +304,22 @@ export const useRoomStore = defineStore('room', () => {
       roomId.value = res.data.roomId
       title.value = res.data.title
       roomState.value = res.data.state
+    })
+    .catch(err => console.log(err))
+  }
+
+  // 관전 나가기
+  const leaveWatcher = function (payload) {
+    axios({
+      method: 'post',
+      url: `${SPECTATE_API}/leave`,
+      headers: { 'access-token': userStore.accessToken },
+    })
+    .then(res => {
+      console.log('관전 나가기');
+      roomId.value = ''
+      title.value = ''
+      roomState.value = ''
     })
     .catch(err => console.log(err))
   }
@@ -323,6 +339,6 @@ export const useRoomStore = defineStore('room', () => {
     // 사용자 강제 퇴장
     forceMemberOut,
     // 관전
-    enterWatch, enterWatchProgress,
+    enterWatch, enterWatchProgress, leaveWatcher,
   }
 },{persist:true})
