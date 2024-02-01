@@ -121,20 +121,22 @@ public class MemberServiceImpl implements MemberService {
 		List<RecentPlayListResponse> recentPlayList = new ArrayList<>();
 		// 최근 10게임 리스트
 		for (GameResult gameResult : list) {
-			Map<String, String> players = new HashMap<>();
+			Map<String, String> opponents = new HashMap<>();
 			//해당 게임에서 바뀐 점수
 			int changePoint = 0;
 			//게임당 결과
 			for (int i = 0; i < gameResult.getMemberList().size(); i++) {
-				if (gameResult.getMemberList().get(i).equals(nickname)) {
-					changePoint = Point.calculatePoint(gameResult.getResultCoinList().get(i));
+				if (gameResult.getGameMode().equals("경쟁")) {
+					if (gameResult.getMemberList().get(i).equals(nickname)) {
+						changePoint = Point.calculatePoint(gameResult.getResultCoinList().get(i));
+					}
 				}
 				int resultCoin = gameResult.getResultCoinList().get(i);
 				String outcome = resultCoin > 25 ? "win" : (resultCoin == 25 ? "draw" : "lose");
-				players.put(gameResult.getMemberList().get(i), outcome);
+				opponents.put(gameResult.getMemberList().get(i), outcome);
 			}
 			RecentPlayListResponse recentPlayListResponse = RecentPlayListResponse.createRecentPlayListResponse(
-				players, gameResult.getGameMode(), gameResult.getMemberList().size(), changePoint);
+				opponents, gameResult.getGameMode(), gameResult.getMemberList().size(), changePoint);
 			recentPlayList.add(recentPlayListResponse);
 		}
 		return recentPlayList;

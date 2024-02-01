@@ -11,14 +11,15 @@ import lombok.ToString;
 @Data
 public class RecentPlayListResponse {
 
-	Map<String,String> players;
+	Map<String, String> opponents;
 	String gameMode;
 	Integer memberNum;
 	Integer pointChange;
 
-	public static RecentPlayListResponse createRecentPlayListResponse(Map<String, String> players,String gameMode,Integer memberNum,Integer pointChange){
+	public static RecentPlayListResponse createRecentPlayListResponse(Map<String, String> opponents, String gameMode,
+		Integer memberNum, Integer pointChange) {
 		return RecentPlayListResponse.builder()
-			.players(players)
+			.opponents(opponents)
 			.gameMode(gameMode)
 			.memberNum(memberNum)
 			.pointChange(pointChange)
