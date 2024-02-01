@@ -71,7 +71,7 @@ for (let i = 0; i < 300; i++) {
       <!-- <div v-for="star in stars" :key="star" :class="star.className" :style="{ top: star.y + 'px', left: star.x + 'px' }"></div> -->
 
       <!-- 옵션, 로고, 아이콘  -->
-      <div v-if="userStore.accessToken !== null" class="d-flex justify-content-between align-items-center position-absolute m-3 z-1" style="width: 95%;">
+      <div v-if="userStore.accessToken !== null" class="d-flex justify-content-between align-items-center position-absolute m-3" style="width: 95%;">
 
         <div class="d-flex flex-row justify-content-between" style="width: 10%;">
           <!-- 알림 모달 아이콘 -->
@@ -89,7 +89,7 @@ for (let i = 0; i < 300; i++) {
           </button>
         </div>
         <!-- 유저 아이콘 -->
-        <img v-if="userStore.viewProfileIcon" type="button" @click="goProfile()" :src='userStore.getIconUrl(userStore.myIcon)' style="width: 60px; height: 60px; border-radius: 50%;">
+        <img v-if="userStore.viewProfileIcon" type="button" class="z-3" @click="goProfile()" :src='userStore.getIconUrl(userStore.myIcon)' style="width: 60px; height: 60px; border-radius: 50%;">
       </div>
 
     

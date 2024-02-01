@@ -14,7 +14,7 @@ export const useGameStore = defineStore('game', () => {
   const matchStore = useMatchStore()
   const router = useRouter()
 
-  const url = `ws://i10a804.p.ssafy.io:8082/chipchippoker`
+  const url = `wss://i10a804.p.ssafy.io/chipchippoker`
 
   const stompClient = webstomp.client(url)
   const subscriptions = ref([])
@@ -135,6 +135,7 @@ export const useGameStore = defineStore('game', () => {
       
       // 토픽 구독 및 수신
       const subscribtion = stompClient.subscribe(`/from/chipchippoker/checkConnect/${gameRoomTitle}`, (message) => {
+        console.log('방 구독하기');
         console.log("subscribe success")
         // 내 구독 아이디 저장 
         
@@ -187,6 +188,8 @@ export const useGameStore = defineStore('game', () => {
   // 게임 매칭 SEND
   const sendMatching = function(title, countOfPeople){
     isMatch.value = true
+    gameRoomTitle.value = title
+    countOfPeople.value = countOfPeople
     console.log(title, countOfPeople)
     stompClient.send(`/to/game/matching/${title}`, JSON.stringify({countOfPeople}), {'access-token': userStore.accessToken})
   }
