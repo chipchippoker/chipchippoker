@@ -28,9 +28,7 @@
                         </label>
                     </div>
 
-                    <button type="button" class="btn-outline-yellow rounded-2" @click="showFindGameModal">찾기</button>
-
-                    
+                    <button type="button" class="btn-outline-yellow rounded-2" @click="showFindGameModal" data-bs-dismiss="modal" aria-label="Close">찾기</button>
                 </div>
             </div>
         </div>
@@ -49,13 +47,15 @@
 <script setup>
 import ModalFindGame from '@/components/Modal/ModalFindGame.vue';
 import ModalNotExistRoomVue from './ModalNotExistRoom.vue';
-import { useMatchStore } from '@/stores/match';
-import { isMemoSame, ref } from 'vue';
+import { isMemoSame, ref, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useGameStore } from '@/stores/game'
+import { useMatchStore } from '@/stores/match';
+import { useRoomStore } from '@/stores/room';
 
 const matchStore = useMatchStore()
 const gameStore = useGameStore()
+const roomStore = useRoomStore()
 const router = useRouter()
 
 const props = defineProps({
@@ -63,26 +63,45 @@ const props = defineProps({
 })
 
 const checkedOptions = ref(2); // 초기 상태 설정
+const findGameModal = ref(null);
+const notExistRoom = ref(null);
+// const findGameModal = new bootstrap.Modal(document.getElementById('FindGame'));
+// const notExistRoom = new bootstrap.Modal(document.getElementById('NotExistRoom'));
+
+const initModals = () => {
+  findGameModal.value = new bootstrap.Modal(document.getElementById('FindGame'));
+  notExistRoom.value = new bootstrap.Modal(document.getElementById('NotExistRoom'));
+};
+
+onMounted(() => {
+  initModals();
+});
+
+watch([() => gameStore.isMatch, () => roomStore.isSearching], ([newMatch, newSearching], [oldMatch, oldSearching]) => {
+  if (newMatch === true && newSearching === false) {
+    findGameModal.value.hide();
+  } else {
+    findGameModal.value.show();
+  }
+});
+
+watch(matchStore.isNotExistRoom, (newVal, oldVal) => {
+  if (newVal === true) {
+    notExistRoom.value.show()
+  } else {
+    notExistRoom.value.hide()
+  }
+})
 
 const showFindGameModal = function () {
-  const findGameModal = new bootstrap.Modal(document.getElementById('FindGame'));
-  findGameModal.show()
   const payload = {
     totalParticipantCnt: checkedOptions.value
   }
   if (props.type === '경쟁전') {
-      matchStore.matchCompete(payload)
+    matchStore.matchCompete(payload)
   } else {
     matchStore.matchFriend(payload)
-    findGameModal.hide()
-    const notExistRoom = new bootstrap.Modal(document.getElementById('NotExistRoom'));
-    notExistRoom.show()
-}
-}
-
-
-const stopFindGame = function() {
-    matchStore.stopFindGame()
+  }
 }
 </script>
 

@@ -18,7 +18,9 @@ export const useMatchStore = defineStore('match', () => {
   const roomId = ref(null)
   const title = ref(null)
   const totalParticipantCnt = ref(0)
+  const isSearching = ref(false)
   const isMatch = ref(false)
+  const isNotExistRoom = ref(true)
 
   // 경쟁전 빠른 시작
   const matchCompete = function(payload) {
@@ -33,6 +35,7 @@ export const useMatchStore = defineStore('match', () => {
       console.log('경쟁전 매치 성공')
       const res = response.data
       console.log(res);
+      isSearching.value = true
       roomId.value = res.data.roomId
       roomStore.roomId = res.data.roomId
       title.value = res.data.title
@@ -58,6 +61,7 @@ export const useMatchStore = defineStore('match', () => {
       const res = response.data
       if (Object.keys(res.data).length === 0) {
         console.log('생성된 친선방 X')
+        isNotExistRoom.value = false
         isMatch.value = false
       } else {
         console.log('친선전 매치 성공')
@@ -65,12 +69,13 @@ export const useMatchStore = defineStore('match', () => {
         title.value = res.data.title
         roomStore.roomId = res.data.roomId
         totalParticipantCnt.value = res.data.totalParticipantCnt
-        gameStore.subscribeHandler(title.value)
+        isNotExistRoom.value = true
+        const payload = {
+          title: title.value
+        }
+        // 방입장
+        roomStore.enterRoomPublic(payload)
       }
-      return res.data
-    })
-    .then(()=>{
-      gameStore.sendMatching(title.value, totalParticipantCnt.value, false)
     })
     .catch(err => console.log(err))
   }  
@@ -83,18 +88,20 @@ export const useMatchStore = defineStore('match', () => {
       url: `${MATCH_API}/quit`,
       headers: { 'access-token': userStore.accessToken }
     })
-    .then(res => {
+    .then(response => {
       console.log('게임 찾기 중단')
-      return res.data
+      const res = response.data
+      console.log(res);
+      gameStore.subscriptionGame.unsubscribe(gameStore.myGameSubId)
     })
     .catch(err => console.log(err))   
   }
 
   return {
     // 경쟁전 빠른 시작
-    matchCompete, roomId, title, totalParticipantCnt, isMatch,
+    matchCompete, roomId, title, totalParticipantCnt, isMatch, isSearching,
     // 친선전 빠른 시작
-    matchFriend,
+    matchFriend, isNotExistRoom,
     // 빠른 게임 찾기 중단
     stopFindGame
   }
