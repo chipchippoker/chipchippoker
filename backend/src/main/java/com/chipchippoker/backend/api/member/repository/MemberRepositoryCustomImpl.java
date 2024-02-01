@@ -31,8 +31,9 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 			.where(point.member.id.eq(m.getId()))
 			.fetchOne();
 		return ProfilePageResponse.createProfilePageResponse(result.getMember().getIcon(), myTotalRank, myFriendRank,
-			result.getWin(),
-			result.getDraw(), result.getLose(), result.getMaxWin(), result.getPointScore(),
+			result.getFriendlyWin(), result.getFriendlyDraw(), result.getFriendlyLose(),
+			result.getCompetitiveWin(), result.getCompetitiveDraw(), result.getCompetitiveLose(), result.getMaxWin(),
+			result.getPointScore(),
 			result.getMember().getNickname(), result.tierByPoint(result.getPointScore()), isMine, isFriend, isSent,
 			recentPlayListResponseList);
 	}

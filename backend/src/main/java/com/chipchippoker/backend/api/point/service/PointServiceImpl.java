@@ -21,11 +21,11 @@ public class PointServiceImpl implements PointService {
 	private final PointRepository pointRepository;
 	private final MemberRepository memberRepository;
 
-	public void saveGameResult(String nickname, Integer coin) {
+	public void saveGameResult(String nickname, Integer coin, String gameMode) {
 		Member member = memberRepository.findByNickname(nickname)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
 		Point point = pointRepository.findByMember(member)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
-		point.updateResult(coin);
+		point.updateResult(coin, gameMode);
 	}
 }

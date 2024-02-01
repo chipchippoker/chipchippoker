@@ -277,7 +277,7 @@ public class GameController {
 					// 1. Point 저장
 					for (MemberManager manager : memberManagers) {
 						pointService.saveGameResult(manager.getMemberInfo().getNickname(),
-							manager.getMemberGameInfo().getHaveCoin());
+							manager.getMemberGameInfo().getHaveCoin(), gameRoom.getType());
 					}
 					// 2. GameResult 저장
 					saveGameResult(memberManagers, gameRoom);
