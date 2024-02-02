@@ -9,6 +9,8 @@ import { ref, computed } from 'vue';
 import { useUserStore } from '@/stores/user'
 import { useFriendStore } from './stores/friend';
 import { useGameStore } from './stores/game';
+
+
 const userStore = useUserStore()
 const friendStore = useFriendStore()
 const gameStore = useGameStore()
@@ -81,19 +83,19 @@ for (let i = 0; i < 300; i++) {
 
         <div class="d-flex flex-row justify-content-between" style="width: 10%;">
           <!-- 알림 모달 아이콘 -->
-          <button @click="checkAlarm()" class="mx-3 z-3 btn-transparency position-relative">
+          <div class="mx-3 z-3 btn-transparency position-relative">
             <!-- <p class="text-white">{{ gameStore.isAlarmArrive }}</p> -->
-            <font-awesome-icon icon="bell" :class="{'fa-shake':gameStore.isAlarmArrive==true}"  size="lg" data-bs-toggle="modal" data-bs-target="#alarmModal" style="color: #ffffff;" />
+            <font-awesome-icon type="button" @click="checkAlarm()"  icon="bell" :class="{'fa-shake':gameStore.isAlarmArrive==true}"  size="lg" data-bs-toggle="modal" data-bs-target="#alarmModal" style="color: #ffffff;" />
             <div v-if="gameStore.isAlarmArrive" class="alarm-on"></div>
-          </button>
+          </div>
           <!-- 설정 모달 아이콘 -->
-          <button class="mx-3 z-3 btn-transparency">
-            <font-awesome-icon icon="gear" size="lg" data-bs-toggle="modal" data-bs-target="#settingModal" style="color: #ffffff;" />
-          </button>
+          <div class="mx-3 z-3 btn-transparency">
+            <font-awesome-icon type="button" icon="gear" size="lg" data-bs-toggle="modal" data-bs-target="#settingModal" style="color: #ffffff;" />
+          </div>
           <!-- 가이드북 모달 아이콘 -->
-          <button class="ms-3 z-3 btn-transparency">
-            <font-awesome-icon icon="book" size="lg" data-bs-toggle="modal" data-bs-target="#guideModal" style="color: #ffffff;" />
-          </button>
+          <div class="ms-3 z-3 btn-transparency">
+            <font-awesome-icon type="button" icon="book" size="lg" data-bs-toggle="modal" data-bs-target="#guideModal" style="color: #ffffff;" />
+          </div>
         </div>
         <!-- 유저 아이콘 -->
         <img v-if="userStore.viewProfileIcon" type="button" class="z-3" @click="goProfile()" :src='userStore.getIconUrl(userStore.myIcon)' style="width: 60px; height: 60px; border-radius: 50%;">
