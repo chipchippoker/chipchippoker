@@ -115,6 +115,10 @@ public class AuthServiceImpl implements AuthService {
 		if (validateExistsUser(socialId)) {
 			throw new DuplicateException(ErrorBase.E409_DUPLICATE_MEMBER);
 		}
+		memberRepository.findByNickname(request.getNickname())
+			.ifPresent(member -> {
+				throw new DuplicateException(ErrorBase.E409_DUPLICATE_NICKNAME);
+			});
 		Member member = Member.newKakaoMember(request);
 		member.connectSocialId(socialId);
 		Point point = Point.createPoint(member);
