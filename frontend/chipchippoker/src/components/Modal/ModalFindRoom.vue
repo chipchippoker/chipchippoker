@@ -11,19 +11,19 @@
                 <div class="d-flex align-items-center gap-3">
                     <div class="form-check ">
                         <input v-model="checkedOptions" class="form-check-input " type="radio" value=2 id="two">
-                        <label class="form-check-label" for="two">
+                        <label class="form-check-label">
                             2인
                         </label>
                     </div>
                     <div class="form-check ">
                         <input v-model="checkedOptions" class="form-check-input " type="radio" value=3 id="three">
-                        <label class="form-check-label" for="three">
+                        <label class="form-check-label">
                             3인
                         </label>
                     </div>
                     <div class="form-check ">
                         <input v-model="checkedOptions" class="form-check-input " type="radio" value=4 id="four">
-                        <label class="form-check-label" for="four">
+                        <label class="form-check-label">
                             4인
                         </label>
                     </div>

@@ -63,7 +63,7 @@ for (let i = 0; i < 300; i++) {
 
 <template>
   <div class="maple">
-    <div>
+    <!-- <div>
       <RouterLink to="/login">로그인</RouterLink> /
       <RouterLink to="/signup">회원가입</RouterLink> / 
       <RouterLink to="/kakaosignup">카카오 회원가입</RouterLink> /
@@ -73,11 +73,11 @@ for (let i = 0; i < 300; i++) {
       <RouterLink to="/wait">대기페이지</RouterLink> /
       <RouterLink to="/game">소켓테스트</RouterLink> /
       <RouterLink to="/animation">애니메이션</RouterLink> /
-    </div>
+    </div> -->
     
     <div class="position-relative">   
       <!-- 별들 -->
-      <!-- <div v-for="star in stars" :key="star" :class="star.className" :style="{ top: star.y + 'px', left: star.x + 'px' }"></div> -->
+      <div v-for="star in stars" :key="star" :class="star.className" :style="{ top: star.y + 'px', left: star.x + 'px' }"></div>
 
       <!-- 옵션, 로고, 아이콘  -->
       <div v-if="userStore.accessToken !== null" class="d-flex justify-content-between align-items-center position-absolute m-3" style="width: 95%;">

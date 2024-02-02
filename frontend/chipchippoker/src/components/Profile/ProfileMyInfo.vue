@@ -110,7 +110,7 @@
         <!-- 친구의 프로필 -->
         <div v-else class="d-flex flex-row-reverse">
           <button class="btn btn-signout">
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdQLmWHJoz263PcrL3G_SLOzQUY28fVmG2wXJUtObYnEK-_WQ/viewform?usp=sf_link">신고하기</a>
+            <a class="text-warning" href="https://docs.google.com/forms/d/e/1FAIpQLSdQLmWHJoz263PcrL3G_SLOzQUY28fVmG2wXJUtObYnEK-_WQ/viewform?usp=sf_link">신고하기</a>
           </button>
           <!-- 버튼 누르고 바뀜 -->
         <div v-if="isSent===true || profileInfo?.isSent" class="btn-signout rounded-2 p-1 bg-secondary text-white text-center border-0">

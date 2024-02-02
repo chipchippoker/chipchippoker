@@ -44,48 +44,55 @@
           </div>
         </div>
       </div>
-      
+
       <!-- 최근 전적 -->
       <ul
-      v-if="userStore?.profileInfo?.recentPlayList.length > 0"
-      class="profile-outline-darkblue my-3 d-flex flex-column gap-1 overflow-y-auto"
-      style="max-height: 300px"
+        v-if="userStore?.profileInfo?.recentPlayList.length > 0"
+        class="profile-outline-darkblue my-3 d-flex flex-column gap-1 overflow-y-auto"
+        style="max-height: 300px"
       >
- <!-- 게임 모드, 인원 -->
- <div 
-            class="bg-lightblue p-1 rounded-3" 
-            v-for="recentPlay in userStore?.profileInfo?.recentPlayList"
-            :key="recentPlay.id">
-            <div class="d-flex gap-2 fw-bold">
-              <div>{{ recentPlay.gameMode }}</div>
-              <div>{{ recentPlay.memberNum }}인</div>
-            </div>
-            <!-- 같이한 사람 이름 -->
-            <div class="d-flex justify-content-between me-2" >
-              <div class="d-flex gap-3">
-                <div v-for="(result, player) in recentPlay.opponents" :key="player">
-                    {{ player }}: {{ result }}
-                </div>
-              </div>
-              <!-- 포인트 -->
+        <!-- 게임 모드, 인원 -->
+        <div
+          class="bg-lightblue p-1 rounded-3"
+          v-for="recentPlay in userStore?.profileInfo?.recentPlayList"
+          :key="recentPlay.id"
+        >
+          <div class="d-flex gap-2 fw-bold">
+            <div>{{ recentPlay.gameMode }}</div>
+            <div>{{ recentPlay.memberNum }}인</div>
+          </div>
+          <!-- 같이한 사람 이름 -->
+          <div class="d-flex justify-content-between me-2">
+            <div class="d-flex gap-3">
               <div
-              v-if="recentPlay.gameMode==='경쟁'"
-              class="fw-bold"
-              :class="[{'text-primary':recentPlay?.pointChange>0},
-              {'text-danger':recentPlay?.pointChange<0}]"
-              >{{ recentPlay?.pointChange  }}pt
+                v-for="(result, player) in recentPlay.opponents"
+                :key="player"
+              >
+                {{ player }}: {{ result }}
+              </div>
             </div>
+            <!-- 포인트 -->
+            <div
+              v-if="recentPlay.gameMode === '경쟁'"
+              class="fw-bold"
+              :class="[
+                { 'text-primary': recentPlay?.pointChange > 0 },
+                { 'text-danger': recentPlay?.pointChange < 0 },
+              ]"
+            >
+              {{ recentPlay?.pointChange }}pt
             </div>
           </div>
-</ul>
-<div
-v-else
-class="profile-outline-darkblue my-3 d-flex flex-column gap-1 overflow-y-auto text-center"
->
-최근 전적이 없습니다.
-</div>
-</div>
-</div>
+        </div>
+      </ul>
+      <div
+        v-else
+        class="profile-outline-darkblue my-3 d-flex flex-column gap-1 overflow-y-auto text-center"
+      >
+        최근 전적이 없습니다.
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
