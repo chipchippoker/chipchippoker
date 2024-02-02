@@ -19,9 +19,10 @@
                 @click="checkNickname">중복 확인</button>
             </div>
             <div v-if="isNickDuplicated" class="form-text text-danger">이미 사용 중인 닉네임입니다.</div>
-            <div v-if="!isValidNickname" id="nickname" class="fw-lgitighter x-little-text text-danger">한글 또는 영어 또는 숫자 또는
-              (_)의 4 ~ 16 글자이어야 합니다.</div>
-            <div v-if="nickname!==null && isNickDuplicated===null" id="nickname" class="fw-lgitighter x-little-text text-danger">닉네임 중복확인을 해주세요.</div>
+            <div v-if="nickname!=='' && !isValidNickname" id="nickname" class="fw-lgitighter x-little-text text-danger">한글 또는 영어 또는 숫자 또는
+              (_)의 2 ~ 12 글자이어야 합니다.</div>
+            <div v-if="nickname!=='' && isNickDuplicated===null" id="nickname" class="fw-lgitighter x-little-text text-danger">닉네임 중복확인을 해주세요.</div>
+            <div v-if="isValidNickname && isNickDuplicated===false" id="id" class="fw-lgitighter x-little-text text-primary">사용 가능한 닉네임입니다.</div>
           </div>
           <!-- 아이디 -->
           <div class="mb-3">
@@ -32,38 +33,45 @@
                 확인</button>
             </div>
             <div v-if="isIdDuplicated" class="form-text text-danger">이미 사용 중인 아이디입니다.</div>
-            <div v-if="!isValidMemberId" id="id" class="fw-lgitighter x-little-text text-danger">영어 또는 숫자의 6 ~ 16 글자이어야
+            <div v-if="memberId!=='' && !isValidMemberId" id="id" class="fw-lgitighter x-little-text text-danger">영어 또는 숫자의 6 ~ 16 글자이어야
               합니다.</div>
-            <div v-if="memberId!==null && isIdDuplicated===null" id="id" class="fw-lgitighter x-little-text text-danger">아이디 중복확인을 해주세요.</div>
+            <div v-if="memberId!=='' && memberId!==null && isIdDuplicated===null" id="id" class="fw-lgitighter x-little-text text-danger">아이디 중복확인을 해주세요.</div>
+            <div v-if="isValidMemberId && isIdDuplicated===false" id="id" class="fw-lgitighter x-little-text text-primary">사용 가능한 아이디입니다.</div>
           </div>
           <!-- 비밀번호 -->
           <div class="mb-3">
             <label for="password1" class="form-label">비밀번호</label>
             <input type="password" class="form-control" id="password1" placeholder="password" v-model="password1">
-            <div v-if="!isValidPassword1" id="id" class="fw-lgitighter x-little-text text-danger">영어, 숫자, 특수문자를 모두 포함한 8 ~
+            <div v-if="password1!=='' && !isValidPassword1" id="id" class="fw-lgitighter x-little-text text-danger">영어, 숫자, 특수문자를 모두 포함한 8 ~
               30 글자이어야 합니다.</div>
           </div>
           <!-- 비밀번호 확인 -->
           <div class="mb-3">
             <label for="password2" class="form-label">비밀번호 확인</label>
             <input type="password" class="form-control" id="password2" placeholder="password" v-model="password2">
-            <div v-if="!isValidPassword2" id="id" class="fw-lgitighter x-little-text text-danger">비밀번호가 똑같아야 합니다.</div>
+            <div v-if="password2!=='' && !isValidPassword2" id="id" class="fw-lgitighter x-little-text text-danger">비밀번호가 똑같아야 합니다.</div>
+            <div v-if="password1 && isValidPassword1 && isValidPassword2 && password1===password2" id="id" class="fw-lgitighter x-little-text text-primary">비밀번호 확인이 완료되었습니다.</div>
           </div>
 
           <!-- 아이콘 모달 버튼 -->
           <div class="d-flex justify-content-center">
             <button class="btn-transparency" type="button">
               <img data-bs-toggle="modal" data-bs-target="#IconModal" class="small-icon"
-                :src='userStore.getIconUrl(userStore.myIcon)' :alt="userStore.myIcon">
+                :src='iconUrl' :alt="userStore.myIcon">
             </button>
           </div>
 
           <!-- 회원가입 버튼 -->
           <div class="d-grid gap-2 pt-3">
-            <button :disabled="!(isValidMemberId && isValidPassword1 && isValidPassword2 && isValidNickname && !isNickDuplicated && !isIdDuplicated)"
+            <button :disabled="!(isValidMemberId && isValidPassword1 && isValidPassword2 && isValidNickname && isNickDuplicated === false && isIdDuplicated === false)"
               type="submit" class="btn btn-primary btn-login">회원가입</button>
           </div>
         </form>
+      </div>
+      <div class="text-white mt-3">
+        이미 회원이십니까?
+        <a type="button" @click="goLogIn()" style="color:#70E5FF;">
+          로그인 ></a>
       </div>
     </div>
 
@@ -76,76 +84,97 @@
 </template>
   
 <script setup>
-import { ref, watch } from "vue";
-import { useUserStore } from "@/stores/user";
-import ModalIconList from "@/components/Modal/ModalIconList.vue";
-import { useRouter } from "vue-router";
+  import { ref, watch,computed } from "vue";
+  import { useUserStore } from "@/stores/user";
+  import ModalIconList from "@/components/Modal/ModalIconList.vue";
+  import { useRouter } from "vue-router";
+  import { useRoomStore } from "../stores/room";
 
-const router = useRouter()
-const userStore = useUserStore()
-const memberId = ref(null)
-const password1 = ref(null)
-const password2 = ref(null)
-const nickname = ref(null)
+  const router = useRouter()
+  const userStore = useUserStore()
+  const memberId = ref('')
+  const password1 = ref('')
+  const password2 = ref('')
+  const nickname = ref('')
 
-const isNickDuplicated = ref(null)
-const isIdDuplicated = ref(null)
-const isValidMemberId = ref(true)
-const isValidPassword1 = ref(true)
-const isValidPassword2 = ref(true)
-const isValidNickname = ref(true)
+  const isNickDuplicated = ref(null)
+  const isIdDuplicated = ref(null)
+  const isValidMemberId = ref(true)
+  const isValidPassword1 = ref(true)
+  const isValidPassword2 = ref(true)
+  const isValidNickname = ref(true)
 
-// 회원가입
-const signUp = function () {
-  const payload = {
-    memberId: memberId.value,
-    password: password1.value,
-    passwordConfirm: password2.value,
-    nickname: nickname.value,
-    icon: userStore.myIcon
+  // 아이콘
+  const iconUrl = computed(() => userStore.getIconUrl(userStore.myIcon))
+
+  // 회원가입
+  const signUp = function () {
+    const payload = {
+      memberId: memberId.value,
+      password: password1.value,
+      passwordConfirm: password2.value,
+      nickname: nickname.value,
+      icon: userStore.myIcon
+    }
+    userStore.signUp(payload)
+    .then(result => {
+      if (result) {
+        memberId.value = null
+        password1.value = null
+        password2.value = null
+        nickname.value = null
+      } else {
+        alert("회원가입 실패했습니다.")
+      }
+    })
   }
-  userStore.signUp(payload)
-  .then(result => {
-    if (result) {
-      memberId.value = null
-      password1.value = null
-      password2.value = null
-      nickname.value = null
+
+  // 닉네임 중복 확인
+  const checkNickname = function () {
+    userStore.checkNickname(nickname.value)
+    .then(result => {
+      isNickDuplicated.value = result
+    })
+    .catch(err => alert(err))
+  }
+
+  // 아이디 중복 확인
+  const checkMemberId = function () {
+    userStore.checkMemberId(memberId.value)
+    .then(result => {
+      isIdDuplicated.value = result
+    })
+    .catch(err => alert(err))
+  }
+
+  // 유효성 검사
+  watch([memberId, password1, password2, nickname], () => {
+    isValidMemberId.value = userStore.validateId(memberId.value);
+    isValidPassword1.value = userStore.validatePassword(password1.value);
+    isValidNickname.value = userStore.validateNickname(nickname.value);
+
+
+    if (password2.value !== null && password1.value !== password2.value) {
+      isValidPassword2.value = false
     } else {
-      alert("회원가입 실패했습니다.")
+      isValidPassword2.value = true
     }
   })
-}
 
-// 닉네임 중복 확인
-const checkNickname = function () {
-  userStore.checkNickname(nickname.value)
-  .then(result => {
-    isNickDuplicated.value = result
+  watch([nickname], () => {
+    // 입력값이 변경될 때마다 중복 확인 상태 초기화
+    isNickDuplicated.value = null;
   })
-  .catch(err => alert(err))
-}
 
-// 아이디 중복 확인
-const checkMemberId = function () {
-  userStore.checkMemberId(memberId.value)
-  .then(result => {
-    isIdDuplicated.value = result
+  watch([memberId], () => {
+    // 입력값이 변경될 때마다 중복 확인 상태 초기화
+    isIdDuplicated.value = null;
   })
-  .catch(err => alert(err))
-}
 
-// 유효성 검사
-watch([memberId, password1, password2, nickname], () => {
-  isValidMemberId.value = userStore.validateId(memberId.value);
-  isValidPassword1.value = userStore.validatePassword(password1.value);
-  isValidNickname.value = userStore.validateNickname(nickname.value);
-  if (password2.value !== null && password1.value !== password2.value) {
-    isValidPassword2.value = false
-  } else {
-    isValidPassword2.value = true
+  // 로그인으로 이동
+  const goLogIn = function(){
+    router.push({name:'login'})
   }
-})
 </script>
 
   

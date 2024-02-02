@@ -47,7 +47,7 @@
 
       <!-- 최근 전적 -->
       <ul
-        v-if="userStore?.profileInfo?.recentPlayList.length > 0"
+        v-if="userStore?.profileInfo?.recentPlayList"
         class="profile-outline-darkblue my-3 d-flex flex-column gap-1 overflow-y-auto"
         style="max-height: 300px"
       >
