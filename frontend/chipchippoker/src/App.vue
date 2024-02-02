@@ -77,7 +77,7 @@ for (let i = 0; i < 300; i++) {
     
     <div class="position-relative">   
       <!-- 별들 -->
-      <div v-for="star in stars" :key="star" :class="star.className" :style="{ top: star.y + 'px', left: star.x + 'px' }"></div>
+      <!-- <div v-for="star in stars" :key="star" :class="star.className" :style="{ top: star.y + 'px', left: star.x + 'px' }"></div> -->
 
       <!-- 옵션, 로고, 아이콘  -->
       <div v-if="userStore.accessToken !== null" class="d-flex justify-content-between align-items-center position-absolute m-3" style="width: 95%;">
