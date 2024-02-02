@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class InboundChannelInterceptor implements ChannelInterceptor {
 	private final JwtUtil jwtUtil;
 	private final MemberRepository memberRepository;
-	private static final Map<String, String> sessionMap = new HashMap<>();
+	public static final Map<String, String> sessionMap = new HashMap<>();
 
 	/*
 	connect 할 때 호출
