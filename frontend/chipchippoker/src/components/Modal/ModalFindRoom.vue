@@ -79,8 +79,10 @@ onMounted(() => {
 
 watch([() => gameStore.isMatch, () => roomStore.isSearching], ([newMatch, newSearching], [oldMatch, oldSearching]) => {
   if (newMatch === true && newSearching === false) {
+    console.log('하이드');
     findGameModal.value.hide();
   } else {
+    console.log('쇼우');
     findGameModal.value.show();
   }
 });

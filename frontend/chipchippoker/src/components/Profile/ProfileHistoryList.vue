@@ -1,35 +1,24 @@
 <template>
   <!-- 나의 정보, 게임 프로필 -->
   <div class="container mainstyle d-flex flex-row" >
-    
+      <!-- 정보 -->
+      <div class="d-flex flex-column w-100">
+        <!-- 프사, 닉네임, 티어, 포인트 -->
+        <div class="d-flex align-items-end fs-3">
+          <!-- 프로필 사진 -->
+          <div
+          class="d-flex justify-content-center ms-5"
+          style="position: relative;">
+            <!-- 내프로필 -->
+            <img v-if="userStore?.profileInfo?.isMine" 
+            class="profile-icon-other" 
+            :src='userStore.getIconUrl(userStore?.myIcon)' :alt="userStore?.myIcon">
 
-    <!-- 정보 -->
-    <div class="d-flex flex-column w-100">
-      <!-- 프사, 닉네임, 티어, 포인트 -->
-      <div class="d-flex align-items-end fs-3">
-        <!-- 프로필 사진 -->
-        <div
-        class="d-flex justify-content-center ms-5 fade-in"
-        style="position: relative;">
-          <!-- 내프로필 -->
-          <img v-if="userStore?.profileInfo?.isMine" 
-          class="profile-icon-mine" 
-          type="button"
-          data-bs-toggle="modal" data-bs-target="#IconModal" 
-          :src='userStore.getIconUrl(userStore?.profileInfo?.icon)' :alt="userStore?.profileInfo?.icon">
+            <!-- 다른사람 프로필 -->
+            <img v-else class="profile-icon-other" :src='userStore.getIconUrl(userStore?.profileInfo?.icon)' :alt="userStore?.profileInfo?.icon">
+            
+          </div>
 
-          <font-awesome-icon
-          v-if="userStore?.profileInfo?.isMine"
-          class="xx-small-icon"
-          style="position: absolute; top: 35px; color: #ffffff;"
-          type="button"
-          data-bs-toggle="modal" data-bs-target="#IconModal" 
-          :icon="['fas', 'arrows-rotate']"
-          />
-          <!-- 다른사람 프로필 -->
-          <img v-else class="profile-icon-other" :src='userStore.getIconUrl(userStore?.profileInfo?.icon)' :alt="userStore?.profileInfo?.icon">
-          
-        </div>
 
         <!-- 닉네임 티어, 포인트 -->
         <div class="w-75 d-flex justify-content-center">
@@ -45,21 +34,21 @@
             </div>
           </div>
         </div>
-      </div>
-      <!-- 최근 전적 -->
-        <ul class="profile-outline-darkblue my-3 d-flex flex-column gap-1 overflow-y-auto" style="max-height: 300px;">
-          <!-- 게임 모드, 인원 -->
-          <div 
-            class="bg-lightblue p-1 rounded-3" 
-            v-for="recentPlay in userStore?.profileInfo?.recentPlayList"
-            :key="recentPlay.id">
-            <div class="d-flex gap-2 fw-bold">
-              <div>{{ recentPlay.gameMode }}</div>
-              <div>{{ recentPlay.memberNum }}인</div>
-            </div>
+
+
+        <!-- 최근 전적 -->
+          <ul v-if="userStore?.profileInfo?.recentPlayList.length > 0" class="profile-outline-darkblue my-3 d-flex flex-column gap-1 overflow-y-auto" style="max-height: 300px;">
+            <div 
+              class="bg-lightblue p-1 rounded-3" 
+              v-for="recentPlay in userStore?.profileInfo?.recentPlayList"
+              :key="recentPlay.id">
+              <div class="d-flex gap-2 fw-bold">
+                <div>{{ recentPlay.gameMode }}</div>
+                <div>{{ recentPlay.memberNum }}인</div>
+              </div>
+
             <!-- 같이한 사람 이름 -->
             <div class="d-flex justify-content-between me-2" >
-              <div class="d-flex gap-3">
                 <div v-for="(result, player) in recentPlay.opponents" :key="player">
                     {{ player }}: {{ result }}
                 </div>
@@ -72,16 +61,13 @@
               {'text-danger':recentPlay?.pointChange<0}]"
               >{{ recentPlay?.pointChange  }}pt
             </div>
-            </div>
+          </ul>
+          <div v-else class="profile-outline-darkblue my-3 d-flex flex-column gap-1 overflow-y-auto text-center">
+            최근 전적이 없습니다.
           </div>
-        </ul>
+      </div>
     </div>
 
-  <!-- 아이콘 모달 팝업 -->
-  <div class="modal fade" id="IconModal" tabindex="-1" aria-labelledby="IconModalLabel" aria-hidden="true">
-    <ModalIconList/>
-  </div>
-  </div>
 </template>
 
 <script setup>

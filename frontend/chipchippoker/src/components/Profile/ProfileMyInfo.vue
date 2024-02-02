@@ -7,11 +7,11 @@
         <div class="d-flex align-items-end fs-3">
           <!-- 프로필 사진 -->
           <div
-          class="d-flex justify-content-center ms-5 fade-in"
+          class="d-flex justify-content-center ms-5"
           style="position: relative;">
             <!-- 내프로필 -->
             <img v-if="userStore?.profileInfo?.isMine" 
-            class="profile-icon-mine" 
+            class="profile-icon-mine fade-in" 
             type="button"
             data-bs-toggle="modal" data-bs-target="#IconModal" 
             :src='userStore.getIconUrl(userStore?.myIcon)' :alt="userStore?.myIcon">
