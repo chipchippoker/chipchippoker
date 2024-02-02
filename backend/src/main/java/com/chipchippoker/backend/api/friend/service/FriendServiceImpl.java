@@ -18,6 +18,7 @@ import com.chipchippoker.backend.common.entity.FriendRequest;
 import com.chipchippoker.backend.common.entity.Member;
 import com.chipchippoker.backend.common.entity.Point;
 import com.chipchippoker.backend.common.exception.NotFoundException;
+import com.chipchippoker.backend.common.util.online.OnlineUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +29,7 @@ public class FriendServiceImpl implements FriendService {
 	private final MemberRepository memberRepository;
 	private final FriendRepository friendRepository;
 	private final FriendRequestRepository friendRequestRepository;
+	private final OnlineUtil onlineUtil;
 
 	@Override
 	public SearchFriendResponse searchFriend(Long id, String nickname) {
@@ -35,24 +37,24 @@ public class FriendServiceImpl implements FriendService {
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
 		Optional<Member> searchMember = memberRepository.findByNickname(nickname);
 		if (searchMember.isPresent()) {
-			// TODO: isOnline은 현재 항상 TRUE로 반환하고 있음. 추후 올바른 값으로 수정 필요.
-			Boolean isOnline = Boolean.TRUE;
+			Member searchedMember = searchMember.get();
+			Boolean isOnline = onlineUtil.isOnline(searchedMember.getNickname());
 
 			// 친구인지 확인
 			Boolean isFriend = Boolean.FALSE;
-			Friend friend = friendRepository.findByMemberAIdAndMemberBId(member.getId(), searchMember.get().getId());
+			Friend friend = friendRepository.findByMemberAIdAndMemberBId(member.getId(), searchedMember.getId());
 			if (friend != null)
 				isFriend = Boolean.TRUE;
 
 			// 친구 요청을 보냈고, 대기 중인지 확인
 			Boolean isSent = Boolean.FALSE;
 			FriendRequest friendRequest = friendRequestRepository.findByFromMemberIdAndToMemberId(member.getId(),
-				searchMember.get().getId());
+				searchedMember.getId());
 			if (friendRequest != null && friendRequest.getStatus().equals("대기"))
 				isSent = Boolean.TRUE;
 
 			return SearchFriendResponse.searchFriendResponse(
-				searchMember.get().getNickname(), searchMember.get().getIcon(), isOnline, isFriend, isSent);
+				searchedMember.getNickname(), searchedMember.getIcon(), isOnline, isFriend, isSent);
 		} else {
 			return null;
 		}
@@ -69,18 +71,18 @@ public class FriendServiceImpl implements FriendService {
 			friendList = friendRepository.findByMemberA(memberA);
 		} else if (memberB.isPresent()) {
 			Friend friend = friendRepository.findByMemberAIdAndMemberBId(id, memberB.get().getId());
-			if (friend != null) friendList.add(friend);
+			if (friend != null)
+				friendList.add(friend);
 		} else {
 			return null;
 		}
 
 		List<SearchFriendListResponse> searchFriendListResponses = new ArrayList<>();
 		for (Friend friend : friendList) {
-			// TODO: isOnline은 현재 항상 TRUE로 반환하고 있음. 추후 올바른 값으로 수정 필요.
 			Member member = friend.getMemberB();
 			Point point = member.getPoint();
 			String tier = point.tierByPoint(point.getPointScore());
-			Boolean isOnline = Boolean.TRUE;
+			Boolean isOnline = onlineUtil.isOnline(member.getNickname());
 			SearchFriendListResponse searchFriendListResponse = SearchFriendListResponse.searchFriendListResponse(
 				member.getIcon(), tier, member.getNickname(), isOnline);
 			searchFriendListResponses.add(searchFriendListResponse);
