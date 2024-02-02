@@ -223,7 +223,7 @@ export const useGameStore = defineStore('game', () => {
       })
     } else {
      console.log('매치 실패')
-     roomStore.isSearching = false
+     roomStore.isSearching = true
     }
   }
 
