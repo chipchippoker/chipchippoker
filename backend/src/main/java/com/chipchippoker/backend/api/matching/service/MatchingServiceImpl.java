@@ -15,6 +15,7 @@ import com.chipchippoker.backend.common.dto.ErrorBase;
 import com.chipchippoker.backend.common.entity.GameRoom;
 import com.chipchippoker.backend.common.entity.Member;
 import com.chipchippoker.backend.common.entity.MemberGameRoomBlackList;
+import com.chipchippoker.backend.common.exception.ForbiddenException;
 import com.chipchippoker.backend.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,11 @@ public class MatchingServiceImpl implements MatchingService {
 	public StartFriendlyMatchingResponse startFriendlyMatching(Long id, Integer totalParticipantCnt) {
 		Member member = memberRepository.findById(id)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
+
+		// 게임방에 이미 들어가 있는 사용자인 경우
+		if (member.getGameRoom() != null) {
+			throw new ForbiddenException(ErrorBase.E403_FORBIDDEN_ALREADY_IN_GAME_ROOM);
+		}
 
 		// 친선, 공개, 대기, 총 인원수, 빈방을 만족하는 게임방 조회
 		List<GameRoom> gameRoomList = gameRoomRepository.findByStartFriendlyMatchingSearchOption(totalParticipantCnt);
@@ -55,6 +61,11 @@ public class MatchingServiceImpl implements MatchingService {
 	public StartCompetitionMatchingResponse startCompetitionMatching(Long id, Integer totalParticipantCnt) {
 		Member member = memberRepository.findById(id)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
+
+		// 게임방에 이미 들어가 있는 사용자인 경우
+		if (member.getGameRoom() != null) {
+			throw new ForbiddenException(ErrorBase.E403_FORBIDDEN_ALREADY_IN_GAME_ROOM);
+		}
 
 		// 경쟁, 대기, 총 인원수를 만족하는 게임방 조회
 		GameRoom gameRoom = gameRoomRepository.findByStartCompetitionMatchingSearchOption(
