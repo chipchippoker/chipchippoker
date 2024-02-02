@@ -31,6 +31,11 @@ public class SpectateRoomServiceImpl implements SpectateRoomService {
 		Member member = memberRepository.findById(id)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
 
+		// 관전방에 이미 들어가 있는 사용자인 경우
+		if (member.getSpectateRoom() != null) {
+			throw new ForbiddenException(ErrorBase.E403_FORBIDDEN_ALREADY_IN_SPECTATE_ROOM);
+		}
+
 		GameRoom gameRoom = gameRoomRepository.findByTitleAndState(title);
 		GameRoomServiceHelper.isExistGameRoom(gameRoom); // 게임방이 존재하지 않는 경우
 

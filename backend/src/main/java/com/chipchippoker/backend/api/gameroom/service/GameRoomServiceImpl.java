@@ -43,6 +43,11 @@ public class GameRoomServiceImpl implements GameRoomService {
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
 		String nickname = member.getNickname();
 
+		// 게임방에 이미 들어가 있는 사용자인 경우
+		if (member.getGameRoom() != null) {
+			throw new ForbiddenException(ErrorBase.E403_FORBIDDEN_ALREADY_IN_GAME_ROOM);
+		}
+
 		// 방 개수가 100개를 초과하는 경우, 생성 불가
 		if (gameRoomRepository.findAll().size() >= 100)
 			throw new DuplicateException(ErrorBase.E403_OVER_MAX_GAME_ROOM_CNT);
