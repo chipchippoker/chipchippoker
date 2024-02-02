@@ -35,7 +35,6 @@ export const useUserStore = defineStore('user', () => {
       }
     })
     .then(res => {
-      console.log(res)
       accessToken.value = res.data.accessToken
       refreshToken.value =res.data.refreshToken
     })
@@ -57,14 +56,12 @@ export const useUserStore = defineStore('user', () => {
 
   // 회원가입
   const signUp = async function (payload) {
-    console.log('회원가입 요청')
     try {
       const response = await axios({
         method: 'post',
         url: `${USER_API}/signup`,
         data: payload
       })
-      console.log('회원가입 성공!')
       const res = response.data
       accessToken.value = res.data.accessToken
       refreshToken.value = res.data.refreshToken
@@ -80,7 +77,6 @@ export const useUserStore = defineStore('user', () => {
     
   // 일반 로그인
   const generalLogIn = async function (payload) {
-    console.log('일반 로그인 요청');
     try {
       const response = await axios({
         method: 'post',
@@ -88,7 +84,6 @@ export const useUserStore = defineStore('user', () => {
         data: payload
       })
       const res = response.data
-      console.log('일반 로그인 성공!!')
       console.log(res.data)
       accessToken.value = res.data.accessToken
       refreshToken.value = res.data.refreshToken
@@ -173,14 +168,12 @@ export const useUserStore = defineStore('user', () => {
 
   // 로그아웃
   const logOut = function () {
-    console.log('로그아웃 요청!');
     axios({
       method: 'post',
       url: `${MEMBERS_API}/logout`,
       headers: { 'access-token': accessToken.value }
     })  
     .then(res => {
-      console.log('로그아웃 성공!!')
       accessToken.value = null
       refreshToken.value = null
       authorizationCode.value = null
@@ -214,42 +207,36 @@ export const useUserStore = defineStore('user', () => {
 
   // 닉네임 중복확인
   const checkNickname = async function (nickname){
-    console.log("닉네임 중복 확인 요청")
     try {
       const res = await axios({
         method: 'post',
         url: `${USER_API}/duplication/nickname`,
         data: { nickname }
       })
-      console.log('닉네임 중복 확인 성공')
       return res.data.data
     } catch (err) {console.log(err)}  
   }
 
   // 아이디 중복확인
   const checkMemberId = async function (memberId){
-    console.log("아이디 중복 확인 요청")
     try {
       const res = await axios({
         method: 'post',
         url: `${USER_API}/duplication/id`,
         data: { memberId }
       })
-      console.log('아이디 중복 확인 성공')
       return res.data.data
     } catch (err) {console.log(err)}
   }
     
   // 회원탈퇴
   const signOut = async function () {
-    console.log('회원탈퇴 요청!')
     try {
       await axios({
         method: 'post',
         url: `${MEMBERS_API}/withdraw`,
         headers: { 'access-token': accessToken.value }
       })
-      console.log('회원탈퇴 성공')
       accessToken.value = null
       refreshToken.value = null
       authorizationCode.value = null
@@ -329,7 +316,7 @@ export const useUserStore = defineStore('user', () => {
       return false
     }
     const length = nickname.length
-    if (length < 4 || length > 16) {
+    if (length < 2 || length > 12) {
   
       return false
     }
@@ -339,7 +326,6 @@ export const useUserStore = defineStore('user', () => {
 
   //  아이콘 변수, 아이콘 가져오기 함수  
   const getIconUrl = function(number){
-    console.log('아이콘 가져오기');
     return new URL(`/src/assets/profile_icons/icon${number}.jpg`,import.meta.url).href;
   }
 
@@ -358,15 +344,12 @@ export const useUserStore = defineStore('user', () => {
 
     })
     .then(res => {
-      console.log("프로필 정보 요청 결과",res);
       profileInfo.value = res.data.data
-      console.log("profileInfo",profileInfo.value)
     })
   }
 
   // 아이콘 변경
   const changeIcon = function (number) {
-    console.log(number)
     axios({
       method:'post',
       url: `${MEMBERS_API}/icon`,
@@ -374,7 +357,6 @@ export const useUserStore = defineStore('user', () => {
       data: {icon: number}
     })
     .then(res => {
-      console.log("아이콘 변경 완료");
       myIcon.value = number
     })
     .catch(err => console.log(err))

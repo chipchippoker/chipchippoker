@@ -71,10 +71,11 @@ router.beforeEach((to, from, next) => {
   import('@/stores/user').then(({ useUserStore }) => {
   const userStore = useUserStore()
 
-  if (!userStore.accessToken && to.name !== 'login' && to.name !== 'signup' && to.name !== 'kakaosignup') {
+  if (userStore.accessToken === null && to.name !== 'login' && to.name !== 'signup' && to.name !== 'kakaosignup') {
     alert('로그인이 필요합니다.')
     console.log('로그인이 필요합니다.');
-    return { name: 'login'}
+    router.push({ name: 'login'})
+    return
   }
     next();
   });

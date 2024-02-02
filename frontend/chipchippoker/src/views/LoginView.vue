@@ -38,7 +38,7 @@
     </div>
     <div class="text-white mt-3">
       아직 회원이 아니십니까? 
-      <a href="" @click="goSignUp" style="color:#70E5FF;">
+      <a type="button" @click="goSignUp()" style="color:#70E5FF;">
         회원가입 ></a>
     </div>
   </div>
