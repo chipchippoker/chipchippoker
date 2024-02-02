@@ -77,7 +77,7 @@ public class RankServiceImpl implements RankService {
 		//인원 제한이 없는 전체 조회 메서드
 		List<Point> totalRank = memberRepository.getTotalRank(0);
 		for (int i = 0; i < totalRank.size(); i++) {
-			if (totalRank.get(i).getMember().getId() == id) {
+			if (totalRank.get(i).getMember().getId().equals(id)) {
 				Point p = totalRank.get(i);
 				return new MyselfRankResponse(i + 1, Point.tierByPoint(p.getPointScore()), p.getMember().getIcon(),
 					p.getMember().getNickname(), p.getPointScore());

@@ -1,30 +1,25 @@
 package com.chipchippoker.backend.common.init;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
-import com.chipchippoker.backend.api.friend.repository.FriendRepository;
 import com.chipchippoker.backend.api.gameresult.repository.GameResultRepository;
-import com.chipchippoker.backend.api.member.repository.MemberRepository;
 import com.chipchippoker.backend.common.collection.GameResult;
 
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 @Transactional
+@Profile({"dev", "local"})
 public class Initializer implements ApplicationRunner {
-	private final MemberRepository memberRepository;
-	private final FriendRepository friendRepository;
-	private final EntityManager entityManager;
 	private final GameResultRepository gameResultRepository;
 	private final MongoTemplate mongoTemplate;
 
@@ -35,7 +30,7 @@ public class Initializer implements ApplicationRunner {
 	}
 
 	@Override
-	public void run(ApplicationArguments args) throws NoSuchAlgorithmException {
+	public void run(ApplicationArguments args) {
 		// 더미 데이터 작성
 		dropCollection("game_result");
 
