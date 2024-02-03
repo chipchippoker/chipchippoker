@@ -29,9 +29,9 @@
             <font-awesome-icon :icon="['fas', 'caret-left']" style="color: #ffffff;" />
         </button>
 
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="friendList" aria-labelledby="friendListLabel">
+        <div  data-bs-backdrop="false" class="offcanvas offcanvas-end" tabindex="-1" id="friendList" aria-labelledby="friendListLabel">
         <div class="offcanvas-header bg-modal">
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <button  type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body bg-modal">
             <MainFriendList/>

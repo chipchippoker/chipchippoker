@@ -33,12 +33,11 @@
             <div>
               {{ userStore?.profileInfo?.nickname }}
             </div>
-            <div style="width: 56px; height: 50px">
-              <img
-                class=""
-                :src="friendStore.getTierIconUrl(userStore?.profileInfo?.tier)"
-                style="width: 100%; height: 100%; object-fit: cover"
-              />
+            <div style="width: 56px;">
+              <img v-if="userStore?.profileInfo?.rank === 1" 
+              :src='friendStore.getTierIconUrl("rare")' 
+              style="width: 100%; height: 100%; object-fit: cover;">
+              <img v-else :src='friendStore.getTierIconUrl(userStore?.profileInfo?.tier)' style="width: 100%; height: 100%; object-fit: cover;">
             </div>
             <div>{{ userStore?.profileInfo?.point }}pt</div>
           </div>
@@ -47,7 +46,7 @@
 
       <!-- 최근 전적 -->
       <ul
-        v-if="userStore?.profileInfo?.recentPlayList"
+        v-if="userStore?.profileInfo?.recentPlayList?.length > 0"
         class="profile-outline-darkblue my-3 d-flex flex-column gap-1 overflow-y-auto"
         style="max-height: 300px"
       >

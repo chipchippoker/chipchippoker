@@ -15,14 +15,14 @@ export const useFriendStore = defineStore('friend', () => {
   const searchedPerson = ref({})
   const friendList = ref([])
   const alarmList = ref([])
-
+  const isSent = ref(false)
+  const isSearched = ref(false)
   // 랭킹 aPI에서 사용되는 변수
   const isContainedinAll = ref(null)
   const isContainedinFriend = ref(null)
   const allRankList = ref([])
   const friendRankList = ref([])
   const myRank = ref([])
-
   // 친구 찾기 
   const findFriendinAll = function(nickname){
     console.log(userStore.accessToken);
@@ -171,14 +171,15 @@ export const useFriendStore = defineStore('friend', () => {
 
   //  티어 가져오기 함수
   const getTierIconUrl = function(tier){
-    return new URL(`/src/assets/tier_icons/${tier}.png`,import.meta.url).href;
+    return new URL(`/src/assets/tier_icons/${tier}.svg`,import.meta.url).href;
   }
   
 
   return {
     // 친구
-    searchedPerson, friendList, alarmList, isContainedinAll, isContainedinFriend,
+    searchedPerson, friendList, alarmList, isContainedinAll, isContainedinFriend,isSent,isSearched,
     findFriendinAll, getFriendList, RequestAlarm, friendRequest, acceptFriendRequest, rejectFriendRequest,
+
     // 랭킹
     allRankList, friendRankList, myRank,
     getAllRankList, getFriendRankList, getMyRankList
