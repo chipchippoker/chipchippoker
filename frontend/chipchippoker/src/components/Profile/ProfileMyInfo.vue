@@ -35,8 +35,9 @@
               <div>
                 {{ userStore?.profileInfo?.nickname }}
               </div>
-              <div style="width: 56px; height: 50px;">
-                <img class=""  :src='friendStore.getTierIconUrl(userStore?.profileInfo?.tier)' style="width: 100%; height: 100%; object-fit: cover;">
+              <div style="width: 56px;">
+                <img v-if="userStore?.profileInfo?.rank === 1" :src='friendStore.getTierIconUrl("rare")' style="width: 100%; height: 100%; object-fit: cover;">
+                <img v-else :src='friendStore.getTierIconUrl(userStore?.profileInfo?.tier)' style="width: 100%; height: 100%; object-fit: cover;">
               </div>
               <div>
                 {{ userStore?.profileInfo?.point }}pt
@@ -45,7 +46,6 @@
           </div>
         </div>
 
-        
         <!-- 상세 정보 -->
         <div class="row profile-outline-darkblue m-3 text-center">
           <!-- 왼쪽 -->
@@ -109,14 +109,25 @@
         </div>
         <!-- 친구의 프로필 -->
         <div v-else class="d-flex flex-row-reverse">
-          <button class="btn btn-signout">
-            <a class="text-warning" href="https://docs.google.com/forms/d/e/1FAIpQLSdQLmWHJoz263PcrL3G_SLOzQUY28fVmG2wXJUtObYnEK-_WQ/viewform?usp=sf_link">신고하기</a>
-          </button>
-          <!-- 버튼 누르고 바뀜 -->
-        <div v-if="isSent===true || profileInfo?.isSent" class="btn-signout rounded-2 p-1 bg-secondary text-white text-center border-0">
-            대기중
-        </div>
-          <button v-else @click="friendRequest" class="btn btn-signout primary">친구 신청</button>
+          <!-- 신고하기 -->
+          <div>
+            <a class="btn_siren fw-bold"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSdQLmWHJoz263PcrL3G_SLOzQUY28fVmG2wXJUtObYnEK-_WQ/viewform?usp=sf_link"
+            target="_blank">
+            <img style="width: 20px;" src="/src/assets/icons/siren.svg" alt="My Happy SVG" />
+            <span>신고하기</span>  
+            </a>
+          </div>
+          <!-- 친구가 아니라면 -->
+          <div v-if="userStore?.profileInfo?.isFriend==false">
+            <!-- 버튼 누르고 바뀜 -->
+            <span v-if="isSent===true || userStore?.profileInfo?.isSent" 
+            class="btn_sent">
+                대기중
+            </span>
+            <span type="button" v-else @click="friendRequest" class="btn_request">친구 신청</span>
+          </div>
+        
         </div>
       </div>
              
@@ -206,5 +217,38 @@
     border: 1px solid black;
   }
 
+  .btn_request {
+    padding: 5px 10px;
+    border: 2px solid #ffc308;
+    background-color: #ffde76;
+    border-radius: 10px;
+    margin-right: 15px;
+  }
+  .btn_request:hover {
+    background-color: #ffc308;
+    color: white;
+    border: 2px solid #ffc308;
+  }
+  .btn_sent {
+    padding: 5px 10px;
+    border: 2px solid #afafaf;
+    border-radius: 10px;
+    margin-right: 15px;
+    background-color: #afafaf;
+  }
+
+  .btn_siren {
+    padding: 5px 10px;
+    text-decoration: none;
+    border: 2px solid #fff;
+    color: red;
+    border-radius: 10px;
+    margin-right: 15px;
+  }
+  .btn_siren:hover {
+    background-color: red;
+    color: white;
+    border: 2px solid red;
+  }
 
 </style>

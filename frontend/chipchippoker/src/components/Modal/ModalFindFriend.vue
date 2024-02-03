@@ -14,7 +14,7 @@
                     <input v-model="nickname" type="text" class="form-control" id="userId" placeholder="Nickname">
                 </div>
                 <div class="col-auto">
-                    <button @click="findNickName" type="submit" class="btn-outline-yellow rounded-2">검색</button>
+                    <button @click="findNickname" type="submit" class="btn-outline-yellow rounded-2">검색</button>
                 </div>
             </div>
         </div>
@@ -25,7 +25,7 @@
                 :item="friendStore.searchedPerson"/>
                 </div>
 
-            <div v-else>검색 결과 없음</div>
+            <div v-else-if="friendStore.isSearched===true">검색 결과 없음</div>
         </div>
         
         </div>
@@ -37,18 +37,23 @@ import ModalFindFriendItem from './ModalFindFriendItem.vue';
 import { onMounted, ref } from 'vue';
 import { useFriendStore } from '@/stores/friend'
 import { useRouter } from 'vue-router'
+import { faL } from '@fortawesome/free-solid-svg-icons';
 
 
 const friendStore = useFriendStore()
 const nickname = ref(null)
-const findNickName = function(){
+const findNickname = function(){
     console.log(`${nickname.value} 닉네임 검색`)
     friendStore.findFriendinAll(nickname.value)
+    friendStore.isSent = false
+    friendStore.isSearched = true
 }
 
 // 모달 닫을때 데이터 청소
 const dataRefresh = function(){
     friendStore.searchedPerson = {}
+    friendStore.isSearched = false
+    friendStore.isSent = false
     nickname.value = null
 }
 
