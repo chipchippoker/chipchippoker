@@ -17,7 +17,6 @@
     "@fortawesome/vue-fontawesome": "^3.0.5",
     "axios": "^1.6.5",
     "bootstrap": "^5.3.2",
-    "canvas": "^2.11.2",
     "dotenv": "^16.3.2",
     "face-api.js": "^0.22.2",
     "openvidu-browser": "^2.29.1",

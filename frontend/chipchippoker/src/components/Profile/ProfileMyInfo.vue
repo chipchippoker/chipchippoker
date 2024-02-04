@@ -125,7 +125,7 @@
             class="btn_sent">
                 대기중
             </span>
-            <span type="button" v-else @click="friendRequest" class="btn_request">친구 신청</span>
+            <span v-else @click="friendRequest" class="btn_request">친구 신청</span>
           </div>
         
         </div>
@@ -223,6 +223,8 @@
     background-color: #ffde76;
     border-radius: 10px;
     margin-right: 15px;
+    cursor:pointer;
+
   }
   .btn_request:hover {
     background-color: #ffc308;
