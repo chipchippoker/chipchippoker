@@ -20,7 +20,6 @@ const goProfile = function(){
   userStore.getProfileInfo(userStore.myNickname)
   router.push({name:'profile',params:{nickname:userStore.myNickname}})
 }
-  
 
 const windowWidth = window.innerWidth;
 const windowHeight = window.innerHeight;

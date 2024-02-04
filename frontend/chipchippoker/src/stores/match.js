@@ -18,9 +18,10 @@ export const useMatchStore = defineStore('match', () => {
   const roomId = ref(null)
   const title = ref(null)
   const totalParticipantCnt = ref(0)
-  const isSearching = ref(false)
-  const isMatch = ref(false)
-  const isNotExistRoom = ref(true)
+
+  const isSearching = ref(false)    // 경쟁전 매칭 중
+  const isMatch = ref(false)        // 
+  const isNotExistRoom = ref(false)  // 친선전 남는 방이 없음
 
   // 경쟁전 빠른 시작
   const matchCompete = function(payload) {
@@ -43,41 +44,43 @@ export const useMatchStore = defineStore('match', () => {
       gameStore.subscribeHandler(title.value)
     })
     .then(()=>{
-      gameStore.sendMatching(title.value, totalParticipantCnt.value, true)
+      gameStore.sendMatching(title.value, totalParticipantCnt.value)
     })
     .catch(err => console.log(err))
   } 
 
 
   // 친선전 빠른 시작
-  const matchFriend = function(payload) {
-    axios({
-      method: 'post',
-      url: `${MATCH_API}/friendly`,
-      headers: { 'access-token': userStore.accessToken },
-      data: payload
-    })
-    .then(response => {
+  const matchFriend = async function(payload) {
+    try {
+      const response = await axios({
+        method: 'post',
+        url: `${MATCH_API}/friendly`,
+        headers: { 'access-token': userStore.accessToken },
+        data: payload
+      })
       const res = response.data
       if (Object.keys(res.data).length === 0) {
         console.log('생성된 친선방 X')
-        isNotExistRoom.value = false
-        isMatch.value = false
+        isNotExistRoom.value = true
+        return false
       } else {
         console.log('친선전 매치 성공')
         roomId.value = res.data.roomId
         title.value = res.data.title
         roomStore.roomId = res.data.roomId
         totalParticipantCnt.value = res.data.totalParticipantCnt
-        isNotExistRoom.value = true
-        const payload = {
+        isNotExistRoom.value = false
+        const payload_1 = {
           title: title.value
         }
         // 방입장
-        roomStore.enterRoomPublic(payload)
+        roomStore.enterRoomPublic(payload_1)
+        return true
       }
-    })
-    .catch(err => console.log(err))
+    } catch (err) {
+      return console.log(err)
+    }
   }  
 
 

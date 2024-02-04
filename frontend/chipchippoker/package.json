@@ -30,6 +30,7 @@
     "webstomp-client": "^1.2.6"
   },
   "devDependencies": {
+    "@types/bootstrap": "^5.2.10",
     "@vitejs/plugin-vue": "^4.5.2",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.33",

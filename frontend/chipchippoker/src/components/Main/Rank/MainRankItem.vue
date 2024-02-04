@@ -3,7 +3,7 @@
     <div 
      type="button" class="d-flex m-2 rounded-2 p-1 overflow-hidden" 
     :class="[{'sticky-bottom sticky-top myrank':item?.nickname===userStore.myNickname},{'otherrank':item?.nickname!=userStore.myNickname},
-{'rainbow-box':item?.rank ===1}]"
+{'rainbow-box':item?.rank ===1}, {'first-place':item?.rank===1}]"
     @click="goProfile(item?.nickname)">
 
 
@@ -45,5 +45,23 @@ const goProfile = function(nickname){
 </script>
 
 <style scoped>
+@keyframes glowing {
+  0% {
+    border-color: #FF5733; /* 불꽃 효과의 시작 색상 */
+    box-shadow: 0 0 10px #FF5733; /* 불꽃 효과의 시작 그림자 */
+  }
+  50% {
+    border-color: #FFC300; /* 불꽃 효과의 중간 색상 */
+    box-shadow: 0 0 20px #FFC300; /* 불꽃 효과의 중간 그림자 */
+  }
+  100% {
+    border-color: #FF5733; /* 불꽃 효과의 끝 색상 */
+    box-shadow: 0 0 10px #FF5733; /* 불꽃 효과의 끝 그림자 */
+  }
+}
+
+.first-place {
+  animation: glowing 2s infinite alternate; /* 애니메이션 적용: 2초 간격으로 불꽃이 번갈아가며 반복됨 */
+}
 
 </style>
