@@ -41,16 +41,25 @@
     <!-- 모달 -->
 
         <!-- 빠른방 입장 모달 -->
-        <div class="modal fade" data-bs-backdrop="false" id="FindRoomModal" tabindex="-1" aria-labelledby="makeRoomModalLabel" aria-hidden="true">
-            <ModalFindRoom
-            :type="gameType"
-            />
+        <div class="modal fade" id="FindRoomModal" tabindex="-1" aria-labelledby="findRoomModalLabel" aria-hidden="true">
+            <ModalFindRoom @showFindGame="handleShowFindGame" :type="gameType" />
+        </div>
+
+        <!-- 게임 찾는중 모달 -->
+        <div class="modal fade" id="FindGameModal" tabindex="-1" aria-labelledby="findGameModalLabel" aria-hidden="true">
+            <ModalFindGame @close="matchStore.stopFindGame()" />
+        </div>
+
+        <!-- 친선 방이 없는 것을 말해주는 모달 -->
+        <div class="modal fade" id="NotExistRoom" tabindex="-1" aria-hidden="true">
+            <ModalNotExistRoom/>
         </div>
        
         <!-- 방만들기 모달 -->
         <div class="modal fade" id="makeRoomModal" tabindex="-1" aria-labelledby="makeRoomModalLabel" aria-hidden="true">
             <ModalCreateRoom/>
         </div>
+
         <!-- 친구 찾기 모달 -->
         <div class="modal fade" id="FindFriendModal" tabindex="-1" aria-labelledby="FindFriendModalLabel" aria-hidden="true">
             <ModalFindFriend/>
@@ -69,34 +78,61 @@
 import MainFriendList from '@/components/Main/Friend/MainFriendList.vue';
 import MainRank from '@/components/Main/Rank/MainRank.vue';
 import MainRoom from '@/components/Main/Room/MainRoom.vue'
+// 모달
+import ModalFindRoom from '@/components/Modal/ModalFindRoom.vue';   // 경쟁 모드, 친선 모드 빠른 시작
+import ModalFindGame from '@/components/Modal/ModalFindGame.vue';   // 게임을 찾는 중입니다.
+import ModalNotExistRoom from '@/components/Modal/ModalNotExistRoom.vue';
 import ModalCreateRoom from '@/components/Modal/ModalCreateRoom.vue';
 import ModalFindFriend from '@/components/Modal/ModalFindFriend.vue';
-import ModalFindRoom from '@/components/Modal/ModalFindRoom.vue';
 import ModalIsExistRoom from '@/components/Modal/ModalIsExistRoom.vue';
+import { ref,onMounted, watch } from 'vue';
+import { useRouter } from 'vue-router';
 import { useFriendStore } from '@/stores/friend';
 import { useSoundStore } from '@/stores/sound';
-import { ref,onMounted, watch } from 'vue';
 import { useUserStore } from '@/stores/user';
-import { useRouter } from 'vue-router';
 import { useRoomStore } from '@/stores/room';
+import { useMatchStore } from '@/stores/match';
+// import bootstrap from 'bootstrap';
 
 const userStore = useUserStore()
 const soundStore = useSoundStore()
 const friendStore = useFriendStore()
 const roomStore = useRoomStore()
+const matchStore = useMatchStore()
 const router = useRouter()
-const gameType = ref('경쟁')
+const gameType = ref('경쟁전')
 const changeType = function(type){
     roomStore.isWatcher = false
     gameType.value = type
 }
 
+// -------------------모달 테스트-------------------
+const handleShowFindGame = function (payload) {
+    console.log('빠른 모드 탐색 시작');
+    if (gameType.value === '경쟁전') {
+        const modalElement = document.getElementById('FindGameModal'); // 모달의 HTML 요소 가져오기
+        const modalInstance = new bootstrap.Modal(modalElement); // 모달 인스턴스 생성
+        modalInstance.show(); // 모달 열기
+        matchStore.matchCompete(payload)
+    } else {
+        matchStore.matchFriend(payload)
+        .then(result => {
+            if (!result) {
+                const notExistRoomModal = new bootstrap.Modal(document.getElementById('NotExistRoom'));
+                notExistRoomModal.show();
+            }
+        })
+    }
+}
+// ------------------------------------------------
+
+
 // 방을 생성할 때 때 이미 있는 방제면
 watch(() => roomStore.isRoom, (newValue) => {
     console.log(roomStore.isRoom)
     if (newValue) {
-        const IsExistRoomModal = new bootstrap.Modal(document.getElementById('IsExistRoomModal'));
-        IsExistRoomModal.show()
+        // const IsExistRoomModal = new bootstrap.Modal(document.getElementById('IsExistRoomModal'));
+        // IsExistRoomModal.show()
         roomStore.isRoom = false
     }
 })

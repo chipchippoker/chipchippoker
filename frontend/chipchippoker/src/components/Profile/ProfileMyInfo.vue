@@ -103,7 +103,7 @@
           <button class="btn btn-signout" data-bs-toggle="modal" data-bs-target="#SignOutModal">회원탈퇴</button>
           <button class="btn btn-logout" data-bs-toggle="modal" data-bs-target="#LogOutModal">로그아웃</button>
           <button v-if="userStore.kakaoAccessToken === null" class="btn btn-kakao">
-            <img class="kakao-logo" @click="userStore.kakaoConnect" src="/src/assets/icons/kakaologo.png" alt="">
+            <img class="kakao-logo" @click="userStore.kakaoConnect()" src="/src/assets/icons/kakaologo.png" alt="">
             카카오 연동하기
           </button>
         </div>
