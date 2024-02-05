@@ -21,6 +21,7 @@ import com.chipchippoker.backend.api.gameroom.service.GameRoomService;
 import com.chipchippoker.backend.common.dto.ApiResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,7 +35,7 @@ public class GameRoomController {
 	// 방 생성
 	@PostMapping("/api/rooms")
 	public ResponseEntity<ApiResponse<CreateGameRoomResponse>> createGameRoom(
-		@RequestBody CreateGameRoomRequest createGameRoomRequest) {
+		@RequestBody @Valid CreateGameRoomRequest createGameRoomRequest) {
 		Long id = (Long)request.getAttribute("id");
 		CreateGameRoomResponse createGameRoomResponse = gameRoomService.createGameRoom(createGameRoomRequest, id);
 		return ResponseEntity.ok(ApiResponse.success(createGameRoomResponse));

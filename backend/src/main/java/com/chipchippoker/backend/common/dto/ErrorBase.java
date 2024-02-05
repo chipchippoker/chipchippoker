@@ -26,6 +26,8 @@ public enum ErrorBase {
 	E400_INVALID_ALREADY_DIE(BAD_REQUEST, false, "BR110", "플레이어는 DIE 상태로 배팅에 참여할 수 없습니다."),
 	E400_INVALID_ROUND_MISMATCH(BAD_REQUEST, false, "BR111", "라운드가 일치하지 않습니다."),
 	E400_INVALID_BET_COIN(BAD_REQUEST, false, "BR112", "배팅이 불가능 한 개수의 코인입니다."),
+	E400_INVALID_VALIDATION(BAD_REQUEST, false, "BR113", "잘못된 검증 형식입니다"),
+
 	/**
 	 * 401 UnAuthorized (인증 실패)
 	 */

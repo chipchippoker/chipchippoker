@@ -1,5 +1,7 @@
 package com.chipchippoker.backend.api.gameroom.model.dto;
 
+import com.chipchippoker.backend.annotation.Title;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,8 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateGameRoomRequest {
-    private String title;
-    private Boolean isPrivate;
-    private Integer password;
-    private Integer totalParticipantCnt;
+	@Title
+	private String title;
+	private Boolean isPrivate;
+	private Integer password;
+	private Integer totalParticipantCnt;
 }
