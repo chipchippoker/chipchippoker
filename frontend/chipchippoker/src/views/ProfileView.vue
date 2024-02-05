@@ -44,7 +44,7 @@
   const router = useRouter()
 
   onMounted(() => {
-    const nickname = route.params.nickname
+    const nickname = userStore.profileNickname
     userStore.getProfileInfo(nickname)
   })
 

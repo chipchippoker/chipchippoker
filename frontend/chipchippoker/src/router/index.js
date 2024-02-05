@@ -40,7 +40,7 @@ const router = createRouter({
       component: KakaoSignupView
     },
     {
-      path: '/profile/:nickname?',
+      path: '/profile',
       name: 'profile',
       component: ProfileView
     },

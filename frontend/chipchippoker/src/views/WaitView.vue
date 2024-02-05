@@ -261,7 +261,6 @@ onMounted(() => {
 onUnmounted(() => {
   // 프로필 아이콘 보이기
   userStore.viewProfileIcon = true
-
   roomId.value = roomStore.roomId
   roomTitle.value = roomStore.title
   totalParticipantCnt.value = roomStore.totalParticipantCnt
