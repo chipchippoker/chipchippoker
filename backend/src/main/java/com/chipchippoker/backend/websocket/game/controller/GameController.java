@@ -21,6 +21,7 @@ import com.chipchippoker.backend.common.dto.ApiResponse;
 import com.chipchippoker.backend.common.dto.MessageBase;
 import com.chipchippoker.backend.common.entity.GameRoom;
 import com.chipchippoker.backend.common.exception.InvalidException;
+import com.chipchippoker.backend.common.exception.NotFoundException;
 import com.chipchippoker.backend.common.util.jwt.JwtUtil;
 import com.chipchippoker.backend.websocket.game.dto.BanMemberMessageRequest;
 import com.chipchippoker.backend.websocket.game.dto.BettingMessageRequest;
@@ -109,14 +110,42 @@ public class GameController {
 		log.info("게임방 퇴장 시작");
 		String nickname = jwtUtil.getNickname(accessToken);
 		GameManager gameManager = gameManagerMap.get(gameRoomTitle);
-		gameManager.deleteMember(nickname);
-		// 게임방 가져오기 REST API 연결시
-		// GameRoom gameRoom = gameRoomRepository.findByTitle(gameRoomTitle)
-		// 	.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS));
-		// String roomManagerNickname = gameRoom.getRoomManagerNickname();
-		// gameManager.setRoomManager(roomManagerNickname);
-		broadcastAllMemberInfoInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_MEMBER_EXIT,
-			ReadyRoomMessageResponse.create(gameManager));
+		try {
+			// 게임방 가져오기 REST API 연결시
+			GameRoom gameRoom = gameRoomRepository.findByTitleAndState(gameRoomTitle);
+			if (gameRoom == null)
+				throw new NotFoundException(MessageBase.E404_CAN_NOT_FIND_GAME_ROOM);
+
+			// 방장이 마지막으로 나가서 게임방이 종료상태로 전환된 경우
+			if (gameRoom.getState().equals("종료")) {
+				// 게임방 관리를 더 이상 하지 않는다.
+				gameManagerMap.remove(gameRoomTitle);
+				return;
+			}
+
+			// 나가는 사람이 방장인 경우
+			if (nickname.equals(gameManager.getRoomManager())) {
+				String roomManagerNickname = gameRoom.getRoomManagerNickname();
+				gameManager.setRoomManager(roomManagerNickname);
+				gameManager.deleteMember(nickname);
+				broadcastAllMemberInfoInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_MANAGER_EXIT,
+					ReadyRoomMessageResponse.create(gameManager));
+			}
+			// 방장이 아닌 경우
+			else {
+				gameManager.deleteMember(nickname);
+				broadcastAllMemberInfoInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_MEMBER_EXIT,
+					ReadyRoomMessageResponse.create(gameManager));
+			}
+
+		}
+		// 방이 존재하지 않는 경우
+		catch (NotFoundException e) {
+			broadcastToMember(nickname, ResponseEntity.badRequest().body(
+				ApiResponse.messageError(e.getMessageBase())
+			));
+			return;
+		}
 		log.info("게임방 퇴장 성공");
 	}
 
