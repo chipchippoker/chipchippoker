@@ -193,7 +193,8 @@ export const useOpenviduStore = defineStore('openvidu', () => {
     // Remove beforeunload listener
     window.removeEventListener("beforeunload", leaveSession)
     roomStore.leaveRoom()
-    router.push('main')
+    console.log('세션나가기')
+    router.push({name:'main'})
   }
   
   /**

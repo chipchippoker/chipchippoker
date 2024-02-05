@@ -113,7 +113,7 @@ export const useGameStore = defineStore('game', () => {
             roundState.value = response.data.roundState
             currentRound.value = response.data.currentRound
             yourTurn.value = response.data.yourTurn
-            gameMemberInfos.value = data.gameMemberInfos
+            gameMemberInfos.value = response.data.gameMemberInfos
             for (let i = 0; i < memberInfos.value.length; i++) {
               // 플레이어 순서에 맞게 데이터 넣기
               const item = response.data.gameMemberInfos.filter((p)=>
@@ -145,7 +145,6 @@ export const useGameStore = defineStore('game', () => {
 
   // 구독 핸들러
   const subscribeHandler = (gameRoomTitle) => {
-    
     // 토픽 구독 및 수신
     subscriptionGame.value = stompClient.subscribe(`/from/chipchippoker/checkConnect/${gameRoomTitle}`, (message) => {
       console.log('방 구독하기');
@@ -184,6 +183,7 @@ export const useGameStore = defineStore('game', () => {
       case "MS007": // 게임 시작 성공
       case "ME002": // 모두 준비상태가 아님
       case "ME003": // 방장이 아님
+      case "MS016":
         receiveStartGame(response)
         break
       case "MS008": // 라운드 종료
@@ -251,9 +251,13 @@ export const useGameStore = defineStore('game', () => {
 
   // 게임방 입장 RECEIVE
   const receiveJoinRoom = function(data){
+    console.log('★★★★★★★★★★★★★★★★★★★★★');
+    console.log('입장시 데이터',data);
+    console.log('★★★★★★★★★★★★★★★★★★★★★');
     countOfPeople.value = data.countOfPeople
     memberInfos.value = data.memberInfos
     roomManagerNickname.value = data.roomManagerNickname
+    console.log('저장된 매니저 닉네임',roomManagerNickname.value);
     gameRoomTitle.value = roomStore.title
     router.push({
       name:'wait',
@@ -320,20 +324,22 @@ export const useGameStore = defineStore('game', () => {
 
   // 게임 시작 RECEIVE
   const receiveStartGame = function (body) {
-    if (body.code === 'MS007'){  // 게임 진행
-      roundState.value = body.data.roundState
-      currentRound.value = body.data.currentRound
-      yourTurn.value = body.data.yourTurn
-      gameMemberInfos.value = body.data.gameMemberInfos
-      router.push({
-        name:'play',
-        params: { roomId: roomStore.roomId },
-      })
-    } else if (body.code === 'ME002') {  // 준비 안됨
-      alert(body.message)
-    } else if (body.code === 'ME003') {  // 방장 아님
-      alert(body.message)
-    }
+    console.log('receiveStartGame', body)
+    router.push({
+      name:'play',
+      params: { roomId: roomStore.roomId },
+    })
+    // if (body.code === 'MS007'){  // 게임 진행
+    //   roundState.value = body.data.roundState
+    //   currentRound.value = body.data.currentRound
+    //   yourTurn.value = body.data.yourTurn
+    //   gameMemberInfos.value = body.data.gameMemberInfos
+      
+    // } else if (body.code === 'ME002') {  // 준비 안됨
+    //   alert(body.message)
+    // } else if (body.code === 'ME003') {  // 방장 아님
+    //   alert(body.message)
+    // }
   }
 
   // 배팅
@@ -394,6 +400,7 @@ export const useGameStore = defineStore('game', () => {
     yourTurn,
     gameMemberInfos,
     memberInfos,
+    roomManagerNickname,
 
     // 구독 정보
     subscriptionGame, myGameSubId,

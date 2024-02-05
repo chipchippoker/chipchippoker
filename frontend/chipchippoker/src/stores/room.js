@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from './user'
 import { useGameStore } from './game'
+import { compileScript } from 'vue/compiler-sfc'
 
 
 export const useRoomStore = defineStore('room', () => {
@@ -111,9 +112,7 @@ export const useRoomStore = defineStore('room', () => {
       }
     })
     .then(response => {
-      console.log('방목록 가져오기 성공');
       const res = response.data
-      console.log(res.data);
       allRoomList.value = res.data.content
       pageData.value = res.data.pageable
       isLast.value = res.data.last
@@ -143,7 +142,9 @@ export const useRoomStore = defineStore('room', () => {
     // 공개방 입장 API 응답 & 방 구독 SEND
     .then(response => {
       const res = response.data
-      if (res.code === 200) {
+      console.log(res)
+      if (res.code === "성공") {
+        console.log('성공 if문 안에 들어옴');
         console.log(res.message)
         roomId.value = res.data.roomId
         title.value = res.data.title
@@ -166,7 +167,7 @@ export const useRoomStore = defineStore('room', () => {
     })
     // 방 입장 SEND
     .then((code) => {
-      if (code === 200) {
+      if (code === "성공") {
         gameStore.sendJoinRoom(title.value)
       }
     })
@@ -218,6 +219,7 @@ export const useRoomStore = defineStore('room', () => {
 
   // 대기방 나가기
   const leaveRoom = function() {
+    console.log('방 나가기 API 호출하러 옴');
     axios({
       method: 'post',
       url: `${ROOM_API}/leave`,
@@ -227,6 +229,7 @@ export const useRoomStore = defineStore('room', () => {
       }
     })
     .then(res => {
+      console.log('방나가기 API 호출');
       console.log(res.data)
       roomId.value = ''
       title.value = ''
