@@ -85,14 +85,14 @@
 
           <!-- 나중에 <chat-winow />로 넘길수 있도록 해보자. -->
           <div id="chat-container">
-            <div class="bg-lightblue rounded-4 w-100 h-100 d-flex flex-column justify-content-end fs-5">
-              <ul id="messageList" class="overflow-y-auto m-0 chat_ul">
-                <li v-for="(message, index) in messages.value" :key="index">
+            <div class="bg-lightblue rounded-4 w-100 h-100 d-flex flex-column justify-content-end">
+              <ul id="messageList" class="overflow-y-auto m-0 chat_ul p-1" style="list-style-type: none;">
+                <li class="my-2" v-for="(message, index) in messages.value" :key="index">
                   <strong>{{message.username}}:</strong> {{message.message}}
                 </li>
               </ul>
               <div class="input-group ">
-                <input class="form-control" type="text" placeholder="입력" v-model="inputMessage">
+                <input class="form-control" type="text" placeholder="입력" v-model="inputMessage" @keyup.enter="sendMessage(inputMessage)">
                 <button class="btn btn-outline-secondary" @click="sendMessage(inputMessage)">전송</button>
               </div>
             </div>
@@ -143,7 +143,7 @@
 import WaitWatcher from "@/components/Wait/WaitWatcher.vue";
 import UserVideo from "@/components/Cam/UserVideo.vue";
 
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from "vue-router";
 import { useUserStore } from '@/stores/user'
 import { useRoomStore } from "@/stores/room";
@@ -216,14 +216,10 @@ const forceDisconnect = function(clientData) {
 const inputMessage = ref("")
 const messages = ref([])
 
-openviduStore.inputMessage = computed(() => inputMessage.value)
-openviduStore.messages = computed(() => messages.value)
-
 const sendMessage = function(input) {
-    openviduStore.sendMessage(input)
-    inputMessage.value = ''
-    window.setTimeout(scrollUl, 50);
-  }
+  openviduStore.sendMessage(input)
+  inputMessage.value = ''
+}
 
 // scroll 함수
 function scrollUl() {
@@ -232,6 +228,12 @@ function scrollUl() {
   chatUl.scrollTop = chatUl.scrollHeight; // 스크롤의 위치를 최하단으로
 }
 
+messages.value = computed(() => openviduStore.messages)
+
+// messages 배열이 변경될 때마다 scrollUl 함수를 호출하여 스크롤 갱신
+watch([openviduStore.messages], () => {
+  window.setTimeout(scrollUl, 50);
+});
 
 /// 플레이어, 관전을 위한 변수들 크헝헝
 const publisherComputed = computed(() => openviduStore.publisher);
