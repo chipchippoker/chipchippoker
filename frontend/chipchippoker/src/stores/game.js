@@ -14,7 +14,7 @@ export const useGameStore = defineStore('game', () => {
   const matchStore = useMatchStore()
   const router = useRouter()
 
-  const url = `wss://i10a804.p.ssafy.io/chipchippoker`
+  const url = `wss://chipchippoker.shop/chipchippoker`
 
   const stompClient = webstomp.client(url)
 

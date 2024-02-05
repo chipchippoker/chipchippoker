@@ -4,11 +4,11 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
  
 const KAKAO_JAVASCRIPT_KEY = import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY
-const REDIRECT_URI = 'http://localho  st:5173/login'
-// const REDIRECT_URI = 'https://i10a804.p.ssafy.io/login'
+// const REDIRECT_URI = 'http://localhost:5173/login'
+const REDIRECT_URI = 'https://chipchippoker.shop/login'
 
 export const useUserStore = defineStore('user', () => {
-  const BASE_API_URL = 'https://i10a804.p.ssafy.io/api'
+  const BASE_API_URL = 'https://chipchippoker.shop/api'
   const USER_API = `${BASE_API_URL}/auth`
   const MEMBERS_API = `${BASE_API_URL}/members`
 
