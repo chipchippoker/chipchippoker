@@ -99,12 +99,14 @@
 
   // 인가코드 받으면
   if (authorizationCode.value) {
+    console.log(authorizationCode.value);
     userStore.simpleLogInRequest(authorizationCode.value)
     .then(result => {
       if (result) {
         authorizationCode.value = null
       } else {
         alert("간편 로그인 실패했습니다.")
+        router.push({ name: 'login' }).catch(() => {})
       }
     })
   }

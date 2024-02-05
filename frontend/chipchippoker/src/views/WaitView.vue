@@ -114,7 +114,7 @@
         </div>
 
         <!-- 나가기 모달 -->
-        <div class="modal fade" id="roomOutModal" tabindex="-1" aria-labelledby="IconModalLabel" aria-hidden="true">
+        <div data-bs-backdrop="static" class="modal fade" id="roomOutModal" tabindex="-1" aria-labelledby="IconModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="background-color: #ffde76;">
               <div class="modal-header border-0">

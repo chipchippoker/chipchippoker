@@ -286,10 +286,16 @@ export const useRoomStore = defineStore('room', () => {
       data: payload
     })
     .then(res => {
-      console.log('관전 대기중 입장');
-      roomId.value = res.data.roomId
-      title.value = res.data.title
-      roomState.value = res.data.state
+      if (res.code === 200) {
+        console.log('관전 대기중 입장');
+        roomId.value = res.data.roomId
+        title.value = res.data.title
+        roomState.value = res.data.state
+        
+      } else if (res.code === 'FB001') {
+        console.log(res.message)
+        alert(res.message)
+      }
     })
     .catch(err => console.log(err))
   }
@@ -303,10 +309,16 @@ export const useRoomStore = defineStore('room', () => {
       data: payload
     })
     .then(res => {
-      console.log('관전 진행중 입장');
-      roomId.value = res.data.roomId
-      title.value = res.data.title
-      roomState.value = res.data.state
+      if (res.code === 200) {
+        console.log('관전 진행중 입장');
+        roomId.value = res.data.roomId
+        title.value = res.data.title
+        roomState.value = res.data.state
+        
+      } else if (res.code === 'FB001') {
+        console.log(res.message)
+        alert(res.message)
+      }
     })
     .catch(err => console.log(err))
   }

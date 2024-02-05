@@ -17,10 +17,10 @@
               <button @click="checkNickname" class="btn btn-outline-secondary" type="button" id="nickname">중복 확인</button>
             </div>
             <div v-if="isNickDuplicated" class="form-text text-danger">이미 사용 중인 닉네임입니다.</div>
-            <div v-if="!isValidNickname" id="nickname" class="fw-lgitighter little-text text-danger">한글 또는 영어 또는 숫자 또는 (_)의 4 ~ 16 글자이어야 합니다.</div>
-          </div>
-          <div class="fw-lgitighter little-text">
-          ※ 닉네임은 4글자 ~ 16글자 사이의 한글, 영어, 숫자, 특수문자 ( _ )로 이루어져야 합니다.
+            <div v-if="nickname!=='' && !isValidNickname" id="nickname" class="fw-lgitighter x-little-text text-danger">한글 또는 영어 또는 숫자 또는
+              (_)의 2 ~ 12 글자이어야 합니다.</div>
+            <div v-if="nickname!=='' && isNickDuplicated===null" id="nickname" class="fw-lgitighter x-little-text text-danger">닉네임 중복확인을 해주세요.</div>
+            <div v-if="isValidNickname && isNickDuplicated===false" id="id" class="fw-lgitighter x-little-text text-primary">사용 가능한 닉네임입니다.</div>
           </div>
 
           <!-- 아이콘 모달 버튼 -->
@@ -31,15 +31,15 @@
           </div>
 
           <!-- 닉네임 중복 체크를 통과해야만 보임 -->
-          <div class="d-grid gap-2 pt-3" v-if="isValidNickname && !isNickDuplicated">
-            <button type="submit" class="btn btn-primary btn-login">회원가입</button>
+          <div class="d-grid gap-2 pt-3">
+            <button :disabled="!(isValidNickname && isNickDuplicated === false)" type="submit" class="btn btn-primary btn-login">회원가입</button>
           </div>
         </form>
       </div>
     </div>
 
     <!-- 아이콘 모달 팝업 -->
-    <div class="modal fade" id="IconModal" tabindex="-1" aria-labelledby="IconModalLabel" aria-hidden="true">
+    <div data-bs-backdrop="static" class="modal fade" id="IconModal" tabindex="-1" aria-labelledby="IconModalLabel" aria-hidden="true">
       <ModalIconList/>
     </div>
   </div>
@@ -52,12 +52,14 @@ import ModalIconList from "@/components/Modal/ModalIconList.vue";
 import { icon } from "@fortawesome/fontawesome-svg-core";
 
 const userStore = useUserStore()
-const isNickDuplicated = ref(false)
-const isValidNickname = ref(false)
-const nickname = ref(null)
+const isNickDuplicated = ref(null)
+const isValidNickname = ref(true)
+const nickname = ref('')
 
 watch([nickname], () => {
   isValidNickname.value = userStore.validateNickname(nickname.value);
+  // 입력값이 변경될 때마다 중복 확인 상태 초기화
+  isNickDuplicated.value = null;
 });
 
 // 닉네임 중복 확인
