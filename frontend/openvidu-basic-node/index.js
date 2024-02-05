@@ -18,6 +18,7 @@ var app = express();
 // Environment variable: PORT where the node server is listening
 var SERVER_PORT = 8500;
 // Environment variable: URL where our OpenVidu server is listening
+// var OPENVIDU_URL = 'https://chipchippoker.shop/openvidu';
 var OPENVIDU_URL = 'https://i10a804.p.ssafy.io/openvidu';
 // Environment variable: secret shared with our OpenVidu server
 var OPENVIDU_SECRET = 'MY_SECRET';
