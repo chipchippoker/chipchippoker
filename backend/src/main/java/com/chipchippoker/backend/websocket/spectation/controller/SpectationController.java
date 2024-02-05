@@ -1,8 +1,5 @@
 package com.chipchippoker.backend.websocket.spectation.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.Header;
@@ -12,12 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chipchippoker.backend.common.dto.ApiResponse;
 import com.chipchippoker.backend.common.dto.MessageBase;
+import com.chipchippoker.backend.common.manager.MapManager;
 import com.chipchippoker.backend.common.util.jwt.JwtUtil;
 import com.chipchippoker.backend.websocket.spectation.dto.EnterSpectatorResponse;
 import com.chipchippoker.backend.websocket.spectation.dto.ExitSpectatorResponse;
 import com.chipchippoker.backend.websocket.spectation.model.SpectationManager;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,13 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SpectationController {
 	private final JwtUtil jwtUtil;
 	private final SimpMessagingTemplate template;
-
-	public static Map<String, SpectationManager> spectationManagerMap;
-
-	@PostConstruct
-	public void init() {
-		spectationManagerMap = new HashMap<>();
-	}
+	private final MapManager mapManager;
 
 	@MessageMapping("/spectataion/enter/{gameRoomTitle}")
 	public void enterSpectationRoom(
@@ -42,10 +33,10 @@ public class SpectationController {
 	) {
 		log.info("관전방 입장 시작");
 		String nickname = jwtUtil.getNickname(accessToken);
-		SpectationManager spectationManager = spectationManagerMap.get(gameRoomTitle);
+		SpectationManager spectationManager = mapManager.getSpectationManagerMap().get(gameRoomTitle);
 		if (spectationManager == null) {
 			spectationManager = new SpectationManager(gameRoomTitle);
-			spectationManagerMap.put(gameRoomTitle, spectationManager);
+			mapManager.getSpectationManagerMap().put(gameRoomTitle, spectationManager);
 		}
 		spectationManager.insertMember(nickname);
 		broadcastAllMemberInfoInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_NEW_SPECTATOR_ENTER,
@@ -63,7 +54,7 @@ public class SpectationController {
 	) {
 		log.info("관전방 나가기 시작");
 		String nickname = jwtUtil.getNickname(accessToken);
-		SpectationManager spectationManager = spectationManagerMap.get(gameRoomTitle);
+		SpectationManager spectationManager = mapManager.getSpectationManagerMap().get(gameRoomTitle);
 		spectationManager.deleteMember(nickname);
 		broadcastAllMemberInfoInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_SPECTATOR_EXIT,
 			ExitSpectatorResponse.create(nickname));

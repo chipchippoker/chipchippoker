@@ -91,7 +91,7 @@ public class GameManager {
 		List<CardInfo> numbers = new ArrayList<>();
 		for (int set = 1; set <= countOfPeople; set++) {
 			for (int i = 1; i <= 10; i++) {
-				numbers.add(new CardInfo(set, i));
+				numbers.add(new CardInfo(i, set));
 			}
 		}
 
