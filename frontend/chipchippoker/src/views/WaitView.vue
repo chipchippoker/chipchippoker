@@ -97,16 +97,15 @@
             </div>
           </div>
         </div>
-
         <!-- 시작(준비), 초대, 나가기 버튼 -->
         <div class="d-flex flex-column justify-content-center align-items-center box-btns m-0 pb-4 mt-5">
           <div>
             <!-- 시작 -->
-            <button v-if="myNickname === roomManagerNickname" @click="startGame()" class="custom-btn btn-1 m-1"><span>시작해?</span><span>시작</span></button>
+            <button v-if="myNickname === gameStore.roomManagerNickname" @click="startGame()" class="custom-btn btn-1 m-1"><span>시작해?</span><span>시작</span></button>
             <!-- 준비 -->
-            <button v-else-if="myNickname !== roomManagerNickname && isReady === false" @click="readyGame()" class="custom-btn btn-1 m-1"><span>준비해?</span><span>준비</span></button>
+            <button v-else-if="myNickname !== gameStore.roomManagerNickname && isReady === false" @click="readyGame()" class="custom-btn btn-1 m-1"><span>준비해?</span><span>준비</span></button>
             <!-- 준비 취소 -->
-            <button v-else-if="myNickname !== roomManagerNickname && isReady === true" @click="readyGame()" class="custom-btn btn-1 m-1"><span>준비취소</span><span>준비완료</span></button>
+            <button v-else-if="myNickname !== gameStore.roomManagerNickname && isReady === true" @click="readyGame()" class="custom-btn btn-1 m-1"><span>준비취소</span><span>준비완료</span></button>
             <!-- 초대 -->
             <button class="custom-btn btn-2 m-1"><span>초대해?</span><span>초대</span></button>
             <!-- 나가기 -->
@@ -176,11 +175,14 @@ if (myNickname.value === roomManagerNickname.value) {
 
 // 방 나가기
 const leaveRoom = function() {
+  console.log('방 나가기 버튼 누르기')
   // 관전자면
   if (roomStore.isWatcher === true) {
+    console.log('관전자임')
     roomStore.leaveWatcher()
     roomStore.isWatcher = false
   } else {
+    console.log('플레이어 방나가기 버튼 누름')
     roomStore.leaveRoom()
   }
   openviduStore.leaveSession()
@@ -198,7 +200,7 @@ const startGame = function () {
 const readyGame = function () {
   // 해당 플레이어 준비 상태 반전
   isReady.value = !isReady.value
-  gameStore.sendReady(title.value, isReady.value)
+  gameStore.sendReady(roomTitle.value, isReady.value)
 }
 
 const forceDisconnect = function(clientData) {

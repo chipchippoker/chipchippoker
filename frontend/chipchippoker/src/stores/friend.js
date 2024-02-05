@@ -48,7 +48,7 @@ export const useFriendStore = defineStore('friend', () => {
       headers: {"access-token": userStore.accessToken}
     })
     .then(res => {
-      console.log("res.data.data => ",res.data.data)
+      // console.log("res.data.data => ",res.data.data)
       friendList.value = res.data.data
     })
     .catch(err => console.log(err))
@@ -62,8 +62,8 @@ export const useFriendStore = defineStore('friend', () => {
       headers: {"access-token": userStore.accessToken}
     })
     .then(res => {
-      console.log(userStore.myNickname,"res => ",res)
-      console.log(userStore.myNickname,"res.data.data => ",res.data.data)
+      // console.log(userStore.myNickname,"res => ",res)
+      // console.log(userStore.myNickname,"res.data.data => ",res.data.data)
       alarmList.value = res.data.data
     })
     .catch(err => console.log(err))
@@ -128,12 +128,12 @@ export const useFriendStore = defineStore('friend', () => {
     })
     
     .then(res => {
-      console.log(res);
+      // console.log(res);
       allRankList.value = res.data.data
       // 내가 전체 랭킹에 존재하는지 판단하는 함수
       isContainedinAll.value = allRankList.value.filter((rank) => rank.nickname === userStore.myNickname).length > 0
-      console.log("res.data.data => ",res.data.data)
-      console.log('isContainedinAll =>', isContainedinAll.value);
+      // console.log("res.data.data => ",res.data.data)
+      // console.log('isContainedinAll =>', isContainedinAll.value);
     })
     .catch(err => console.log(err))
   }
@@ -149,8 +149,8 @@ export const useFriendStore = defineStore('friend', () => {
       friendRankList.value = res.data.data
       // 내가 친구 랭킹에 존재하는지 판단하는 함수
       isContainedinFriend.value = friendRankList.value.filter((rank) => rank.nickname === userStore.myNickname).length > 0
-      console.log("res.data.data => ",res.data.data)
-      console.log('isContainedinFriend', isContainedinFriend.value);
+      // console.log("res.data.data => ",res.data.data)
+      // console.log('isContainedinFriend', isContainedinFriend.value);
     })
     .catch(err => console.log(err))
   }
@@ -163,7 +163,7 @@ export const useFriendStore = defineStore('friend', () => {
       headers: {"access-token": userStore.accessToken}
     })
     .then(res => {
-      console.log("res.data.data => ",res.data.data)
+      // console.log("res.data.data => ",res.data.data)
       myRank.value = res.data.data
     })
     .catch(err => console.log(err))
