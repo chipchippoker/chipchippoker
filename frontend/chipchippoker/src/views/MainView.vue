@@ -30,43 +30,42 @@
         </button>
 
         <div  data-bs-backdrop="false" class="offcanvas offcanvas-end" tabindex="-1" id="friendList" aria-labelledby="friendListLabel">
-        <div class="offcanvas-header bg-modal">
-            <button  type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <div class="offcanvas-header bg-modal">
+                <button  type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body bg-modal">
+                <MainFriendList/>
+            </div>
         </div>
-        <div class="offcanvas-body bg-modal">
-            <MainFriendList/>
-        </div>
-
-    </div>
     <!-- 모달 -->
 
         <!-- 빠른방 입장 모달 -->
-        <div class="modal fade" id="FindRoomModal" tabindex="-1" aria-labelledby="findRoomModalLabel" aria-hidden="true">
+        <div data-bs-backdrop="static" class="modal fade" id="FindRoomModal" tabindex="-1" aria-labelledby="findRoomModalLabel" aria-hidden="true">
             <ModalFindRoom @showFindGame="handleShowFindGame" :type="gameType" />
         </div>
 
         <!-- 게임 찾는중 모달 -->
-        <div class="modal fade" id="FindGameModal" tabindex="-1" aria-labelledby="findGameModalLabel" aria-hidden="true">
+        <div data-bs-backdrop="static" class="modal fade" id="FindGameModal" tabindex="-1" aria-labelledby="findGameModalLabel" aria-hidden="true">
             <ModalFindGame @close="matchStore.stopFindGame()" />
         </div>
 
         <!-- 친선 방이 없는 것을 말해주는 모달 -->
-        <div class="modal fade" id="NotExistRoom" tabindex="-1" aria-hidden="true">
+        <div data-bs-backdrop="static" class="modal fade" id="NotExistRoom" tabindex="-1" aria-hidden="true">
             <ModalNotExistRoom/>
         </div>
        
         <!-- 방만들기 모달 -->
-        <div class="modal fade" id="makeRoomModal" tabindex="-1" aria-labelledby="makeRoomModalLabel" aria-hidden="true">
+        <div data-bs-backdrop="static" class="modal fade" id="makeRoomModal" tabindex="-1" aria-labelledby="makeRoomModalLabel" aria-hidden="true">
             <ModalCreateRoom/>
         </div>
 
         <!-- 친구 찾기 모달 -->
-        <div class="modal fade" id="FindFriendModal" tabindex="-1" aria-labelledby="FindFriendModalLabel" aria-hidden="true">
+        <div data-bs-backdrop="static" class="modal fade" id="FindFriendModal" tabindex="-1" aria-labelledby="FindFriendModalLabel" aria-hidden="true">
             <ModalFindFriend/>
         </div>
 
         <!-- 이미 있는 방 제목입니다 모달 -->
-        <div class="modal fade" id="IsExistRoomModal" tabindex="-1" aria-labelledby="IsExistRoomModalLabel" aria-hidden="true">
+        <div data-bs-backdrop="static" class="modal fade" id="IsExistRoomModal" tabindex="-1" aria-labelledby="IsExistRoomModalLabel" aria-hidden="true">
             <ModalIsExistRoom/>
         </div>
         

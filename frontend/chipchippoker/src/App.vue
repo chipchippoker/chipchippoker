@@ -107,16 +107,16 @@ for (let i = 0; i < 300; i++) {
       </div>
 
       <!-- 알림 Modal -->
-      <div class="modal fade" id="alarmModal" tabindex="-1" aria-labelledby="alarmModalLabel" aria-hidden="true">
+      <div data-bs-backdrop="static" class="modal fade" id="alarmModal" tabindex="-1" aria-labelledby="alarmModalLabel" aria-hidden="true">
         <ModalNotificationList/>
         
       </div>
       <!-- 세팅 Modal -->
-      <div class="modal fade" id="settingModal" tabindex="-1" aria-labelledby="settingModalLabel" aria-hidden="true">
+      <div data-bs-backdrop="static" class="modal fade" id="settingModal" tabindex="-1" aria-labelledby="settingModalLabel" aria-hidden="true">
         <ModalMainSettings/>
       </div>
       <!-- 가이드북 Modal -->
-      <div class="modal fade " id="guideModal" tabindex="-1" aria-labelledby="guideModalLabel" aria-hidden="true">
+      <div data-bs-backdrop="static" class="modal fade " id="guideModal" tabindex="-1" aria-labelledby="guideModalLabel" aria-hidden="true">
         <ModalGuide/>
       </div>
     </div>

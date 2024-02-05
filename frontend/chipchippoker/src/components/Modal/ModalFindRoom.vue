@@ -34,12 +34,12 @@
             </div>
         </div>
         <!-- 게임 찾기 모달 -->
-        <!-- <div class="modal" id="FindGame" tabindex="-1">
+        <!-- <div data-bs-backdrop="static" class="modal" id="FindGame" tabindex="-1">
             <ModalFindGame
             @close="stopFindGame()"/>
         </div> -->
         <!-- 친선 방이 없는 것을 말해주는 모달 -->
-        <!-- <div class="modal fade" id="NotExistRoom" tabindex="-1" aria-hidden="true">
+        <!-- <div data-bs-backdrop="static" class="modal fade" id="NotExistRoom" tabindex="-1" aria-hidden="true">
             <ModalNotExistRoom/>
         </div> -->
     </div>

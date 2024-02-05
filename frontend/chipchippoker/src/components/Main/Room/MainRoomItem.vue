@@ -33,17 +33,17 @@
 
 
         <!-- 입장 비밀번호 모달 -->
-        <div class="modal fade" :id="`EnterPWModal${item?.roomId}`" tabindex="-1" :aria-labelledby="`EnterPWModal${item?.roomId}`" aria-hidden="true">
+        <div data-bs-backdrop="static" class="modal fade" :id="`EnterPWModal${item?.roomId}`" tabindex="-1" :aria-labelledby="`EnterPWModal${item?.roomId}`" aria-hidden="true">
             <ModalEnterPassword
             :room-data="item"
             :user-type="userType"/>
         </div>
         <!-- 게임 진행 중 모달 -->
-        <div class="modal fade" :id="`IsPlayingModal${item?.roomId}`" tabindex="-1" :aria-labelledby="`IsPlayingModal${item?.roomId}`" aria-hidden="true">
+        <div data-bs-backdrop="static" class="modal fade" :id="`IsPlayingModal${item?.roomId}`" tabindex="-1" :aria-labelledby="`IsPlayingModal${item?.roomId}`" aria-hidden="true">
             <ModalIsPlayingRoomVue/>
         </div>
         <!-- 꽉찬 방 모달 -->
-        <div class="modal fade" :id="`IsFullModal${item?.roomId}`" tabindex="-1" :aria-labelledby="`IsFullModal${item?.roomId}`" aria-hidden="true">
+        <div data-bs-backdrop="static" class="modal fade" :id="`IsFullModal${item?.roomId}`" tabindex="-1" :aria-labelledby="`IsFullModal${item?.roomId}`" aria-hidden="true">
             <ModalIsFullRoomVue/>
         </div>
     </div>

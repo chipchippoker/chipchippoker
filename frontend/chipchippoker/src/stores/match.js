@@ -97,7 +97,7 @@ export const useMatchStore = defineStore('match', () => {
       console.log(res);
       gameStore.subscriptionGame.unsubscribe(gameStore.myGameSubId)
     })
-    .catch(err => console.log(err))   
+    .catch(err => console.log(err))
   }
 
   return {
