@@ -102,8 +102,8 @@
         <div v-if="userStore?.profileInfo?.isMine" class="d-flex flex-row-reverse">
           <button class="btn btn-signout" data-bs-toggle="modal" data-bs-target="#SignOutModal">회원탈퇴</button>
           <button class="btn btn-logout" data-bs-toggle="modal" data-bs-target="#LogOutModal">로그아웃</button>
-          <button v-if="userStore.kakaoAccessToken === null" class="btn btn-kakao">
-            <img class="kakao-logo" @click="userStore.kakaoConnect()" src="/src/assets/icons/kakaologo.png" alt="">
+          <button v-if="userStore.kakaoAccessToken === null" @click="kakaoConnect()" class="btn btn-kakao">
+            <img class="kakao-logo" src="/src/assets/icons/kakaologo.png" alt="">
             카카오 연동하기
           </button>
         </div>
@@ -153,10 +153,12 @@
   import ModalSignOut from "../Modal/ModalSignOut.vue";
 
   import { ref, onMounted } from "vue";
+  import { useRoute } from "vue-router";
   import { useUserStore } from '@/stores/user'
   import { useFriendStore } from "@/stores/friend";
   const userStore = useUserStore()
   const friendStore = useFriendStore()
+  const route = useRoute()
   const profileInfo = ref({})
   const totalGame = ref(null)
   const isSent = ref(false)
@@ -171,6 +173,32 @@
     profileInfo.value = userStore.profileInfo
     totalGame.value = profileInfo.win + profileInfo.draw + profileInfo.lose
   })
+
+  // 카카오 연동하기
+  const kakaoConnect = function() {
+    console.log('인가코드 받기');
+    userStore.getKakaoCodeToSink()
+  }
+  const authorizationCode = ref(null)
+  // 카카오 인가코드 받기
+  authorizationCode.value = route.query.code
+  userStore.authorizationCode = authorizationCode.value
+
+  // 인가코드 받으면
+  if (authorizationCode.value) {
+    console.log('카카오 연동 요청');
+    userStore.kakaoConnect(authorizationCode.value)
+    .then(result => {
+      if (result) {
+        authorizationCode.value = null
+        console.log('카카오 연동 성공');
+      } else {
+        alert("카카오 연동 실패했습니다.")
+      }
+    })
+  }
+
+
 </script>
   
 <style scoped>

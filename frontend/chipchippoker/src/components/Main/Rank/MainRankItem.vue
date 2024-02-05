@@ -38,8 +38,8 @@ defineProps({item:Object})
 
 const goProfile = function(nickname){
     console.log(`${nickname} 페이지로 이동`)
-    
-    router.push({name:'profile',params:{nickname}})
+    userStore.profileNickname = nickname
+    router.push({name:'profile'})
 }
 
 </script>

@@ -4,8 +4,10 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
  
 const KAKAO_JAVASCRIPT_KEY = import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY
-const REDIRECT_URI = 'http://localhost:5173/login'
-// const REDIRECT_URI = 'https://chipchippoker.shop/login'
+// const REDIRECT_URI = 'http://localhost:5173/login'
+// const REDIRECT_SINK_URI = `http://localhost:5173/profile`
+const REDIRECT_URI = 'https://chipchippoker.shop/login'
+const REDIRECT_SINK_URI = `https://chipchippoker.shop/profile`
 
 export const useUserStore = defineStore('user', () => {
   // const BASE_API_URL = 'https://i10a804.p.ssafy.io/api'
@@ -22,6 +24,7 @@ export const useUserStore = defineStore('user', () => {
   const myNickname = ref('')
   const myIcon = ref('1')
   const profileInfo = ref({})
+  const profileNickname = ref('')
 
   // 프로필 아이콘 보여주기
   const viewProfileIcon = ref(true)
@@ -107,6 +110,14 @@ export const useUserStore = defineStore('user', () => {
     })
   }
 
+  const getKakaoCodeToSink = function () {
+    console.log('카카오 인가코드 받기')
+    Kakao.init(KAKAO_JAVASCRIPT_KEY)
+    Kakao.Auth.authorize({
+      redirectUri: REDIRECT_SINK_URI,
+    })
+  }
+
   // 간편 로그인
   const simpleLogInRequest = async function (authorizationCode) {
     console.log('간편 로그인 요청');
@@ -115,7 +126,7 @@ export const useUserStore = defineStore('user', () => {
       const response = await axios({
         method: 'post',
         url: `${USER_API}/authorization`,
-        data: { authorizationCode }
+        // data: { authorizationCode }
       })
 
       const res = response.data
@@ -369,11 +380,11 @@ export const useUserStore = defineStore('user', () => {
 
     // 로그인, 로그아웃, 회원가입, 회원탈퇴, 카카오 연동
     generalLogIn, getKakaoCode, simpleLogInRequest, kakaoSignUp,
-    logOut, signUp, signOut, checkMemberId, checkNickname, validateId, validatePassword, validateNickname, kakaoConnect, 
+    logOut, signUp, signOut, checkMemberId, checkNickname, validateId, validatePassword, validateNickname, kakaoConnect, getKakaoCodeToSink,
     accessToken, refreshToken, authorizationCode, kakaoAccessToken,
 
     // 프로필 아이콘, 프로필 정보 받아오기
     getIconUrl, getTierIconUrl, getProfileInfo, changeIcon,
-    myIcon, myNickname, profileInfo, viewProfileIcon,
+    myIcon, myNickname, profileInfo, viewProfileIcon, profileNickname
     }
 },{persist:true})
