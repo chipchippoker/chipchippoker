@@ -98,7 +98,7 @@
       data-bs-toggle="modal" data-bs-target="#roomOutModal" style="width: 70px; height: 30px" >나가기</button>
     </div>
 
-    <div class="modal fade" id="roomOutModal" tabindex="-1" aria-labelledby="IconModalLabel" aria-hidden="true">
+    <div data-bs-backdrop="static" class="modal fade" id="roomOutModal" tabindex="-1" aria-labelledby="IconModalLabel" aria-hidden="true">
       <!-- 나가기 모달 -->
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="background-color: #ffde76;">
@@ -208,7 +208,9 @@
 
   // 합
   const totalBettingCoin = computed(() => {
-    return gameStore.gameMemberInfos.reduce((total, member) => total + member.bettingCoin, 0);
+    if (gameStore.gameMemberInfos) {
+      return gameStore.gameMemberInfos.reduce((total, member) => total + member.bettingCoin, 0);
+    }
   });
 
   const playersComputed = computed(() => openviduStore.players)

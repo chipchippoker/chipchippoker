@@ -132,16 +132,16 @@
       </div>
              
       <!-- 아이콘 모달 팝업 -->
-      <div class="modal fade" id="IconModal" tabindex="-1" aria-labelledby="IconModalLabel" aria-hidden="true">
+      <div data-bs-backdrop="static" class="modal fade" id="IconModal" tabindex="-1" aria-labelledby="IconModalLabel" aria-hidden="true">
         <ModalIconList/>
       </div>
 
       <!-- 로그아웃 모달 팝업 -->
-      <div class="modal fade" id="LogOutModal" tabindex="-1" aria-labelledby="LogOutLabel" aria-hidden="true">
+      <div data-bs-backdrop="static" class="modal fade" id="LogOutModal" tabindex="-1" aria-labelledby="LogOutLabel" aria-hidden="true">
         <ModalLogOut />
       </div>
       <!-- 회원탈퇴 모달 팝업 -->
-      <div class="modal fade" id="SignOutModal" tabindex="-1" aria-labelledby="SignOutLabel" aria-hidden="true">
+      <div data-bs-backdrop="static" class="modal fade" id="SignOutModal" tabindex="-1" aria-labelledby="SignOutLabel" aria-hidden="true">
         <ModalSignOut />
       </div>
     </div>

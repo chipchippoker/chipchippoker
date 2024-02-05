@@ -76,7 +76,7 @@
     </div>
 
     <!-- 아이콘 모달 팝업 -->
-    <div class="modal fade" id="IconModal" tabindex="-1" aria-labelledby="IconModalLabel" aria-hidden="true">
+    <div data-bs-backdrop="static" class="modal fade" id="IconModal" tabindex="-1" aria-labelledby="IconModalLabel" aria-hidden="true">
       <ModalIconList />
     </div>
 
