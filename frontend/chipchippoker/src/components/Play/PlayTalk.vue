@@ -1,12 +1,12 @@
 <template>
-  <div class="bg-lightblue rounded-4 w-100 h-100 d-flex flex-column justify-content-end fs-5">
-    <ul class="overflow-y-auto m-0 chat_ul">
-      <li v-for="(message, index) in messages.value" :key="index">
+  <div class="bg-lightblue rounded-4 w-100 h-100 d-flex flex-column justify-content-end">
+    <ul class="overflow-y-auto m-0 chat_ul p-1" style="list-style-type: none;">
+      <li class="my-2" v-for="(message, index) in messages.value" :key="index" >
         <strong>{{message.username}}:</strong> {{message.message}}
       </li>
     </ul>
     <div class="input-group">
-      <input class="form-control" type="text" placeholder="입력" v-model="inputMessage">
+      <input class="form-control" type="text" placeholder="입력" v-model="inputMessage" @keyup.enter="sendMessage(inputMessage)">
       <button class="btn btn-outline-secondary" @click="sendMessage(inputMessage)">전송</button>
     </div>
   </div>
@@ -29,7 +29,6 @@
   const sendMessage = function(input) {
     openviduStore.sendMessage(input)
     inputMessage.value = ''
-    window.setTimeout(scrollUl, 50);
   }
 
   // scroll 함수
@@ -40,6 +39,12 @@
   }
 
   messages.value = computed(() => openviduStore.messages)
+
+  // messages 배열이 변경될 때마다 scrollUl 함수를 호출하여 스크롤 갱신
+  watch([openviduStore.messages], () => {
+    window.setTimeout(scrollUl, 50);
+  });
+
 
 
 </script>

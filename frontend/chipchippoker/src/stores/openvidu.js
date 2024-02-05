@@ -93,10 +93,8 @@ export const useOpenviduStore = defineStore('openvidu', () => {
         const { connection } = stream;
         return JSON.parse(connection.data);
       }
-      const clientData = computed(() => {
-        const { clientData } = getConnectionData();
-        return clientData;
-      });
+      const { clientData } = getConnectionData()
+      console.log(clientData);
       
       
       if (roomStore.watchersNickname.includes(clientData)) {
@@ -187,12 +185,13 @@ export const useOpenviduStore = defineStore('openvidu', () => {
     subscribers.value = [];
     players.value = []
     watchers.value = []
+    inputMessage.value = ''
+    messages.value = []
     roomStore.watchersNickname = []
     OV.value = undefined;
   
     // Remove beforeunload listener
     window.removeEventListener("beforeunload", leaveSession)
-    roomStore.leaveRoom()
     console.log('세션나가기')
     router.push({name:'main'})
   }

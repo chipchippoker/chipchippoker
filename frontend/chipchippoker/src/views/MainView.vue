@@ -91,7 +91,7 @@ import { useSoundStore } from '@/stores/sound';
 import { useUserStore } from '@/stores/user';
 import { useRoomStore } from '@/stores/room';
 import { useMatchStore } from '@/stores/match';
-import { useGameStore } from '@/stores/game'
+import { useGameStore } from '@/stores/game';
 // import bootstrap from 'bootstrap';
 
 const userStore = useUserStore()
@@ -100,6 +100,7 @@ const gameStore = useGameStore()
 const friendStore = useFriendStore()
 const roomStore = useRoomStore()
 const matchStore = useMatchStore()
+const gameStore = useGameStore()
 const router = useRouter()
 const gameType = ref('경쟁전')
 const changeType = function(type){
@@ -145,6 +146,7 @@ const reLoad = function() {
 }
 
 onMounted(()=>{
+    gameStore.connectHandler()
     friendStore.getAllRankList()
     // friendStore.getMyRankList()
     // soundStore.bgmOn()
