@@ -126,7 +126,7 @@ export const useUserStore = defineStore('user', () => {
       const response = await axios({
         method: 'post',
         url: `${USER_API}/authorization`,
-        // data: { authorizationCode }
+        data: { authorizationCode }
       })
 
       const res = response.data
