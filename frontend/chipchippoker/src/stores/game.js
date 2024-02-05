@@ -62,16 +62,16 @@ export const useGameStore = defineStore('game', () => {
   const isAlarmArrive = ref(false)
 
   // 연결 끊김 이벤트
-  stompClient.ws.onclose = event => {
-    alert("WebSocket connection closed");
-    console.log("WebSocket connection closed", event);
-    stompClient = webstomp.client("wss://chipchippoker.shop/chipchippoker")
+  // stompClient.ws.onclose = event => {
+  //   alert("WebSocket connection closed");
+  //   console.log("WebSocket connection closed", event);
+  //   stompClient = webstomp.client("wss://chipchippoker.shop/chipchippoker")
 
-    // 재연결 로직
-    setTimeout(function() {
-      stompClient.connect({ 'access-token': userStore.accessToken, 'heart-beat':'10000,10000' }, (frame) => {console.log('재연결 성공');})
-    }, 1000); // 0.1초 후에 다시 연결을 시도합니다.
-  }
+  //   // 재연결 로직
+  //   setTimeout(function() {
+  //     stompClient.connect({ 'access-token': userStore.accessToken, 'heart-beat':'10000,10000' }, (frame) => {console.log('재연결 성공');})
+  //   }, 1000); // 0.1초 후에 다시 연결을 시도합니다.
+  // }  
 
   stompClient.connect({ 'access-token': userStore.accessToken}, (frame) => {
     console.log("Connect success", gameRoomTitle.value)
