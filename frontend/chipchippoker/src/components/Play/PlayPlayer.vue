@@ -7,19 +7,22 @@
         <!-- 플레이어 정보 -->
         <div :class="classNameList[index]" :id="'player' + (index + 1)" v-for="(player, index) in gameStore.memberInfos" :key="index">
           <div class="text-white align-self-center ">{{ player.nickname }} / 
-            <div>보유코인: {{gameStore?.gameMemberInfos[index]?.havingCoin}}</div>
+            <div>보유코인: {{gameStore?.gameMemberInfos[index]?.haveCoin}}</div>
+            {{ index }}
           </div>
           <!-- 1, 3번 플레이어 -->
-          <div v-if="index in [0, 2]" class="d-flex h-100 m-2 mt-0">
-            <div>
+          <div v-if="[0, 2].includes(index)" class="d-flex h-100 m-2 mt-0">
+            <!-- <div>
               <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
-            </div>
+            </div> -->
+            <!-- 본인 -->
             <div v-if="player.nickname === userStore.myNickname" class="m-2">
               <UserVideoVue
               :stream-manager="publisherComputed"
               view="playView"
               />
             </div>
+            <!-- 본인이 아닌 경우 -->
             <div v-else class="m-2">
               <UserVideoVue
               v-if="gameStore.myOrder >= index"
@@ -32,13 +35,22 @@
               view="playView"
               />
             </div>
-            <img class="object-fit-contain" style="width: 150px;" :src=getCardUrl(1,gameStore?.gameMemberInfos[index]?.cardNumber) alt="?">
+            <!-- 카드 이미지 나일때 -->
+            <img class="object-fit-contain" style="width: 150px;" 
+            v-if="player.nickname === userStore.myNickname"
+            :src=getBackCardUrl()
+            alt="?">
+            <!-- 카드 남일때 -->
+            <img class="object-fit-contain" style="width: 150px;" 
+            v-else
+            :src=getCardUrl(gameStore?.gameMemberInfos[index]?.cardInfo?.cardSet,gameStore?.gameMemberInfos[index]?.cardInfo?.cardNumber) 
+            :alt="gameStore?.gameMemberInfos[index]?.cardInfo?.cardNumber">
           </div>
           <!-- 2, 4번 플레이어 -->
           <div v-else class="d-flex flex-row-reverse h-100 m-2 mt-0">
-            <div>
+            <!-- <div>
               <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
-            </div>
+            </div> -->
             <div v-if="player.nickname === userStore.myNickname" class="m-2">
               {{ playersComputed[index] }}
               <UserVideoVue
@@ -58,7 +70,16 @@
               view="playView"
               />
             </div>  
-            <img class="object-fit-contain" style="width: 150px;" :src=getCardUrl(1,gameStore?.gameMemberInfos[index]?.cardNumber) alt="?">
+            <!-- 카드 이미지 나일때 -->
+            <img class="object-fit-contain" style="width: 150px;" 
+            v-if="player.nickname === userStore.myNickname"
+            :src=getBackCardUrl()
+            alt="?">
+            <!-- 카드 남일때 -->
+            <img class="object-fit-contain" style="width: 150px;" 
+            v-else
+            :src=getCardUrl(gameStore?.gameMemberInfos[index]?.cardInfo?.cardSet,gameStore?.gameMemberInfos[index]?.cardInfo?.cardNumber) 
+            :alt="gameStore?.gameMemberInfos[index]?.cardInfo?.cardNumber">
           </div>
         </div>
       </div>
@@ -122,6 +143,8 @@
   });
   // 클래스 부여하기
   const classNameList = ["position-absolute top-0 start-0 d-flex flex-column h-50", "position-absolute top-0 end-0 d-flex flex-column h-50", "position-absolute bottom-0 start-0 d-flex flex-column h-50", "position-absolute bottom-0 end-0 d-flex flex-column h-50"]
+  
+  console.log('게임방 멤버', gameStore.memberInfos);
   
   roomId.value = props.roomId
   myNickname.value = props.myNickname
