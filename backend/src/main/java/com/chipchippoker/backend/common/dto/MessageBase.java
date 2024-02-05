@@ -26,7 +26,8 @@ public enum MessageBase {
 	S200_FRIEND_REQUEST(OK, false, "MS012", "친구 요청을 받았습니다."),
 	S200_GAME_ROOM_NEW_SPECTATOR_ENTER(OK, false, "MS013", "새로운 관전자가 방에 입장했습니다."),
 	S200_GAME_ROOM_SPECTATOR_EXIT(OK, false, "MS014", "관전자가 게임방에서나갔습니다."),
-	S200_GAME_ROOM_MANAGER_EXIT(OK, false, "MS015", "게임방 방장이 게임방에서나갔습니다."),
+	S200_GAME_ROOM_MANAGER_EXIT(OK, false, "MS015", "게임방 방장이 게임방에서 나갔습니다."),
+	S200_GAME_ROOM_START(OK, false, "MS016", "게임방이 시작되었습니다."),
 	/**
 	 * 400 Bad Request (잘못된 요청)
 	 */

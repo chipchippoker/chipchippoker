@@ -204,6 +204,9 @@ public class GameController {
 			try {
 				// 게임시작
 				gameManager.gameStart();
+				broadcastAllConnected(gameRoomTitle, ResponseEntity.ok(
+					ApiResponse.messageSuccess(MessageBase.S200_GAME_ROOM_START)
+				));
 				deliveryAnotherMessage(gameRoomTitle, gameManager);
 				log.info("게임방 게임 시작 성공");
 			} catch (InvalidException e) {
