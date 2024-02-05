@@ -1,7 +1,5 @@
 package com.chipchippoker.backend.common.handler;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.messaging.Message;
@@ -12,7 +10,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
 
-import com.chipchippoker.backend.api.member.repository.MemberRepository;
+import com.chipchippoker.backend.common.manager.MapManager;
 import com.chipchippoker.backend.common.util.jwt.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -23,8 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class InboundChannelInterceptor implements ChannelInterceptor {
 	private final JwtUtil jwtUtil;
-	private final MemberRepository memberRepository;
-	public static final Map<String, String> sessionMap = new HashMap<>();
+	private final MapManager mapManager;
 
 	/*
 	connect 할 때 호출
@@ -51,7 +48,7 @@ public class InboundChannelInterceptor implements ChannelInterceptor {
 			log.info("CONNECT");
 			log.info(accessor.getFirstNativeHeader("access-token"));
 			String nickname = jwtUtil.getNickname(accessor.getFirstNativeHeader("access-token"));
-			sessionMap.put(sessionId, nickname);
+			mapManager.getSessionMap().put(sessionId, nickname);
 			log.info(nickname.concat("이 연결된 세션 ID는 ").concat(sessionId).concat(" 입니다."));
 		}
 		/*
@@ -63,7 +60,7 @@ public class InboundChannelInterceptor implements ChannelInterceptor {
 		else if (StompCommand.SUBSCRIBE.equals(accessor.getCommand()) && Objects.requireNonNull(
 			accessor.getDestination()).contains("member")) {
 			log.info("SUBSCRIBE MEMBER");
-			String nickname = sessionMap.get(sessionId);
+			String nickname = mapManager.getSessionMap().get(sessionId);
 			log.info("nickname : ".concat(nickname));
 			if (!nickname.equals(accessor.getDestination().split("/member/")[1])) {
 				return null;
@@ -99,10 +96,10 @@ public class InboundChannelInterceptor implements ChannelInterceptor {
 		String sessionId = accessor.getSessionId();
 		log.info(sessionId);
 		if (StompCommand.DISCONNECT.equals(accessor.getCommand())
-			&& !(sessionMap.get(sessionId) == null)) {
+			&& !(mapManager.getSessionMap().get(sessionId) == null)) {
 			log.info("DISCONNECT");
-			String nickname = sessionMap.get(sessionId);
-			sessionMap.remove(sessionId);
+			String nickname = mapManager.getSessionMap().get(sessionId);
+			mapManager.getSessionMap().remove(sessionId);
 			log.info(nickname.concat("의 웹소켓의 연결을 종료합니다."));
 		}
 		ChannelInterceptor.super.postSend(message, channel, sent);

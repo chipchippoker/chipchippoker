@@ -1,7 +1,5 @@
 package com.chipchippoker.backend.websocket.matching.controller;
 
-import static com.chipchippoker.backend.websocket.game.controller.GameController.*;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.Header;
@@ -11,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chipchippoker.backend.common.dto.ApiResponse;
 import com.chipchippoker.backend.common.dto.MessageBase;
+import com.chipchippoker.backend.common.manager.MapManager;
 import com.chipchippoker.backend.common.util.jwt.JwtUtil;
 import com.chipchippoker.backend.websocket.game.model.GameManager;
 import com.chipchippoker.backend.websocket.matching.dto.GameMatchingMessageRequest;
@@ -25,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GameMatchingController {
 	private final SimpMessagingTemplate template;
 	private final JwtUtil jwtUtil;
+	private final MapManager mapManager;
 
 	//경쟁전 매칭이 되었을 때
 	@MessageMapping("/game/matching/{gameRoomTitle}")
@@ -35,14 +35,14 @@ public class GameMatchingController {
 	) {
 		log.info("매칭 시작");
 		String nickname = jwtUtil.getNickname(accessToken);
-		GameManager gameManager = gameManagerMap.get(gameRoomTitle);
+		GameManager gameManager = mapManager.getGameManagerMap().get(gameRoomTitle);
 		if (gameManager == null) {
 			gameManager = new GameManager(gameRoomTitle, gameMatchingMessageRequest.getCountOfPeople(), null);
 		}
 		gameManager.insertMember(nickname, Boolean.FALSE);
-		gameManagerMap.put(gameRoomTitle, gameManager);
+		mapManager.getGameManagerMap().put(gameRoomTitle, gameManager);
 		broadcastAllMemberInMainRoom(gameRoomTitle, MessageBase.S200_GAME_MATCHING,
-			GameMatchingMessageResponse.create(gameManagerMap.get(gameRoomTitle)));
+			GameMatchingMessageResponse.create(mapManager.getGameManagerMap().get(gameRoomTitle)));
 		log.info("매칭 로직 종료");
 	}
 
