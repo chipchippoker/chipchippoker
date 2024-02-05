@@ -100,7 +100,6 @@ const gameStore = useGameStore()
 const friendStore = useFriendStore()
 const roomStore = useRoomStore()
 const matchStore = useMatchStore()
-const gameStore = useGameStore()
 const router = useRouter()
 const gameType = ref('경쟁전')
 const changeType = function(type){
@@ -151,7 +150,6 @@ onMounted(()=>{
     // friendStore.getMyRankList()
     // soundStore.bgmOn()
     // location.reload()
-    gameStore.connectHandler()
 })
 
 </script>
