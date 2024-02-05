@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chipchippoker.backend.api.auth.model.dto.Token;
-import com.chipchippoker.backend.api.auth.model.dto.request.AuthorizationCodeRequest;
 import com.chipchippoker.backend.api.auth.model.dto.request.SimpleSignupRequest;
 import com.chipchippoker.backend.api.auth.model.dto.response.SimpleSignupResponse;
 import com.chipchippoker.backend.api.auth.service.AuthService;
@@ -45,14 +45,13 @@ public class MemberController {
 	}
 
 	@Operation(summary = "소셜 연동하기")
-	@PostMapping("/social")
+	@GetMapping("/social")
 	public ResponseEntity<ApiResponse<Void>> socialConnection(
-		@RequestBody AuthorizationCodeRequest authorizationCodeRequest) {
-		String authorizationCode = authorizationCodeRequest.getAuthorizationCode();
-		if (authorizationCode == null || authorizationCode.isEmpty()) {
+		@RequestParam String code) {
+		if (code == null || code.isEmpty()) {
 			throw new InvalidException(ErrorBase.E400_INVALID_AUTHORIZATION_CODE);
 		}
-		Token token = authService.getToken(authorizationCode);
+		Token token = authService.getConnectionToken(code);
 		if (token == null) {
 			throw new InvalidException(ErrorBase.E400_INVALID_AUTH_TOKEN);
 		} else {

@@ -105,6 +105,12 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
+	public Token getConnectionToken(String authorizationCode) {
+		AuthProvider authProvider = authProviderFinder.findAuthProvider(MemberSocialType.KAKAO);
+		return authProvider.getConnectionToken(authorizationCode);
+	}
+
+	@Override
 	public SimpleSignupResponse signUp(SimpleSignupRequest request, String token) {
 		AuthProvider authProvider = authProviderFinder.findAuthProvider(MemberSocialType.KAKAO);
 		if (token == null || token.isEmpty()) {
