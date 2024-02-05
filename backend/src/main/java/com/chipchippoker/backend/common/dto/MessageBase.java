@@ -26,17 +26,23 @@ public enum MessageBase {
 	S200_FRIEND_REQUEST(OK, false, "MS012", "친구 요청을 받았습니다."),
 	S200_GAME_ROOM_NEW_SPECTATOR_ENTER(OK, false, "MS013", "새로운 관전자가 방에 입장했습니다."),
 	S200_GAME_ROOM_SPECTATOR_EXIT(OK, false, "MS014", "관전자가 게임방에서나갔습니다."),
+	S200_GAME_ROOM_MANAGER_EXIT(OK, false, "MS015", "게임방 방장이 게임방에서나갔습니다."),
 	/**
 	 * 400 Bad Request (잘못된 요청)
 	 */
-	E400_CAN_NOT_BAN(BAD_REQUEST, false, "ME001", "방장만 강제퇴장을 요청할 수 있습니다."),
-	E400_CAN_NOT_START_NOT_READY(BAD_REQUEST, false, "ME002", "모두 준비상태가 아닙니다."),
-	E400_CAN_NOT_START_NOT_ROOM_MANAGER(BAD_REQUEST, false, "ME003", "방장이 아니라 시작할 수 없습니다."),
-	E400_CAN_NOT_BET_ROUND_MISMATCH(BAD_REQUEST, false, "ME004", "베팅 라운드가 잘못되었습니다."),
-	E400_CAN_NOT_BET_TURN_MISMATCH(BAD_REQUEST, false, "ME005", "해당 멤버의 베팅 턴이 아닙니다."),
-	E400_CAN_NOT_BET_BET_COIN_MISMATCH(BAD_REQUEST, false, "ME006", "베팅이 불가능 한 코인 개수입니다."),
-	E400_CAN_NOT_START_ALREADY_START(BAD_REQUEST, false, "ME007", "이미 시작한 게임방입니다."),
-	E400_CAN_NOT_START_ALONE(BAD_REQUEST, false, "ME008", "혼자서는 게임할 수 없습니다.");
+	E400_CAN_NOT_BAN(BAD_REQUEST, false, "MB001", "방장만 강제퇴장을 요청할 수 있습니다."),
+	E400_CAN_NOT_START_NOT_READY(BAD_REQUEST, false, "MB002", "모두 준비상태가 아닙니다."),
+	E400_CAN_NOT_START_NOT_ROOM_MANAGER(BAD_REQUEST, false, "MB003", "방장이 아니라 시작할 수 없습니다."),
+	E400_CAN_NOT_BET_ROUND_MISMATCH(BAD_REQUEST, false, "MB004", "베팅 라운드가 잘못되었습니다."),
+	E400_CAN_NOT_BET_TURN_MISMATCH(BAD_REQUEST, false, "MB005", "해당 멤버의 베팅 턴이 아닙니다."),
+	E400_CAN_NOT_BET_BET_COIN_MISMATCH(BAD_REQUEST, false, "MB006", "베팅이 불가능 한 코인 개수입니다."),
+	E400_CAN_NOT_START_ALREADY_START(BAD_REQUEST, false, "MB007", "이미 시작한 게임방입니다."),
+	E400_CAN_NOT_START_ALONE(BAD_REQUEST, false, "MB008", "혼자서는 게임할 수 없습니다."),
+
+	/**
+	 * 404 Not Found (존재하지 않는 리소스)
+	 */
+	E404_CAN_NOT_FIND_GAME_ROOM(NOT_FOUND, false, "MN001", "찾을 수 없는 방입니다.");
 
 	private final HttpStatusCode statusCode;
 	private final boolean sendNotification;
