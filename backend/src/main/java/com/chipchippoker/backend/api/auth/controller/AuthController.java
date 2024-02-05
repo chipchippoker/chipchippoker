@@ -4,14 +4,13 @@ import java.security.NoSuchAlgorithmException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chipchippoker.backend.api.auth.model.dto.Token;
+import com.chipchippoker.backend.api.auth.model.dto.request.AuthorizationCodeRequest;
 import com.chipchippoker.backend.api.auth.model.dto.request.DuplicationConfirmIdRequest;
 import com.chipchippoker.backend.api.auth.model.dto.request.DuplicationConfirmNicknameRequest;
 import com.chipchippoker.backend.api.auth.model.dto.request.LoginRequest;
@@ -68,13 +67,14 @@ public class AuthController {
 	}
 
 	@Operation(summary = "인가코드 전달")
-	@GetMapping("/login/kakao")
+	@PostMapping("/authorization")
 	public ResponseEntity<ApiResponse<AuthorizationInformationResponse>> passAuthorizationCode(
-		@RequestParam String code) {
-		if (code == null || code.isEmpty()) {
+		@RequestBody AuthorizationCodeRequest authorizationCodeRequest) {
+		String authorizationCode = authorizationCodeRequest.getAuthorizationCode();
+		if (authorizationCode == null || authorizationCode.isEmpty()) {
 			throw new InvalidException(ErrorBase.E400_INVALID_AUTHORIZATION_CODE);
 		}
-		Token token = authService.getToken(code);
+		Token token = authService.getToken(authorizationCode);
 		// 3 인가 코드로 발급이 불가능한 경우
 		if (token == null) {
 			throw new InvalidException(ErrorBase.E400_INVALID_AUTH_TOKEN);
