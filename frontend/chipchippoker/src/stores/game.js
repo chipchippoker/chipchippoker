@@ -61,6 +61,77 @@ export const useGameStore = defineStore('game', () => {
   // 친구신청 알림
   const isAlarmArrive = ref(false)
 
+  const connectHandler = function() {
+    stompClient.connect({ 'access-token': userStore.accessToken}, (frame) => {
+    console.log("Connect success", gameRoomTitle.value)
+    console.log();
+    // stompClient.heartbeat.outgoing = 2000;
+    // stompClient.heartbeat.incoming = 0;
+    console.log(stompClient);
+    // 개인 메세지함 구독(기본구독)
+    subscriptionPrivate.value = stompClient.subscribe(`/from/chipchippoker/member/${userStore.myNickname}`, (message) => {
+
+      console.log('개인 메세지함 구독 성공')
+      const response = JSON.parse(message.body).body
+      console.log(response)
+
+      // 개인메세지함 구독 아이디
+      myPrivateSubId.value = message.headers.subscription
+
+      switch (response.code) {
+
+        case "MS004":
+          console.log('현재 진행 중인 라운드와 일치하지 않습니다.')
+          notMatchRound.value = true
+          break
+
+        case "MS005":
+          console.log('본인의 차례가 아닙니다.')
+          notYourTurn.value = true
+          break
+
+        case "MS006":
+          console.log('배팅이 불가능합니다.')
+          cannotBat.value = true
+          break
+
+        case "MS007": // 게임 진행
+          // 게임 데이터 저장 -> 5초건 텀 두고 데이터 받기..
+          setTimeout(()=>{
+            roundState.value = response.data.roundState
+            currentRound.value = response.data.currentRound
+            yourTurn.value = response.data.yourTurn
+            gameMemberInfos.value = data.gameMemberInfos
+            for (let i = 0; i < memberInfos.value.length; i++) {
+              // 플레이어 순서에 맞게 데이터 넣기
+              const item = response.data.gameMemberInfos.filter((p)=>
+              {p.nickname === memberInfos.value[i]})
+              gameMemberInfos.value.push(item)
+            }
+      
+            console.log('게임시작');
+            console.log("roundState", roundState.value);
+            console.log("currentRound", currentRound.value);
+            console.log("yourTurn", yourTurn.value);
+            console.log("gameMemberInfos", gameMemberInfos.value);
+          },5000)
+          break
+        case "MS012": // 친구요청 받음
+          isAlarmArrive.value = true
+          break
+
+        case "ME002": // 모두 준비상태가 아닙니다
+          console.log("모두 준비상태가 아닙니다");
+          break
+        
+        case "ME003": // 방장이 아닌사람이 start 한다면
+          console.log("님은 방장이 아님");
+          break
+      }
+    })
+  })
+  }
+
   // 구독 핸들러
   const subscribeHandler = (gameRoomTitle) => {
     // 토픽 구독 및 수신
@@ -310,86 +381,86 @@ export const useGameStore = defineStore('game', () => {
   }
 
 
-  watch(() => userStore.accessToken, (newAccessToken, oldAccessToken) => {
-    if (newAccessToken !== null && oldAccessToken === null) {
-      // 로그인되어 accessToken이 있을 때 연결 로직 실행
-      stompClient.connect({ 'access-token': userStore.accessToken}, (frame) => {
-        console.log("Connect success", gameRoomTitle.value)
-        console.log();
-        // stompClient.heartbeat.outgoing = 2000;
-        // stompClient.heartbeat.incoming = 0;
-        console.log(stompClient);
-        // 개인 메세지함 구독(기본구독)
-        subscriptionPrivate.value = stompClient.subscribe(`/from/chipchippoker/member/${userStore.myNickname}`, (message) => {
+  // watch(() => userStore.accessToken, (newAccessToken, oldAccessToken) => {
+  //   if (newAccessToken !== null && oldAccessToken === null) {
+  //     // 로그인되어 accessToken이 있을 때 연결 로직 실행
+  //     stompClient.connect({ 'access-token': userStore.accessToken}, (frame) => {
+  //       console.log("Connect success", gameRoomTitle.value)
+  //       console.log();
+  //       // stompClient.heartbeat.outgoing = 2000;
+  //       // stompClient.heartbeat.incoming = 0;
+  //       console.log(stompClient);
+  //       // 개인 메세지함 구독(기본구독)
+  //       subscriptionPrivate.value = stompClient.subscribe(`/from/chipchippoker/member/${userStore.myNickname}`, (message) => {
     
-          console.log('개인 메세지함 구독 성공')
-          const response = JSON.parse(message.body).body
-          console.log(response)
+  //         console.log('개인 메세지함 구독 성공')
+  //         const response = JSON.parse(message.body).body
+  //         console.log(response)
     
-          // 개인메세지함 구독 아이디
-          myPrivateSubId.value = message.headers.subscription
+  //         // 개인메세지함 구독 아이디
+  //         myPrivateSubId.value = message.headers.subscription
     
-          switch (response.code) {
+  //         switch (response.code) {
     
-            case "MS004":
-              console.log('현재 진행 중인 라운드와 일치하지 않습니다.')
-              notMatchRound.value = true
-              break
+  //           case "MS004":
+  //             console.log('현재 진행 중인 라운드와 일치하지 않습니다.')
+  //             notMatchRound.value = true
+  //             break
     
-            case "MS005":
-              console.log('본인의 차례가 아닙니다.')
-              notYourTurn.value = true
-              break
+  //           case "MS005":
+  //             console.log('본인의 차례가 아닙니다.')
+  //             notYourTurn.value = true
+  //             break
     
-            case "MS006":
-              console.log('배팅이 불가능합니다.')
-              cannotBat.value = true
-              break
+  //           case "MS006":
+  //             console.log('배팅이 불가능합니다.')
+  //             cannotBat.value = true
+  //             break
     
-            case "MS007": // 게임 진행
-              // 게임 데이터 저장 -> 5초건 텀 두고 데이터 받기..
-              setTimeout(()=>{
-                roundState.value = response.data.roundState
-                currentRound.value = response.data.currentRound
-                yourTurn.value = response.data.yourTurn
-                gameMemberInfos.value = data.gameMemberInfos
-                for (let i = 0; i < memberInfos.value.length; i++) {
-                  // 플레이어 순서에 맞게 데이터 넣기
-                  const item = response.data.gameMemberInfos.filter((p)=>
-                  {p.nickname === memberInfos.value[i]})
-                  gameMemberInfos.value.push(item)
-                }
+  //           case "MS007": // 게임 진행
+  //             // 게임 데이터 저장 -> 5초건 텀 두고 데이터 받기..
+  //             setTimeout(()=>{
+  //               roundState.value = response.data.roundState
+  //               currentRound.value = response.data.currentRound
+  //               yourTurn.value = response.data.yourTurn
+  //               gameMemberInfos.value = data.gameMemberInfos
+  //               for (let i = 0; i < memberInfos.value.length; i++) {
+  //                 // 플레이어 순서에 맞게 데이터 넣기
+  //                 const item = response.data.gameMemberInfos.filter((p)=>
+  //                 {p.nickname === memberInfos.value[i]})
+  //                 gameMemberInfos.value.push(item)
+  //               }
           
-                console.log('게임시작');
-                console.log("roundState", roundState.value);
-                console.log("currentRound", currentRound.value);
-                console.log("yourTurn", yourTurn.value);
-                console.log("gameMemberInfos", gameMemberInfos.value);
-              },5000)
-              break
-            case "MS012": // 친구요청 받음
-              isAlarmArrive.value = true
-              break
+  //               console.log('게임시작');
+  //               console.log("roundState", roundState.value);
+  //               console.log("currentRound", currentRound.value);
+  //               console.log("yourTurn", yourTurn.value);
+  //               console.log("gameMemberInfos", gameMemberInfos.value);
+  //             },5000)
+  //             break
+  //           case "MS012": // 친구요청 받음
+  //             isAlarmArrive.value = true
+  //             break
     
-            case "ME002": // 모두 준비상태가 아닙니다
-              console.log("모두 준비상태가 아닙니다");
-              break
+  //           case "ME002": // 모두 준비상태가 아닙니다
+  //             console.log("모두 준비상태가 아닙니다");
+  //             break
             
-            case "ME003": // 방장이 아닌사람이 start 한다면
-              console.log("님은 방장이 아님");
-              break
-          }
-        })
-      })
+  //           case "ME003": // 방장이 아닌사람이 start 한다면
+  //             console.log("님은 방장이 아님");
+  //             break
+  //         }
+  //       })
+  //     })
     
-    } else if (newAccessToken === null && oldAccessToken !== null) {
-      // 로그아웃되어 accessToken이 없을 때 연결 해제 로직 실행
-      stompClient.disconnect(() => {
-        console.log("WebSocket disconnected");
-        // 이후 필요한 로직 작성
-      });
-    }
-  });
+  //   } else if (newAccessToken === null && oldAccessToken !== null) {
+  //     // 로그아웃되어 accessToken이 없을 때 연결 해제 로직 실행
+  //     stompClient.disconnect(() => {
+  //       console.log("WebSocket disconnected");
+  //       // 이후 필요한 로직 작성
+  //     });
+  //   }
+  // });
   
   return {
     // State
@@ -433,6 +504,7 @@ export const useGameStore = defineStore('game', () => {
     cannotBat,
     indexing,
     myOrder,
+    connectHandler
   }
 
 }, { persist: true }) 

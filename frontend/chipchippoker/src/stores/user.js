@@ -138,7 +138,6 @@ export const useUserStore = defineStore('user', () => {
         myIcon.value = res.data.icon
         myNickname.value = res.data.nickname
         router.push({ name: 'main' })
-
       } else if (res.data.code === 202) {
         console.log("카카오 로그인 성공, 닉네임 설정!!")
         console.log(res.data)
