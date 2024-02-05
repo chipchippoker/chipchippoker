@@ -19,7 +19,8 @@ export const useOpenviduStore = defineStore('openvidu', () => {
 
   axios.defaults.headers.post["Content-Type"] = "application/json";
   // const APPLICATION_SERVER_URL = 'https://i10a804.p.ssafy.io/signal-server/';
-  const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/';
+  const APPLICATION_SERVER_URL = 'http://chipchippoker.shop:8500/signal-server/';
+  // const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8500/';
 
   // OpenVidu objects
   const OV = ref(undefined)
