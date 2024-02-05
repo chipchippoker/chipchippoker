@@ -19,7 +19,7 @@ export const useOpenviduStore = defineStore('openvidu', () => {
 
   axios.defaults.headers.post["Content-Type"] = "application/json";
   // const APPLICATION_SERVER_URL = 'https://i10a804.p.ssafy.io/signal-server/';
-  const APPLICATION_SERVER_URL = 'http://chipchippoker.shop:8500/signal-server/';
+  const APPLICATION_SERVER_URL = 'https://chipchippoker.shop/signal-server/';
   // const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8500/';
 
   // OpenVidu objects
@@ -212,7 +212,7 @@ export const useOpenviduStore = defineStore('openvidu', () => {
     // const response = await axios.post(APPLICATION_SERVER_URL + 'sessions', { customSessionId: sessionId, userNo: 53, endHour: 1, endMinute: 30, quota: 16, isPrivacy: false}, {
     //   headers: { 'Content-Type': 'application/json', },
     // });
-    const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId, userNo: 53, endHour: 1, endMinute: 30, quota: 16, isPrivacy: false}, {
+    const response = await axios.post(APPLICATION_SERVER_URL + 'sessions', { customSessionId: sessionId, userNo: 53, endHour: 1, endMinute: 30, quota: 16, isPrivacy: false}, {
       headers: { 'Content-Type': 'application/json', },
     });
     console.log('세션 생성 성공');
@@ -222,8 +222,8 @@ export const useOpenviduStore = defineStore('openvidu', () => {
   async function createToken(sessionId) {
     // const response = await axios.post(APPLICATION_SERVER_URL + 'sessions/' + sessionId + '/connections', {}, {
     //   headers: { 'Content-Type': 'application/json', },
-    // });
-    const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
+    // })
+    const response = await axios.post(APPLICATION_SERVER_URL + 'sessions/' + sessionId + '/connections', {}, {
       headers: { 'Content-Type': 'application/json', },
     });
     return response.data; // The token
