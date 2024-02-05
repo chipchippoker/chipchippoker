@@ -4,7 +4,7 @@
       <!-- 모달 헤더 -->
       <div class="modal-header border-0 position-relative">
         <h1 class="position-absolute top-50 start-50 translate-middle modal-title fs-5 mt-2" id="makeRoomModalLabel">방 생성</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button @click="closeModal()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <!-- 모달 바디 -->
       <div class="modal-body p-4">
@@ -16,6 +16,7 @@
             <div class="col-9">
                 <input type="text" class="form-control" id="RoomName" v-model="title">
             </div>
+            <div v-if="title!=='' && title.length > 20" class="fw-lgitighter x-little-text text-danger">방 제목은 1 ~ 20 글자이어야 합니다.</div>
           </div>
 
           <!-- 공개 여부 -->
@@ -23,11 +24,11 @@
             <!-- 비공개 체크 박스 -->
             <label class="col-4">공개 여부</label>
             <div class="col-4 form-check">
-                <input @click="toggleIsPrivate()" class="form-check-input" type="radio" id="publicRadio" value=false v-model="isPrivate">
+                <input @click="toggleIsPrivate('false')" class="form-check-input" type="radio" id="publicRadio" value=false v-model="isPrivate">
                 <label class="form-check-label" for="publicRadio">공개</label>
             </div>
             <div class="col-4 form-check">
-                <input @click="toggleIsPrivate()" class="form-check-input" type="radio" id="privateRadio" value=true v-model="isPrivate">
+                <input @click="toggleIsPrivate('true')" class="form-check-input" type="radio" id="privateRadio" value=true v-model="isPrivate">
                 <label class="form-check-label" for="privateRadio">비공개</label>
             </div>
           </div>
@@ -38,8 +39,9 @@
               <label for="inputPassword6" class="col-form-label" >Password</label>
             </div>
             <div class="col-9">
-              <input disabled type="password" id="inputPassword6" class='form-control' aria-describedby="passwordHelpInline" v-model="password" autocomplete="on">
+              <input :disabled="isPrivate==='false'" type="password" id="inputPassword6" class='form-control' aria-describedby="passwordHelpInline" v-model="password" autocomplete="on">
             </div>
+            <div v-if="password!=='' && (password.length !== 4 || isNaN(password))" class="fw-lgitighter x-little-text text-danger">방 비밀번호는 4자리의 숫자이어야 합니다.</div>
           </div>
           
           <!-- 인원 수 -->
@@ -52,7 +54,7 @@
                 <option value="4">4인</option>
               </select>
               <!-- 방 만들기 버튼 -->
-              <button data-bs-dismiss="modal" @click="createRoom()" type="button" class="col-3 btn-outline-yellow rounded-2">방만들기</button>
+              <button data-bs-dismiss="modal" :disabled="!((0 < title.length && title.length <= 20) && (isPrivate === 'false' || (isPrivate === 'true' && password.length === 4 && !isNaN(password))))" @click="createRoom()" type="button" class="col-3 btn-outline-yellow rounded-2">방만들기</button>
             </div>
           </div>
         </form>
@@ -69,16 +71,16 @@ import { useRoomStore } from "@/stores/room";
 const roomStore = useRoomStore()
 
 const title = ref('')
-const isPrivate = ref(false)
-const password = ref(null)
+const isPrivate = ref('false')
+const password = ref('')
 const totalParticipantCnt = ref(2)
 
 // 방 생성하기
 const createRoom = function () {
-    roomStore.isWatcher = false
+  roomStore.isWatcher = false
   const payload = {
       title: title.value,
-      isPrivate: isPrivate.value,
+      isPrivate: isPrivate.value === 'true',
       password: password.value,
       totalParticipantCnt: totalParticipantCnt.value
   }
@@ -86,23 +88,25 @@ const createRoom = function () {
 
   roomStore.createRoom(payload)
   title.value = ''
-
-  isPrivate.value = false
-  password.value = null
+  isPrivate.value = 'false'
+  password.value = ''
   totalParticipantCnt.value = 2
 }
 
-const toggleIsPrivate = function() {
-  const inputTag = document.getElementById('inputPassword6')
-  const isDisabled = inputTag.disabled
 
-  // disabled 속성이 존재할 경우
-  if (isDisabled) {
-    inputTag.removeAttribute('disabled')
-  } 
-  // disabled 속성이 존재하지 않을 경우
-  else {
-    inputTag.setAttribute('disabled', true)
+// 모달 닫으면
+const closeModal = function() {
+  title.value = ''
+  isPrivate.value = 'false'
+  password.value = ''
+  totalParticipantCnt.value = 2
+}
+
+// 공개 비공개
+const toggleIsPrivate = function(value) {
+  isPrivate.value = value
+  if (isPrivate.value === 'false') {
+    password.value = ''
   }
 }
 </script>
