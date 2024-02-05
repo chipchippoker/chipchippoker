@@ -36,4 +36,17 @@ public class KakaoAuthApiClient {
 			.retrieve()
 			.body(KakaoToken.class);
 	}
+
+	public KakaoToken getKakaoConnectionToken(String authorizationCode) throws HttpClientErrorException {
+		RestClient restClient = RestClient.create();
+		return restClient.get()
+			.uri("https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id="
+				+ kakaoSecret.getClient_id()
+				+ "&redirect_uri="
+				+ kakaoSecret.getRedirect_uri_connect()
+				+ "&code="
+				+ authorizationCode)
+			.retrieve()
+			.body(KakaoToken.class);
+	}
 }

@@ -24,6 +24,8 @@ public interface AuthService {
 
 	Token getToken(String authorizationCode);
 
+	Token getConnectionToken(String authorizationCode);
+
 	SimpleSignupResponse signUp(SimpleSignupRequest request, String token) throws Exception;
 
 	Long getKakaoSocialId(String accessToken);

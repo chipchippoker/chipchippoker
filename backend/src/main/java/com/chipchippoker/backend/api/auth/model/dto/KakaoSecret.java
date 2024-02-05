@@ -14,11 +14,18 @@ public class KakaoSecret {
 	@Value("${kakao.redirect_uri}")
 	private String redirect_uri;
 
+	@Value("${kakao.redirect_uri_connect}")
+	private String redirect_uri_connect;
+
 	public String getClient_id() {
 		return client_id;
 	}
 
 	public String getRedirect_uri() {
 		return redirect_uri;
+	}
+
+	public String getRedirect_uri_connect() {
+		return redirect_uri_connect;
 	}
 }

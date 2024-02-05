@@ -32,4 +32,13 @@ public class KakaoAuthProvider implements AuthProvider {
 			throw new InvalidException(ErrorBase.E400_INVALID_AUTHORIZATION_CODE);
 		}
 	}
+
+	@Override
+	public KakaoToken getConnectionToken(String authorizationCode) {
+		try {
+			return kakaoAuthApiClient.getKakaoConnectionToken(authorizationCode);
+		} catch (HttpClientErrorException e) {
+			throw new InvalidException(ErrorBase.E400_INVALID_AUTHORIZATION_CODE);
+		}
+	}
 }
