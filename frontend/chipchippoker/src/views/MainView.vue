@@ -91,10 +91,12 @@ import { useSoundStore } from '@/stores/sound';
 import { useUserStore } from '@/stores/user';
 import { useRoomStore } from '@/stores/room';
 import { useMatchStore } from '@/stores/match';
+import { useGameStore } from '@/stores/game'
 // import bootstrap from 'bootstrap';
 
 const userStore = useUserStore()
 const soundStore = useSoundStore()
+const gameStore = useGameStore()
 const friendStore = useFriendStore()
 const roomStore = useRoomStore()
 const matchStore = useMatchStore()
@@ -146,6 +148,8 @@ onMounted(()=>{
     friendStore.getAllRankList()
     // friendStore.getMyRankList()
     // soundStore.bgmOn()
+    // location.reload()
+    gameStore.connectHandler()
 })
 
 </script>
