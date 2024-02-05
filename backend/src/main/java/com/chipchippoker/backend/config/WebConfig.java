@@ -25,10 +25,11 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
 			.allowedOrigins("http://localhost:5173", "http://i10a804.p.ssafy.io",
-				"https://i10a804.p.ssafy.io")
+				"https://i10a804.p.ssafy.io", "https://chipchippoker.shop")
 			.allowedMethods("*")
 			.allowedHeaders("access-token", "refresh-token", "Content-Type", "kakao-access-token")
 			.allowCredentials(true)
 			.maxAge(3600);
+
 	}
 }
