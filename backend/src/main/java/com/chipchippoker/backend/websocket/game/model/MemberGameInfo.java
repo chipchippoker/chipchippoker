@@ -14,6 +14,7 @@ public class MemberGameInfo {
 	private Integer haveCoin;
 	private Integer bettingCoin;
 	private String isState;
+	private Integer actionCount;
 
 	public static MemberGameInfo create() {
 		return MemberGameInfo.builder()
@@ -21,6 +22,7 @@ public class MemberGameInfo {
 			.haveCoin(25)
 			.bettingCoin(0)
 			.isState("BET")
+			.actionCount(0)
 			.build();
 	}
 }
