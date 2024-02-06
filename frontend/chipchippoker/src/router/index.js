@@ -21,7 +21,7 @@ const router = createRouter({
       path: '/main',
       name: 'main',
       component: MainView,
-      meth: { auth: true }
+      meta: { requiresAuth: true }
     },
     {
       path: '/login',
@@ -68,17 +68,22 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  // window.location.reload(true)
   import('@/stores/user').then(({ useUserStore }) => {
   const userStore = useUserStore()
+  const isAuthenticated = userStore.accessToken !== null
 
-  if (userStore.accessToken === null && to.name !== 'login' && to.name !== 'signup' && to.name !== 'kakaosignup') {
-    alert('로그인이 필요합니다.')
-    console.log('로그인이 필요합니다.');
-    router.push({ name: 'login'})
-    return
+  // 인증이 필요한 페이지이고 사용자가 인증되어 있지 않다면
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    // 로그인 페이지로 이동
+    router.push({ name: 'login' })
+  } else if (isAuthenticated && (to.name === 'login' || to.name === 'signup' || to.name === 'kakaosignup')) {
+    // 사용자가 인증되어 있고, 로그인 페이지 또는 회원가입 페이지로 가려고 할 때
+    // 메인 페이지로 리다이렉트
+    router.push({ name: 'main' })
+  } else {
+    // 다른 경우에는 그냥 진행
+    next()
   }
-    next();
   });
 });
 
