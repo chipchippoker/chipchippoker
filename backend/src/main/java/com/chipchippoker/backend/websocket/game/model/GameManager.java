@@ -3,6 +3,7 @@ package com.chipchippoker.backend.websocket.game.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -310,5 +311,12 @@ public class GameManager {
 
 	public void banMember(String banMemberNickname) {
 		deleteMember(banMemberNickname);
+	}
+
+	public List<MemberManager> getMemberManagersByCreatedAt() {
+		return this.memberManagerMap.values()
+			.stream()
+			.sorted(Comparator.comparing(MemberManager::getCreatedAt))
+			.toList();
 	}
 }
