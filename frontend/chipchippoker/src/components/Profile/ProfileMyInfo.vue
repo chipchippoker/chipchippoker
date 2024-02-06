@@ -153,15 +153,25 @@
   import ModalSignOut from "../Modal/ModalSignOut.vue";
 
   import { ref, onMounted } from "vue";
-  import { useRoute } from "vue-router";
+  import { useRoute, onBeforeRouteUpdate } from "vue-router";
   import { useUserStore } from '@/stores/user'
   import { useFriendStore } from "@/stores/friend";
+  import { useRouter } from "vue-router";
+
   const userStore = useUserStore()
   const friendStore = useFriendStore()
+  const router = useRouter()
   const route = useRoute()
   const profileInfo = ref({})
   const totalGame = ref(null)
   const isSent = ref(false)
+
+  // 프로필페이지 갱신
+  onBeforeRouteUpdate(async (to, from) => {
+    if (to.params === from.params) {
+      router.go(0)
+    }
+  })
 
   // 친구 요청
   const friendRequest = function(){
@@ -169,11 +179,7 @@
     isSent.value = true
     friendStore.friendRequest(userStore?.profileInfo?.nickname)
   }
-  onMounted(() => {
-    profileInfo.value = userStore.profileInfo
-    totalGame.value = profileInfo.win + profileInfo.draw + profileInfo.lose
-  })
-
+  
   // 카카오 연동하기
   const kakaoConnect = function() {
     console.log('인가코드 받기');
@@ -183,7 +189,7 @@
   // 카카오 인가코드 받기
   authorizationCode.value = route.query.code
   userStore.authorizationCode = authorizationCode.value
-
+  
   // 인가코드 받으면
   if (authorizationCode.value) {
     console.log('카카오 연동 요청');
@@ -199,6 +205,10 @@
   }
 
 
+  onMounted(() => {
+    profileInfo.value = userStore.profileInfo
+    totalGame.value = profileInfo.win + profileInfo.draw + profileInfo.lose
+  })
 </script>
   
 <style scoped>
