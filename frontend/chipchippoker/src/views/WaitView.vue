@@ -162,17 +162,19 @@ const roomTitle = ref('')
 const totalParticipantCnt = ref('')
 const myNickname = ref('')
 
-const roomManagerNickname = ref('')
-const isManager = ref(false)
+const roomManagerNickname = computed(() => gameStore.roomManagerNickname)
+const isManager = computed(() => {
+  if (myNickname.value === roomManagerNickname.value) {
+    return true
+  } else {
+    return false
+  }
+})
 const isReady = ref(false)
 
 roomId.value = roomStore.roomId
 roomTitle.value = roomStore.title
-roomManagerNickname.value = roomStore.roomManagerNickname
 myNickname.value = userStore.myNickname
-if (myNickname.value === roomManagerNickname.value) {
-  isManager.value = true
-}
 
 // 방 나가기
 const leaveRoom = function() {
@@ -206,6 +208,7 @@ const forceDisconnect = function(clientData) {
     title: roomTitle.value,
     nickname: clientData
   }
+  console.log(payload);
   roomStore.forceMemberOut(payload)
 }
 

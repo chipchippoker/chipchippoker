@@ -266,11 +266,11 @@ export const useRoomStore = defineStore('room', () => {
       data: payload
     })
     .then(response => {
-      const res = response.data
-      console.log(response.message)
-      if (res.code === 200) {
-        gameStore.sendBan(title.value, userStore.myNickname)
-      } else if (res.code === 'FB005') {
+      console.log(response.data);
+      console.log(payload.nickname);
+      if (response.data.code === '성공') {
+        gameStore.sendBan(title.value, payload.nickname)
+      } else if (response.code === 'FB005') {
         alert(res.message)
       }
     })
