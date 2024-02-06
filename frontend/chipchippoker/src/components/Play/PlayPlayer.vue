@@ -20,10 +20,20 @@
               />
             </div>
 
-            <!-- 카드 -->
-            <img class="object-fit-contain" style="width: 150px;" 
+            <!-- 뒤집 카드 -->
+            <div class="flip-card" id="flip-card" @click="flip()">
+              <div class="flip-card-inner">
+                  <div class="flip-card-front">
+                    <img :src="getCardUrl(0,0)" alt="뒷면카드">
+                  </div>
+                  <div class="flip-card-back">
+                    <img :src="getCardUrl(player.cardInfo?.cardSet,player.cardInfo?.cardNumber)" alt="앞장">
+                  </div>
+              </div>
+            </div>
+            <!-- <img class="object-fit-contain" style="width: 150px;" 
             :src=getCardUrl(player.cardInfo?.cardSet,player.cardInfo?.cardNumber) 
-            :alt="player.cardInfo?.cardNumber">
+            :alt="player.cardInfo?.cardNumber"> -->
           </div>
           <!-- 2, 4번 플레이어 -->
           <div v-else class="d-flex flex-row-reverse h-100 m-2 mt-0">
@@ -32,9 +42,21 @@
               :stream-manager="findVideo(playersComputed, player.nickname)"
               />
             </div>
+            <!-- 뒤집 카드 -->
+            <div class="flip-card" id="flip-card" @click="flip()">
+              <div class="flip-card-inner">
+                  <div class="flip-card-front">
+                    <img :src="getCardUrl(0,0)" alt="뒷면카드">
+                  </div>
+                  <div class="flip-card-back">
+                    <img :src="getCardUrl(player.cardInfo?.cardSet,player.cardInfo?.cardNumber)" alt="앞장">
+                  </div>
+              </div>
+            </div>
+            <!--             
             <img class="object-fit-contain" style="width: 150px;" 
             :src=getCardUrl(player.cardInfo?.cardSet,player.cardInfo?.cardNumber) 
-            :alt="player.cardInfo?.cardNumber">
+            :alt="player.cardInfo?.cardNumber"> -->
           </div>
         </div>
       </div>
@@ -45,7 +67,7 @@
       <!-- 남은 시간, 총 배팅 코인 -->
       <div class="position-absolute top-0 start-50 translate-middle mt-4 d-flex flex-column align-items-center">
         <div class="text-white fs-3 fw-bold"> 초</div>
-        <div class="text-white fw-bold">총 배팅:</div>
+        <div class="text-white fw-bold">턴: {{ gameStore.yourTurn }}</div>
       </div>
     </div>
     <!-- 나가기 -->
@@ -113,14 +135,7 @@
   const findVideo = function (players, targetNickname) {
     for (let i = 0; i < players.length; i++) {
       const player = players[i]
-      console.log('player ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★')
-      console.log(player)
-      console.log('player ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★')
       if (player.nickname === targetNickname) {
-        console.log(player)
-        console.log(targetNickname)
-        console.log(player.nickname);
-        console.log(player.player);
         return player.player
       }
     }
@@ -133,6 +148,17 @@
   const getCardUrl = function (setnum, cardnum) {
       return new URL(`/src/assets/cards/set${setnum}/card${cardnum}.png`, import.meta.url).href;
   };
+
+  // 카드 뒤집기
+  const flip = () => {
+    const flipCards = document.querySelectorAll('.flip-card');
+    flipCards.forEach(flipCard => {
+      flipCard.classList.toggle('flipped');  
+    });
+  };
+
+  const playersComputed = computed(() => openviduStore.players)
+  const publisherComputed = computed(() => openviduStore.publisher)
 
   // 시간 15초에서 줄어들기
   const yourTurn = ref(null)

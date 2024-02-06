@@ -32,10 +32,14 @@
     </div>
     <!-- 채팅, 카드, 컨트롤러 -->
     <div class="d-flex align-items-center mb-3" style="width: 100%; height: 20%;">
-      <!-- 카드 -->
-      <div class="text-white w-25">
-        card
+      <!-- 카드 세트-->
+      <div class="w-25">
+        <div class="d-flex flex-wrap p-3 ms-5">
+          <img v-for="idx in (10 - gameStore.currentRound)" :key="idx" class="object-fit-contain list-overlap"
+            style="width: 80px;" src="/src/assets/cards/set0/card0.png" alt="back">
+        </div>
       </div>
+
       <!-- 컨트롤러 or 채팅 -->
       <div class="h-100 w-50">
         <PlayControllerVue v-if="roomStore.isWatcher === false" />
