@@ -23,6 +23,7 @@ public enum ErrorBase {
 	E400_INVALID_PASSWORD(BAD_REQUEST, false, "BR107", "올바르지 않은 비밀번호입니다."),
 	E400_INVALID_AUTHORIZATION_CODE(BAD_REQUEST, false, "BR108", "올바르지 않은 인가코드입니다."),
 	E400_INVALID_VALIDATION(BAD_REQUEST, false, "BR113", "잘못된 검증 형식입니다"),
+	E400_INVALID_PASSWORD_CONFIRM(BAD_REQUEST, false, "BR114", "잘못된 비밀번호 확인 요청입니다"),
 
 	/**
 	 * 401 UnAuthorized (인증 실패)

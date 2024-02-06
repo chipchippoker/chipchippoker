@@ -52,6 +52,11 @@ public class AuthServiceImpl implements AuthService {
 			throw new DuplicateException(ErrorBase.E409_DUPLICATE_NICKNAME);
 		}
 
+		// 패스워드와 패스워드 확인 입력값 일치 여부 확인
+		if (!signupRequest.getPassword().equals(signupRequest.getPasswordConfirm())) {
+			throw new InvalidException(ErrorBase.E400_INVALID_PASSWORD_CONFIRM);
+		}
+
 		//패스워드 암호화
 		String password = encryptionPassword(signupRequest.getPassword());
 		signupRequest.setPassword(password);
