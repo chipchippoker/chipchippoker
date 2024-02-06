@@ -79,7 +79,7 @@
   const emit = defineEmits(['clientData', 'forceDisconnect'])
   
   function getConnectionData() {
-    const { connection } = props.streamManager.stream;
+    const { connection } = props.streamManager.stream
     return JSON.parse(connection.data);
   }
 

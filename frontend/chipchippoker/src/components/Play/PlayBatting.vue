@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="position-absolute top-50 start-50 translate-middle battingstyle p-0" style="width: 35%; height: 75%;">
+
       <div class="position-relative w-100 h-100 d-flex">
         <!-- 왼쪽 플레이어들 -->
         <div class="w-50 h-100">
@@ -26,6 +27,7 @@
         </div>
       </div>
     </div>
+    
   </div>
 </template>
 

@@ -39,7 +39,7 @@
               :key="index">
               <div style="width: 400px; height: 300px;">
                 <UserVideo
-                  :stream-manager="sub"
+                  :stream-manager="sub.player"
                   :is-manager="isManager"
                   @force-disconnect="forceDisconnect"
                   />
@@ -185,7 +185,6 @@ const leaveRoom = function() {
   } else {
     roomStore.leaveRoom()
   }
-  openviduStore.leaveSession()
 }
 
 // 게임 시작

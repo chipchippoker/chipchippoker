@@ -3,93 +3,51 @@
     <!-- 플레이어 감정, 동영상, 카드 -->
     <div class="w-100 h-100 position-relative">
       <div>
-
         <!-- 플레이어 정보 -->
-        <div :class="classNameList[index]" :id="'player' + (index + 1)" v-for="(player, index) in gameStore.memberInfos" :key="index">
+        
+        <!-- <h3 class="text-white">{{ gameStore.gameMemberInfos }}</h3> -->
+        <div :class="classNameList[index]" :id="'player' + (index + 1)" v-for="(player, index) in gameStore.gameMemberInfos" :key="index">
           <div class="text-white align-self-center ">{{ player.nickname }} / 
-            <div>보유코인: {{gameStore?.gameMemberInfos[index]?.haveCoin}}</div>
-            {{ index }}
+            <div>보유코인: {{player.haveCoin}}</div>
+            <div>배팅코인: {{player.bettingCoin}}</div>
+            <div>턴: {{gameStore?.yourTurn}}</div>
+            <div>카드 정보: {{player.cardInfo}}</div>
           </div>
           <!-- 1, 3번 플레이어 -->
           <div v-if="[0, 2].includes(index)" class="d-flex h-100 m-2 mt-0">
-            <!-- <div>
-              <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
-            </div> -->
             <!-- 본인 -->
-            <div v-if="player.nickname === userStore.myNickname" class="m-2">
+            <div class="m-2">
               <UserVideoVue
-              :stream-manager="publisherComputed"
-              view="playView"
+              :stream-manager="findVideo(playersComputed, player.nickname)"
               />
             </div>
-            <!-- 본인이 아닌 경우 -->
-            <div v-else class="m-2">
-              <UserVideoVue
-              v-if="gameStore.myOrder >= index"
-              :stream-manager="playersComputed[index]"
-              view="playView"
-              />
-              <UserVideoVue
-              v-else
-              :stream-manager="playersComputed[index-1]"
-              view="playView"
-              />
-            </div>
-            <!-- 카드 이미지 나일때 -->
+
+            <!-- 카드 -->
             <img class="object-fit-contain" style="width: 150px;" 
-            v-if="player.nickname === userStore.myNickname"
-            :src=getBackCardUrl()
-            alt="?">
-            <!-- 카드 남일때 -->
-            <img class="object-fit-contain" style="width: 150px;" 
-            v-else
-            :src=getCardUrl(gameStore?.gameMemberInfos[index]?.cardInfo?.cardSet,gameStore?.gameMemberInfos[index]?.cardInfo?.cardNumber) 
-            :alt="gameStore?.gameMemberInfos[index]?.cardInfo?.cardNumber">
+            :src=getCardUrl(player.cardInfo?.cardSet,player.cardInfo?.cardNumber) 
+            :alt="player.cardInfo?.cardNumber">
           </div>
           <!-- 2, 4번 플레이어 -->
           <div v-else class="d-flex flex-row-reverse h-100 m-2 mt-0">
-            <!-- <div>
-              <font-awesome-icon :icon="['fas', 'pause']" class="fa-5x" style="color: #ffffff;"/>
-            </div> -->
-            <div v-if="player.nickname === userStore.myNickname" class="m-2">
-              {{ playersComputed[index] }}
+            <div class="m-2">
               <UserVideoVue
-              :stream-manager="publisherComputed"
-              view="playView"
+              :stream-manager="findVideo(playersComputed, player.nickname)"
               />
             </div>
-            <div v-else class="m-2">
-              <UserVideoVue
-              v-if="gameStore.myOrder >= index"
-              :stream-manager="playersComputed[index]"
-              view="playView"
-              />
-              <UserVideoVue
-              v-else
-              :stream-manager="playersComputed[index-1]"
-              view="playView"
-              />
-            </div>  
-            <!-- 카드 이미지 나일때 -->
             <img class="object-fit-contain" style="width: 150px;" 
-            v-if="player.nickname === userStore.myNickname"
-            :src=getBackCardUrl()
-            alt="?">
-            <!-- 카드 남일때 -->
-            <img class="object-fit-contain" style="width: 150px;" 
-            v-else
-            :src=getCardUrl(gameStore?.gameMemberInfos[index]?.cardInfo?.cardSet,gameStore?.gameMemberInfos[index]?.cardInfo?.cardNumber) 
-            :alt="gameStore?.gameMemberInfos[index]?.cardInfo?.cardNumber">
+            :src=getCardUrl(player.cardInfo?.cardSet,player.cardInfo?.cardNumber) 
+            :alt="player.cardInfo?.cardNumber">
           </div>
         </div>
       </div>
 
       <!-- 배팅보드 -->
       <PlayBattingVue />
+      
       <!-- 남은 시간, 총 배팅 코인 -->
       <div class="position-absolute top-0 start-50 translate-middle mt-4 d-flex flex-column align-items-center">
-        <div class="text-white fs-3 fw-bold">{{ time }} 초</div>
-        <div class="text-white fw-bold">총 배팅: {{ totalBettingCoin }}</div>
+        <div class="text-white fs-3 fw-bold"> 초</div>
+        <div class="text-white fw-bold">총 배팅:</div>
       </div>
     </div>
     <!-- 나가기 -->
@@ -137,6 +95,7 @@
   const router = useRouter()
   const roomId = ref(null)
   const myNickname = ref(null)
+  
   const props = defineProps({
     roomId: String,
     myNickname: String
@@ -149,73 +108,39 @@
   roomId.value = props.roomId
   myNickname.value = props.myNickname
 
-  // 앞장 카드 가져오기
+
+  // ----------------------------------------------------------------------------------------------------------
+  const findVideo = function (players, targetNickname) {
+    for (let i = 0; i < players.length; i++) {
+      const player = players[i]
+      console.log('player ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★')
+      console.log(player)
+      console.log('player ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★')
+      if (player.nickname === targetNickname) {
+        console.log(player)
+        console.log(targetNickname)
+        console.log(player.nickname);
+        console.log(player.player);
+        return player.player
+      }
+    }
+    return publisherComputed.value
+  }
+
+  //-----------------------------------------------------------------------------------------------------------
+
+
+  // 카드 가져오기
   const getCardUrl = function (setnum, cardnum) {
       return new URL(`/src/assets/cards/set${setnum}/card${cardnum}.png`, import.meta.url).href;
   };
-  // 뒷장 카드 가져오기
-  const getBackCardUrl = function () {
-      return new URL(`/src/assets/cards/back.png`, import.meta.url).href;
-  }
-
-  // 시간 15초에서 줄어들기
-  const yourTurn = ref(null)
-  const time = ref(15)
-
-  const handleYourTurnChange = () => {
-    yourTurn.value = gameStore.yourTurn; // yourTurn 업데이트
-
-    if (yourTurn.value !== null) {
-      // yourTurn 값이 존재하면 타이머 시작
-      startCountdownTimer();
-    } else {
-      // yourTurn 값이 null이면 타이머 중지
-      stopCountdownTimer();
-    }
-  };
-
-  // 카운트다운 타이머 변수
-  let countdownTimer
-
-  // 타이머 시작 함수
-  const startCountdownTimer = function()  {
-    time.value = 15; // 초기 남은 시간 15초
-
-    // 1초마다 실행되는 타이머 함수
-    countdownTimer = setInterval(() => {
-      time.value--
-
-      if (time.value >= 0) {
-        // 남은 시간이 0보다 크면 업데이트
-        console.log('남은 시간:', time.value);
-      } else {
-        // 남은 시간이 0이면 "die"로 응답 보내고 타이머 중지
-        console.log('남은 시간: 0, die로 응답 보내기');
-        gameStore.bet(roomStore.title,"DIE", gameStore.bettingCoin)
-        stopCountdownTimer();
-        // 여기에서 "die"로 응답 보내는 로직 추가
-      }
-    }, 1000);
-  };
-
-  // 타이머 중지 함수
-  const stopCountdownTimer = () => {
-    clearInterval(countdownTimer);
-  };
-
-  // yourTurn 값이 변경될 때 호출되는 함수 등록
-  watch(() => gameStore.yourTurn, handleYourTurnChange)
-
-  // 합
-  const totalBettingCoin = computed(() => {
-    if (gameStore.gameMemberInfos) {
-      return gameStore.gameMemberInfos.reduce((total, member) => total + member.bettingCoin, 0);
-    }
-  });
 
   const playersComputed = computed(() => openviduStore.players)
   const publisherComputed = computed(() => openviduStore.publisher)
 
+  // 시간 15초에서 줄어들기
+  const yourTurn = ref(null)
+  
   // 방 나가기
   const leaveRoom = function() {
     // 관전자면
@@ -225,11 +150,9 @@
     } else {
       roomStore.leaveRoom()
     }
-    openviduStore.leaveSession()
   }
 
   onMounted (() => {
-    gameStore.indexing(userStore.myNickname)
 
     navigator.mediaDevices.getUserMedia({ video: true, audio: true })
       .then((stream) => {

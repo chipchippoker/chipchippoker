@@ -5,10 +5,11 @@ import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from './user'
 import { useGameStore } from './game'
 import { compileScript } from 'vue/compiler-sfc'
-
+import { useOpenviduStore } from './openvidu'
 
 export const useRoomStore = defineStore('room', () => {
   const userStore = useUserStore()
+  const openviduStore = useOpenviduStore()
   const ROOM_API = `${userStore.BASE_API_URL}/rooms`
   const SPECTATE_API = `${userStore.BASE_API_URL}/spectate`
 
@@ -236,6 +237,11 @@ export const useRoomStore = defineStore('room', () => {
       totalParticipantCnt.value = 0
       isRoom.value = false
       gameStore.sendExitRoom(title.value)
+    })
+    .then(()=>{
+      openviduStore.leaveSession()
+      gameStore.resetGameStore()
+      router.push({name:'main'})
     })
     .catch(err => console.log(err))
   }

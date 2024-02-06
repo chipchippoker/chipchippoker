@@ -53,7 +53,7 @@ const clickVideo = function() {
         'sad':detections.expressions.sad,
         'surprised':detections.expressions.surprised*100
       }
-      console.log(emotion)
+      // console.log(emotion)
       // 가장 큰 감정 추출
       const maxEmotion = Object.keys(emotion).reduce((maxEmotion, key) => {
         return emotion[key] > emotion[maxEmotion] ? key : maxEmotion;
