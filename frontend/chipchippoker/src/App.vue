@@ -3,8 +3,7 @@ import ModalGuide from './components/Modal/ModalGuide.vue';
 import ModalNotificationList from './components/Modal/ModalNotificationList.vue';
 import ModalMainSettings from './components/Modal/ModalMainSettings.vue';
 import { RouterLink, RouterView } from 'vue-router'
-import { useRouter } from 'vue-router';
-
+import { useRoute, useRouter } from 'vue-router';
 import { ref, computed } from 'vue';
 import { useUserStore } from '@/stores/user'
 import { useFriendStore } from './stores/friend';
@@ -14,11 +13,14 @@ import { useGameStore } from './stores/game';
 const userStore = useUserStore()
 const friendStore = useFriendStore()
 const gameStore = useGameStore()
-
+const route = useRoute()
 const router = useRouter()
+
 const goProfile = function(){
   userStore.profileNickname = userStore.myNickname
-  // userStore.getProfileInfo(userStore.myNickname)
+  if (route.fullPath === '/profile') {
+    router.go(0)
+  }
   router.push({name:'profile'})
 }
 

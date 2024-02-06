@@ -67,6 +67,7 @@ const router = createRouter({
   ]
 })
 
+
 router.beforeEach((to, from, next) => {
   import('@/stores/user').then(({ useUserStore }) => {
   const userStore = useUserStore()
