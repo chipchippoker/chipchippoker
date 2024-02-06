@@ -123,7 +123,7 @@ export const useGameStore = defineStore('game', () => {
             console.log("currentRound", currentRound.value);
             console.log("yourTurn", yourTurn.value);
             console.log("gameMemberInfos", gameMemberInfos.value);
-          },3000)
+          },2000)
           break
         case "MS008": // 라운드 종료
           receiveGameFinish(response.data)

@@ -219,12 +219,10 @@ const coinSlide = function(){
 /* 코인 */
 .coin-list {
     display: flex;
-
 }
 
 .coin-overlap {
     margin-left: -25px;
-    
 }
 
 .move1 {
