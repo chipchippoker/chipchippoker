@@ -39,6 +39,7 @@ public enum MessageBase {
 	E400_CAN_NOT_BET_BET_COIN_MISMATCH(BAD_REQUEST, false, "MB006", "베팅이 불가능 한 코인 개수입니다."),
 	E400_CAN_NOT_START_ALREADY_START(BAD_REQUEST, false, "MB007", "이미 시작한 게임방입니다."),
 	E400_CAN_NOT_START_ALONE(BAD_REQUEST, false, "MB008", "혼자서는 게임할 수 없습니다."),
+	E400_CAN_NOT_BET_ALREADY_DIE(BAD_REQUEST, false, "MB009", "플레이어는 DIE 상태로 배팅에 참여할 수 없습니다."),
 
 	/**
 	 * 404 Not Found (존재하지 않는 리소스)

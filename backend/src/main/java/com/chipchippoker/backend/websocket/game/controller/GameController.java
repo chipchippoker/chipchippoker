@@ -229,21 +229,6 @@ public class GameController {
 		@DestinationVariable(value = "gameRoomTitle") String gameRoomTitle,
 		BettingMessageRequest bettingMessageRequest
 	) {
-		/*
-		검증 내역
-		- 현재 라운드가 진행 라운드와 동일한지
-		1. 아니다 -> 불가능 ( DONE )
-		- 해당 유저의 턴이 맞는지
-		1. 현재 다이 상태이다 -> 불가능 ( DONE )
-		2. 현재 차례가 아니다 -> 불가능 ( DONE )
-		------
-		해당 유저의 턴이 맞다면 해당 유저가 베팅할 수 있는 코인을 베팅한 것이 맞는지?
-		1. 해당 유저의 코인보다 많다 -> 불가능 ( DONE )
-		2. 0 이하의 코인을 베팅하려고 한다. -> 불가능 ( DONE )
-		2. 최소 배팅 미만이거나 최대 배팅 초과인 경우 -> 불가능
-
-		배팅을 했다면 다음 차례에 배팅 차례를 넘겨준다.
-		 */
 		log.info("베팅 로직 시작");
 		String nickname = jwtUtil.getNickname(accessToken);
 
@@ -252,7 +237,6 @@ public class GameController {
 		MemberManager memberManager = gameManager.getMemberManagerMap().get(nickname);
 		Collection<MemberManager> memberManagers = gameManager.getMemberManagerMap().values();
 
-		// 진행 라운드와 게임의 현재 라운드가 다른 경우
 		if (!gameManager.getCurrentRound().equals(bettingMessageRequest.getCurrentRound())) {
 			broadcastToMember(nickname, ResponseEntity.badRequest().body(ApiResponse.messageError(
 				MessageBase.E400_CAN_NOT_BET_ROUND_MISMATCH,
@@ -262,7 +246,6 @@ public class GameController {
 		}
 
 		if (!nickname.equals(gameManager.getOrder().get(gameManager.getTurnNumber()))) {
-			// 니 차례가 아닙니다.
 			broadcastToMember(nickname, ResponseEntity.badRequest().body(ApiResponse.messageError(
 				MessageBase.E400_CAN_NOT_BET_TURN_MISMATCH,
 				gameManager.getOrder().get(gameManager.getTurnNumber()).concat("의 차례입니다."))));
@@ -274,21 +257,19 @@ public class GameController {
 			gameManager.betting(bettingMessageRequest, memberManager);
 		} catch (InvalidException e) {
 			log.info("베팅이 불가능합니다.");
-			broadcastToMember(nickname, ResponseEntity.badRequest().body(ApiResponse.error(e.getErrorBase())));
+			broadcastToMember(nickname, ResponseEntity.badRequest().body(ApiResponse.messageError(e.getMessageBase())));
 			return;
 		}
 
-		// 라운드 종료인지 확인
-		if (gameManager.checkDone()) {
-			// 라운드종료
-			gameManager.roundEnd();
+		if (gameManager.checkRoundEnd()) {
+			String winnerNickname = gameManager.roundEnd();
 			broadcastAllConnected(gameRoomTitle,
 				ResponseEntity.ok(ApiResponse.messageSuccess(MessageBase.S200_GAME_ROOM_ROUND_END,
 					GameRoomMessageResponse.roundEnd(gameManager,
-						memberManagers))));
+						memberManagers,
+						winnerNickname))));
 			try {
-				// 새로운 라운드 세팅
-				gameManager.newRoundSetting(bettingMessageRequest.getCurrentRound());
+				gameManager.newRoundSetting(gameManager.getCurrentRound());
 			} catch (RuntimeException e) {
 				// 게임 전체 종료
 				// 라운드 종료 메시지는 이미 보내짐.
@@ -312,7 +293,7 @@ public class GameController {
 					gameRoom.updateGameRoomState("종료");
 					gameRoomRepository.save(gameRoom);
 
-					// 3. 게임종료 메시지 출력
+					// 4. 게임종료 메시지 출력
 					broadcastAllConnected(gameRoomTitle, ResponseEntity.ok(
 						ApiResponse.messageSuccess(
 							MessageBase.S200_GAME_ROOM_RANK_MATCH_END,
@@ -320,7 +301,7 @@ public class GameController {
 						)
 					));
 
-					// 4. GameManager 제거
+					// 5. GameManager 제거
 					mapManager.getGameManagerMap().remove(gameRoomTitle);
 				} else if (gameRoom.getType().equals("친선")) {
 					// 1. GameResult 저장
@@ -348,10 +329,8 @@ public class GameController {
 			deliveryAnotherMessage(gameRoomTitle, gameManager);
 			log.info("새로운 라운드가 시작되었습니다.");
 		} else {
-			// 다음 차례로 넘어간다.
 			gameManager.nextTurn();
 			log.info("베팅 차례가 넘어갑니다.");
-			// 각각 다른 메시지 내려주기
 			deliveryAnotherMessage(gameRoomTitle, gameManager);
 			log.info("새로운 배팅 차례입니다.");
 		}

@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Stack;
 
-import com.chipchippoker.backend.common.dto.ErrorBase;
 import com.chipchippoker.backend.common.dto.MessageBase;
 import com.chipchippoker.backend.common.exception.InvalidException;
 import com.chipchippoker.backend.websocket.game.dto.BettingMessageRequest;
@@ -70,7 +69,7 @@ public class GameManager {
 		log.info("게임방을 생성했습니다.");
 	}
 
-	public boolean nextTurn() {
+	public void nextTurn() {
 		for (int i = 0; i < 5; i++) {
 			// 다음 사람이 배팅중이라면 턴을 넘겨준다.
 			if (memberManagerMap.get(order.get((turnNumber + 1) % memberManagerMap.size()))
@@ -78,13 +77,11 @@ public class GameManager {
 				.getIsState()
 				.equals("BET")) {
 				setTurnNumber((getTurnNumber() + 1) % memberManagerMap.size());
-				return true;
-				// 다음 사람이 베팅중이 아니라면 그 다음 사람에게 턴을 넘겨줘야한다.
+				return;
 			} else {
 				turnNumber = (turnNumber + 1) % memberManagerMap.size();
 			}
 		}
-		return false;
 	}
 
 	private Stack<CardInfo> makeCardStack(int countOfPeople) {
@@ -127,33 +124,32 @@ public class GameManager {
 	}
 
 	public void betting(BettingMessageRequest bettingMessageRequest, MemberManager memberManager) {
-		// 유저가 이미 죽은 상태라면
+		// 유저가 이미 죽은 상태라면 베팅불가하다.
 		if (memberManager.getMemberGameInfo().getIsState().equals("DIE")) {
-			throw new InvalidException(ErrorBase.E400_INVALID_ALREADY_DIE);
+			throw new InvalidException(MessageBase.E400_CAN_NOT_BET_ALREADY_DIE);
 		}
 
 		/*
-		1. 본인이 가진 코인의 양에서 배팅을 했는가? 또는 음의 코인을 베팅하려 하는 가?
-		2. 배팅해야하는 최소 칩 이상으로 배팅을 했는가?
-		3. 배팅해야하는 최대 칩 이하로 배팅을 했는가?
+		3. 배팅해야하는 최대 칩 이하로 배팅을 했는가? 그게 아니라면 베팅이 불가하다.
 		 */
 		if (bettingMessageRequest.getAction().equals("BET")) {
 			if (bettingMessageRequest.getBettingCoin() > memberManager.getMemberGameInfo().getHaveCoin()
 				|| bettingMessageRequest.getBettingCoin() <= 0
 			) {
-				throw new InvalidException(ErrorBase.E400_INVALID_BET_COIN);
+				throw new InvalidException(MessageBase.E400_CAN_NOT_BET_BET_COIN_MISMATCH);
 			}
 			// todo (환) 배팅 가능한 코인을 배팅한 것인지 확인하는 로직
 
 			// 배팅중
 			memberManager.getMemberGameInfo().setIsState("BET");
 
-			// 가진 코인 변경
 			memberManager.getMemberGameInfo()
 				.setHaveCoin(memberManager.getMemberGameInfo().getHaveCoin() - bettingMessageRequest.getBettingCoin());
-			// 배팅한 코인 변경
 			memberManager.getMemberGameInfo().setBettingCoin(memberManager.getMemberGameInfo().getBettingCoin()
 				+ bettingMessageRequest.getBettingCoin());
+
+			// 사용자 행동횟수 +1
+			memberManager.getMemberGameInfo().setActionCount(memberManager.getMemberGameInfo().getActionCount() + 1);
 
 			// 최소로 배팅해야 하는 코인 업데이트
 			// minCoin = bettingMessageRequest.getBettingCoin();
@@ -175,18 +171,25 @@ public class GameManager {
 	/**
 	 * DIE 상태가 아닌 모든 플레이어가 동일한 금액을 베팅했으면 해당 라운드는 종료되어야 한다.
 	 */
-	public boolean checkDone() {
+	public boolean checkRoundEnd() {
 		// todo (환) 라운드 종료조건 로직 다시보기
 		/*
 		1. 다이를 외친 사람을 제외한 나머지의 베팅칩이 모두 같으면 라운드 종료
+		2. 다이를 외친 사람을 제외하고 혼자 남았으면 라운드 종료
+		2. 모든 사람이 액션을 최소 한 번 이상 했는 지가 중요하다.
 		 */
 		List<MemberManager> notDie = memberManagerMap.values()
 			.stream()
 			.filter(memberManager -> !memberManager.getMemberGameInfo().getIsState().equals("DIE"))
 			.toList();
 
+		if (notDie.size() == 1)
+			return true;
+
 		Integer bettingCoin = notDie.get(0).getMemberGameInfo().getBettingCoin();
 		for (MemberManager manager : notDie) {
+			if (manager.getMemberGameInfo().getActionCount().equals(0))
+				return false;
 			if (!bettingCoin.equals(manager.getMemberGameInfo().getBettingCoin()))
 				return false;
 		}
@@ -198,7 +201,7 @@ public class GameManager {
 	 * 라운드가 종료되었을 때, 승리한 사람에게 베팅된 모든 코인 주기
 	 * + 라운드가 종료되었을 때, 10을 들고 포기한 사람에게 10개의 코인 몰수하기
 	 */
-	public void roundEnd() {
+	public String roundEnd() {
 		// 승리한 사람 -> 포기하지 않은 사람 중에 카드가 가장 높은 사람
 		List<MemberManager> notDie = memberManagerMap.values()
 			.stream()
@@ -207,12 +210,19 @@ public class GameManager {
 
 		String winner = "";
 		int cardNum = 0;
+		int cardSet = 0;
 
 		// 승리한 사람과 카드 넘버 저장
 		for (MemberManager manager : notDie) {
 			if (manager.getMemberGameInfo().getCardInfo().getCardNumber() > cardNum) {
 				winner = manager.getMemberInfo().getNickname();
 				cardNum = manager.getMemberGameInfo().getCardInfo().getCardNumber();
+				cardSet = manager.getMemberGameInfo().getCardInfo().getCardSet();
+			} else if (manager.getMemberGameInfo().getCardInfo().getCardNumber() == cardNum
+				&& manager.getMemberGameInfo().getCardInfo().getCardSet() > cardSet) {
+				winner = manager.getMemberInfo().getNickname();
+				cardNum = manager.getMemberGameInfo().getCardInfo().getCardNumber();
+				cardSet = manager.getMemberGameInfo().getCardInfo().getCardSet();
 			}
 		}
 
@@ -227,6 +237,7 @@ public class GameManager {
 
 		// 이긴 사람이 다음 라운드 배팅 턴 잡기
 		turnNumber = order.indexOf(winner);
+		return winner;
 	}
 
 	public void newRoundSetting(int prevRound) {
@@ -255,6 +266,10 @@ public class GameManager {
 				manager.getMemberGameInfo().setHaveCoin(manager.getMemberGameInfo().getHaveCoin() - 1);
 				// 베팅 코인이 1개가 된다.
 				manager.getMemberGameInfo().setBettingCoin(1);
+				// 베팅중인 상태로 전환한다.
+				manager.getMemberGameInfo().setIsState("BET");
+				// action 은 0으로 초기화해준다.
+				manager.getMemberGameInfo().setActionCount(0);
 			}
 		}
 	}
