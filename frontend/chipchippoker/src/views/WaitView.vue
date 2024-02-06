@@ -23,29 +23,29 @@
         <div v-if="roomStore.isWatcher===false" id="video-container">
           <div class="flex-container row g-1 p-0">
             <!-- 내 캠 -->
-            <div class="col-6">
-              <div style="width: 400px; height: 300px;">
+            <div class="col-6 mb-5"
+              v-for="(player, index) in gameStore.memberInfos" :key="index">
+              <div :class="{ 'is-ready': player.isReady }" style="width: 410px; height: 310px;">
                 <UserVideo 
-                :stream-manager="publisherComputed" 
+                :stream-manager="findVideo(playersComputed, player.nickname)" 
                 :is-manager="isManager"
                 :room-manager-nickname="roomManagerNickname"
+                @force-disconnect="forceDisconnect"
                 />
               </div>
             </div>
             <!-- 다른 사람 캠 -->
-            <div
-              class="col-6 mb-5"
-              v-for="(sub, index) in playersComputed"
-              :key="index">
+            <!-- <div class="col-6 mb-5"
+              v-for="(player, index) in gameStore.memberInfos" :key="index">
               <div style="width: 400px; height: 300px;">
                 <UserVideo
-                  :stream-manager="sub.player"
+                  :stream-manager="findVideo(playersComputed, player.nickname)"
                   :is-manager="isManager"
+                  :room-manager-nickname="roomManagerNickname"
                   @force-disconnect="forceDisconnect"
                   />
               </div>
-            </div>
-
+            </div> -->
           </div>
         </div>
 
@@ -54,12 +54,12 @@
           <div class="flex-container row g-1 p-0">
             <div
               class="col-6 mb-5"
-              v-for="sub in playersComputed"
-              :key="sub.stream.connection.connectionId">
-              <div style="width: 400px; height: 300px;">
+              v-for="(player, index) in gameStore.memberInfos"
+              :key="index">
+              <div :class="{ 'is-ready': player.isReady }" style="width: 410px; height: 31  0px;">
                 <!-- 다른 사람 캠 -->
                 <UserVideo
-                  :stream-manager="sub"
+                  :stream-manager="findVideo(playersComputed, player.nickname)"
                   :is-manager="isManager"
                   @force-disconnect="forceDisconnect"
                   />
@@ -133,7 +133,6 @@
             </div>
           </div>  
         </div>
-
       </div>
     </div>
   </div>
@@ -154,13 +153,17 @@ const userStore = useUserStore()
 const roomStore = useRoomStore()
 const gameStore = useGameStore()
 const openviduStore = useOpenviduStore()
-const router = useRouter()
-const route = useRoute()
 
 const roomId = ref('')
 const roomTitle = ref('')
 const totalParticipantCnt = ref('')
 const myNickname = ref('')
+
+/// 플레이어, 관전을 위한 변수들 크헝헝
+const publisherComputed = computed(() => openviduStore.publisher)
+const subscribersComputed = computed(() => openviduStore.subscribers)
+const playersComputed = computed(() => openviduStore.players)
+const watchersComputed = computed(() => openviduStore.watchers)
 
 const roomManagerNickname = computed(() => gameStore.roomManagerNickname)
 const isManager = computed(() => {
@@ -202,6 +205,7 @@ const readyGame = function () {
   gameStore.sendReady(roomTitle.value, isReady.value)
 }
 
+// 강퇴
 const forceDisconnect = function(clientData) {
   const payload = {
     title: roomTitle.value,
@@ -210,6 +214,25 @@ const forceDisconnect = function(clientData) {
   console.log(payload);
   roomStore.forceMemberOut(payload)
 }
+
+// 캠
+const findVideo = function (players, targetNickname) {
+    for (let i = 0; i < players.length; i++) {
+      const player = players[i]
+      console.log('player ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★')
+      console.log(player)
+      console.log('player ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★')
+      if (player.nickname === targetNickname) {
+        console.log(player)
+        console.log(targetNickname)
+        console.log(player.nickname);
+        console.log(player.player);
+        return player.player
+      }
+    }
+    return publisherComputed.value
+  }
+
 
 /////////////////////채팅창을 위한 부분
 const inputMessage = ref("")
@@ -232,14 +255,7 @@ messages.value = computed(() => openviduStore.messages)
 // messages 배열이 변경될 때마다 scrollUl 함수를 호출하여 스크롤 갱신
 watch([openviduStore.messages], () => {
   window.setTimeout(scrollUl, 50);
-});
-
-/// 플레이어, 관전을 위한 변수들 크헝헝
-const publisherComputed = computed(() => openviduStore.publisher);
-const subscribersComputed = computed(() => openviduStore.subscribers);
-const playersComputed = computed(() => openviduStore.players);
-const watchersComputed = computed(() => openviduStore.watchers);
-
+})
 
 onMounted(() => {
   navigator.mediaDevices.getUserMedia({ video: true, audio: true })
@@ -541,5 +557,21 @@ onUnmounted(() => {
   transform: rotateX(-90deg);
 }
 
+.is-ready {
+  border: 5px solid green; /* 준비가 완료되었을 때의 테두리 색상 */
+  border-radius: 30px;
+  animation: pulse 1s infinite alternate; /* 테두리에 깜빡거리는 애니메이션 효과 */
+}
+
+@keyframes pulse {
+  from {
+    border-color: green;
+    box-shadow: 0 0 10px green;
+  }
+  to {
+    border-color: #00ff00;
+    box-shadow: 0 0 20px #00ff00;
+  }
+}
 
 </style>

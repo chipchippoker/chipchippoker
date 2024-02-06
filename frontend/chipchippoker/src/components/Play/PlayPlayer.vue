@@ -4,8 +4,6 @@
     <div class="w-100 h-100 position-relative">
       <div>
         <!-- 플레이어 정보 -->
-        
-        <!-- <h3 class="text-white">{{ gameStore.gameMemberInfos }}</h3> -->
         <div :class="classNameList[index]" :id="'player' + (index + 1)" v-for="(player, index) in gameStore.gameMemberInfos" :key="index">
           <div class="text-white align-self-center ">{{ player.nickname }} / 
             <div>보유코인: {{player.haveCoin}}</div>
@@ -96,6 +94,9 @@
   const roomId = ref(null)
   const myNickname = ref(null)
   
+  const playersComputed = computed(() => openviduStore.players)
+  const publisherComputed = computed(() => openviduStore.publisher)
+
   const props = defineProps({
     roomId: String,
     myNickname: String
@@ -107,7 +108,6 @@
   
   roomId.value = props.roomId
   myNickname.value = props.myNickname
-
 
   // ----------------------------------------------------------------------------------------------------------
   const findVideo = function (players, targetNickname) {
@@ -129,14 +129,10 @@
 
   //-----------------------------------------------------------------------------------------------------------
 
-
   // 카드 가져오기
   const getCardUrl = function (setnum, cardnum) {
       return new URL(`/src/assets/cards/set${setnum}/card${cardnum}.png`, import.meta.url).href;
   };
-
-  const playersComputed = computed(() => openviduStore.players)
-  const publisherComputed = computed(() => openviduStore.publisher)
 
   // 시간 15초에서 줄어들기
   const yourTurn = ref(null)
