@@ -37,20 +37,30 @@ export const useOpenviduStore = defineStore('openvidu', () => {
   const players = ref([])
   const watchers = ref([])
 
-  async function joinSession() {
+  function joinSession() {
+    if (session.value !== undefined) {
+      console.log('세션 이미 존재. joinSession 함수를 실행하지 않습니다.');
+      return;
+    }
+
     OV.value = new OpenVidu()
     session.value = OV.value.initSession()
     console.log('조인 세션!');
 
     session.value.on("streamCreated", ( {stream} )=> {
+      // 이미 해당 스트림에 대한 구독이 이루어진 경우, 무시
+      if (subscribers.value.some(sub => sub.stream === stream)) {
+        return;
+      }
+      
       const subscriber = session.value.subscribe(stream)
       console.log('세션 생성!!!!');
       console.log(stream);
   
       // 닉네임과 watcher 얻기
       function getConnectionData() {
-          const { connection } = stream;
-          return JSON.parse(connection.data);
+        const { connection } = stream;
+        return JSON.parse(connection.data);
       }
       const { clientData } = getConnectionData()
       console.log(clientData);

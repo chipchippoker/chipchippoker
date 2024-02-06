@@ -1,5 +1,5 @@
 <template>
-  <video ref="videoEl" autoplay @click="clickVideo"/>
+  <video ref="videoEl" autoplay @click="clickVideo" :style="videoStyle"/>
 </template>
 
 <script>
@@ -11,14 +11,21 @@ export default {
 
 <script setup>
 import * as faceAPI from 'face-api.js'
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
+import { useRoute } from 'vue-router';
 
-
+const route = useRoute()
 const props = defineProps({
   streamManager: Object,
 });
 
 const videoEl = ref(null);
+
+const videoStyle = ref({ width: "400px", height: "300px" });
+
+if (route.name === 'play') {
+  videoStyle.value = { width: "280px", height: "210px" }
+}
 
 // mouted되면 videoEl의 값을 addVideoElement에 추가함.
 onMounted(() => {
@@ -55,6 +62,7 @@ const clickVideo = function() {
     }, 1000))
     
 }
+
 
 </script>
 
