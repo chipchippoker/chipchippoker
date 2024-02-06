@@ -200,7 +200,7 @@ export const useUserStore = defineStore('user', () => {
   }  
 
   // 카카오 연동
-  const kakaoConnect = async function () {
+  const kakaoConnect = async function (authorizationCode) {
     console.log('카카오 연동 요청!')
     try {
       await axios({
