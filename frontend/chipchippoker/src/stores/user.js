@@ -129,7 +129,6 @@ export const useUserStore = defineStore('user', () => {
         url: `${USER_API}/authorization`,
         data: { authorizationCode }
       })
-
       const res = response.data
       console.log(response)
       if (res.data.code === 200) {

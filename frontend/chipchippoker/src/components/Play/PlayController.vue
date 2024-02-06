@@ -32,12 +32,17 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useGameStore } from '@/stores/game';
 import { useRoomStore } from '@/stores/room';
+import { useUserStore } from '@/stores/user';
+
+const userStore = useUserStore()
 const gameStore = useGameStore()
 const roomStore = useRoomStore()
 const bettingCoin = ref(0)
+const myGameInfo = ref({})  // 내 게임 정보
+
 // 베팅 코인 조절 함수
 const plus1 = function () {
   bettingCoin.value += 1
@@ -51,19 +56,79 @@ const plus3 = function () {
 const plus5 = function () {
   bettingCoin.value += 5
 }
+// 올인은 더 생각해보기
 const all = function () {
   bettingCoin.value = gameStore?.gameMemberInfos[0]?.haveCoin
 }
 
 // 베팅
 const bet = function () {
-  gameStore.bet(roomStore.title, "BET", bettingCoin.value)
+  if (gameStore.yourTurn === userStore.myNickname && betValidation()) {
+    gameStore.bet(roomStore.title, "BET", bettingCoin.value)
+    bettingCoin.value = 0
+  }
 }
 const die = function () {
-  gameStore.bet(roomStore.title, "DIE", bettingCoin.value)
+  if (gameStore.yourTurn === userStore.myNickname) {
+    gameStore.bet(roomStore.title, "DIE", bettingCoin.value)
+    bettingCoin.value = 0
+  }
 }
 
 gameStore.bettingCoin = bettingCoin.value
+
+// 내 게임 정보 추출하기
+const getGameInfo = function(){
+  gameStore.gameMemberInfos.forEach(info => {
+    if (info.nickname === userStore.myNickname) {
+      myGameInfo.value = info
+    }
+  })
+}
+
+// 최대 배팅 코인 구하기
+const calculateMaxBetting = function(){
+  let maxBettingCoin = 0
+  gameStore.gameMemberInfos.forEach(info => {
+    if (info.bettingCoin > maxBettingCoin) {
+      maxBettingCoin = info.bettingCoin
+    }
+  })
+  return maxBettingCoin
+}
+
+// 베팅 Validation ===================================================
+const betValidation = function(){
+  getGameInfo()
+  const maxBettingCoin = calculateMaxBetting()
+  // 0 이하의 코인을 베팅하려고 하거나
+  if (bettingCoin.value <= 0)
+  {
+    alert("코인을 베팅해주세요.")
+    return false
+  }
+  // 보유 코인보다 많은 금액을 베팅하려고 할 때
+  else if (bettingCoin.value > myGameInfo.value.haveCoin)
+  {
+    alert("현재 자신이 가지고 있는 코인보다 많이 베팅할 수 없습니다.")
+    return false
+  }
+  // 현재 필드에 나와있는 최대 베팅 금액보다 적은 금액을 베팅하려고 할 때 -> 첫 턴일 때 생각해봐야 함
+  else if (bettingCoin.value + myGameInfo.value.bettingCoin < maxBettingCoin)
+  {
+    alert("현재 최대 베팅 코인보다 적게 베팅할 수 없습니다.")
+    return false
+  }
+  // 나의 턴이 아닐 때 controller 건드리는 경우
+  else if (gameStore.yourTurn !== userStore.myNickname)
+  {
+    alert("나의 턴이 아닐땐 배팅할 수 없습니다.")
+    return false
+  }
+  return true
+}
+
+// ===================================================================
 
 </script>
 

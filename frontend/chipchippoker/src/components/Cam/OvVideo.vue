@@ -1,5 +1,5 @@
 <template>
-  <video ref="videoEl" autoplay @click="clickVideo" :style="videoStyle"/>
+  <video class="cam" ref="videoEl" autoplay @click="clickVideo" :style="videoStyle"/>
 </template>
 
 <script>
@@ -60,10 +60,14 @@ const clickVideo = function() {
       }, Object.keys(emotion)[0]);
       emit('sendEmotion',maxEmotion)
     }, 1000))
-    
 }
 
 
 </script>
 
-<style scoped></style>
+<style scoped>
+.cam {
+  border-radius: 30px;
+  /* filter: grayscale(100%) */
+}
+</style>

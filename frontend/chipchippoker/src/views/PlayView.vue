@@ -76,15 +76,11 @@ import PlayControllerVue from "../components/Play/PlayController.vue";
 import PlayPlayerVue from "../components/Play/PlayPlayer.vue";
 import PlayTalkVue from "../components/Play/PlayTalk.vue";
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router';
 import { useRoomStore } from "@/stores/room";
 import { useGameStore } from "@/stores/game";
-import { useOpenviduStore } from "@/stores/openvidu";
-const openviduStore = useOpenviduStore()
-const router = useRouter()
+
 const userStore = useUserStore()
 const roomStore = useRoomStore()
-const route = useRoute()
 const gameStore = useGameStore()
 // Join form
 const roomId = ref('')
