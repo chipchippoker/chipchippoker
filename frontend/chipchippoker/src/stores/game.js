@@ -1,4 +1,4 @@
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useRouter } from 'vue-router'
 
@@ -63,6 +63,14 @@ export const useGameStore = defineStore('game', () => {
   // 친구신청 알림
   const isAlarmArrive = ref(false)
 
+
+  // 웹소켓 연결 끊김 이벤트
+  stompClient.ws.onclose = function (event) {
+    console.log('웹소켓 연결 끊김 감지')
+  }
+  console.log(stompClient)
+
+  // connectHandler()
   const connectHandler = function() {
     stompClient.connect({ 'access-token': userStore.accessToken}, (frame) => {
     console.log("Connect success", gameRoomTitle.value)
@@ -110,19 +118,12 @@ export const useGameStore = defineStore('game', () => {
             currentRound.value = response.data.currentRound
             yourTurn.value = response.data.yourTurn
             gameMemberInfos.value = response.data.gameMemberInfos
-            for (let i = 0; i < memberInfos.value.length; i++) {
-              // 플레이어 순서에 맞게 데이터 넣기
-              const item = response.data.gameMemberInfos.filter((p)=>
-              {p.nickname === memberInfos.value[i]})
-              gameMemberInfos.value.push(item)
-            }
       
-            console.log('게임시작');
             console.log("roundState", roundState.value);
             console.log("currentRound", currentRound.value);
             console.log("yourTurn", yourTurn.value);
             console.log("gameMemberInfos", gameMemberInfos.value);
-          },5000)
+          },3000)
           break
         case "MS008": // 라운드 종료
           receiveGameFinish(response.data)
@@ -172,11 +173,15 @@ export const useGameStore = defineStore('game', () => {
         case "MS006": // 게임 준비 완료
           receiveReady(response.data)
           break
-        case "MB002": // 모두 준비상태가 아님
+        case "MS008": // 라운드 종료
+        receiveGameFinish(response.data)
+        break
+          case "MB002": // 모두 준비상태가 아님
           console.log('모두 준비 상태가 아닙니다.');
           alert(response.message)
           break
         case "MB003": // 방장이 아님
+
         case "MS016":
           receiveStartGame(response)
           break
@@ -256,31 +261,20 @@ export const useGameStore = defineStore('game', () => {
     })
   }
 
-  // 방 나가기 SEND
-  const sendExitRoom = function (title) {
-    stompClient.send(`/to/game/exit/${title}`, JSON.stringify({}), { 'access-token': userStore.accessToken })
-    // 게임 관련 데이터 초기화 시켜주기
-    subscriptionGame.value = undefined
-    memberInfos.value = []
-    gameRoomTitle.value = ''
-    roomManagerNickname.value = ''
-    countOfPeople.value = 0
-    myGameSubId.value = ''
-    isMatch.value = false
-    roundState.value = false
-    currentRound.value = 0
-    yourTurn.value = null
-    gameMemberInfos.value = []
-    bettingCoin.value = 0
+  // 게임방 나가기 SEND
+  const sendExitRoom = function (gameRoomTitle) {
+    stompClient.send(`/to/game/exit/${gameRoomTitle}`, JSON.stringify({}), { 'access-token': userStore.accessToken })
   }
 
-
-  // 대기방 나가기 RECEIVE
+  // 손 봐야함
+  // 게임방 나가기 RECEIVE
   const receiveExitRoom = function(data){
-    countOfPeople.value = data.countOfPeople
-    roomManagerNickname.value = data.roomManagerNickname
-    memberInfos.value = data.memberInfos
-  }    
+   
+      countOfPeople.value = data.countOfPeople
+      roomManagerNickname.value = data.roomManagerNickname
+      memberInfos.value = data.memberInfos
+      
+    }    
   
 
   // 게임 준비 SEND
@@ -322,6 +316,7 @@ export const useGameStore = defineStore('game', () => {
 
   // 배팅
   const bet = function (gameRoomTitle, action, bettingCoin ) {
+    console.log('배팅하기!!!!!!!!!!!!!!!!!!!!!!!!!');
     const message = {
       currentRound:currentRound.value,
       action: action,
@@ -344,18 +339,7 @@ export const useGameStore = defineStore('game', () => {
   // 강퇴 본인
   const receiveBanMe = function (message) {
     // 게임 관련 데이터 초기화 시켜주기
-    subscriptionGame.value = undefined
-    memberInfos.value = []
-    gameRoomTitle.value = ''
-    roomManagerNickname.value = ''
-    countOfPeople.value = 0
-    myGameSubId.value = ''
-    isMatch.value = false
-    roundState.value = false
-    currentRound.value = 0
-    yourTurn.value = null
-    gameMemberInfos.value = []
-    bettingCoin.value = 0
+    resetGameStore()
     openviduStore.leaveSession()
     router.push({name:'main'})
     alert(message)
@@ -378,16 +362,25 @@ export const useGameStore = defineStore('game', () => {
   const sendFriendRequest = function(nickname){
     stompClient.send("/to/friend/request", JSON.stringify({"nickname":nickname}), { 'access-token': userStore.accessToken })
   }
-
-
-  watch(() => userStore.accessToken, (newAccessToken, oldAccessToken) => {
-    if (newAccessToken === null && oldAccessToken !== null) {
-      // 로그아웃되어 accessToken이 없을 때 연결 해제 로직 실행
-      stompClient.disconnect(() => {
-        console.log("WebSocket disconnected");
-      });
-    }
-  });
+// 방 나가기 시 초기화 함수
+const resetGameStore = function() {
+  subscriptionGame.value = undefined
+  roomInfo.value = {}
+  totalCountOfPeople.value = 0
+  myOrder.value = 0
+  memberInfos.value = []
+  myPrivateSubId.value = ''
+  gameRoomTitle.value = ''
+  roomManagerNickname.value = ''
+  countOfPeople.value = 0
+  myGameSubId.value = ''
+  isMatch.value = false
+  roundState.value = false
+  currentRound.value = 0
+  yourTurn.value = null
+  gameMemberInfos.value = []
+  bettingCoin.value = 0
+}
   
   return {
     // State
@@ -399,6 +392,7 @@ export const useGameStore = defineStore('game', () => {
     gameMemberInfos,
     memberInfos,
     roomManagerNickname,
+    resetGameStore,
 
     // 구독 정보
     subscriptionGame, myGameSubId,

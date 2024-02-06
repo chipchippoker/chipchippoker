@@ -66,47 +66,45 @@ export const useOpenviduStore = defineStore('openvidu', () => {
       console.log(clientData);
       const { isWatcher } = getConnectionData()
       console.log(isWatcher);
-      subscribers.value.push(subscriber)
+      subscribers.value.push({subscriber:subscriber, nickname:clientData})
       // 플레이어, 관전자 리스트에도 추가
+      // streammanager ---------------------------------------------
       if (isWatcher === false) {
-        players.value.push(subscriber)
+        players.value.push({player:subscriber, nickname:clientData})
       } else {
-        watchers.value.push(subscriber)
+        watchers.value.push({watcher:subscriber, nickname:clientData})
         // 관전자 이름들도 추가
         roomStore.watchersNickname.push(clientData)
       }
-      console.log(subscribers.value);
-      console.log(players.value);
     })
   
     // On every Stream destroyed...
     session.value.on("streamDestroyed", ( {stream} ) => {
-      const index = subscribers.value.indexOf(stream.streamManager, 0)
-      if(index >= 0){
-        subscribers.value.splice(index, 1)
-      }
-      // 플레이어, 관전자 리스트에도 삭제
-      if (players.value.includes(stream.streamManager)) {
-        const index1 = players.value.indexOf(stream.streamManager, 0)
-        if(index1 >= 0){
-          players.value.splice(index1, 1)
-        }      
-      }
-      if (watchers.value.includes(stream.streamManager)) {
-        const index2 = watchers.value.indexOf(stream.streamManager, 0)
-        if(index2 >= 0){
-          watchers.value.splice(index2, 1)
-        }      
-      }
-      // 관전자 이름도 삭제
       function getConnectionData() {
         const { connection } = stream;
         return JSON.parse(connection.data);
       }
       const { clientData } = getConnectionData()
-      console.log(clientData);
       
+      // 파괴된 스트림에 연결된 구독자를 제거합니다.
+      const index = subscribers.value.findIndex(sub => sub.subscriber.stream === stream);
+      if (index !== -1) {
+          subscribers.value.splice(index, 1);
+      }
+
+      // 파괴된 스트림에 연결된 플레이어를 제거합니다.
+      const playerIndex = players.value.findIndex(player => player.player.stream === stream);
+      if (playerIndex !== -1) {
+          players.value.splice(playerIndex, 1);
+      }
+
+      // 파괴된 스트림에 연결된 관전자를 제거합니다.
+      const watcherIndex = watchers.value.findIndex(watcher => watcher.watcher.stream === stream);
+      if (watcherIndex !== -1) {
+          watchers.value.splice(watcherIndex, 1);
+      }
       
+      // 관전자 이름도 삭제
       if (roomStore.watchersNickname.includes(clientData)) {
         const index3 = roomStore.watchersNickname.indexOf(clientData, 0)
         if(index3 >= 0){
@@ -203,7 +201,7 @@ export const useOpenviduStore = defineStore('openvidu', () => {
     // Remove beforeunload listener
     window.removeEventListener("beforeunload", leaveSession)
     console.log('세션나가기')
-    router.push({name:'main'})
+    
   }
   
   /**

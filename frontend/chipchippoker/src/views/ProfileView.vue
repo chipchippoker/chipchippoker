@@ -39,7 +39,6 @@
   import { useRouter, onBeforeRouteUpdate } from 'vue-router'
   const userStore = useUserStore()
   const router = useRouter()
-
   onMounted(() => {
     const nickname = userStore.profileNickname
     userStore.getProfileInfo(nickname)
