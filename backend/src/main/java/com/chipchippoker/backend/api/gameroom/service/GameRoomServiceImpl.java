@@ -23,7 +23,6 @@ import com.chipchippoker.backend.common.entity.GameRoom;
 import com.chipchippoker.backend.common.entity.Member;
 import com.chipchippoker.backend.common.entity.MemberGameRoomBlackList;
 import com.chipchippoker.backend.common.entity.SpectateRoom;
-import com.chipchippoker.backend.common.exception.DuplicateException;
 import com.chipchippoker.backend.common.exception.ForbiddenException;
 import com.chipchippoker.backend.common.exception.NotFoundException;
 
@@ -49,8 +48,9 @@ public class GameRoomServiceImpl implements GameRoomService {
 		}
 
 		// 방 개수가 100개를 초과하는 경우, 생성 불가
-		if (gameRoomRepository.findAll().size() >= 100)
-			throw new DuplicateException(ErrorBase.E403_OVER_MAX_GAME_ROOM_CNT);
+		Integer gameRoomListSize = gameRoomRepository.findByStateCnt();
+		if (gameRoomListSize >= 100)
+			throw new ForbiddenException(ErrorBase.E403_OVER_MAX_GAME_ROOM_CNT);
 
 		GameRoomServiceHelper.isDuplicatedGameRoom(gameRoomRepository,
 			createGameRoomRequest.getTitle()); // 이미 중복되는 방제목이 있는 경우

@@ -96,5 +96,13 @@ public class GameRoomRepositoryCustomImpl implements GameRoomRepositoryCustom {
 				gameRoom.totalParticipantCnt.eq(totalParticipantCnt))
 			.fetchOne();
 	}
+
+	@Override
+	public Integer findByStateCnt() {
+		return queryFactory
+			.selectFrom(gameRoom)
+			.where(gameRoom.state.eq("대기").or(gameRoom.state.eq("진행")))
+			.fetch().size();
+	}
 }
 
