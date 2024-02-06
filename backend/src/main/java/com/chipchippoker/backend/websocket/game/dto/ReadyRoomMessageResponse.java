@@ -22,9 +22,10 @@ public class ReadyRoomMessageResponse {
 	private String roomManagerNickname;
 
 	public static ReadyRoomMessageResponse create(GameManager gameManager) {
+
 		return ReadyRoomMessageResponse.builder()
 			.countOfPeople(gameManager.getCountOfPeople())
-			.memberInfos(gameManager.getMemberManagerMap().values().stream().map(MemberManager::getMemberInfo).toList())
+			.memberInfos(gameManager.getMemberManagersByCreatedAt().stream().map(MemberManager::getMemberInfo).toList())
 			.roomManagerNickname(gameManager.getRoomManager())
 			.build();
 	}

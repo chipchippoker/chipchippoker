@@ -34,7 +34,8 @@ public class GameRoomMessageResponse {
 			.roundState(Boolean.TRUE)
 			.currentRound(gameManager.getCurrentRound())
 			.yourTurn(gameManager.getOrder().get(gameManager.getTurnNumber()))
-			.gameMemberInfos(GameMemberInfo.createListInRoundProceed(isNotTurnMemberManager, isTurnMemberManager))
+			.gameMemberInfos(
+				GameMemberInfo.createListInRoundProceed(gameManager, isNotTurnMemberManager, isTurnMemberManager))
 			.build();
 	}
 
@@ -48,7 +49,7 @@ public class GameRoomMessageResponse {
 			.currentRound(gameManager.getCurrentRound())
 			.yourTurn(gameManager.getOrder().get(gameManager.getTurnNumber()))
 			.winnerNickname(winnerNickname)
-			.gameMemberInfos(GameMemberInfo.createListRoundEnd(memberManagers))
+			.gameMemberInfos(GameMemberInfo.createListRoundEnd(gameManager, memberManagers))
 			.build();
 	}
 }
