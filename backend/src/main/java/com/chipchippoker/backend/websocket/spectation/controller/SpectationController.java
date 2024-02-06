@@ -11,9 +11,12 @@ import com.chipchippoker.backend.common.dto.ApiResponse;
 import com.chipchippoker.backend.common.dto.MessageBase;
 import com.chipchippoker.backend.common.manager.MapManager;
 import com.chipchippoker.backend.common.util.jwt.JwtUtil;
+import com.chipchippoker.backend.websocket.game.model.GameManager;
+import com.chipchippoker.backend.websocket.spectation.dto.EnterSpectatorRequest;
 import com.chipchippoker.backend.websocket.spectation.dto.EnterSpectatorResponse;
 import com.chipchippoker.backend.websocket.spectation.dto.ExitSpectatorResponse;
 import com.chipchippoker.backend.websocket.spectation.model.SpectationManager;
+import com.chipchippoker.backend.websocket.spectation.service.SpectationService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +28,13 @@ public class SpectationController {
 	private final JwtUtil jwtUtil;
 	private final SimpMessagingTemplate template;
 	private final MapManager mapManager;
+	private final SpectationService spectationService;
 
 	@MessageMapping("/spectataion/enter/{gameRoomTitle}")
 	public void enterSpectationRoom(
 		@Header(name = "access-token") String accessToken,
-		@DestinationVariable(value = "gameRoomTitle") String gameRoomTitle
+		@DestinationVariable(value = "gameRoomTitle") String gameRoomTitle,
+		EnterSpectatorRequest enterSpectatorRequest
 	) {
 		log.info("관전방 입장 시작");
 		String nickname = jwtUtil.getNickname(accessToken);
@@ -44,6 +49,13 @@ public class SpectationController {
 
 		broadcastAllSpectatorInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_NEW_SPECTATOR_ENTER,
 			EnterSpectatorResponse.create(nickname));
+		log.info(enterSpectatorRequest.getGameState());
+		if (enterSpectatorRequest.getGameState().equals("진행")) {
+			log.info("진행중인 게임에 입장");
+			GameManager gameManager = mapManager.getGameManagerMap().get(gameRoomTitle);
+			// 들어온 사람한테만 전달해줌
+			broadcastToMember(nickname, spectationService.gameInfoToSpectator(gameManager));
+		}
 		log.info("관전방 입장 성공");
 	}
 
@@ -86,5 +98,10 @@ public class SpectationController {
 		log.info("방에 있는 모든 관전자들에게 메시지 전달 시작");
 		template.convertAndSend("/from/chipchippoker/spectation/checkConnect/".concat(gameRoomTitle), object);
 		log.info("방에 있는 모든 관전자들에게 메시지 전달 완료");
+	}
+
+	private void broadcastToMember(String nickname, Object object) {
+		log.info("개인에게 메시지 전송");
+		template.convertAndSend("/from/chipchippoker/member/".concat(nickname), object);
 	}
 }
