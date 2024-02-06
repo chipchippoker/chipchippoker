@@ -6,11 +6,13 @@ import webstomp from 'webstomp-client'
 import { useUserStore } from './user'
 import { useRoomStore } from './room'
 import { useMatchStore } from './match'  
+import { useOpenviduStore } from './openvidu'
 
 export const useGameStore = defineStore('game', () => {
   const userStore = useUserStore()
   const roomStore = useRoomStore()
   const matchStore = useMatchStore()
+  const openviduStore = useOpenviduStore()
   const router = useRouter()
 
   const url = `wss://chipchippoker.shop/chipchippoker`
@@ -80,19 +82,25 @@ export const useGameStore = defineStore('game', () => {
 
       switch (response.code) {
 
-        case "MS004":
+        case "MB004":
           console.log('현재 진행 중인 라운드와 일치하지 않습니다.')
           notMatchRound.value = true
           break
 
-        case "MS005":
+        case "MB005":
           console.log('본인의 차례가 아닙니다.')
           notYourTurn.value = true
           break
 
-        case "MS006":
+        case "MB006":
           console.log('배팅이 불가능합니다.')
-          cannotBat.value = true
+          cannotBat.value = true  
+          break
+
+
+        case "MS005": // 강퇴(본인)
+          console.log(response.message);
+          receiveBanMe(response.message)
           break
 
         case "MS007": // 게임 진행
@@ -116,12 +124,11 @@ export const useGameStore = defineStore('game', () => {
             console.log("gameMemberInfos", gameMemberInfos.value);
           },5000)
           break
+        case "MS008": // 라운드 종료
+          receiveGameFinish(response.data)
+          break
         case "MS012": // 친구요청 받음
           isAlarmArrive.value = true
-          break
-
-        case "ME002": // 모두 준비상태가 아닙니다
-          console.log("모두 준비상태가 아닙니다");
           break
         
         case "ME003": // 방장이 아닌사람이 start 한다면
@@ -159,30 +166,25 @@ export const useGameStore = defineStore('game', () => {
           receiveExitRoom(response.data) 
           break     
         case "MS004": // 강퇴(타인)
-          console.log(response.member)
+          console.log(response)
           receiveBanYou(response.data)
           break
-        case "MS005": // 강퇴(본인)
-          console.log(response.member);
-          receiveBanMe(response.data)
+        case "MS006": // 게임 준비 완료
+          receiveReady(response.data)
           break
-      case "MS006": // 게임 준비 완료
-        receiveReady(response.data)
-        break
-      case "MS007": // 게임 시작 성공
-      case "ME002": // 모두 준비상태가 아님
-      case "ME003": // 방장이 아님
-      case "MS016":
-        receiveStartGame(response)
-        break
-      case "MS008": // 라운드 종료
-        receiveGameFinish(response.data)
-        break
-      case "MS011": // 매칭
-        console.log(response.message)
-        receiveMatching(response.data)
-      }
-    })
+        case "MB002": // 모두 준비상태가 아님
+          console.log('모두 준비 상태가 아닙니다.');
+          alert(response.message)
+          break
+        case "MB003": // 방장이 아님
+        case "MS016":
+          receiveStartGame(response)
+          break
+        case "MS011": // 매칭
+          console.log(response.message)
+          receiveMatching(response.data)
+        }
+      })
   }
   
   // 게임 매칭 SEND
@@ -254,45 +256,32 @@ export const useGameStore = defineStore('game', () => {
     })
   }
 
-  // 게임방 나가기 SEND
-  const sendExitRoom = function (gameRoomTitle) {
-    stompClient.send(`/to/game/exit/${gameRoomTitle}`, JSON.stringify({}), { 'access-token': userStore.accessToken })
+  // 방 나가기 SEND
+  const sendExitRoom = function (title) {
+    stompClient.send(`/to/game/exit/${title}`, JSON.stringify({}), { 'access-token': userStore.accessToken })
+    // 게임 관련 데이터 초기화 시켜주기
+    subscriptionGame.value = undefined
+    memberInfos.value = []
+    gameRoomTitle.value = ''
+    roomManagerNickname.value = ''
+    countOfPeople.value = 0
+    myGameSubId.value = ''
+    isMatch.value = false
+    roundState.value = false
+    currentRound.value = 0
+    yourTurn.value = null
+    gameMemberInfos.value = []
+    bettingCoin.value = 0
   }
 
-  // 손 봐야함
-  // 게임방 나가기 RECEIVE
+
+  // 대기방 나가기 RECEIVE
   const receiveExitRoom = function(data){
-    // 내가 나갈때
-    if(data.memberInfos.nickname === userStore.myNickname){
-      // 게임 관련 데이터 초기화 시켜주기
-      memberInfos.value = []
-      gameRoomTitle.value = ''
-      roomManagerNickname.value = ''
-      countOfPeople.value = 0
-      myGameSubId.value = ''
-      isMatch.value = false
-      roundState.value = false
-      currentRound.value = 0
-      yourTurn.value = null
-      gameMemberInfos.value = []
-      bettingCoin.value = 0
-      // 구독 취소하고 메인페이지로 보내기
-      subscriptionGame.unsubscribe(myGameSubId.value)
-      router.push('main')
-    } else {
-      countOfPeople.value = data.countOfPeople
-      roomManagerNickname.value = data.roomManagerNickname
-      memberInfos.value = data.memberInfos
-      gameMemberInfos.value = 
-      // 나가는 사람 memberInfos와 gameMemberInfos에서 삭제
-      memberInfos.value.forEach((memeber, index) => {
-        if (memeber && !data.memberInfos.find(info => info.nickname === memeber)) {
-          memberInfos.value.splice(index, 1)
-          gameMemberInfos.value.splice(index, 1)
-        }
-      })
-    }    
-  }
+    countOfPeople.value = data.countOfPeople
+    roomManagerNickname.value = data.roomManagerNickname
+    memberInfos.value = data.memberInfos
+  }    
+  
 
   // 게임 준비 SEND
   const sendReady = function (gameRoomTitle, isReady) {
@@ -353,13 +342,23 @@ export const useGameStore = defineStore('game', () => {
     roomManagerNickname.value = data.roomManagerNickname
   }
   // 강퇴 본인
-  const receiveBanMe = function () {
-    countOfPeople.value = 0
+  const receiveBanMe = function (message) {
+    // 게임 관련 데이터 초기화 시켜주기
+    subscriptionGame.value = undefined
     memberInfos.value = []
+    gameRoomTitle.value = ''
     roomManagerNickname.value = ''
-    subscriptionGame.unsubscribe(myGameSubId.value)
-    myGameSubId.value = null
-    router.push('main')
+    countOfPeople.value = 0
+    myGameSubId.value = ''
+    isMatch.value = false
+    roundState.value = false
+    currentRound.value = 0
+    yourTurn.value = null
+    gameMemberInfos.value = []
+    bettingCoin.value = 0
+    openviduStore.leaveSession()
+    router.push({name:'main'})
+    alert(message)
   }
   
   // 라운드 종료
@@ -381,86 +380,14 @@ export const useGameStore = defineStore('game', () => {
   }
 
 
-  // watch(() => userStore.accessToken, (newAccessToken, oldAccessToken) => {
-  //   if (newAccessToken !== null && oldAccessToken === null) {
-  //     // 로그인되어 accessToken이 있을 때 연결 로직 실행
-  //     stompClient.connect({ 'access-token': userStore.accessToken}, (frame) => {
-  //       console.log("Connect success", gameRoomTitle.value)
-  //       console.log();
-  //       // stompClient.heartbeat.outgoing = 2000;
-  //       // stompClient.heartbeat.incoming = 0;
-  //       console.log(stompClient);
-  //       // 개인 메세지함 구독(기본구독)
-  //       subscriptionPrivate.value = stompClient.subscribe(`/from/chipchippoker/member/${userStore.myNickname}`, (message) => {
-    
-  //         console.log('개인 메세지함 구독 성공')
-  //         const response = JSON.parse(message.body).body
-  //         console.log(response)
-    
-  //         // 개인메세지함 구독 아이디
-  //         myPrivateSubId.value = message.headers.subscription
-    
-  //         switch (response.code) {
-    
-  //           case "MS004":
-  //             console.log('현재 진행 중인 라운드와 일치하지 않습니다.')
-  //             notMatchRound.value = true
-  //             break
-    
-  //           case "MS005":
-  //             console.log('본인의 차례가 아닙니다.')
-  //             notYourTurn.value = true
-  //             break
-    
-  //           case "MS006":
-  //             console.log('배팅이 불가능합니다.')
-  //             cannotBat.value = true
-  //             break
-    
-  //           case "MS007": // 게임 진행
-  //             // 게임 데이터 저장 -> 5초건 텀 두고 데이터 받기..
-  //             setTimeout(()=>{
-  //               roundState.value = response.data.roundState
-  //               currentRound.value = response.data.currentRound
-  //               yourTurn.value = response.data.yourTurn
-  //               gameMemberInfos.value = data.gameMemberInfos
-  //               for (let i = 0; i < memberInfos.value.length; i++) {
-  //                 // 플레이어 순서에 맞게 데이터 넣기
-  //                 const item = response.data.gameMemberInfos.filter((p)=>
-  //                 {p.nickname === memberInfos.value[i]})
-  //                 gameMemberInfos.value.push(item)
-  //               }
-          
-  //               console.log('게임시작');
-  //               console.log("roundState", roundState.value);
-  //               console.log("currentRound", currentRound.value);
-  //               console.log("yourTurn", yourTurn.value);
-  //               console.log("gameMemberInfos", gameMemberInfos.value);
-  //             },5000)
-  //             break
-  //           case "MS012": // 친구요청 받음
-  //             isAlarmArrive.value = true
-  //             break
-    
-  //           case "ME002": // 모두 준비상태가 아닙니다
-  //             console.log("모두 준비상태가 아닙니다");
-  //             break
-            
-  //           case "ME003": // 방장이 아닌사람이 start 한다면
-  //             console.log("님은 방장이 아님");
-  //             break
-  //         }
-  //       })
-  //     })
-    
-  //   } else if (newAccessToken === null && oldAccessToken !== null) {
-  //     // 로그아웃되어 accessToken이 없을 때 연결 해제 로직 실행
-  //     stompClient.disconnect(() => {
-  //       console.log("WebSocket disconnected");
-  //       // 이후 필요한 로직 작성
-  //     });
-  //   }
-  // });
+  watch(() => userStore.accessToken, (newAccessToken, oldAccessToken) => {
+    if (newAccessToken === null && oldAccessToken !== null) {
+      // 로그아웃되어 accessToken이 없을 때 연결 해제 로직 실행
+      stompClient.disconnect(() => {
+        console.log("WebSocket disconnected");
+      });
+    }
+  });
   
   return {
     // State
