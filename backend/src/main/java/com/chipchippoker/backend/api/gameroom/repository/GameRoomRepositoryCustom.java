@@ -16,4 +16,6 @@ public interface GameRoomRepositoryCustom {
 	List<GameRoom> findByStartFriendlyMatchingSearchOption(Integer totalParticipantCnt);
 
 	GameRoom findByStartCompetitionMatchingSearchOption(Integer totalParticipantCnt);
+
+	Integer findByStateCnt();
 }
