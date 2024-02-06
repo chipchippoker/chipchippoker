@@ -121,6 +121,7 @@ export const useUserStore = defineStore('user', () => {
   // 간편 로그인
   const simpleLogInRequest = async function (authorizationCode) {
     console.log('간편 로그인 요청');
+    console.log(authorizationCode);
     // 인가코드로 로그인 요청
     try {
       const response = await axios({

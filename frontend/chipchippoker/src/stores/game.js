@@ -101,7 +101,7 @@ export const useGameStore = defineStore('game', () => {
             roundState.value = response.data.roundState
             currentRound.value = response.data.currentRound
             yourTurn.value = response.data.yourTurn
-            gameMemberInfos.value = data.gameMemberInfos
+            gameMemberInfos.value = response.data.gameMemberInfos
             for (let i = 0; i < memberInfos.value.length; i++) {
               // 플레이어 순서에 맞게 데이터 넣기
               const item = response.data.gameMemberInfos.filter((p)=>

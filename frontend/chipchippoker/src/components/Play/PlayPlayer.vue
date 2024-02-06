@@ -204,7 +204,7 @@
   };
 
   // yourTurn 값이 변경될 때 호출되는 함수 등록
-  watch(() =>gameStore.yourTurn, handleYourTurnChange)
+  watch(() => gameStore.yourTurn, handleYourTurnChange)
 
   // 합
   const totalBettingCoin = computed(() => {
@@ -215,16 +215,17 @@
 
   const playersComputed = computed(() => openviduStore.players)
   const publisherComputed = computed(() => openviduStore.publisher)
-  console.log(playersComputed.value);
+
+  // 방 나가기
   const leaveRoom = function() {
     // 관전자면
     if (roomStore.isWatcher === true) {
       roomStore.leaveWatcher()
       roomStore.isWatcher = false
     } else {
-      gameStore.sendExitRoom()
+      roomStore.leaveRoom()
     }
-      openviduStore.leaveSession()
+    openviduStore.leaveSession()
   }
 
   onMounted (() => {
@@ -238,7 +239,7 @@
         console.error('카메라 및 마이크 액세스 오류:', error);
       });
 
-      openviduStore.joinSession()
+      // openviduStore.joinSession()
   })
 </script>
 

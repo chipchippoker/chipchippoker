@@ -217,7 +217,7 @@ export const useRoomStore = defineStore('room', () => {
     .catch(err => console.log(err))
   }
 
-  // 대기방 나가기
+  // 방 나가기
   const leaveRoom = function() {
     console.log('방 나가기 API 호출하러 옴');
     axios({
