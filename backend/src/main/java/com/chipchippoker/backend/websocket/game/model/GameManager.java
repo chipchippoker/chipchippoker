@@ -56,6 +56,7 @@ public class GameManager {
 	private String roomManager;
 	private Integer lastBettingMaxCoin;
 	private Integer maxCoin;
+	private List<PenaltyInfo> penaltyInfos;
 
 	public GameManager(String roomTitle, Integer countOfPeople, String nickname) {
 		log.info("게임방을 생성합니다.");
@@ -70,6 +71,7 @@ public class GameManager {
 		this.roomManager = nickname;
 		this.lastBettingMaxCoin = 1;
 		this.maxCoin = 1;
+		this.penaltyInfos = new ArrayList<>();
 		log.info("게임방을 생성했습니다.");
 	}
 
@@ -215,6 +217,7 @@ public class GameManager {
 	 * + 라운드가 종료되었을 때, 10을 들고 포기한 사람에게 10개의 코인 몰수하기
 	 */
 	public String roundEnd() {
+		// todo 10을 들고 포기한 사람 패널티 부여 + 게임방에 패널티 받은 사람들 닉네임 알려주기
 		// 승리한 사람 -> 포기하지 않은 사람 중에 카드가 가장 높은 사람
 		List<MemberManager> notDie = memberManagerMap.values()
 			.stream()
@@ -248,6 +251,40 @@ public class GameManager {
 		MemberManager winnerManager = memberManagerMap.get(winner);
 		winnerManager.getMemberGameInfo().setHaveCoin(winnerManager.getMemberGameInfo().getHaveCoin() + getCoin);
 
+		// 다이한 사람들 중 10을 들고 있던 사람들에게서 칩 10개를 몰수해서 우승자에게 주기
+		// 10을 들고 포기한 사람들의 MemberManager 가져오기
+		List<MemberManager> dieHaveTen = memberManagerMap.values()
+			.stream()
+			.filter(memberManager -> memberManager.getMemberGameInfo().getIsState().equals("DIE"))
+			.filter(memberManager -> memberManager.getMemberGameInfo().getCardInfo().getCardNumber().equals(10))
+			.toList();
+
+		if (!dieHaveTen.isEmpty()) {
+			for (MemberManager manager : dieHaveTen) {
+				if (manager.getMemberGameInfo().getHaveCoin() > 10) {
+					penaltyInfos.add(PenaltyInfo.create(
+						manager.getMemberInfo().getNickname(),
+						10
+					));
+					winnerManager.getMemberGameInfo().setHaveCoin(
+						winnerManager.getMemberGameInfo().getHaveCoin() + 10
+					);
+					manager.getMemberGameInfo().setHaveCoin(
+						manager.getMemberGameInfo().getHaveCoin() - 10
+					);
+				} else {
+					penaltyInfos.add(PenaltyInfo.create(
+						manager.getMemberInfo().getNickname(),
+						manager.getMemberGameInfo().getHaveCoin(
+						)));
+					winnerManager.getMemberGameInfo().setHaveCoin(
+						winnerManager.getMemberGameInfo().getHaveCoin() + manager.getMemberGameInfo().getHaveCoin()
+					);
+					manager.getMemberGameInfo().setHaveCoin(0);
+				}
+			}
+		}
+
 		// 이긴 사람이 다음 라운드 배팅 턴 잡기
 		turnNumber = order.indexOf(winner);
 		return winner;
@@ -271,6 +308,7 @@ public class GameManager {
 
 		lastBettingMaxCoin = 1;
 		maxCoin = Integer.MAX_VALUE;
+		penaltyInfos = new ArrayList<>();
 
 		for (MemberManager manager : memberManagers) {
 			// 코인이 남은 사람만 남은 라운드에 진출할 수 있다.
