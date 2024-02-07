@@ -71,11 +71,6 @@ export const useMatchStore = defineStore('match', () => {
         roomStore.roomId = res.data.roomId
         totalParticipantCnt.value = res.data.totalParticipantCnt
         isNotExistRoom.value = false
-        const payload_1 = {
-          title: title.value
-        }
-        // 방입장
-        roomStore.enterRoomPublic(payload_1)
         return true
       }
     } catch (err) {

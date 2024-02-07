@@ -34,7 +34,8 @@
                 <!-- 문의 -> 구글폼으로 연결 -->
                 <div>
                     <h4 class="fw-bold">문의하기
-                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdmmaeY3EmByEDTqNVndKTz2GdtdbLpFgZK2nkJ8rG-IBM3Yg/viewform?usp=sf_link">
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdmmaeY3EmByEDTqNVndKTz2GdtdbLpFgZK2nkJ8rG-IBM3Yg/viewform?usp=sf_link"
+                        target="_blank">
                             <font-awesome-icon :icon="['fas', 'envelope-open']" style="color: #ffffff;" />
                         </a>
                     </h4>

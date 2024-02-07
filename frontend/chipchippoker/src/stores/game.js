@@ -108,6 +108,11 @@ export const useGameStore = defineStore('game', () => {
           cannotBat.value = true  
           break
 
+        case "MB008":
+          console.log('혼자서는 게임이 불가합니다.')
+          alert(response.message)
+          break
+
 
         case "MS005": // 강퇴(본인)
           console.log(response.message);
@@ -403,6 +408,9 @@ export const useGameStore = defineStore('game', () => {
     yourTurn.value = null
     gameMemberInfos.value = []
     bettingCoin.value = 0
+    subscriptionSpectation.value = undefined
+    mySpectateSubId.value = []
+    watchersNickname.value = []
   }
   
 
@@ -449,17 +457,20 @@ export const useGameStore = defineStore('game', () => {
 
   // 관전 RECEIVE
   const receiveSpectaionRoom = function(data){
-    watchersNickname.value.push(data.nickname)
+    watchersNickname.value = data.spectatorList
+    memberInfos.value = data.memberInfos
   }
 
   // 관전 나가기 SEND
-  const sendSpectationExit = function () {
-    stompClient.send(`/to/spectation/exit/${gameRoomTitle}`, { 'access-token': userStore.accessToken })
+  const sendSpectationExit = function (gameRoomTitle) {
+    console.log(gameRoomTitle);
+    console.log(userStore.accessToken);
+    stompClient.send(`/to/spectation/exit/${gameRoomTitle}`, JSON.stringify({}), { 'access-token': userStore.accessToken })
   }
 
   // 관전 나가기 RECEIVE
   const receiveSpectaionExit = function(data){
-    watchersNickname.value = data.spectators
+    watchersNickname.value = data.spectatorList
   } 
   //---------------------------------------------------관전--------------------------------------------------------
 

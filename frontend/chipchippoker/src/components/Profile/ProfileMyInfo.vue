@@ -102,7 +102,7 @@
         <div v-if="userStore?.profileInfo?.isMine" class="d-flex flex-row-reverse">
           <button class="btn btn-signout" data-bs-toggle="modal" data-bs-target="#SignOutModal">회원탈퇴</button>
           <button class="btn btn-logout" data-bs-toggle="modal" data-bs-target="#LogOutModal">로그아웃</button>
-          <button v-if="userStore.kakaoAccessToken === null" @click="kakaoConnect()" class="btn btn-kakao">
+          <button v-if="userStore.kakaoAccessToken === null || userStore.profileInfo.isKakaoConnect === false" @click="kakaoConnect()" class="btn btn-kakao">
             <img class="kakao-logo" src="/src/assets/icons/kakaologo.png" alt="">
             카카오 연동하기
           </button>
