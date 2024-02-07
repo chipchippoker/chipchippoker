@@ -43,13 +43,13 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 		if (limit != 0) {
 			return queryFactory
 				.selectFrom(point)
-				.orderBy(point.pointScore.desc())
+				.orderBy(point.pointScore.desc(), point.member.nickname.desc())
 				.limit(limit)
 				.fetch();
 		}
 		return queryFactory
 			.selectFrom(point)
-			.orderBy(point.pointScore.desc())
+			.orderBy(point.pointScore.desc(), point.member.nickname.desc())
 			.fetch();
 
 	}
@@ -61,7 +61,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 				.join(friend.memberA, member)
 				.join(member.point, point)
 				.where(member.id.eq(id))
-				.orderBy(friend.memberB.point.pointScore.desc())
+				.orderBy(friend.memberB.point.pointScore.desc(), point.member.nickname.desc())
 				.limit(limit)
 				.fetch();
 		}
@@ -70,7 +70,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 			.join(friend.memberA, member)
 			.join(member.point, point)
 			.where(member.id.eq(id))
-			.orderBy(friend.memberB.point.pointScore.desc())
+			.orderBy(friend.memberB.point.pointScore.desc(), point.member.nickname.desc())
 			.fetch();
 	}
 
