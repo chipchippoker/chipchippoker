@@ -182,7 +182,7 @@
         console.error('카메라 및 마이크 액세스 오류:', error);
       });
 
-      // openviduStore.joinSession()
+    openviduStore.joinSession()
   })
 </script>
 

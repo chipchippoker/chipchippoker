@@ -87,13 +87,9 @@ const enterRoomPublic = function (title, type) {
                 const isFullModal = new bootstrap.Modal(document.getElementById(`IsFullModal${props.item?.roomId}`));
                 isFullModal.show()
             } else {
-                roomStore.enterRoomPublic(payload)
+                roomStore.enterRoom(payload)
             }
-        } else if (type === '관전자' && props.item.state === '진행') {
-            roomStore.isWatcher = true
-            roomStore.watchersNickname.push(userStore.myNickname)
-            roomStore.enterWatchProgress(payload)
-        } else {
+        } else { // 관전자
             roomStore.isWatcher = true
             roomStore.watchersNickname.push(userStore.myNickname)
             roomStore.enterWatch(payload)
@@ -120,8 +116,8 @@ const showEnterPWModal = function (type) {
             const isFullModal = new bootstrap.Modal(document.getElementById(`IsFullModal${props.item?.roomId}`));
             isFullModal.show()
         } else {
-        const enterPWModal = new bootstrap.Modal(document.getElementById(`EnterPWModal${props.item?.roomId}`));
-        enterPWModal.show()
+            const enterPWModal = new bootstrap.Modal(document.getElementById(`EnterPWModal${props.item?.roomId}`));
+            enterPWModal.show()
         }
 
     }

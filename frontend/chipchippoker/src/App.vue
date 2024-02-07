@@ -75,8 +75,8 @@ for (let i = 0; i < 300; i++) {
       <RouterLink to="/wait">대기페이지</RouterLink> /
       <RouterLink to="/game">소켓테스트</RouterLink> /
       <RouterLink to="/animation">애니메이션</RouterLink> /
-    </div>
-     -->
+    </div> -->
+    
     <div class="position-relative">   
       <!-- 별들 -->
       <!-- <div v-for="star in stars" :key="star" :class="star.className" :style="{ top: star.y + 'px', left: star.x + 'px' }"></div> -->
@@ -129,7 +129,6 @@ for (let i = 0; i < 300; i++) {
 <style>
 @import "@/assets/css/color.css";
 @import "@/assets/css/size.css";
-@import "@/assets/css/animation.css";
 
 html, body {
   margin: 0;

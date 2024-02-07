@@ -182,12 +182,20 @@ export const useGameStore = defineStore('game', () => {
           break
         case "MB003": // 방장이 아님
 
-        case "MS016":
+        case "MS016": // 게임방 시작
           receiveStartGame(response)
           break
         case "MS011": // 매칭
           console.log(response.message)
           receiveMatching(response.data)
+        case "MS013": // 관전자 입장
+          console.log(response.message);
+          receiveSpectaionRoom(response.data)
+          break
+        case "MS014": // 관전자 퇴장
+          console.log(response.message);
+          receiveSpectaionExit(response.data)
+          break
         }
       })
   }
@@ -362,25 +370,84 @@ export const useGameStore = defineStore('game', () => {
   const sendFriendRequest = function(nickname){
     stompClient.send("/to/friend/request", JSON.stringify({"nickname":nickname}), { 'access-token': userStore.accessToken })
   }
-// 방 나가기 시 초기화 함수
-const resetGameStore = function() {
-  subscriptionGame.value = undefined
-  roomInfo.value = {}
-  totalCountOfPeople.value = 0
-  myOrder.value = 0
-  memberInfos.value = []
-  myPrivateSubId.value = ''
-  gameRoomTitle.value = ''
-  roomManagerNickname.value = ''
-  countOfPeople.value = 0
-  myGameSubId.value = ''
-  isMatch.value = false
-  roundState.value = false
-  currentRound.value = 0
-  yourTurn.value = null
-  gameMemberInfos.value = []
-  bettingCoin.value = 0
-}
+  // 방 나가기 시 초기화 함수
+  const resetGameStore = function() {
+    subscriptionGame.value = undefined
+    roomInfo.value = {}
+    totalCountOfPeople.value = 0
+    myOrder.value = 0
+    memberInfos.value = []
+    myPrivateSubId.value = ''
+    gameRoomTitle.value = ''
+    roomManagerNickname.value = ''
+    countOfPeople.value = 0
+    myGameSubId.value = ''
+    isMatch.value = false
+    roundState.value = false
+    currentRound.value = 0
+    yourTurn.value = null
+    gameMemberInfos.value = []
+    bettingCoin.value = 0
+  }
+  
+
+
+  //---------------------------------------------------관전--------------------------------------------------------
+  // 관전 구독 정보
+  const subscriptionSpectation = ref(undefined)
+  
+  // 관전 정보
+  const mySpectateSubId = ref('')
+  const watchersNickname = ref([])
+
+
+
+  // 관전 구독 핸들러
+  const spectateHandler = (gameRoomTitle) => {
+    // 토픽 구독 및 수신
+    subscriptionSpectation.value = stompClient.subscribe(`/from/chipchippoker/spectation/checkConnect/${gameRoomTitle}`, (message) => {
+      console.log('관전 구독하기');
+      // 내 구독 아이디 저장 
+      
+      mySpectateSubId.value = message.headers.subscription
+      console.log(message.headers);
+      const response = JSON.parse(message.body).body
+      console.log(response)
+
+      switch (response.code) {
+        case "MS013": // 관전자 입장
+          console.log(response.message);
+          receiveSpectaionRoom(response.data)
+          break
+        case "MS014": // 관전자 퇴장
+          console.log(response.message);
+          receiveSpectaionExit(response.data)
+          break
+        }
+      })
+  }
+
+  // 관전 SEND
+  const sendSpectationRoom = function (gameRoomTitle, gameState) {
+    stompClient.send(`/to/spectation/enter/${gameRoomTitle}`, JSON.stringify({gameState}), { 'access-token': userStore.accessToken })
+  }
+
+  // 관전 RECEIVE
+  const receiveSpectaionRoom = function(data){
+    watchersNickname.value.push(data.nickname)
+  }
+
+  // 관전 나가기 SEND
+  const sendSpectationExit = function () {
+    stompClient.send(`/to/spectation/exit/${gameRoomTitle}`, { 'access-token': userStore.accessToken })
+  }
+
+  // 관전 나가기 RECEIVE
+  const receiveSpectaionExit = function(data){
+    watchersNickname.value = data.spectators
+  } 
+  //---------------------------------------------------관전--------------------------------------------------------
+
   
   return {
     // State
@@ -397,7 +464,8 @@ const resetGameStore = function() {
     // 구독 정보
     subscriptionGame, myGameSubId,
 
-
+    // 관전 정보
+    spectateHandler, sendSpectationRoom, receiveSpectaionRoom, watchersNickname, sendSpectationExit, receiveSpectaionExit,
 
     // Action
 
@@ -412,12 +480,6 @@ const resetGameStore = function() {
     sendFriendRequest,
     bet,
     subscribeHandler,
-    stompClient,
-    roundState,
-    currentRound,
-    yourTurn,
-    gameMemberInfos,
-    bettingCoin,
     isAlarmArrive,
     // 배팅 시 오류 메세지
     notMatchRound,

@@ -76,6 +76,8 @@ export const useOpenviduStore = defineStore('openvidu', () => {
         // 관전자 이름들도 추가
         roomStore.watchersNickname.push(clientData)
       }
+      console.log(players);
+      console.log(watchers);
     })
   
     // On every Stream destroyed...
