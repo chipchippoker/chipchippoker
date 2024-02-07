@@ -28,12 +28,14 @@ public class ProfilePageResponse {
 	Boolean isMine;
 	Boolean isFriend;
 	Boolean isSent;
+	Boolean isKakaoConnect;
 	List<RecentPlayListResponse> recentPlayList;
 
 	public static ProfilePageResponse createProfilePageResponse(String icon, Integer rank, Integer rankFriend,
 		Integer friendlyWin, Integer friendlyDraw, Integer friendlyLose, Integer competitiveWin,
 		Integer competitiveDraw, Integer competitiveLose,
 		Integer maxWin, Integer point, String nickname, String tier, Boolean isMine, Boolean isFriend, Boolean isSent,
+		Boolean isKakaoConnect,
 		List<RecentPlayListResponse> recentPlayList) {
 		return ProfilePageResponse.builder()
 			.icon(icon)
@@ -58,6 +60,7 @@ public class ProfilePageResponse {
 			.isMine(isMine)
 			.isFriend(isFriend)
 			.isSent(isSent)
+			.isKakaoConnect(isKakaoConnect)
 			.recentPlayList(recentPlayList)
 			.build();
 	}

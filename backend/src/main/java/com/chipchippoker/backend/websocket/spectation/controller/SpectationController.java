@@ -30,7 +30,7 @@ public class SpectationController {
 	private final MapManager mapManager;
 	private final SpectationService spectationService;
 
-	@MessageMapping("/spectataion/enter/{gameRoomTitle}")
+	@MessageMapping("/spectation/enter/{gameRoomTitle}")
 	public void enterSpectationRoom(
 		@Header(name = "access-token") String accessToken,
 		@DestinationVariable(value = "gameRoomTitle") String gameRoomTitle,
@@ -43,18 +43,19 @@ public class SpectationController {
 			spectationManager = new SpectationManager(gameRoomTitle);
 			mapManager.getSpectationManagerMap().put(gameRoomTitle, spectationManager);
 		}
+		GameManager gameManager = mapManager.getGameManagerMap().get(gameRoomTitle);
 		spectationManager.insertMember(nickname);
 		broadcastAllMemberInfoInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_NEW_SPECTATOR_ENTER,
-			EnterSpectatorResponse.create(nickname));
+			EnterSpectatorResponse.create(gameManager, spectationManager));
 
 		broadcastAllSpectatorInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_NEW_SPECTATOR_ENTER,
-			EnterSpectatorResponse.create(nickname));
+			EnterSpectatorResponse.create(gameManager, spectationManager));
 		log.info(enterSpectatorRequest.getGameState());
+
 		if (enterSpectatorRequest.getGameState().equals("진행")) {
 			log.info("진행중인 게임에 입장");
-			GameManager gameManager = mapManager.getGameManagerMap().get(gameRoomTitle);
 			// 들어온 사람한테만 전달해줌
-			broadcastToMember(nickname, spectationService.gameInfoToSpectator(gameManager));
+			broadcastToMember(nickname, spectationService.gameInfoToSpectator(gameManager, spectationManager));
 		}
 		log.info("관전방 입장 성공");
 	}
@@ -69,10 +70,10 @@ public class SpectationController {
 		SpectationManager spectationManager = mapManager.getSpectationManagerMap().get(gameRoomTitle);
 		spectationManager.deleteMember(nickname);
 		broadcastAllMemberInfoInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_SPECTATOR_EXIT,
-			ExitSpectatorResponse.create(nickname));
+			ExitSpectatorResponse.create(spectationManager.getSpectatorList()));
 
 		broadcastAllSpectatorInReadyRoom(gameRoomTitle, MessageBase.S200_GAME_ROOM_SPECTATOR_EXIT,
-			ExitSpectatorResponse.create(nickname));
+			ExitSpectatorResponse.create(spectationManager.getSpectatorList()));
 		log.info("관전방 나가기 성공");
 	}
 
