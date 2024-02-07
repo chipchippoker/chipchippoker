@@ -60,7 +60,7 @@ public class SpectationController {
 		log.info("관전방 입장 성공");
 	}
 
-	@MessageMapping("/spectataion/exit/{gameRoomTitle}")
+	@MessageMapping("/spectation/exit/{gameRoomTitle}")
 	public void exitSpectationRoom(
 		@Header(name = "access-token") String accessToken,
 		@DestinationVariable(value = "gameRoomTitle") String gameRoomTitle
