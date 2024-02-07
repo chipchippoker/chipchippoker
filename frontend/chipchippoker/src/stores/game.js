@@ -7,6 +7,7 @@ import { useUserStore } from './user'
 import { useRoomStore } from './room'
 import { useMatchStore } from './match'  
 import { useOpenviduStore } from './openvidu'
+import { faL } from '@fortawesome/free-solid-svg-icons'
 
 export const useGameStore = defineStore('game', () => {
   const userStore = useUserStore()
@@ -38,7 +39,9 @@ export const useGameStore = defineStore('game', () => {
   const myPrivateSubId = ref('')
   const myGameSubId = ref('')
   const isMatch = ref(false)
-  console.log();
+
+  // 게임 상태 변수
+  const firstStart = ref(false)
   const indexing = function (nickname) {
     memberInfos.value.forEach((member, index) => {
       if (member.nickname === nickname) {
@@ -75,7 +78,7 @@ export const useGameStore = defineStore('game', () => {
     stompClient.connect({ 'access-token': userStore.accessToken}, (frame) => {
     console.log("Connect success", gameRoomTitle.value)
     console.log();
-    // stompClient.heartbeat.outgoing = 2000;
+    // stompClient.heartbeat.outgoing = 5000;
     // stompClient.heartbeat.incoming = 0;
     console.log(stompClient);
     // 개인 메세지함 구독(기본구독)
@@ -112,18 +115,26 @@ export const useGameStore = defineStore('game', () => {
           break
 
         case "MS007": // 게임 진행
-          // 게임 데이터 저장 -> 5초건 텀 두고 데이터 받기..
-          setTimeout(()=>{
-            roundState.value = response.data.roundState
-            currentRound.value = response.data.currentRound
-            yourTurn.value = response.data.yourTurn
-            gameMemberInfos.value = response.data.gameMemberInfos
+          // 맨 처음 데이터 저장시에만 0.1초 미루기
+          if (firstStart.value === false){
+            firstStart.value = true
+            setTimeout(()=>{
+              roundState.value = response.data.roundState
+              currentRound.value = response.data.currentRound
+              yourTurn.value = response.data.yourTurn
+              gameMemberInfos.value = response.data.gameMemberInfos
       
-            console.log("roundState", roundState.value);
-            console.log("currentRound", currentRound.value);
-            console.log("yourTurn", yourTurn.value);
-            console.log("gameMemberInfos", gameMemberInfos.value);
-          },2000)
+            },100)
+          } else {
+            // 두번째 저장할때는 2초 미루기
+            setTimeout(()=>{
+              roundState.value = response.data.roundState
+              currentRound.value = response.data.currentRound
+              yourTurn.value = response.data.yourTurn
+              gameMemberInfos.value = response.data.gameMemberInfos
+
+            },1000)
+        }
           break
         case "MS008": // 라운드 종료
           receiveGameFinish(response.data)
@@ -309,6 +320,7 @@ export const useGameStore = defineStore('game', () => {
       name:'play',
       params: { roomId: roomStore.roomId },
     })
+    firstStart.value = false
     // if (body.code === 'MS007'){  // 게임 진행
     //   roundState.value = body.data.roundState
     //   currentRound.value = body.data.currentRound
@@ -355,15 +367,18 @@ export const useGameStore = defineStore('game', () => {
   
   // 라운드 종료
   const receiveGameFinish = function(data){
-    console.log('라운드 종료');
-    roundState.value = data?.roundState
-    currentRound.value = data?.currentRound
-    yourTurn.value = data?.yourTurn
-    gameMemberInfos.value = data?.gameMemberInfos
-    console.log("roundState", roundState.value);
-    console.log("currentRound", currentRound.value);
-    console.log("yourTurn", yourTurn.value);
-    console.log("gameMemberInfos", gameMemberInfos.value);
+    setTimeout(()=>{
+      console.log('라운드 종료');
+      roundState.value = data?.roundState
+      currentRound.value = data?.currentRound
+      yourTurn.value = data?.yourTurn
+      gameMemberInfos.value = data?.gameMemberInfos
+      console.log("roundState", roundState.value);
+      console.log("currentRound", currentRound.value);
+      console.log("yourTurn", yourTurn.value);
+      console.log("gameMemberInfos", gameMemberInfos.value);
+
+    },100)
   }
   
   // 친구신청 Send
@@ -464,9 +479,12 @@ export const useGameStore = defineStore('game', () => {
     // 구독 정보
     subscriptionGame, myGameSubId,
 
+    // 게임 상태 변수
+    firstStart,
+
     // 관전 정보
     spectateHandler, sendSpectationRoom, receiveSpectaionRoom, watchersNickname, sendSpectationExit, receiveSpectaionExit,
-
+    
     // Action
 
     receiveMessage,
