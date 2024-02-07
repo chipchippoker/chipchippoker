@@ -28,6 +28,14 @@
     <!-- players -->
     <div class="w-100 position-relative" style="height: 70%;">
       <!-- 결과표 -->
+      <div v-if="gameStore.roundState == false && gameStore.memberEndGameInfos== '' && gameStore.winnerNickname != ''" class="position-absolute top-50 start-50 translate-middle bg-modal
+       rounded-5 px-5 py-5" style="z-index: 999; width: 50%;">
+        <div class="d-flex flex-column justify-content-center align-items-center text-center">
+          <h2 class="fw-bold">라운드 결과</h2>
+          <h3 class="m-3">{{ gameStore.winnerNickname }}님 승!!</h3>
+          
+        </div>
+      </div>
       <div v-if="gameStore.memberEndGameInfos != ''" class="position-absolute top-50 start-50 translate-middle bg-modal
        rounded-5 px-5 pt-5" style="z-index: 999; width: 50%;">
         <div class="d-flex flex-column justify-content-center align-items-center text-center">
@@ -64,7 +72,6 @@
       </div>
       <!-- 이모지 or 로로 -->
       <div class="h-100 w-25 d-flex justify-content-center align-items-center">
-        <!-- 결과표 -->
 
         <!-- <div class="d-flex justify-content-around w-100 animate__jackInTheBox ">
           <font-awesome-icon :icon="['fas', 'face-angry']" class="fa-5x" style="color: #9f0909;" />

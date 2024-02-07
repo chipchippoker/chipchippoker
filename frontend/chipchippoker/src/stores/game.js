@@ -29,6 +29,8 @@ export const useGameStore = defineStore('game', () => {
   const receiveMessage = ref('')
   // 게임 종료 결과 리스트
   const memberEndGameInfos = ref('')
+  // 라운드 승자
+  const winnerNickname = ref('')
   // 게임 방 정보
   const roomInfo = ref({})
   const gameRoomTitle = ref('')
@@ -134,15 +136,26 @@ export const useGameStore = defineStore('game', () => {
                 gameMemberInfos.value = response.data.gameMemberInfos
 
               }, 100)
-            } else {
-              // 두번째 저장할때는 2초 미루기
+            } else if(roundState.value === false) {
+              // 새로운 라운드 저장할때는 2초 미루기
               setTimeout(() => {
                 roundState.value = response.data.roundState
                 currentRound.value = response.data.currentRound
                 yourTurn.value = response.data.yourTurn
                 gameMemberInfos.value = response.data.gameMemberInfos
+                console.log('라운드 저장 2초 미룸');
 
+              }, 2000)
+            } else{
+              // 배팅은 1초 미루기
+              setTimeout(() => {
+                roundState.value = response.data.roundState
+                currentRound.value = response.data.currentRound
+                yourTurn.value = response.data.yourTurn
+                gameMemberInfos.value = response.data.gameMemberInfos
+                console.log('배팅 저장1초 미룸');
               }, 1000)
+
             }
             break
           case "MS008": // 라운드 종료
@@ -203,11 +216,9 @@ export const useGameStore = defineStore('game', () => {
           receiveRoundFinish(response.data)
           break
         case "MS009": // 경쟁 게임 종료
-          console.log('매치 종 룡~~~~~~~~~~~~~~~~~~~~~~~~~')
           receiveGameFinishRank(response.data)
           break
         case "MS010": // 친선 게임 종료
-          console.log('매치 종 룡~~~~~~~~~~~~~~~~~~~~~~~~~')
           receiveGameFinishFriend(response.data)
           break
         case "MB002": // 모두 준비상태가 아님
@@ -339,17 +350,6 @@ export const useGameStore = defineStore('game', () => {
       params: { roomId: roomStore.roomId },
     })
     firstStart.value = false
-    // if (body.code === 'MS007'){  // 게임 진행
-    //   roundState.value = body.data.roundState
-    //   currentRound.value = body.data.currentRound
-    //   yourTurn.value = body.data.yourTurn
-    //   gameMemberInfos.value = body.data.gameMemberInfos
-
-    // } else if (body.code === 'ME002') {  // 준비 안됨
-    //   alert(body.message)
-    // } else if (body.code === 'ME003') {  // 방장 아님
-    //   alert(body.message)
-    // }
   }
 
   // 배팅
@@ -385,37 +385,25 @@ export const useGameStore = defineStore('game', () => {
 
   // 라운드 종료
   const receiveRoundFinish = function (data) {
-    setTimeout(() => {
-      console.log('라운드 종료');
-      roundState.value = data?.roundState
-      currentRound.value = data?.currentRound
-      yourTurn.value = data?.yourTurn
-      gameMemberInfos.value = data?.gameMemberInfos
-      console.log("roundState", roundState.value);
-      console.log("currentRound", currentRound.value);
-      console.log("yourTurn", yourTurn.value);
-      console.log("gameMemberInfos", gameMemberInfos.value);
-
-    }, 100)
+    console.log('라운드 종료');
+    roundState.value = data?.roundState
+    currentRound.value = data?.currentRound
+    yourTurn.value = data?.yourTurn
+    gameMemberInfos.value = data?.gameMemberInfos
+    winnerNickname.value = data?.winnerNickname
+    console.log("roundState", roundState.value);
+    console.log("currentRound", currentRound.value);
+    console.log("yourTurn", yourTurn.value);
+    console.log("gameMemberInfos", gameMemberInfos.value);
   }
 
   // 경쟁 게임 종료
   const receiveGameFinishRank = function (data) {
-    console.log('------------------------------------------------------------------')
-    console.log('경쟁 종료');
-    console.log('------------------------------------------------------------------')
     memberEndGameInfos.value = data.memberEndGameInfos
-    console.log("data.memberEndGameInfos",data.memberEndGameInfos)
-    
   }
   // 친선 게임 종료
   const receiveGameFinishFriend = function (data) {
-    console.log('------------------------------------------------------------------')
-    console.log('친선 종료');
-    console.log('------------------------------------------------------------------')
-    memberEndGameInfos.value = data.memberEndGameInfos
-    console.log("data.memberEndGameInfos",data.memberEndGameInfos)
-
+   memberEndGameInfos.value = data.memberEndGameInfos
   }
 
   // 친구신청 Send
@@ -424,6 +412,7 @@ export const useGameStore = defineStore('game', () => {
   }
   // 방 나가기 시 초기화 함수
   const resetGameStore = function () {
+    winnerNickname.value = ''
     subscriptionGame.value = undefined
     roomInfo.value = {}
     totalCountOfPeople.value = 0
@@ -516,6 +505,7 @@ export const useGameStore = defineStore('game', () => {
     currentRound,
     yourTurn,
     gameMemberInfos,
+    winnerNickname,
     memberInfos,
     memberEndGameInfos,
     roomManagerNickname,

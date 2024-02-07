@@ -6,13 +6,13 @@
         <div class="w-50 h-100">
           <div v-if="gameStore.memberInfos && gameStore.memberInfos.length > 0"
             class="h-50 d-flex justify-content-evenly align-items-center flex-column">
-            <div class="text-white">보유코인
+            <div class="text-white">보유코인 : {{ gameStore?.gameMemberInfos[0]?.haveCoin }}
               <div class="d-flex flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[0]?.haveCoin" :key="index"
                   class="list-overlap-small" :src="getCoinUrl(1)" alt="">
               </div>
             </div>
-            <div class="text-white fw-bold">배팅 코인:
+            <div class="text-white fw-bold">배팅 코인: {{ gameStore?.gameMemberInfos[0]?.bettingCoin }}
               <!-- 배팅 코인 이미지 -->
               <div class="d-flex flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[0]?.bettingCoin" :key="index"
@@ -22,14 +22,14 @@
           </div>
           <div v-if="gameStore.memberInfos && gameStore.memberInfos.length > 2"
             class="h-50 d-flex justify-content-evenly align-items-center flex-column">
-            <div class="text-white">보유코인
+            <div class="text-white">보유코인: {{ gameStore?.gameMemberInfos[2]?.haveCoin }}
               <div class="d-flex flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[2]?.haveCoin" :key="index"
                   class="list-overlap-small" :src="getCoinUrl(3)" alt="">
               </div>
 
             </div>
-            <div class="text-white fw-bold">배팅 코인:
+            <div class="text-white fw-bold">배팅 코인: {{ gameStore?.gameMemberInfos[2]?.bettingCoin }}
               <!-- 배팅 코인 이미지 -->
               <div class="d-flex flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[2]?.bettingCoin" :key="index"
@@ -42,13 +42,13 @@
         <div class="w-50 h-100">
           <div v-if="gameStore.memberInfos && gameStore.memberInfos.length > 1"
             class="h-50 d-flex justify-content-evenly align-items-center flex-column">
-            <div class="text-white">보유코인
+            <div class="text-white">보유코인: {{ gameStore?.gameMemberInfos[1]?.haveCoin }}
               <div class="d-flex flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[1]?.haveCoin" :key="index"
                   class="list-overlap-small" :src="getCoinUrl(2)" alt="">
               </div>
             </div>
-            <div class="text-white fw-bold">배팅 코인:
+            <div class="text-white fw-bold">배팅 코인: {{ gameStore?.gameMemberInfos[1]?.bettingCoin }}
               <!-- 배팅 코인 이미지 -->
               <div class="d-flex flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[1]?.bettingCoin" :key="index"
@@ -59,13 +59,13 @@
           </div>
           <div v-if="gameStore.memberInfos && gameStore.memberInfos.length > 3"
             class="h-50 d-flex justify-content-evenly align-items-center flex-column">
-            <div class="text-white">보유코인
+            <div class="text-white">보유코인: {{ gameStore?.gameMemberInfos[3]?.haveCoin }}
               <div class="d-flex flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[3]?.haveCoin" :key="index"
                   class="list-overlap-small" :src="getCoinUrl(4)" alt="">
               </div>
             </div>
-            <div class="text-white fw-bold">배팅 코인: 
+            <div class="text-white fw-bold">배팅 코인: {{ gameStore?.gameMemberInfos[3]?.bettingCoin }}
               <!-- 배팅 코인 이미지 -->
               <div class="d-flex flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[3]?.bettingCoin" :key="index"
