@@ -40,7 +40,9 @@ public class GameMatchingController {
 			gameManager = new GameManager(gameRoomTitle, gameMatchingMessageRequest.getCountOfPeople(), nickname);
 		}
 		gameManager.insertMember(nickname, Boolean.FALSE);
-		gameManager.getMemberManagerMap().get(nickname).getMemberInfo().setIsReady(true);
+		if (!gameManager.getRoomManager().equals(nickname)) {
+			gameManager.getMemberManagerMap().get(nickname).getMemberInfo().setIsReady(true);
+		}
 		mapManager.getGameManagerMap().put(gameRoomTitle, gameManager);
 		broadcastAllMemberInMainRoom(gameRoomTitle, MessageBase.S200_GAME_MATCHING,
 			GameMatchingMessageResponse.create(mapManager.getGameManagerMap().get(gameRoomTitle)));
