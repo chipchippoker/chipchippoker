@@ -44,3 +44,64 @@
     color: white;
     transform: rotateY(180deg);
 }
+
+.card-devide-move1 {
+    transform: translate(200px, 200px);
+    transition: 1s;
+}
+
+.card-devide-move2 {
+    transform: translate(-200px, 200px);
+    transition: 1s;
+}
+
+.card-devide-move3 {
+    transform: translate(200px, -200px);
+    transition: 1s;
+}
+
+.card-devide-move4 {
+    transform: translate(-200px, -200px);
+    transition: 1s;
+}
+
+
+
+.coin-unmove1 {
+    transform: translate(0, 0);
+    transition: 1s;
+}
+
+.coin-unmove2 {
+    transform: translate(0, 0);
+    transition: 1s;
+}
+
+.coin-unmove3 {
+    transform: translate(0, 0);
+    transition: 1s;
+}
+
+.coin-unmove4 {
+    transform: translate(0, 0);
+    transition: 1s;
+}
+.coin-move1 {
+    transform: translate(50%, 50%);
+    transition: 1s;
+}
+
+.coin-move2 {
+    transform: translate(-50%, 50%);
+    transition: 1s;
+}
+
+.coin-move3 {
+    transform: translate(50%, -50%);
+    transition: 1s;
+}
+
+.coin-move4 {
+    transform: translate(-50%, -50%);
+    transition: 1s;
+}
