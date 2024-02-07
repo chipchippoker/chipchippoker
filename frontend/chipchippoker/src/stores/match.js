@@ -5,8 +5,6 @@ import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from './user'
 import { useGameStore } from './game'
 import { useRoomStore } from './room'
-import { MagicString } from 'vue/compiler-sfc'
-
 
 export const useMatchStore = defineStore('match', () => {
   const userStore = useUserStore()
@@ -24,31 +22,33 @@ export const useMatchStore = defineStore('match', () => {
   const isNotExistRoom = ref(false)  // 친선전 남는 방이 없음
 
   // 경쟁전 빠른 시작
-  const matchCompete = function(payload) {
-    console.log(payload);
-    axios({
-      method: 'post',
-      url: `${MATCH_API}/competition`,
-      headers: { 'access-token': userStore.accessToken },
-      data: payload
-    })
-    .then(response => {
+  const matchCompete = async function(payload) {
+    console.log(payload)
+    try {
+      const response = await axios({
+        method: 'post',
+        url: `${MATCH_API}/competition`,
+        headers: { 'access-token': userStore.accessToken },
+        data: payload
+      })
       console.log('경쟁전 매치 성공')
       const res = response.data
-      console.log(res);
+      console.log(res)
       isSearching.value = true
       roomId.value = res.data.roomId
       roomStore.roomId = res.data.roomId
+      roomStore.title = res.data.title
       title.value = res.data.title
       totalParticipantCnt.value = res.data.totalParticipantCnt
       gameStore.subscribeHandler(title.value)
-    })
-    .then(()=>{
-      gameStore.sendMatching(title.value, totalParticipantCnt.value)
-    })
-    .catch(err => console.log(err))
+      return res.code
+    } catch (err) {
+      if (err.response.data.code === 'FB010') {
+        alert('이미 방에 입장해있습니다')
+      }
+      return console.log(err)
+    }
   } 
-
 
   // 친선전 빠른 시작
   const matchFriend = async function(payload) {
@@ -78,7 +78,6 @@ export const useMatchStore = defineStore('match', () => {
     }
   }  
 
-
   // 빠른 게임 찾기 중단
   const stopFindGame = function () {
     axios({
@@ -90,7 +89,9 @@ export const useMatchStore = defineStore('match', () => {
       console.log('게임 찾기 중단')
       const res = response.data
       console.log(res);
-      gameStore.subscriptionGame.unsubscribe(gameStore.myGameSubId)
+      isSearching.value = false
+      // 게임나가기 send
+      gameStore.sendExitRoom(title.value)
     })
     .catch(err => console.log(err))
   }
