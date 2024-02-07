@@ -37,40 +37,38 @@
                 <MainFriendList/>
             </div>
         </div>
-    <!-- 모달 -->
+        <!-- 모달 -->
 
         <!-- 빠른방 입장 모달 -->
-        <div data-bs-backdrop="static" class="modal fade" id="FindRoomModal" tabindex="-1" aria-labelledby="findRoomModalLabel" aria-hidden="true">
+        <div class="modal fade" id="FindRoomModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="findRoomModalLabel" aria-hidden="true">
             <ModalFindRoom @showFindGame="handleShowFindGame" :type="gameType" />
         </div>
 
         <!-- 게임 찾는중 모달 -->
-        <div data-bs-backdrop="static" class="modal fade" id="FindGameModal" tabindex="-1" aria-labelledby="findGameModalLabel" aria-hidden="true">
-            <ModalFindGame @close="matchStore.stopFindGame()" />
+        <div class="modal fade" id="FindGameModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="findGameModalLabel" aria-hidden="false">
+            <ModalFindGame/>
         </div>
 
         <!-- 친선 방이 없는 것을 말해주는 모달 -->
-        <div data-bs-backdrop="static" class="modal fade" id="NotExistRoom" tabindex="-1" aria-hidden="true">
+        <div class="modal fade" id="NotExistRoom" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
             <ModalNotExistRoom/>
         </div>
        
         <!-- 방만들기 모달 -->
-        <div data-bs-backdrop="static" class="modal fade" id="makeRoomModal" tabindex="-1" aria-labelledby="makeRoomModalLabel" aria-hidden="true">
+        <div class="modal fade" id="makeRoomModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="makeRoomModalLabel" aria-hidden="true">
             <ModalCreateRoom/>
         </div>
 
         <!-- 친구 찾기 모달 -->
-        <div data-bs-backdrop="static" class="modal fade" id="FindFriendModal" tabindex="-1" aria-labelledby="FindFriendModalLabel" aria-hidden="true">
+        <div class="modal fade" id="FindFriendModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="FindFriendModalLabel" aria-hidden="true">
             <ModalFindFriend/>
         </div>
 
         <!-- 이미 있는 방 제목입니다 모달 -->
-        <div data-bs-backdrop="static" class="modal fade" id="IsExistRoomModal" tabindex="-1" aria-labelledby="IsExistRoomModalLabel" aria-hidden="true">
+        <div class="modal fade" id="IsExistRoomModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="IsExistRoomModalLabel" aria-hidden="true">
             <ModalIsExistRoom/>
         </div>
-        
     </div>
-    
 </template>
 
 <script setup>
@@ -84,15 +82,14 @@ import ModalNotExistRoom from '@/components/Modal/ModalNotExistRoom.vue';
 import ModalCreateRoom from '@/components/Modal/ModalCreateRoom.vue';
 import ModalFindFriend from '@/components/Modal/ModalFindFriend.vue';
 import ModalIsExistRoom from '@/components/Modal/ModalIsExistRoom.vue';
-import { ref,onMounted, watch } from 'vue';
-import { useRouter } from 'vue-router';
-import { useFriendStore } from '@/stores/friend';
-import { useSoundStore } from '@/stores/sound';
-import { useUserStore } from '@/stores/user';
-import { useRoomStore } from '@/stores/room';
-import { useMatchStore } from '@/stores/match';
-import { useGameStore } from '@/stores/game';
-// import bootstrap from 'bootstrap';
+import { ref, onMounted, watch } from 'vue';
+import { useRouter, onBeforeRouteLeave  } from 'vue-router';
+import { useFriendStore } from '@/stores/friend'
+import { useSoundStore } from '@/stores/sound'
+import { useUserStore } from '@/stores/user'
+import { useRoomStore } from '@/stores/room'
+import { useMatchStore } from '@/stores/match'
+import { useGameStore } from '@/stores/game'
 
 const userStore = useUserStore()
 const soundStore = useSoundStore()
@@ -107,14 +104,34 @@ const changeType = function(type){
     gameType.value = type
 }
 
+// ===================== 게임 찾기 모달 감시=======================
+const modalWatch = watch(matchStore.isSearching, (newVal, oldVal) => {
+    const findGameModal = new bootstrap.Modal(document.getElementById('FindGameModal'))
+    console.log(matchStore.isSearching.value)
+    console.log(newVal);
+    if (!newVal) {
+        findGameModal.hide()
+    } else {
+        // findGameModal.show()
+    }
+})
+
+
+// ================================================================
 // -------------------모달 테스트-------------------
 const handleShowFindGame = function (payload) {
     console.log('빠른 모드 탐색 시작');
     if (gameType.value === '경쟁전') {
-        const modalElement = document.getElementById('FindGameModal'); // 모달의 HTML 요소 가져오기
-        const modalInstance = new bootstrap.Modal(modalElement); // 모달 인스턴스 생성
-        modalInstance.show(); // 모달 열기
+        const modalInstance = new bootstrap.Modal(document.getElementById('FindGameModal'))
+        // modalInstance.show(); // 모달 열기
         matchStore.matchCompete(payload)
+        .then(code => {
+            if (code === '성공') {
+                modalInstance.show()
+                console.log(matchStore.title, matchStore.totalParticipantCnt);
+                gameStore.sendMatching(matchStore.title, matchStore.totalParticipantCnt)
+            }
+        })
     } else {
         matchStore.matchFriend(payload)
         .then(result => {
@@ -143,6 +160,17 @@ watch(() => roomStore.isRoom, (newValue) => {
 const reLoad = function() {
     router.go(0)
 }
+
+// 메인페이지 떠나기 전에
+onBeforeRouteLeave((to, from, next) => {
+    // 모달 백드랍 제거
+    console.log('메인페이지 떠나기 전에~~~~');
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+      backdrop.remove();
+    }
+    next(); // 다음 라우터로 이동
+})
 
 onMounted(()=>{
     gameStore.connectHandler()

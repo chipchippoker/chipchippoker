@@ -55,7 +55,6 @@ export const useRoomStore = defineStore('room', () => {
   const roomState = ref(null)
   const watchersNickname = ref([])
 
-
   // 웹소켓
   const gameStore = useGameStore()
   

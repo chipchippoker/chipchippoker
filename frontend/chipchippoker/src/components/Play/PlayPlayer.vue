@@ -10,7 +10,6 @@
           </div>
           <!-- 1, 3번 플레이어 -->
           <div v-if="[0, 2].includes(index)" class="d-flex h-100 m-2 mt-0">
-            <!-- 본인 -->
             <div class="m-2">
               <UserVideoVue :stream-manager="findVideo(playersComputed, player.nickname)" />
             </div>

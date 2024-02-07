@@ -13,7 +13,9 @@ export default {
 import * as faceAPI from 'face-api.js'
 import { ref, onMounted, watch } from "vue";
 import { useRoute } from 'vue-router';
+import { useGameStore } from '@/stores/game';
 
+const gameStore = useGameStore()
 const route = useRoute()
 const props = defineProps({
   streamManager: Object,

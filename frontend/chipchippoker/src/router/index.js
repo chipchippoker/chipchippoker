@@ -60,7 +60,6 @@ const router = createRouter({
   ]
 })
 
-
 router.beforeEach((to, from, next) => {
   import('@/stores/user').then(({ useUserStore }) => {
   const userStore = useUserStore()
@@ -78,7 +77,7 @@ router.beforeEach((to, from, next) => {
     // 다른 경우에는 그냥 진행
     next()
   }
-  });
-});
+  })
+})
 
 export default router

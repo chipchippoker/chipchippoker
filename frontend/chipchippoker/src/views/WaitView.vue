@@ -17,7 +17,6 @@
     <!--  body -->
     <div class="container row mt-5">
       <div class="col-9">
-        
         <!-- 본인이 플레이어면 -->
         <!-- 모든 캠 -->
         <div v-if="roomStore.isWatcher===false" id="video-container">
@@ -25,27 +24,28 @@
             <!-- 내 캠 -->
             <div class="col-6 mb-5"
               v-for="(player, index) in gameStore.memberInfos" :key="index">
-              <div :class="{ 'is-ready': player.isReady }" style="width: 410px; height: 310px;">
+              <div
+               :class="{ 'is-ready': player.isReady }"
+                style="width: 410px; height: 310px;">
+                <h3 style="color: white;">{{ player.nickname }}</h3>
                 <UserVideo 
-                :stream-manager="findVideo(playersComputed, player.nickname)" 
+                :stream-manager="findVideo(playersComputed, player.nickname)"
                 :is-manager="isManager"
                 :room-manager-nickname="roomManagerNickname"
                 @force-disconnect="forceDisconnect"
                 />
               </div>
-            </div>
-            <!-- 다른 사람 캠 -->
-            <!-- <div class="col-6 mb-5"
-              v-for="(player, index) in gameStore.memberInfos" :key="index">
-              <div style="width: 400px; height: 300px;">
+              <!-- 다른 사람 캠 -->
+              <!-- <div v-else style="width: 410px; height: 310px;"
+                :class="{ 'is-ready': player.isReady }">
                 <UserVideo
                   :stream-manager="findVideo(playersComputed, player.nickname)"
                   :is-manager="isManager"
                   :room-manager-nickname="roomManagerNickname"
                   @force-disconnect="forceDisconnect"
                   />
-              </div>
-            </div> -->
+              </div> -->
+            </div>
           </div>
         </div>
 
@@ -56,7 +56,7 @@
               class="col-6 mb-5"
               v-for="(player, index) in gameStore.memberInfos"
               :key="index">
-              <div :class="{ 'is-ready': player.isReady }" style="width: 410px; height: 31  0px;">
+              <div :class="{ 'is-ready': player.isReady }" style="width: 410px; height: 310px;">
                 <!-- 다른 사람 캠 -->
                 <UserVideo
                   :stream-manager="findVideo(playersComputed, player.nickname)"
@@ -217,11 +217,13 @@ const forceDisconnect = function(clientData) {
 
 // 캠
 const findVideo = function (players, targetNickname) {
+  console.log(players.length);
     for (let i = 0; i < players.length; i++) {
       const player = players[i]
       console.log('player ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★')
-      console.log(player)
+      console.log(i, player)
       console.log('player ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★')
+      console.log(i, player.nickname, targetNickname);
       if (player.nickname === targetNickname) {
         console.log(player)
         console.log(targetNickname)

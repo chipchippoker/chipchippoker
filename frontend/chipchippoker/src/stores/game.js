@@ -9,17 +9,18 @@ import { useMatchStore } from './match'
 import { useOpenviduStore } from './openvidu'
 import { faL } from '@fortawesome/free-solid-svg-icons'
 
+
 export const useGameStore = defineStore('game', () => {
   const userStore = useUserStore()
   const roomStore = useRoomStore()
   const matchStore = useMatchStore()
   const openviduStore = useOpenviduStore()
   const router = useRouter()
-
+  
   const url = `wss://chipchippoker.shop/chipchippoker`
-
+  
   const stompClient = webstomp.client(url)
-
+  
   // 구독 정보
   const subscriptionGame = ref(undefined)
   const subscriptionPrivate = ref(undefined)
@@ -40,6 +41,8 @@ export const useGameStore = defineStore('game', () => {
   const myGameSubId = ref('')
   const isMatch = ref(false)
 
+
+  const isMatchStart = ref(false) // 매치로 시작하는 게임인가
   // 게임 상태 변수
   const firstStart = ref(false)
   const indexing = function (nickname) {
@@ -229,17 +232,14 @@ export const useGameStore = defineStore('game', () => {
     // 다 모이면 플레이 페이지로 이동
     console.log(data);
     memberInfos.value = data.memberInfos
-    console.log(memberInfos.value);
-    console.log(typeof(totalCountOfPeople.value));
+    console.log(memberInfos.value)
     console.log(data.memberInfos.length, totalCountOfPeople.value);
     // 매치 인원이 다 모이면
     if (data.memberInfos.length === totalCountOfPeople.value) {
       matchStore.isSearching = false
       console.log('매치 성공!!')
-      router.push({
-        name:'play',
-        params: { roomId: matchStore.roomId },
-      })
+      isMatchStart.value = true   // 매치로 인한 게임 시작
+      roomStore.startGame(matchStore.title) // 게임 시작 send
     } else {
       console.log('매칭 중')
       matchStore.isSearching = true
@@ -293,14 +293,12 @@ export const useGameStore = defineStore('game', () => {
   // 손 봐야함
   // 게임방 나가기 RECEIVE
   const receiveExitRoom = function(data){
-   
       countOfPeople.value = data.countOfPeople
       roomManagerNickname.value = data.roomManagerNickname
       memberInfos.value = data.memberInfos
-      
+      subscriptionGame.value.unsubscribe(myGameSubId.value)
     }    
   
-
   // 게임 준비 SEND
   const sendReady = function (gameRoomTitle, isReady) {
     stompClient.send(`/to/game/ready/${gameRoomTitle}`, JSON.stringify({isReady}), { 'access-token': userStore.accessToken })

@@ -1,8 +1,9 @@
 <template>
   <div class="position-relative" v-if="streamManager" @mouseover="showControls = true" @mouseleave="showControls = false">
-    <ov-video :stream-manager="streamManager" @sendEmotion="sendEmotion"/>
+    <ov-video 
+    :class="{ 'is-turn': clientData === gameStore.yourTurn }"
+    :stream-manager="streamManager" @sendEmotion="sendEmotion"/>
     <!-- {{ clientData }}이게 내 현재 이름임 이거 지우면 실행 안됨, 안보이게 투명하게 해야하나? -->
-    <div><p class="opacity-0">{{ clientData }}</p></div>
     <p style="color: white;">{{ clientData }}</p>
     
 
@@ -136,5 +137,24 @@
 .ready-border {
   border: 3px solid #ffcc00; /* 두껍고 밝은 색상 테두리 */
 }
+
+/* 내 턴 */
+.is-turn {
+  border: 5px solid green; /* 준비가 완료되었을 때의 테두리 색상 */
+  border-radius: 30px;
+  animation: pulse 1s infinite alternate; /* 테두리에 깜빡거리는 애니메이션 효과 */
+}
+
+@keyframes pulse {
+  from {
+    border-color: green;
+    box-shadow: 0 0 10px green;
+  }
+  to {
+    border-color: #00ff00;
+    box-shadow: 0 0 20px #00ff00;
+  }
+}
+
 </style>
   
