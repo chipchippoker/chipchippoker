@@ -6,7 +6,7 @@
             <button @click="deletePW()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body d-flex justify-content-center">
-            <form class="d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center gap-3">
                 <div>
                     비밀번호
                 </div>
@@ -14,9 +14,9 @@
                     <input v-model="password" type="password" class="form-control" :id="`password${roomData?.roomId}`" autocomplete="off">
                 </div>
                 <div >
-                    <button @click="enterRoomPrivate()" type="submit" class="btn-outline-yellow rounded-2">입장하기</button>
+                    <button @click="enterRoomPrivate()" class="btn-outline-yellow rounded-2" data-bs-dismiss="modal">입장하기</button>
                 </div>
-            </form>
+            </div>
         </div>
         
         </div>
@@ -32,6 +32,7 @@ import { useUserStore } from '@/stores/user';
 
 
 const friendStore = useFriendStore()
+const roomStore = useRoomStore()
 const userStore = useUserStore()
 const password = ref(null)
 
@@ -43,23 +44,18 @@ const props = defineProps({
 const deletePW = function(){
     password.value = null
 }
-const roomStore = useRoomStore()
 const enterRoomPrivate = function () {
     const payload = {
-        title: roomData.title,
+        title: props.roomData.title,
         password: password.value
     }
     if (props.userType === '플레이어') {
         roomStore.isWatcher = false
-        roomStore.enterRoomPrivate(payload)
-    } else if (props.userType === '관전자' && roomStore.state === '대기') {
+        roomStore.enterRoom(payload)
+    } else { // 관전자
         roomStore.isWatcher = true
         roomStore.watchersNickname.push(userStore.myNickname)
         roomStore.enterWatch(payload)
-    } else {
-        roomStore.isWatcher = true
-        roomStore.watchersNickname.push(userStore.myNickname)
-        roomStore.enterWatchProgress(payload)
     }
     deletePW()
 }

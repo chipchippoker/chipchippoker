@@ -131,16 +131,16 @@ export const useRoomStore = defineStore('room', () => {
     .catch(err => console.log(err))
   }
 
-  // 공개방 입장
-  const enterRoomPublic = function (payload) {
-    // 공개방 입장 API 호출
+  // 방 입장
+  const enterRoom = function(payload) {
+    // 방 입장 API 호출
     axios({
       method: 'post',
       url: `${ROOM_API}/enter`,
       headers: { 'access-token': userStore.accessToken },
       data: payload
     })
-    // 공개방 입장 API 응답 & 방 구독 SEND
+    // 방 입장 API 응답 & 방 구독 SEND
     .then(response => {
       const res = response.data
       console.log(res)
@@ -151,19 +151,7 @@ export const useRoomStore = defineStore('room', () => {
         title.value = res.data.title
         totalParticipantCnt.value = res.data.totalParticipantCnt
         gameStore.subscribeHandler(title.value)
-      } else if (res.code === 'FB001') {
-        console.log(res.message)
-        alert(res.message)
-      } else if (res.code === 'FB002') {
-        console.log(res.message)        
-        alert(res.message)
-      } else if (res.code === 'FB003') {
-        console.log(res.message)        
-        alert(res.message)
-      } else if (res.code === 'FB000') {
-        console.log(res.message)
-        alert(res.message)
-      }
+      } 
       return res.code
     })
     // 방 입장 SEND
@@ -172,51 +160,27 @@ export const useRoomStore = defineStore('room', () => {
         gameStore.sendJoinRoom(title.value)
       }
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      console.log(err)
+      if (err.response.data.code === 'FB001') {
+        console.log(err.response.data.message)
+        alert(err.response.data.message)
+      } else if (err.response.data.code === 'FB002') {
+        console.log(err.response.data.message)        
+        alert(err.response.data.message)
+      } else if (err.response.data.code === 'FB003') {
+        console.log(err.response.data.message)        
+        alert(err.response.data.message)
+      } else if (err.response.data.code === 'FB000') {
+        console.log(err.response.data.message)
+        alert(err.response.data.message)
+      } else if (err.response.data.code === 'FB010') {
+        console.log(err.response.data.message)
+        alert(err.response.data.message)
+      }
+    })
   }
 
-  // 비공개방 입장
-  const enterRoomPrivate = function(payload) {
-    axios({
-      method: 'post',
-      url: `${ROOM_API}/enter`,
-      headers: { 'access-token': userStore.accessToken },
-      data: {
-        title: payload.title,
-        password: payload.password
-      }
-    })
-    .then(response => {
-      const res = response.data
-      if (res.code === 200) {
-        console.log(res.message)
-        roomId.value = res.data.roomId
-        title.value = res.data.title
-        totalParticipantCnt.value = res.data.totalParticipantCnt
-        gameStore.subscribeHandler(title.value)
-      } else if (res.code === 'FB001') {
-        console.log(res.message)
-        alert(res.message)
-      } else if (res.code === 'FB002') {
-        console.log(res.message)        
-        alert(res.message)
-      } else if (res.code === 'FB003') {
-        console.log(res.message)        
-        alert(res.message)
-      } else if (res.code === 'FB000') {
-        console.log(res.message)
-        alert('들어갈 수 없는 방입니다')
-      }
-      return res.code
-    })
-    .then((code) => {
-      // 방 입장 SEND
-      if (code === 200) {
-        gameStore.sendJoinRoom(title.value)
-      }   
-    })
-    .catch(err => console.log(err))
-  }
 
   // 방 나가기
   const leaveRoom = function() {
@@ -276,14 +240,14 @@ export const useRoomStore = defineStore('room', () => {
       console.log(payload.nickname);
       if (response.data.code === '성공') {
         gameStore.sendBan(title.value, payload.nickname)
-      } else if (response.code === 'FB005') {
+      } else if (response.data.code === 'FB005') {
         alert(res.message)
       }
     })
     .catch(err => console.log(err))
   } 
 
-  // 관전 대기중 입장
+  // 관전 입장
   const enterWatch = function (payload) {
     axios({
       method: 'post',
@@ -292,42 +256,43 @@ export const useRoomStore = defineStore('room', () => {
       data: payload
     })
     .then(res => {
-      if (res.code === 200) {
-        console.log('관전 대기중 입장');
-        roomId.value = res.data.roomId
-        title.value = res.data.title
-        roomState.value = res.data.state
-        
-      } else if (res.code === 'FB001') {
-        console.log(res.message)
-        alert(res.message)
-      }
-    })
-    .catch(err => console.log(err))
-  }
-
-  // 관전 진행중 입장
-  const enterWatchProgress = function (payload) {
-    axios({
-      method: 'post',
-      url: `${SPECTATE_API}/enter`,
-      headers: { 'access-token': userStore.accessToken },
-      data: payload
+      console.log(res.data);
+      if (res.data.code === '성공') {
+        console.log('관전 입장');
+        roomId.value = res.data.data.roomId
+        title.value = res.data.data.title
+        roomState.value = res.data.data.state
+        gameStore.spectateHandler(title.value)
+      } 
+      return res.data
     })
     .then(res => {
-      if (res.code === 200) {
-        console.log('관전 진행중 입장');
-        roomId.value = res.data.roomId
-        title.value = res.data.title
-        roomState.value = res.data.state
-        
-      } else if (res.code === 'FB001') {
-        console.log(res.message)
-        alert(res.message)
+      gameStore.sendSpectationRoom(res.data.title, res.data.state)
+      if (roomState.value === '대기') {
+        router.push({
+          name:'wait',
+          params: { roomId: res.data.roomId },
+        })
+      } else {
+        router.push({
+          name:'play',
+          params: { roomId: res.data.roomId },
+        })
       }
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      console.log(err)
+      console.log(err.response.data)
+      if (err.response.data.code === 'FB001') {
+        console.log(err.response.data.message)
+        alert(err.response.data.message)
+      } else if (err.response.data.code === 'FB011') {
+        console.log(err.response.data.message)
+        alert(err.response.data.message)
+      }
+    })
   }
+
 
   // 관전 나가기
   const leaveWatcher = function () {
@@ -341,6 +306,12 @@ export const useRoomStore = defineStore('room', () => {
       roomId.value = ''
       title.value = ''
       roomState.value = ''
+      gameStore.sendSpectationExit(title.value)
+    })
+    .then(()=>{
+      openviduStore.leaveSession()
+      gameStore.resetGameStore()
+      router.push({name:'main'})
     })
     .catch(err => console.log(err))
   }
@@ -352,7 +323,7 @@ export const useRoomStore = defineStore('room', () => {
     // 방 생성
     createRoom, roomManagerNickname, roomId, title, totalParticipantCnt, isRoom,
     // 방 입장
-    enterRoomPublic, enterRoomPrivate, isWatcher, roomState, watchersNickname,
+    enterRoom, isWatcher, roomState, watchersNickname,
     // 방 나가기
     leaveRoom,
     // 게임 시작하기
@@ -360,6 +331,6 @@ export const useRoomStore = defineStore('room', () => {
     // 사용자 강제 퇴장
     forceMemberOut,
     // 관전
-    enterWatch, enterWatchProgress, leaveWatcher,
+    enterWatch, leaveWatcher,
   }
 },{persist:true})

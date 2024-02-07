@@ -98,7 +98,7 @@ roomTitle.value = roomStore.title
 totalParticipantCnt.value = roomStore.totalParticipantCnt
 console.log(roomTitle.value)
 
-const watchersNickname = computed(() => roomStore.watchersNickname)
+const watchersNickname = computed(() => gameStore.watchersNickname)
 const watchersCount = computed(() => watchersNickname.value.length)
 
 const showWatchersList = ref(false)

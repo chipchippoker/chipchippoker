@@ -10,10 +10,13 @@
 <script setup>
 import { useRoomStore } from '@/stores/room';
 import { computed } from 'vue';
+import { useGameStore } from '../../stores/game';
 
 
 const roomStore = useRoomStore()
-const watchersNickname = computed(() => roomStore.watchersNickname)
+const gameStore = useGameStore()
+const watchersNickname = computed(() => gameStore.watchersNickname)
+console.log(watchersNickname.value);
 
 </script>
 
