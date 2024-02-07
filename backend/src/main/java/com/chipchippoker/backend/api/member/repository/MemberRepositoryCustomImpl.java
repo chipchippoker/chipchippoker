@@ -35,6 +35,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 			result.getCompetitiveWin(), result.getCompetitiveDraw(), result.getCompetitiveLose(), result.getMaxWin(),
 			result.getPointScore(),
 			result.getMember().getNickname(), result.tierByPoint(result.getPointScore()), isMine, isFriend, isSent,
+			result.getMember().getKakaoLinkState(),
 			recentPlayListResponseList);
 	}
 

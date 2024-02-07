@@ -11,6 +11,7 @@ import com.chipchippoker.backend.common.dto.MessageBase;
 import com.chipchippoker.backend.websocket.game.model.GameManager;
 import com.chipchippoker.backend.websocket.game.model.MemberManager;
 import com.chipchippoker.backend.websocket.spectation.dto.GameRoomForSpectatorMessageResponse;
+import com.chipchippoker.backend.websocket.spectation.model.SpectationManager;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,17 +24,17 @@ public class SpectationServiceImpl implements SpectationService {
 
 	@Override
 	public ResponseEntity<ApiResponse<GameRoomForSpectatorMessageResponse>> gameInfoToSpectator(
-		GameManager gameManager) {
+		GameManager gameManager, SpectationManager spectationManager) {
 		ArrayList<MemberManager> memberManagers = new ArrayList<>(gameManager.getMemberManagerMap().values());
 		return ResponseEntity.ok(
 			ApiResponse.messageSuccess(MessageBase.S200_GAME_ROOM_IN_PLAY_INFO,
-				GameRoomForSpectatorMessageResponse.getCurrentState(gameManager, memberManagers
-				)
+				GameRoomForSpectatorMessageResponse.getCurrentState(gameManager, spectationManager, memberManagers)
 			));
 	}
 
-	public void deliveryGameInfoForSpectator(String gameRoomTitle, GameManager gameManager) {
-		broadcastAllSpectatorConnected(gameRoomTitle, gameInfoToSpectator(gameManager));
+	public void deliveryGameInfoForSpectator(String gameRoomTitle, GameManager gameManager,
+		SpectationManager spectationManager) {
+		broadcastAllSpectatorConnected(gameRoomTitle, gameInfoToSpectator(gameManager, spectationManager));
 	}
 
 	public void broadcastAllSpectatorConnected(String gameRoomTitle, Object object) {

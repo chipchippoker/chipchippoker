@@ -6,6 +6,7 @@ import java.util.List;
 import com.chipchippoker.backend.websocket.game.model.GameManager;
 import com.chipchippoker.backend.websocket.game.model.GameMemberInfo;
 import com.chipchippoker.backend.websocket.game.model.MemberManager;
+import com.chipchippoker.backend.websocket.spectation.model.SpectationManager;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,8 +22,10 @@ public class GameRoomForSpectatorMessageResponse {
 	private Integer currentRound;
 	private String yourTurn;
 	private List<GameMemberInfo> gameMemberInfos = new ArrayList<>();
+	private List<String> spectators = new ArrayList<>();
 
 	public static GameRoomForSpectatorMessageResponse getCurrentState(GameManager gameManager,
+		SpectationManager spectationManager,
 		ArrayList<MemberManager> memberManagers) {
 		ArrayList<GameMemberInfo> result = new ArrayList<>();
 		for (MemberManager memberManager : memberManagers) {
@@ -36,6 +39,7 @@ public class GameRoomForSpectatorMessageResponse {
 			.currentRound(gameManager.getCurrentRound())
 			.yourTurn(gameManager.getOrder().get(gameManager.getTurnNumber()))
 			.gameMemberInfos(result)
+			.spectators(spectationManager.getSpectatorList())
 			.build();
 	}
 }
