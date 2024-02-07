@@ -123,7 +123,6 @@ const handleShowFindGame = function (payload) {
     console.log('빠른 모드 탐색 시작');
     if (gameType.value === '경쟁전') {
         const modalInstance = new bootstrap.Modal(document.getElementById('FindGameModal'))
-        // modalInstance.show(); // 모달 열기
         matchStore.matchCompete(payload)
         .then(code => {
             if (code === '성공') {
@@ -135,9 +134,13 @@ const handleShowFindGame = function (payload) {
     } else {
         matchStore.matchFriend(payload)
         .then(result => {
-            if (!result) {
+            console.log('친선전 매칭 결과', result);
+            
+            if (result === false) {
                 const notExistRoomModal = new bootstrap.Modal(document.getElementById('NotExistRoom'));
                 notExistRoomModal.show();
+            } else if (result === 'FB010') {
+                console.log('이미 방 입장 중')
             }
         })
     }
@@ -163,11 +166,14 @@ const reLoad = function() {
 
 // 메인페이지 떠나기 전에
 onBeforeRouteLeave((to, from, next) => {
+    const modalInstance = new bootstrap.Modal(document.getElementById('FindGameModal'))
+    modalInstance.hide()
     // 모달 백드랍 제거
     console.log('메인페이지 떠나기 전에~~~~');
     const backdrop = document.querySelector('.modal-backdrop');
     if (backdrop) {
-      backdrop.remove();
+        console.log('백드롭 제거');
+        backdrop.remove();
     }
     next(); // 다음 라우터로 이동
 })
@@ -177,7 +183,6 @@ onMounted(()=>{
     friendStore.getAllRankList()
     // friendStore.getMyRankList()
     // soundStore.bgmOn()
-    // location.reload()
     
     if (roomStore.title !== '') {
         roomStore.leaveRoom()
