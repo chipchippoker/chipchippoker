@@ -115,9 +115,7 @@
   const router = useRouter()
   const roomId = ref(null)
   const myNickname = ref(null)
-  
-  const playersComputed = computed(() => openviduStore.players)
-  const publisherComputed = computed(() => openviduStore.publisher)
+
 
   const props = defineProps({
     roomId: String,
