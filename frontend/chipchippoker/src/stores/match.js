@@ -38,6 +38,7 @@ export const useMatchStore = defineStore('match', () => {
       roomId.value = res.data.roomId
       roomStore.roomId = res.data.roomId
       roomStore.title = res.data.title
+      roomStore.totalParticipantCnt = res.data.totalParticipantCnt
       title.value = res.data.title
       totalParticipantCnt.value = res.data.totalParticipantCnt
       gameStore.subscribeHandler(title.value)
@@ -66,15 +67,24 @@ export const useMatchStore = defineStore('match', () => {
         return false
       } else {
         console.log('친선전 매치 성공')
+        console.log(res.data)
         roomId.value = res.data.roomId
         title.value = res.data.title
-        roomStore.roomId = res.data.roomId
         totalParticipantCnt.value = res.data.totalParticipantCnt
+        roomStore.roomId = res.data.roomId
+        roomStore.title = res.data.title
+        roomStore.totalParticipantCnt = res.data.totalParticipantCnt
         isNotExistRoom.value = false
+        // 대기방으로 이동
+        gameStore.subscribeHandler(title.value)
+        gameStore.sendJoinRoom(title.value)
         return true
       }
     } catch (err) {
-      return console.log(err)
+      if (err.response.data.code === 'FB010') {
+        alert('이미 방에 입장해있습니다')
+      }
+      return err.response.data.code
     }
   }  
 

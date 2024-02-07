@@ -137,8 +137,9 @@ export const useOpenviduStore = defineStore('openvidu', () => {
         messageData['username'] = userStore.myNickname
       }
       messages.value.push(messageData);
-    });
-  
+    })
+    
+    // 캠 크기 설정
     let resolution = "400x300";  // 기본값 설정
 
     if (route.name === 'wait') {
@@ -177,18 +178,11 @@ export const useOpenviduStore = defineStore('openvidu', () => {
           console.log("There was an error connecting to the session:", error.code, error.message);
         })
     })
-  
-    // window.addEventListener("beforeunload", (event) => {
-    //     leaveSession();
-    //     // Uncomment the line below if you want to show a confirmation message
-    //     // event.returnValue = "Are you sure you want to leave?";
-    //   })
     }
   
   function leaveSession(){
     if(session.value) session.value.disconnect()
     
-    // Empty all properties...
     session.value = undefined;
     mainStreamManager.value = undefined;
     publisher.value = undefined;
@@ -199,11 +193,8 @@ export const useOpenviduStore = defineStore('openvidu', () => {
     messages.value = []
     roomStore.watchersNickname = []
     OV.value = undefined;
-  
-    // Remove beforeunload listener
-    // window.removeEventListener("beforeunload", leaveSession)
+
     console.log('세션나가기')
-    
   }
   
   /**
@@ -219,9 +210,6 @@ export const useOpenviduStore = defineStore('openvidu', () => {
   }
   
   async function createSession(sessionId) {
-    // const response = await axios.post(APPLICATION_SERVER_URL + 'sessions', { customSessionId: sessionId, userNo: 53, endHour: 1, endMinute: 30, quota: 16, isPrivacy: false}, {
-    //   headers: { 'Content-Type': 'application/json', },
-    // });
     const response = await axios.post(APPLICATION_SERVER_URL + 'sessions', { customSessionId: sessionId, userNo: 53, endHour: 1, endMinute: 30, quota: 16, isPrivacy: false}, {
       headers: { 'Content-Type': 'application/json', },
     });
@@ -230,9 +218,6 @@ export const useOpenviduStore = defineStore('openvidu', () => {
   }
   
   async function createToken(sessionId) {
-    // const response = await axios.post(APPLICATION_SERVER_URL + 'sessions/' + sessionId + '/connections', {}, {
-    //   headers: { 'Content-Type': 'application/json', },
-    // })
     const response = await axios.post(APPLICATION_SERVER_URL + 'sessions/' + sessionId + '/connections', {}, {
       headers: { 'Content-Type': 'application/json', },
     });

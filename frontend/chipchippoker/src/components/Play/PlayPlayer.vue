@@ -205,7 +205,6 @@ const leaveRoom = function () {
 }
 
 onMounted(() => {
-
   navigator.mediaDevices.getUserMedia({ video: true, audio: true })
     .then((stream) => {
       // 카메라 및 마이크에 대한 성공적인 액세스 처리
@@ -213,7 +212,7 @@ onMounted(() => {
     .catch((error) => {
       console.error('카메라 및 마이크 액세스 오류:', error);
     });
-
+    console.log('여긴 플레이플레이어!!');
     openviduStore.joinSession()
   })
 </script>
