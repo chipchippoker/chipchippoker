@@ -50,11 +50,12 @@ public class GameManager {
 	private Map<String, MemberManager> memberManagerMap;
 	private Integer currentRound;
 	private final Integer gameEndRound = 10;
-	private final Integer bettingLimitTime = 15;
 	private Stack<CardInfo> cardStack;
 	private List<String> order;
 	private Integer turnNumber;
 	private String roomManager;
+	private Integer lastBettingMaxCoin;
+	private Integer maxCoin;
 
 	public GameManager(String roomTitle, Integer countOfPeople, String nickname) {
 		log.info("게임방을 생성합니다.");
@@ -67,6 +68,8 @@ public class GameManager {
 		this.order = new ArrayList<>();
 		this.turnNumber = 0;
 		this.roomManager = nickname;
+		this.lastBettingMaxCoin = 1;
+		this.maxCoin = 1;
 		log.info("게임방을 생성했습니다.");
 	}
 
@@ -132,16 +135,23 @@ public class GameManager {
 
 		/*
 		3. 배팅해야하는 최대 칩 이하로 배팅을 했는가? 그게 아니라면 베팅이 불가하다.
+		불가능한 경우들
+		베팅하려는 코인이 가지고 잇는 코인보다 많음
+		베팅한 코인이 0보다 작음 (0은 체크, 1이상은 베팅)
+		(베팅하려는 코인 + 이미 베팅한 코인 - 라운드 최대 베팅)이 0보다 작음 (같으면 콜이고 그 이상이면 RUN)
+		(라운드 최대 배팅금액 - 베팅하려는 코인 - 베팅한 코인)이 0보다 작음 (같으면 상대를 올인시키는 것이고 그 이상이면 봐주는 거)
 		 */
 		if (bettingMessageRequest.getAction().equals("BET")) {
 			if (bettingMessageRequest.getBettingCoin() > memberManager.getMemberGameInfo().getHaveCoin()
-				|| bettingMessageRequest.getBettingCoin() <= 0
+				|| bettingMessageRequest.getBettingCoin() < 0
+				|| (bettingMessageRequest.getBettingCoin() + memberManager.getMemberGameInfo().getBettingCoin()
+				- lastBettingMaxCoin) < 0
+				||
+				(maxCoin - bettingMessageRequest.getBettingCoin() - memberManager.getMemberGameInfo().getBettingCoin())
+					< 0
 			) {
 				throw new InvalidException(MessageBase.E400_CAN_NOT_BET_BET_COIN_MISMATCH);
 			}
-			// todo (환) 배팅 가능한 코인을 배팅한 것인지 확인하는 로직
-
-			// 배팅중
 			memberManager.getMemberGameInfo().setIsState("BET");
 
 			memberManager.getMemberGameInfo()
@@ -153,19 +163,22 @@ public class GameManager {
 			memberManager.getMemberGameInfo().setActionCount(memberManager.getMemberGameInfo().getActionCount() + 1);
 
 			// 최소로 배팅해야 하는 코인 업데이트
-			// minCoin = bettingMessageRequest.getBettingCoin();
+			// 본인이 베팅해야하는 최소 베팅금액은 마지막으로 베팅했던 사람의 베팅금액에서 자신이 베팅했던 금액을 뺀 것이다.
+			lastBettingMaxCoin = memberManager.getMemberGameInfo().getBettingCoin();
 
 		} else if (bettingMessageRequest.getAction().equals("DIE")) {
 			memberManager.getMemberGameInfo().setIsState("DIE");
-			// todo (환) 배팅 가능한 라운드 최대 칩 변경 가능성
-			// 포기한 사람이 가진 칩의 개수가 라운드에서 가장 적은 사람이었다면 배팅 가능한 칩의 개수가 늘어나야 한다.
-			memberManagerMap
+
+			List<MemberGameInfo> memberGameInfosInBet = memberManagerMap
 				.values()
 				.stream()
-				.filter(memberManager1 -> memberManager1.getMemberGameInfo().getIsState().equals("BET"))
 				.map(MemberManager::getMemberGameInfo)
-				.map(MemberGameInfo::getHaveCoin);
+				.filter(memberGameInfo -> memberGameInfo.getIsState().equals("BET"))
+				.toList();
 
+			for (MemberGameInfo memberGameInfo : memberGameInfosInBet) {
+				maxCoin = Math.min(maxCoin, memberGameInfo.getBettingCoin() + memberGameInfo.getHaveCoin());
+			}
 		}
 	}
 
@@ -173,7 +186,6 @@ public class GameManager {
 	 * DIE 상태가 아닌 모든 플레이어가 동일한 금액을 베팅했으면 해당 라운드는 종료되어야 한다.
 	 */
 	public boolean checkRoundEnd() {
-		// todo (환) 라운드 종료조건 로직 다시보기
 		/*
 		1. 다이를 외친 사람을 제외한 나머지의 베팅칩이 모두 같으면 라운드 종료
 		2. 다이를 외친 사람을 제외하고 혼자 남았으면 라운드 종료
@@ -257,6 +269,9 @@ public class GameManager {
 		if (leftMember == 1)
 			throw new RuntimeException();
 
+		lastBettingMaxCoin = 1;
+		maxCoin = Integer.MAX_VALUE;
+
 		for (MemberManager manager : memberManagers) {
 			// 코인이 남은 사람만 남은 라운드에 진출할 수 있다.
 			if (manager.getMemberGameInfo().getHaveCoin() >= 1) {
@@ -270,6 +285,16 @@ public class GameManager {
 				// 베팅중인 상태로 전환한다.
 				manager.getMemberGameInfo().setIsState("BET");
 				// action 은 0으로 초기화해준다.
+				manager.getMemberGameInfo().setActionCount(0);
+
+				// maxCoin 변경
+				maxCoin = Math.min(maxCoin, manager.getMemberGameInfo().getHaveCoin() + 1);
+			}
+			// 코인이 없는 사람은 이제 게임에서 제외된다.
+			else {
+				manager.getMemberGameInfo().setHaveCoin(0);
+				manager.getMemberGameInfo().setBettingCoin(0);
+				manager.getMemberGameInfo().setIsState("DIE");
 				manager.getMemberGameInfo().setActionCount(0);
 			}
 		}
