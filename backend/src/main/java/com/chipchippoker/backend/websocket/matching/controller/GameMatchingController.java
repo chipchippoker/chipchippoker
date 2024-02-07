@@ -38,8 +38,11 @@ public class GameMatchingController {
 		GameManager gameManager = mapManager.getGameManagerMap().get(gameRoomTitle);
 		if (gameManager == null) {
 			gameManager = new GameManager(gameRoomTitle, gameMatchingMessageRequest.getCountOfPeople(), nickname);
+			gameManager.insertMember(nickname, Boolean.TRUE);
+		} else {
+			gameManager.insertMember(nickname, Boolean.FALSE);
 		}
-		gameManager.insertMember(nickname, Boolean.FALSE);
+
 		if (!gameManager.getRoomManager().equals(nickname)) {
 			gameManager.getMemberManagerMap().get(nickname).getMemberInfo().setIsReady(true);
 		}
