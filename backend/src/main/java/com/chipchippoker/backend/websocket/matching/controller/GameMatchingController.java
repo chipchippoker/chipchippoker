@@ -37,9 +37,10 @@ public class GameMatchingController {
 		String nickname = jwtUtil.getNickname(accessToken);
 		GameManager gameManager = mapManager.getGameManagerMap().get(gameRoomTitle);
 		if (gameManager == null) {
-			gameManager = new GameManager(gameRoomTitle, gameMatchingMessageRequest.getCountOfPeople(), null);
+			gameManager = new GameManager(gameRoomTitle, gameMatchingMessageRequest.getCountOfPeople(), nickname);
 		}
 		gameManager.insertMember(nickname, Boolean.FALSE);
+		gameManager.getMemberManagerMap().get(nickname).getMemberInfo().setIsReady(true);
 		mapManager.getGameManagerMap().put(gameRoomTitle, gameManager);
 		broadcastAllMemberInMainRoom(gameRoomTitle, MessageBase.S200_GAME_MATCHING,
 			GameMatchingMessageResponse.create(mapManager.getGameManagerMap().get(gameRoomTitle)));
