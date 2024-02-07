@@ -303,10 +303,11 @@ export const useRoomStore = defineStore('room', () => {
     })
     .then(res => {
       console.log('관전 나가기');
+      gameStore.sendSpectationExit(title.value)
       roomId.value = ''
       title.value = ''
       roomState.value = ''
-      gameStore.sendSpectationExit(title.value)
+      isWatcher.value = false
     })
     .then(()=>{
       openviduStore.leaveSession()

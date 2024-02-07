@@ -42,28 +42,21 @@ const router = createRouter({
     {
       path: '/profile',
       name: 'profile',
-      component: ProfileView
+      component: ProfileView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/play/:roomId?',
       name: 'play',
-      component: PlayView
+      component: PlayView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/wait/:roomId?',
       name: 'wait',
-      component: WaitView
+      component: WaitView,
+      meta: { requiresAuth: true }
     },  
-    {
-      path: '/game',
-      name: 'game',
-      component: GameTest
-    },
-    {
-      path: '/animation',
-      name: 'animation',
-      component: animation
-    }
   ]
 })
 

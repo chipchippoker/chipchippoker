@@ -178,11 +178,11 @@ export const useOpenviduStore = defineStore('openvidu', () => {
         })
     })
   
-    window.addEventListener("beforeunload", (event) => {
-        leaveSession();
-        // Uncomment the line below if you want to show a confirmation message
-        // event.returnValue = "Are you sure you want to leave?";
-      })
+    // window.addEventListener("beforeunload", (event) => {
+    //     leaveSession();
+    //     // Uncomment the line below if you want to show a confirmation message
+    //     // event.returnValue = "Are you sure you want to leave?";
+    //   })
     }
   
   function leaveSession(){
@@ -201,7 +201,7 @@ export const useOpenviduStore = defineStore('openvidu', () => {
     OV.value = undefined;
   
     // Remove beforeunload listener
-    window.removeEventListener("beforeunload", leaveSession)
+    // window.removeEventListener("beforeunload", leaveSession)
     console.log('세션나가기')
     
   }

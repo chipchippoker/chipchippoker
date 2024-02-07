@@ -129,6 +129,8 @@ for (let i = 0; i < 300; i++) {
 <style>
 @import "@/assets/css/color.css";
 @import "@/assets/css/size.css";
+@import "@/assets/css/animation.css";
+
 
 html, body {
   margin: 0;

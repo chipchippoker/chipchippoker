@@ -126,17 +126,50 @@ const closeModal = function () {
 onMounted(() => {
   // 프로필 아이콘 안보이기
   userStore.viewProfileIcon = false
-  // 새로고침할때 구독 재연결  
+
+  window.addEventListener("beforeunload", (event) => {
+    event.preventDefault()
+    event.returnValue = '';
+    // if (roomStore.isWatcher === true  && roomStore.title !== '') {
+    //   roomStore.leaveWatcher()
+    // } else if (roomStore.title !== '') {
+    //     roomStore.leaveRoom()
+    // }
+  })
+  window.addEventListener("popstate", (event) => {
+    if (roomStore.isWatcher === true  && roomStore.title !== '') {
+      roomStore.leaveWatcher()
+    } else if (roomStore.title !== '') {
+        roomStore.leaveRoom()
+    }
+  })
 })
 
-// window.addEventListener('beforeunload', (event) => {
-//   // 새로고침 감지 코드
 
-// })
 
 onUnmounted(() => {
   // 프로필 아이콘 보이기
   userStore.viewProfileIcon = true
+
+
+  window.removeEventListener("beforeunload", (event) => {
+    event.preventDefault()
+    event.returnValue = '';
+    // if (roomStore.isWatcher === true  && roomStore.title !== '') {
+    //   roomStore.leaveWatcher()
+    // } else if (roomStore.title !== '') {
+    //     roomStore.leaveRoom()
+    // }
+  })
+  window.removeEventListener("popstate", (event) => {
+    if (roomStore.isWatcher === true  && roomStore.title !== '') {
+      roomStore.leaveWatcher()
+    } else if (roomStore.title !== '') {
+        roomStore.leaveRoom()
+    }
+  })
+
+  roomStore.leaveRoom()
 })
 
 </script>

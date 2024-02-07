@@ -15,13 +15,13 @@
         
         <div class="d-flex">
             <!-- 랭킹 -->
-            <div>
+            <!-- <div> -->
                 <MainRank class="mainstyle m-3"/>
-            </div>
+            <!-- </div> -->
             <!-- 방목록 -->
-            <div>
+            <!-- <div> -->
                 <MainRoom class="mainstyle m-3 px-2 pt-3 pb-0"/>
-            </div>
+            <!-- </div> -->
         </div>
 
         <!-- 친구 목록 -->
@@ -150,6 +150,10 @@ onMounted(()=>{
     // friendStore.getMyRankList()
     // soundStore.bgmOn()
     // location.reload()
+    
+    if (roomStore.title !== '') {
+        roomStore.leaveRoom()
+    }
 })
 
 </script>

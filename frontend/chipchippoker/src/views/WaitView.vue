@@ -275,6 +275,23 @@ onMounted(() => {
 
   // 메인페이지 -> 방 만들기 : 세션 생성
   openviduStore.joinSession()
+
+  window.addEventListener("beforeunload", (event) => {
+    event.returnValue = '';
+    event.preventDefault()
+    // if (roomStore.isWatcher === true  && roomStore.title !== '') {
+    //   roomStore.leaveWatcher()
+    // } else if (roomStore.title !== '') {
+    //     roomStore.leaveRoom()
+    // }
+  })
+  window.addEventListener("popstate", (event) => {
+    if (roomStore.isWatcher === true  && roomStore.title !== '') {
+      roomStore.leaveWatcher()
+    } else if (roomStore.title !== '') {
+        roomStore.leaveRoom()
+    }
+  })
 })
 
 // localStorage에서 불러오기
@@ -287,6 +304,23 @@ onUnmounted(() => {
   myNickname.value = userStore.myNickname
 
   console.log('방 정보 가져오기 성공!!');
+
+  window.removeEventListener("beforeunload", (event) => {
+    event.preventDefault()
+    event.returnValue = '';
+    // if (roomStore.isWatcher === true  && roomStore.title !== '') {
+    //   roomStore.leaveWatcher()
+    // } else if (roomStore.title !== '') {
+    //     roomStore.leaveRoom()
+    // }
+  })
+  window.removeEventListener("popstate", (event) => {
+    if (roomStore.isWatcher === true  && roomStore.title !== '') {
+      roomStore.leaveWatcher()
+    } else if (roomStore.title !== '') {
+        roomStore.leaveRoom()
+    }
+  })
 })
 
 </script>
