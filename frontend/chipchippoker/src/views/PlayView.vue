@@ -26,7 +26,23 @@
       </div>
     </div>
     <!-- players -->
-    <div class="w-100" style="height: 70%;">
+    <div class="w-100 position-relative" style="height: 70%;">
+      <!-- 결과표 -->
+      <div v-if="gameStore.memberEndGameInfos != ''" class="position-absolute top-50 start-50 translate-middle bg-modal
+       rounded-5 px-5 pt-5" style="z-index: 999; width: 50%;">
+        <div class="d-flex flex-column justify-content-center align-items-center text-center">
+          <h2 class="fw-bold">게임 결과</h2>
+          <div class="" v-for="playerResult in gameStore.memberEndGameInfos">
+            <h3 class="m-3">{{ playerResult.nickname }}님 <span
+                :class="[{ 'text-danger': playerResult.isResult == '승' }, { 'text-primary': playerResult.isResult == '패' }]">{{
+                  playerResult.isResult }}</span></h3>
+            <p v-if="playerResult?.pointChange">pointChange: {{ playerResult.pointChange }}</p>
+          </div>
+        </div>
+        <div class="text-center my-3">
+          <h3 type="button" class="btn-outline-yellow rounded-2 p-1 d-inline-block" @click="gotoMain()">메인페이지로 가기</h3>
+        </div>
+      </div>
       <!-- 플레이어 화면 / 카드 / 감정 / 정보 -->
       <PlayPlayerVue />
     </div>
@@ -48,6 +64,8 @@
       </div>
       <!-- 이모지 or 로로 -->
       <div class="h-100 w-25 d-flex justify-content-center align-items-center">
+        <!-- 결과표 -->
+
         <!-- <div class="d-flex justify-content-around w-100 animate__jackInTheBox ">
           <font-awesome-icon :icon="['fas', 'face-angry']" class="fa-5x" style="color: #9f0909;" />
           <font-awesome-icon :icon="['fas', 'face-sad-cry']" class="fa-5x" style="color: #ece513;" />
@@ -82,6 +100,7 @@ import PlayTalkVue from "../components/Play/PlayTalk.vue";
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoomStore } from "@/stores/room";
 import { useGameStore } from "@/stores/game";
+import router from "@/router";
 
 const userStore = useUserStore()
 const roomStore = useRoomStore()
@@ -99,7 +118,7 @@ totalParticipantCnt.value = roomStore.totalParticipantCnt
 console.log(roomTitle.value)
 
 const watchersNickname = computed(() => gameStore.watchersNickname)
-const watchersCount = computed(() => watchersNickname.value.length)
+// const watchersCount = computed(() => watchersNickname.value.length)
 
 const showWatchersList = ref(false)
 
@@ -123,6 +142,12 @@ const closeModal = function () {
   gameStore.cannotBat = false;
 };
 
+// 게임 종료하고 메인페이지로 가기
+const gotoMain = function () {
+  roomStore.leaveRoom()
+  router.push({ name: 'main' })
+}
+
 onMounted(() => {
   // 프로필 아이콘 안보이기
   userStore.viewProfileIcon = false
@@ -137,10 +162,10 @@ onMounted(() => {
     // }
   })
   window.addEventListener("popstate", (event) => {
-    if (roomStore.isWatcher === true  && roomStore.title !== '') {
+    if (roomStore.isWatcher === true && roomStore.title !== '') {
       roomStore.leaveWatcher()
     } else if (roomStore.title !== '') {
-        roomStore.leaveRoom()
+      roomStore.leaveRoom()
     }
   })
 })
@@ -162,10 +187,10 @@ onUnmounted(() => {
     // }
   })
   window.removeEventListener("popstate", (event) => {
-    if (roomStore.isWatcher === true  && roomStore.title !== '') {
+    if (roomStore.isWatcher === true && roomStore.title !== '') {
       roomStore.leaveWatcher()
     } else if (roomStore.title !== '') {
-        roomStore.leaveRoom()
+      roomStore.leaveRoom()
     }
   })
 

@@ -4,7 +4,7 @@
     <div class="w-100 h-100 position-relative">
       <div>
         <!-- 플레이어 정보 -->
-        <div :class="classNameList[index]" :id="'player' + (index + 1)" v-for="(player, index) in gameMemberInfos"
+        <div :class="classNameList[index]" :id="'player' + (index + 1)" v-for="(player, index) in gameStore.gameMemberInfos"
           :key="index">
           <div class="text-white align-self-center ">{{ player.nickname }}
           </div>
@@ -13,9 +13,11 @@
             <div class="m-2">
               <UserVideoVue :stream-manager="findVideo(playersComputed, player.nickname)" />
             </div>
-
-            <!-- 뒤집 카드 -->
-            <div class="flip-card" id="flip-card">
+            <!-- 애니메이션 X 카드 -->
+            <div>
+              <img :src="getCardUrl(player.cardInfo?.cardSet, player.cardInfo?.cardNumber)" alt="앞장">
+            </div>
+            <!-- <div class="flip-card" id="flip-card">
               <div class="flip-card-inner">
                 <div class="flip-card-front">
                   <img :src="getCardUrl(0, 0)" alt="뒷면카드">
@@ -24,15 +26,18 @@
                   <img :src="getCardUrl(player.cardInfo?.cardSet, player.cardInfo?.cardNumber)" alt="앞장">
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
           <!-- 2, 4번 플레이어 -->
           <div v-else class="d-flex flex-row-reverse h-100 m-2 mt-0">
             <div class="m-2">
               <UserVideoVue :stream-manager="findVideo(playersComputed, player.nickname)" />
             </div>
-            <!-- 뒤집 카드 -->
-            <div class="flip-card" id="flip-card">
+            <!-- 애니메이션 X 카드 -->
+            <div>
+              <img :src="getCardUrl(player.cardInfo?.cardSet, player.cardInfo?.cardNumber)" alt="앞장">
+            </div>
+            <!-- <div class="flip-card" id="flip-card">
               <div class="flip-card-inner">
                 <div class="flip-card-front">
                   <img :src="getCardUrl(0, 0)" alt="뒷면카드">
@@ -41,7 +46,7 @@
                   <img :src="getCardUrl(player.cardInfo?.cardSet, player.cardInfo?.cardNumber)" alt="앞장">
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -150,43 +155,43 @@ const publisherComputed = computed(() => openviduStore.publisher)
 const roundState = computed(() => gameStore.roundState);
 
 // 애니메이션과 시간차 관련 로직 --------------------------------------------------------------------------------
-const gameMemberInfos = ref(null)
+// const gameMemberInfos = ref(null)
 
-const getGameData = function () {
-  gameMemberInfos.value = gameStore.gameMemberInfos
-}
+// const getGameData = function () {
+//   gameMemberInfos.value = gameStore.gameMemberInfos
+// }
 
-// 라운드 상태 감지
-watch(roundState, (newValue, oldValue) => {
-  if (newValue === true && oldValue === false) {
-    // 게임 시작시
-    if (gameStore.currentRound === 1) {
-      Promise.all([
-        // 바로 게임 데이터 받아오기
-        getGameData(),
-      ])
-        .then(() => {
-          //  카드 앞으로 뒤집기 (실행효과가 안보이는 이유 모르겠음)
-          flip()
-        })
-    } else {
-      // 라운드 시작시
-      Promise.all([
-        // 데이터 받아오기
-        getGameData()
-      ])
-      // 데이터 받아온 뒤에 카드 앞장 뒤집기
-        .then(() => {
-          flip()
-        })
-    }
-  }
-  // 라운드 종료시
-  else if (newValue === false && oldValue === true) {
-    // 카드 뒤로 뒤집기
-    flip()
-  }
-})
+// // 라운드 상태 감지
+// watch(roundState, (newValue, oldValue) => {
+//   if (newValue === true && oldValue === false) {
+//     // 게임 시작시
+//     if (gameStore.currentRound === 1) {
+//       Promise.all([
+//         // 바로 게임 데이터 받아오기
+//         getGameData(),
+//       ])
+//         .then(() => {
+//           //  카드 앞으로 뒤집기 (실행효과가 안보이는 이유 모르겠음)
+//           flip()
+//         })
+//     } else {
+//       // 라운드 시작시
+//       Promise.all([
+//         // 데이터 받아오기
+//         getGameData()
+//       ])
+//       // 데이터 받아온 뒤에 카드 앞장 뒤집기
+//         .then(() => {
+//           flip()
+//         })
+//     }
+//   }
+//   // 라운드 종료시
+//   else if (newValue === false && oldValue === true) {
+//     // 카드 뒤로 뒤집기
+//     flip()
+//   }
+// })
 
 // 방 나가기
 const leaveRoom = function () {
