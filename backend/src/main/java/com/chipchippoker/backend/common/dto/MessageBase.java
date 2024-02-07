@@ -20,14 +20,15 @@ public enum MessageBase {
 	S200_GAME_ROOM_MEMBER_READY(OK, false, "MS006", "회원이 준비를 마쳤습니다."),
 	S200_GAME_ROOM_IN_PLAY_INFO(OK, false, "MS007", "진행중인 게임의 메시지입니다."),
 	S200_GAME_ROOM_ROUND_END(OK, false, "MS008", "라운드가 종료되었습니다."),
-	S200_GAME_ROOM_RANK_MATCH_END(OK, false, "MS009", "친선 매치가 종료되었습니다."),
-	S200_GAME_ROOM_NORMAL_MATCH_END(OK, false, "MS010", "경쟁 매치가 종료되었습니다."),
+	S200_GAME_ROOM_RANK_MATCH_END(OK, false, "MS009", "경쟁 매치가 종료되었습니다."),
+	S200_GAME_ROOM_NORMAL_MATCH_END(OK, false, "MS010", "친선 매치가 종료되었습니다."),
 	S200_GAME_MATCHING(OK, false, "MS011", "게임 매칭 중입니다."),
 	S200_FRIEND_REQUEST(OK, false, "MS012", "친구 요청을 받았습니다."),
 	S200_GAME_ROOM_NEW_SPECTATOR_ENTER(OK, false, "MS013", "새로운 관전자가 방에 입장했습니다."),
 	S200_GAME_ROOM_SPECTATOR_EXIT(OK, false, "MS014", "관전자가 게임방에서나갔습니다."),
 	S200_GAME_ROOM_MANAGER_EXIT(OK, false, "MS015", "게임방 방장이 게임방에서 나갔습니다."),
 	S200_GAME_ROOM_START(OK, false, "MS016", "게임방이 시작되었습니다."),
+	S200_GAME_ROOM_NORMAL_MATCH_END_READY_ROOM(OK, false, "MS017", "친선 매치가 종료된 후 대기방의 상태입니다."),
 	/**
 	 * 400 Bad Request (잘못된 요청)
 	 */

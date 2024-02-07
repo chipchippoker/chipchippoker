@@ -304,14 +304,20 @@ public class GameController {
 					// 5. GameManager 제거
 					mapManager.getGameManagerMap().remove(gameRoomTitle);
 				} else if (gameRoom.getType().equals("친선")) {
-					// 1. GameResult 저장
+					// 1. Point 저장
+					for (MemberManager manager : memberManagers) {
+						pointService.saveGameResult(manager.getMemberInfo().getNickname(),
+							manager.getMemberGameInfo().getHaveCoin(), gameRoom.getType());
+					}
+
+					// 2. GameResult 저장
 					gameService.saveGameResult(memberManagers, gameRoom);
 
-					// 2. 게임방 상태 변경
+					// 3. 게임방 상태 변경
 					gameRoom.updateGameRoomState("대기");
 					gameRoomRepository.save(gameRoom);
 
-					// 3. 게임종료 메시지 출력
+					// 4. 게임종료 메시지 출력
 					broadcastAllConnected(gameRoomTitle, ResponseEntity.ok(
 							ApiResponse.messageSuccess(
 								MessageBase.S200_GAME_ROOM_NORMAL_MATCH_END,
@@ -320,7 +326,12 @@ public class GameController {
 						)
 					);
 
-					// 4. GameManager 상태 변경
+					// 5. 대기방 정보 전달
+					broadcastAllConnected(gameRoomTitle,
+						gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_NORMAL_MATCH_END_READY_ROOM,
+							gameManager));
+
+					// 6. GameManager 상태 변경
 					gameManager.setGameState("대기");
 				}
 				return;
