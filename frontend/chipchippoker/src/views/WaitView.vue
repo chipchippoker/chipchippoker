@@ -29,7 +29,7 @@
                 style="width: 410px; height: 310px;">
                 <h3 style="color: white;">{{ player.nickname }}</h3>
                 <UserVideo 
-                :stream-manager="findVideo(playersComputed, player.nickname)"
+                :stream-manager="findVideo(playersComputed, player.nickname, index)"
                 :is-manager="isManager"
                 :room-manager-nickname="roomManagerNickname"
                 @force-disconnect="forceDisconnect"
@@ -59,7 +59,7 @@
               <div :class="{ 'is-ready': player.isReady }" style="width: 410px; height: 310px;">
                 <!-- 다른 사람 캠 -->
                 <UserVideo
-                  :stream-manager="findVideo(playersComputed, player.nickname)"
+                  :stream-manager="findVideo(playersComputed, player.nickname, index)"
                   :is-manager="isManager"
                   @force-disconnect="forceDisconnect"
                   />
@@ -215,20 +215,21 @@ const forceDisconnect = function(clientData) {
   roomStore.forceMemberOut(payload)
 }
 
-// 캠
-const findVideo = function (players, targetNickname) {
-  console.log(players.length);
+// 캠 - 아 드디어 했다 와 진짜 죽을거같다 playersComputed가 갱신되기 전에 이 함수가 실행되면서 그렇게 되면
+// 무조건 publisherComputed.value가 나올 수 밖에 없기 때문에
+// index를 같이 넣어서 갱신되지 않고 만약 이전 그대로면 undefined로 처음부터 uservideo에 들어가지 않게 해서
+// 아무 것도 출력하지 않게 하면 나중에 playersComputed가 갱신 되었을 때 그에 맞는 카메라를 넣을 수 있음
+const findVideo = function (players, targetNickname, index) {
+  if (players.length < index) {
+    return undefined
+  }
+  console.log(players);
+  console.log(targetNickname);
     for (let i = 0; i < players.length; i++) {
       const player = players[i]
-      console.log('player ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★')
-      console.log(i, player)
-      console.log('player ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★')
-      console.log(i, player.nickname, targetNickname);
       if (player.nickname === targetNickname) {
         console.log(player)
         console.log(targetNickname)
-        console.log(player.nickname);
-        console.log(player.player);
         return player.player
       }
     }
@@ -259,7 +260,10 @@ watch([openviduStore.messages], () => {
   window.setTimeout(scrollUl, 50);
 })
 
+
+
 onMounted(() => {
+
   navigator.mediaDevices.getUserMedia({ video: true, audio: true })
     .then((stream) => {
       // 카메라 및 마이크에 대한 성공적인 액세스 처리

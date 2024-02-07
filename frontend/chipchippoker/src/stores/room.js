@@ -332,5 +332,6 @@ export const useRoomStore = defineStore('room', () => {
     forceMemberOut,
     // 관전
     enterWatch, leaveWatcher,
+
   }
 },{persist:true})

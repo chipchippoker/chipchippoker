@@ -63,9 +63,7 @@ export const useOpenviduStore = defineStore('openvidu', () => {
         return JSON.parse(connection.data);
       }
       const { clientData } = getConnectionData()
-      console.log(clientData);
       const { isWatcher } = getConnectionData()
-      console.log(isWatcher);
       subscribers.value.push({subscriber:subscriber, nickname:clientData})
       // 플레이어, 관전자 리스트에도 추가
       // streammanager ---------------------------------------------
@@ -152,6 +150,7 @@ export const useOpenviduStore = defineStore('openvidu', () => {
     // Get a token from the OpenVidu deployment
     getToken(String(roomStore.roomId)).then((token) => {
       console.log("토큰 만들어지나");
+      console.log(token);
       session.value.connect(token, {clientData: userStore.myNickname, isWatcher: roomStore.isWatcher})
       .then(() => {
           // Get your own camera stream with the desired properties ---
@@ -172,12 +171,19 @@ export const useOpenviduStore = defineStore('openvidu', () => {
   
           // --- Publish your stream ---
           session.value.publish(publisher.value)
+          console.log(publisher.value)
           console.log(players);
         })
         .catch((error) => {
           console.log("There was an error connecting to the session:", error.code, error.message);
         })
     })
+  
+    window.addEventListener("beforeunload", (event) => {
+        leaveSession();
+        // Uncomment the line below if you want to show a confirmation message
+        // event.returnValue = "Are you sure you want to leave?";
+      })
     }
   
   function leaveSession(){
@@ -193,7 +199,9 @@ export const useOpenviduStore = defineStore('openvidu', () => {
     messages.value = []
     roomStore.watchersNickname = []
     OV.value = undefined;
-
+  
+    // Remove beforeunload listener
+    window.removeEventListener("beforeunload", leaveSession)
     console.log('세션나가기')
   }
   
@@ -203,8 +211,6 @@ export const useOpenviduStore = defineStore('openvidu', () => {
   * --------------------------------------------
   */
   async function getToken(roomId) {
-    console.log(roomId);
-    console.log(typeof(roomId));
     const sessionId = await createSession(roomId);
     return await createToken(sessionId);
   }
