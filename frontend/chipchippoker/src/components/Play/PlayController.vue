@@ -56,20 +56,22 @@ const plus3 = function () {
 const plus5 = function () {
   bettingCoin.value += 5
 }
-// 올인은 더 생각해보기
+// 올인
 const all = function () {
-  bettingCoin.value = gameStore?.gameMemberInfos[0]?.haveCoin
+  getGameInfo()
+  bettingCoin.value = calculateAllinBetting() - myGameInfo.value.bettingCoin 
+  console.log('bettingCoin', bettingCoin.value);
 }
 
 // 베팅
 const bet = function () {
-  if (gameStore.yourTurn === userStore.myNickname && betValidation()) {
+  if (betValidation()) {
     gameStore.bet(roomStore.title, "BET", bettingCoin.value)
     bettingCoin.value = 0
   }
 }
 const die = function () {
-  if (gameStore.yourTurn === userStore.myNickname) {
+  if (betValidation()) {
     gameStore.bet(roomStore.title, "DIE", bettingCoin.value)
     bettingCoin.value = 0
   }
@@ -87,22 +89,33 @@ const getGameInfo = function(){
 }
 
 // 최대 배팅 코인 구하기
-const calculateMaxBetting = function(){
-  let maxBettingCoin = 0
+const calculateAllinBetting = function(){
+  let maxBettingCoin = 200
   gameStore.gameMemberInfos.forEach(info => {
-    if (info.bettingCoin > maxBettingCoin) {
-      maxBettingCoin = info.bettingCoin
+    // 살아있는 사람 중에서
+    if (info.bettingCoin + info.haveCoin !== 0 && info.bettingCoin + info.haveCoin < maxBettingCoin) {
+      maxBettingCoin = info.bettingCoin + info.haveCoin
     }
   })
   return maxBettingCoin
 }
 
+const calculateMinBetting = function(){
+  let minBettingCoin = 0
+  gameStore.gameMemberInfos.forEach(info => {
+    if (info.bettingCoin + info.haveCoin !== 0 && info.bettingCoin > minBettingCoin) {
+      minBettingCoin = info.bettingCoin
+    }
+  })
+  return minBettingCoin
+}
+
+
 // 베팅 Validation ===================================================
 const betValidation = function(){
   getGameInfo()
-  const maxBettingCoin = calculateMaxBetting()
-  // 0 이하의 코인을 베팅하려고 하거나
-  if (bettingCoin.value <= 0)
+  // 0 미만의 코인을 베팅하려고 하거나
+  if (bettingCoin.value < 0)
   {
     alert("코인을 베팅해주세요.")
     return false
@@ -114,7 +127,7 @@ const betValidation = function(){
     return false
   }
   // 현재 필드에 나와있는 최대 베팅 금액보다 적은 금액을 베팅하려고 할 때 -> 첫 턴일 때 생각해봐야 함
-  else if (bettingCoin.value + myGameInfo.value.bettingCoin < maxBettingCoin)
+  else if (bettingCoin.value + myGameInfo.value.bettingCoin < calculateMinBetting())
   {
     alert("현재 최대 베팅 코인보다 적게 베팅할 수 없습니다.")
     return false

@@ -1,7 +1,7 @@
 <template>
   <div class="position-relative" v-if="streamManager" @mouseover="showControls = true" @mouseleave="showControls = false">
     <ov-video 
-    :class="{ 'is-turn': clientData === gameStore.yourTurn }"
+    :class="{ 'is-turn': clientData === gameStore.yourTurn, 'is-die' : isDie() }"
     :stream-manager="streamManager" @sendEmotion="sendEmotion"/>
     <!-- {{ clientData }}이게 내 현재 이름임 이거 지우면 실행 안됨, 안보이게 투명하게 해야하나? -->
     <p style="color: white;">{{ clientData }}</p>
@@ -55,7 +55,7 @@
   const maxEmotion = ref(null)
   const sendEmotion = function (...args){
     maxEmotion.value = args[0]
-    console.log(maxEmotion.value);
+    // console.log(maxEmotion.value);
   }
   const showControls = ref(false);
 
@@ -131,6 +131,19 @@
     }
   }
   
+  const isDie = function(){
+    gameStore.gameMemberInfos?.forEach(info=>{
+      if (info.nickname === clientData.value && info.haveCoin + info.bettingCoin === 0) {
+        return true
+      } else {
+        return false
+      }
+    })
+  }
+
+
+
+
 </script>
 
 <style scope>
@@ -156,5 +169,8 @@
   }
 }
 
+.is-die {
+  filter: grayscale(100%)
+}
 </style>
   

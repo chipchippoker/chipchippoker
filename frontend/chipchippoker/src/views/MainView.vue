@@ -45,7 +45,7 @@
         </div>
 
         <!-- 게임 찾는중 모달 -->
-        <div class="modal fade" id="FindGameModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="findGameModalLabel" aria-hidden="false">
+        <div class="modal fade" id="FindGameModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="findGameModalLabel" aria-hidden="true">
             <ModalFindGame/>
         </div>
 

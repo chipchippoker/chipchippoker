@@ -197,8 +197,8 @@ const roundState = computed(() => gameStore.roundState);
 const leaveRoom = function () {
   // 관전자면
   if (roomStore.isWatcher === true) {
-    roomStore.leaveWatcher()
     roomStore.isWatcher = false
+    roomStore.leaveWatcher()
   } else {
     roomStore.leaveRoom()
   }

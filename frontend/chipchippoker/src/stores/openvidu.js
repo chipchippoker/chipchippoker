@@ -104,13 +104,11 @@ export const useOpenviduStore = defineStore('openvidu', () => {
           watchers.value.splice(watcherIndex, 1);
       }
       
-      // 관전자 이름도 삭제
-      if (roomStore.watchersNickname.includes(clientData)) {
-        const index3 = roomStore.watchersNickname.indexOf(clientData, 0)
-        if(index3 >= 0){
-          roomStore.watchersNickname.splice(index3, 1)
-        }      
-      }    
+      // 파괴된 스트림에 연결된 관전자를 제거합니다.
+      const watcherNicknameIndex = roomStore.watchersNickname.findIndex(watcher => watcher.watcher.stream === stream);
+      if (watcherNicknameIndex !== -1) {
+        roomStore.watchersNickname.splice(watcherNicknameIndex, 1);
+      }  
     })
   
     // On every asynchronous exception...
@@ -151,6 +149,7 @@ export const useOpenviduStore = defineStore('openvidu', () => {
     getToken(String(roomStore.roomId)).then((token) => {
       console.log("토큰 만들어지나");
       console.log(token);
+      console.log(roomStore.isWatcher);
       session.value.connect(token, {clientData: userStore.myNickname, isWatcher: roomStore.isWatcher})
       .then(() => {
           // Get your own camera stream with the desired properties ---

@@ -28,7 +28,7 @@ export const useGameStore = defineStore('game', () => {
   // 게임 정보
   const receiveMessage = ref('')
   // 게임 종료 결과 리스트
-  const memberEndGameInfos = ref('')
+  const memberEndGameInfos = ref([])
   // 라운드 승자
   const winnerNickname = ref('')
   // 게임 방 정보
@@ -432,7 +432,7 @@ export const useGameStore = defineStore('game', () => {
     subscriptionSpectation.value = undefined
     mySpectateSubId.value = []
     watchersNickname.value = []
-    memberEndGameInfos.value = ''
+    memberEndGameInfos.value = []
   }
 
 

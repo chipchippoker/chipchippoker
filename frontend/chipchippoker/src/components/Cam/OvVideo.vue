@@ -70,6 +70,6 @@ const clickVideo = function() {
 <style scoped>
 .cam {
   border-radius: 30px;
-  /* filter: grayscale(100%) */
 }
+
 </style>

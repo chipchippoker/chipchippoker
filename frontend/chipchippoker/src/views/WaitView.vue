@@ -27,7 +27,6 @@
               <div
                :class="{ 'is-ready': player.isReady }"
                 style="width: 410px; height: 310px;">
-                <h3 style="color: white;">{{ player.nickname }}</h3>
                 <UserVideo 
                 :stream-manager="findVideo(playersComputed, player.nickname, index)"
                 :is-manager="isManager"
@@ -35,16 +34,6 @@
                 @force-disconnect="forceDisconnect"
                 />
               </div>
-              <!-- 다른 사람 캠 -->
-              <!-- <div v-else style="width: 410px; height: 310px;"
-                :class="{ 'is-ready': player.isReady }">
-                <UserVideo
-                  :stream-manager="findVideo(playersComputed, player.nickname)"
-                  :is-manager="isManager"
-                  :room-manager-nickname="roomManagerNickname"
-                  @force-disconnect="forceDisconnect"
-                  />
-              </div> -->
             </div>
           </div>
         </div>
@@ -183,8 +172,8 @@ myNickname.value = userStore.myNickname
 const leaveRoom = function() {
   // 관전자면
   if (roomStore.isWatcher === true) {
-    roomStore.leaveWatcher()
     roomStore.isWatcher = false
+    roomStore.leaveWatcher()
   } else {
     roomStore.leaveRoom()
   }
