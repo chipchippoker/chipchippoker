@@ -16,31 +16,33 @@
           <!-- Watchers List -->
           <div v-if="showWatchersList" class="text-white">
             <ul>
-              <li v-for="watcher in watchersNickname" :key="watcher">{{ watcher }}</li>
+              <li v-for="watcher in gameStore.watchersNickname" :key="watcher">{{ watcher }}</li>
             </ul>
           </div>
           <font-awesome-icon type="button" @click="toggleWatchersList" :icon="['fas', 'eye']" size="lg"
             style="color: #ffffff;" />
-          <div class="text-white ms-3" style="width: 40px;">{{ watchersCount }}명</div>
+          <div class="text-white ms-3" style="width: 40px;">{{ gameStore.watchersNickname?.length }}명</div>
         </div>
       </div>
     </div>
     <!-- players -->
     <div class="w-100 position-relative" style="height: 70%;">
       <!-- 결과표 -->
-      <div v-if="gameStore.roundState == false && gameStore.memberEndGameInfos== '' && gameStore.winnerNickname != ''" class="position-absolute top-50 start-50 translate-middle bg-modal
-       rounded-5 px-5 py-5" style="z-index: 999; width: 50%;">
+      <!-- 라운드 결과 -->
+      <div v-if="gameStore.roundState == false && gameStore.memberEndGameInfos.length==0 && gameStore.winnerNickname != ''" class="position-absolute top-50 start-50 translate-middle bg-modal
+       rounded-5 px-5 py-5" style="z-index: 998; width: 40%;">
         <div class="d-flex flex-column justify-content-center align-items-center text-center">
           <h2 class="fw-bold">라운드 결과</h2>
           <h3 class="m-3">{{ gameStore.winnerNickname }}님 승!!</h3>
           
         </div>
       </div>
-      <div v-if="gameStore.memberEndGameInfos != ''" class="position-absolute top-50 start-50 translate-middle bg-modal
-       rounded-5 px-5 pt-5" style="z-index: 999; width: 50%;">
+      <!-- 게임 결과 -->
+      <div v-else-if="gameStore.memberEndGameInfos.length" class="position-absolute top-50 start-50 translate-middle bg-modal
+       rounded-5 px-5 pt-5" style="z-index: 999; width: 40%;">
         <div class="d-flex flex-column justify-content-center align-items-center text-center">
           <h2 class="fw-bold">게임 결과</h2>
-          <div class="" v-for="playerResult in gameStore.memberEndGameInfos">
+          <div class="" v-for="playerResult in gameStore.memberEndGameInfos" :key="playerResult.nickname">
             <h3 class="m-3">{{ playerResult.nickname }}님 <span
                 :class="[{ 'text-danger': playerResult.isResult == '승' }, { 'text-primary': playerResult.isResult == '패' }]">{{
                   playerResult.isResult }}</span></h3>
@@ -125,7 +127,6 @@ totalParticipantCnt.value = roomStore.totalParticipantCnt
 console.log(roomTitle.value)
 
 const watchersNickname = computed(() => gameStore.watchersNickname)
-// const watchersCount = computed(() => watchersNickname.value.length)
 
 const showWatchersList = ref(false)
 
