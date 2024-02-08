@@ -28,6 +28,8 @@ import com.chipchippoker.backend.websocket.game.dto.RankGameEndMessageResponse;
 import com.chipchippoker.backend.websocket.game.model.GameManager;
 import com.chipchippoker.backend.websocket.game.model.MemberManager;
 import com.chipchippoker.backend.websocket.game.service.GameService;
+import com.chipchippoker.backend.websocket.spectation.model.SpectationManager;
+import com.chipchippoker.backend.websocket.spectation.service.SpectationService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +44,7 @@ public class GameController {
 	private final SimpMessagingTemplate template;
 	private final MapManager mapManager;
 	private final GameService gameService;
+	private final SpectationService spectationService;
 
 	/**
 	 * 게임방 생성 REST API에서 성공 응답이 오면 WEB SOCKET API를 호출하여 실시간 통신을 준비한다.
@@ -64,7 +67,6 @@ public class GameController {
 		broadcastAllConnected(gameRoomTitle,
 			gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_CREATED,
 				gameManager));
-
 		log.info("게임방 생성 완료");
 	}
 
@@ -86,6 +88,9 @@ public class GameController {
 			gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_NEW_MEMBER_ENTER,
 				gameManager));
 
+		broadcastAllSpectatorConnected(gameRoomTitle,
+			gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_NEW_MEMBER_ENTER,
+				gameManager));
 		log.info("게임방 입장 성공");
 	}
 
@@ -122,11 +127,19 @@ public class GameController {
 				broadcastAllConnected(gameRoomTitle,
 					gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_MANAGER_EXIT,
 						gameManager));
+
+				broadcastAllSpectatorConnected(gameRoomTitle,
+					gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_MANAGER_EXIT,
+						gameManager));
 			}
 			// 방장이 아닌 경우
 			else {
 				gameManager.deleteMember(nickname);
 				broadcastAllConnected(gameRoomTitle,
+					gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_MEMBER_EXIT,
+						gameManager));
+
+				broadcastAllSpectatorConnected(gameRoomTitle,
 					gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_MEMBER_EXIT,
 						gameManager));
 			}
@@ -159,6 +172,9 @@ public class GameController {
 			broadcastAllConnected(gameRoomTitle,
 				gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_BAN_MEMBER,
 					gameManager));
+			broadcastAllSpectatorConnected(gameRoomTitle,
+				gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_BAN_MEMBER,
+					gameManager));
 		} else {
 			broadcastToMember(nickname, ResponseEntity.badRequest().body(ApiResponse.messageError(
 				MessageBase.E400_CAN_NOT_BAN)));
@@ -181,6 +197,9 @@ public class GameController {
 		broadcastAllConnected(gameRoomTitle,
 			gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_MEMBER_READY,
 				gameManager));
+		broadcastAllSpectatorConnected(gameRoomTitle,
+			gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_MEMBER_READY,
+				gameManager));
 		log.info("게임방 레디 완료");
 	}
 
@@ -195,6 +214,11 @@ public class GameController {
 		log.info("게임방 게임 시작");
 		String nickname = jwtUtil.getNickname(accessToken);
 		GameManager gameManager = mapManager.getGameManagerMap().get(gameRoomTitle);
+		SpectationManager spectationManager = mapManager.getSpectationManagerMap().get(gameRoomTitle);
+		if (spectationManager == null) {
+			spectationManager = new SpectationManager(gameRoomTitle);
+			mapManager.getSpectationManagerMap().put(gameRoomTitle, spectationManager);
+		}
 		if (gameManager.getRoomManager().equals(nickname)) {
 			try {
 				// 게임시작
@@ -202,7 +226,11 @@ public class GameController {
 				broadcastAllConnected(gameRoomTitle, ResponseEntity.ok(
 					ApiResponse.messageSuccess(MessageBase.S200_GAME_ROOM_START)
 				));
+				broadcastAllSpectatorConnected(gameRoomTitle, ResponseEntity.ok(
+					ApiResponse.messageSuccess(MessageBase.S200_GAME_ROOM_START)
+				));
 				deliveryAnotherMessage(gameRoomTitle, gameManager);
+				spectationService.deliveryGameInfoForSpectator(gameRoomTitle, gameManager, spectationManager);
 				log.info("게임방 게임 시작 성공");
 			} catch (InvalidException e) {
 				// 모두 준비완료 상태가 아니라 시작 불가
@@ -234,6 +262,11 @@ public class GameController {
 
 		// 게임 액션
 		GameManager gameManager = mapManager.getGameManagerMap().get(gameRoomTitle);
+		SpectationManager spectationManager = mapManager.getSpectationManagerMap().get(gameRoomTitle);
+		if (spectationManager == null) {
+			spectationManager = new SpectationManager(gameRoomTitle);
+			mapManager.getSpectationManagerMap().put(gameRoomTitle, spectationManager);
+		}
 		MemberManager memberManager = gameManager.getMemberManagerMap().get(nickname);
 		Collection<MemberManager> memberManagers = gameManager.getMemberManagerMap().values();
 
@@ -267,8 +300,16 @@ public class GameController {
 				broadcastAllConnected(gameRoomTitle,
 					ResponseEntity.ok(ApiResponse.messageSuccess(MessageBase.S200_GAME_ROOM_PENALTY_HAPPEN,
 						gameManager.getPenaltyInfos())));
+				broadcastAllSpectatorConnected(gameRoomTitle,
+					ResponseEntity.ok(ApiResponse.messageSuccess(MessageBase.S200_GAME_ROOM_PENALTY_HAPPEN,
+						gameManager.getPenaltyInfos())));
 			}
 			broadcastAllConnected(gameRoomTitle,
+				ResponseEntity.ok(ApiResponse.messageSuccess(MessageBase.S200_GAME_ROOM_ROUND_END,
+					GameRoomMessageResponse.roundEnd(gameManager,
+						memberManagers,
+						winnerNickname))));
+			broadcastAllSpectatorConnected(gameRoomTitle,
 				ResponseEntity.ok(ApiResponse.messageSuccess(MessageBase.S200_GAME_ROOM_ROUND_END,
 					GameRoomMessageResponse.roundEnd(gameManager,
 						memberManagers,
@@ -330,9 +371,19 @@ public class GameController {
 							)
 						)
 					);
+					broadcastAllSpectatorConnected(gameRoomTitle, ResponseEntity.ok(
+							ApiResponse.messageSuccess(
+								MessageBase.S200_GAME_ROOM_NORMAL_MATCH_END,
+								NormalGameEndMessageResponse.create(memberManagers)
+							)
+						)
+					);
 
 					// 5. 대기방 정보 전달
 					broadcastAllConnected(gameRoomTitle,
+						gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_NORMAL_MATCH_END_READY_ROOM,
+							gameManager));
+					broadcastAllSpectatorConnected(gameRoomTitle,
 						gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_NORMAL_MATCH_END_READY_ROOM,
 							gameManager));
 
@@ -343,11 +394,13 @@ public class GameController {
 			}
 			// 새로운 라운드 시작 메시지 출력
 			deliveryAnotherMessage(gameRoomTitle, gameManager);
+			spectationService.deliveryGameInfoForSpectator(gameRoomTitle, gameManager, spectationManager);
 			log.info("새로운 라운드가 시작되었습니다.");
 		} else {
 			gameManager.nextTurn();
 			log.info("베팅 차례가 넘어갑니다.");
 			deliveryAnotherMessage(gameRoomTitle, gameManager);
+			spectationService.deliveryGameInfoForSpectator(gameRoomTitle, gameManager, spectationManager);
 			log.info("새로운 배팅 차례입니다.");
 		}
 		log.info("베팅 로직 완료");
@@ -369,6 +422,15 @@ public class GameController {
 		log.info("방에 있는 모든 사람에게 메시지 전달 시작");
 		template.convertAndSend("/from/chipchippoker/checkConnect/".concat(gameRoomTitle), object);
 		log.info("방에 있는 모든 사람들에게 메시지 전달 완료");
+	}
+
+	/**
+	 * 관전 중인 모든 사람에게 메시지를 전달하는 메서드
+	 */
+	public void broadcastAllSpectatorConnected(String gameRoomTitle, Object object) {
+		log.info("방에 있는 모든 관전자들에게 메시지 전달 시작");
+		template.convertAndSend("/from/chipchippoker/spectation/checkConnect/".concat(gameRoomTitle), object);
+		log.info("방에 있는 모든 관전자들에게 메시지 전달 완료");
 	}
 
 	/**
