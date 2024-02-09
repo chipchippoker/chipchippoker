@@ -57,7 +57,7 @@ public class GameMemberInfo {
 			temp.put(memberManager.getMemberInfo().getNickname(),
 				new GameMemberInfo(memberManager.getMemberInfo().getNickname(),
 					memberManager.getMemberGameInfo().getHaveCoin(),
-					memberManager.getMemberGameInfo().getBettingCoin(),
+					0,
 					memberManager.getMemberGameInfo().getCardInfo(),
 					memberManager.getMemberGameInfo().getIsState()));
 		}
