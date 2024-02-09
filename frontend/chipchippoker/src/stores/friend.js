@@ -163,7 +163,6 @@ export const useFriendStore = defineStore('friend', () => {
       headers: {"access-token": userStore.accessToken}
     })
     .then(res => {
-      // console.log("res.data.data => ",res.data.data)
       myRank.value = res.data.data
     })
     .catch(err => console.log(err))

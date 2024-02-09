@@ -1,10 +1,12 @@
 <template>
-  <div class="position-relative" v-if="streamManager" @mouseover="showControls = true" @mouseleave="showControls = false">
+  <div class="position-relative text-center" v-if="streamManager" @mouseover="showControls = true" @mouseleave="showControls = false">
     <ov-video 
     :class="{ 'is-turn': clientData === gameStore.yourTurn, 'is-die' : isDie() }"
     :stream-manager="streamManager" @sendEmotion="sendEmotion"/>
     <!-- {{ clientData }}이게 내 현재 이름임 이거 지우면 실행 안됨, 안보이게 투명하게 해야하나? -->
-    <p style="color: white;">{{ clientData }}</p>
+    <img class="xx-small-icon"  :src='friendStore.getTierIconUrl(userInfo?.tier)'>
+    <span class="mx-2" style="color: white;">{{ clientData }}</span>
+    <span style="color: white;">{{ userInfo?.rank }}등</span>
     
 
     <!-- 감정 이모지 -->
@@ -35,11 +37,16 @@
 </script>
 
 <script setup>
-  import { ref, onMounted, computed, } from 'vue';
+  import { ref, computed, } from 'vue';
   import OvVideo from '@/components/Cam/OvVideo.vue';
+  import { useUserStore } from '@/stores/user';
   import { useGameStore } from '@/stores/game';
+  import { useFriendStore } from '@/stores/friend';
 
+  const userStore = useUserStore()
   const gameStore = useGameStore()
+  const friendStore = useFriendStore()
+  const userInfo = ref({})
 
   ///////////////////카메라 및 오디오 설정을 위한 부분임
   const muted = ref(false)       // 기본은 음소거 비활성화
@@ -62,7 +69,12 @@
 
   // clientData는 computed로 진행됨
   const clientData = computed(() => {
-    const { clientData } = getConnectionData();
+    const { clientData } = getConnectionData()
+    friendStore.allRankList.forEach(info => {
+      if (info.nickname === clientData) {
+        userInfo.value = info
+      }
+    })
     emit('clientData', clientData);
     return clientData;
   });
