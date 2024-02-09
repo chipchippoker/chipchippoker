@@ -32,7 +32,8 @@ public class GameRoomForSpectatorMessageResponse {
 			result.add(new GameMemberInfo(memberManager.getMemberInfo().getNickname()
 				, memberManager.getMemberGameInfo().getHaveCoin(),
 				memberManager.getMemberGameInfo().getBettingCoin(),
-				memberManager.getMemberGameInfo().getCardInfo()));
+				memberManager.getMemberGameInfo().getCardInfo(),
+				memberManager.getMemberGameInfo().getIsState()));
 		}
 		return GameRoomForSpectatorMessageResponse.builder()
 			.roundState(Boolean.TRUE)
