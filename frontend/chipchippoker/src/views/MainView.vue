@@ -193,7 +193,11 @@ onMounted(()=>{
 
 <style scoped>
 
-
+@media only screen and (max-width: 900px) {
+  .mainstyle {
+    display: none;
+  }
+}
 .btn-outline-weightyellow {
     height: 30px;
     display: flex;
@@ -210,5 +214,4 @@ onMounted(()=>{
     background-color: #ffde76;    
     height: 100px;
 }
-
 </style>
