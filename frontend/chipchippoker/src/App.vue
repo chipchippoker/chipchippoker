@@ -83,7 +83,7 @@ for (let i = 0; i < 100; i++) {
       <RouterLink to="/animation">애니메이션</RouterLink> /
     </div> -->
     
-    <div class="position-relative container">   
+    <div class="position-relative container p-0 w-100" >   
       <!-- 별들 -->
       <!-- <div v-for="star in stars" :key="star" :class="star.className" :style="{ top: star.y + 'px', left: star.x + 'px' }"></div> -->
 

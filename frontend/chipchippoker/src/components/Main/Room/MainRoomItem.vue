@@ -1,8 +1,8 @@
 <template>
-    <div class="container">
-        <div class="row col-12" id="room-item">
+    <div class="container p-0">
+        <div class="row col-12 w-100 h-100 justify-content-between" id="room-item">
             <!-- 공개 여부, 방 제목, 참여 인원, 관전 인원 -->
-            <div class="row col-9">
+            <div class="row col-9 pe-0">
                 
                 <!-- 방 제목 -->
                 <div class="col-12">
@@ -10,7 +10,7 @@
                 </div>
 
                 <!-- 방 정보 -->
-                <div class="row col-12">
+                <div class="row col-12 pe-0">
 
                     <!-- 공개 여부 -->
                     <div class="col-12 d-flex justify-content-between">
@@ -19,7 +19,7 @@
                     </div>
 
                     <!-- 참여 인원, 관전 인원 -->
-                    <div class="col-12">
+                    <div class="col-12 pe-0">
                         <div v-if="roomStore.roomType == '친선'">
                             <div class="x-little-text not-overflow-text">
                                 참여 인원 : {{ item?.currentParticipantCnt }}/{{ item?.totalParticipantCnt }}  
@@ -38,29 +38,29 @@
             </div>
 
             <!-- 입장, 관전 버튼 -->
-            <div class="row col-4 pe-0" v-if="roomStore.roomType == '친선'">
-                <div class="col-12 m-0 p-0">
+            <div class="row col-4 justify-content-end pe-2" v-if="roomStore.roomType == '친선'">
+                <div class="col-8 m-0 p-0">
                     <!-- 친선일 때만 보이기 -->
                     <button v-if="item?.isPrivate" @click="showEnterPWModal('플레이어')"
-                        class="btn-2" :disalbed="item?.currentParticipantCnt === item?.totalParticipantCnt"
+                        class="btn-2 m-0" :disalbed="item?.currentParticipantCnt === item?.totalParticipantCnt"
                         :class="{ 'btn-2-red-done': item?.currentParticipantCnt === item?.totalParticipantCnt, 'btn-2-red': item?.currentParticipantCnt !== item?.totalParticipantCnt }">
                         입장
                     </button>
                     <button v-else @click="enterRoomPublic(item.title, '플레이어')"
-                        class="btn-2 btn-2-red" :disalbed="item?.currentParticipantCnt === item?.totalParticipantCnt"
+                        class="btn-2 btn-2-red m-0" :disalbed="item?.currentParticipantCnt === item?.totalParticipantCnt"
                         :class="{ 'btn-2-red-done': item?.currentParticipantCnt === item?.totalParticipantCnt, 'btn-2-red': item?.currentParticipantCnt !== item?.totalParticipantCnt }">
                         입장
                     </button>
                 </div>
-                <div class="col-12 m-0 p-0">
+                <div class="col-8 m-0 p-0">
                     <button v-if="item?.isPrivate" @click="showEnterPWModal('관전자')"
-                        class="btn-2"
+                        class="btn-2 m-0"
                         :class="{ 'btn-2-blue-done': item?.currentSpectatorCnt === 6, 'btn-2-blue': item?.currentSpectatorCnt !== 6 }">
                         관전
                         <!-- <font-awesome-icon :icon="['fas', 'caret-right']" style="color: #8f8f8f;" /> -->
                     </button>
                     <button v-else @click="enterRoomPublic(item.title, '관전자')"
-                        class="btn-2 btn-2-blue"
+                        class="btn-2 btn-2-blue m-0"
                         :class="{ 'btn-2-blue-done': item?.currentSpectatorCnt === 6, 'btn-2-blue': item?.currentSpectatorCnt !== 6 }">
                         관전
                         <!-- <font-awesome-icon :icon="['fas', 'caret-right']" style="color: #8f8f8f;" /> -->
@@ -176,6 +176,11 @@ const showEnterPWModal = function (type) {
     /* 텍스트 오버플로우시 말줄임(...) 표시 */
     white-space: nowrap;
     /* 텍스트가 넘치면 줄바꿈을 하지 않음 */
+}
+
+.not-overflow-text:hover {
+    overflow: visible;
+    cursor: pointer;
 }
 
 #room-item {
