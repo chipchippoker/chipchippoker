@@ -46,7 +46,10 @@ const bettingCoin = ref(0)
 const myGameInfo = ref({})  // 내 게임 정보
 const maxBettingCoin = ref(200)
 const minBettingCoin = ref(0)
-
+// 타이머
+const timer = ref(20)
+// 배팅을 했는지 안했는지
+const isBetting = ref(false)
 // 웹소켓 메시지 수신 시 최대 배팅 코인 업데이트
 watch(() => gameStore.gameMemberInfos, () => {
   console.log('턴 변화 감지')
@@ -55,6 +58,7 @@ watch(() => gameStore.gameMemberInfos, () => {
   calculateMaxBettingCoin()
   calculateMinBettingCoin()
 })
+
 
 // 베팅 코인 조절 함수
 const plus1 = function () {
@@ -92,6 +96,7 @@ const bet = function () {
   if (betValidation()) {
     gameStore.bet(roomStore.title, "BET", bettingCoin.value)
     bettingCoin.value = 0
+    isBetting.value = true
   }
 }
 
@@ -108,11 +113,36 @@ const call = function () {
 const die = function () {
   if (gameStore.yourTurn === userStore.myNickname) {
     bettingCoin.value = 0
+    isBetting.value = true
     gameStore.bet(roomStore.title, "DIE", bettingCoin.value)
   } else {
     alert("본인 차례가 아닙니다.")
   }
 }
+
+// // 타이머 실행함수
+// const timerSetting = function(){
+      // 1초마다 한번씩 호출되는 함수
+//   const reduceTime = setInterval(()=>{
+      // 만약 timer의 시간이 있다면 1초씩 감소
+//     if (timer.value > 0){
+//       timer.value -= 1
+//       console.log('남은 시간',timer.value)
+      // 만약 타이머가 0초이고 현재 턴이 나의 턴이라면 다이를 보냄
+//     } else if (gameStore.yourTurn === userStore.myNickname ){
+//       die()
+      // 타이머가 0초이고 나의 턴이 아닐때는 멈추기
+//     } else{
+//       console.log("멈추기")
+//       clearInterval(reduceTime)
+//     }
+//   },1000)
+// }
+// watch(()=>gameStore.yourTurn,()=>{
+//   timer.value = 20
+//   isBetting.value = false
+//   timerSetting()
+// })
 
 gameStore.bettingCoin = bettingCoin.value
 
