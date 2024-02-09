@@ -5,11 +5,11 @@
 
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body d-flex flex-column justify-content-center align-items-center gap-5">
+        <div class="modal-body d-flex flex-column justify-content-center align-items-center gap-4">
             <h3>정말로... 탈퇴 하시겠습니까?</h3>
             <div class="d-flex gap-5">
-                <button class="btn btn-primary"  data-bs-dismiss="modal" aria-label="Close">돌아가기</button>
-                <button class="btn btn-outline-secondary" data-bs-dismiss="modal" @click="signOut">탈퇴하고 얻은 포인트 다 잃기</button>
+                <button class="btn-2 btn-2-blue"  data-bs-dismiss="modal" aria-label="Close">돌아가기</button>
+                <button class="btn-2 btn-3-red" style="width: 210px;" data-bs-dismiss="modal" @click="signOut">탈퇴하고 얻은 포인트 다 잃기</button>
             </div>
         </div>
         
@@ -31,5 +31,11 @@ const signOut = function(){
 </script>
 
 <style lang="scss" scoped>
-
+button {
+    width: 75px;
+    height: 30px;
+    font-size: 17px;
+    margin-bottom: 10px;
+    margin-top: 0%;
+}
 </style>

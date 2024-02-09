@@ -1,15 +1,17 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { useUserStore } from './user'
 import { useGameStore } from './game'
 import { useRoomStore } from './room'
+import { useOpenviduStore } from './openvidu'
 
 export const useMatchStore = defineStore('match', () => {
   const userStore = useUserStore()
   const gameStore = useGameStore()
   const roomStore = useRoomStore()
+  const openviduStore = useOpenviduStore()
   const MATCH_API = `${userStore.BASE_API_URL}/matching`
   const router = useRouter()
   
@@ -36,11 +38,12 @@ export const useMatchStore = defineStore('match', () => {
       console.log(res)
       isSearching.value = true
       roomId.value = res.data.roomId
+      title.value = res.data.title
+      totalParticipantCnt.value = res.data.totalParticipantCnt
       roomStore.roomId = res.data.roomId
       roomStore.title = res.data.title
       roomStore.totalParticipantCnt = res.data.totalParticipantCnt
-      title.value = res.data.title
-      totalParticipantCnt.value = res.data.totalParticipantCnt
+      openviduStore.joinSession()
       gameStore.subscribeHandler(title.value)
       return res.code
     } catch (err) {

@@ -96,7 +96,7 @@
 import PlayBattingVue from "@/components/Play/PlayBatting.vue";
 import UserVideoVue from "../Cam/UserVideo.vue";
 import { ref, defineProps, computed, onMounted, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useGameStore } from "@/stores/game";
 import { useRoomStore } from "@/stores/room";
 import { useOpenviduStore } from "@/stores/openvidu";
@@ -214,6 +214,11 @@ onMounted(() => {
     });
     console.log('여긴 플레이플레이어!!');
     openviduStore.joinSession()
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+        console.log('백드롭 제거');
+        backdrop.remove();
+    }
   })
 </script>
 
