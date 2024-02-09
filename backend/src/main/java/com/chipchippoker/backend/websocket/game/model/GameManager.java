@@ -122,27 +122,15 @@ public class GameManager {
 		} else {
 			this.gameState = "진행";
 			this.order.addAll(memberManagerMap.keySet().stream().toList());
-			// 카드 배분
-			// 기본칩 배팅
-			// 라운드 설정
 			newRoundSetting(0);
 		}
 	}
 
 	public void betting(BettingMessageRequest bettingMessageRequest, MemberManager memberManager) {
-		// 유저가 이미 죽은 상태라면 베팅불가하다.
 		if (memberManager.getMemberGameInfo().getIsState().equals("DIE")) {
 			throw new InvalidException(MessageBase.E400_CAN_NOT_BET_ALREADY_DIE);
 		}
 
-		/*
-		3. 배팅해야하는 최대 칩 이하로 배팅을 했는가? 그게 아니라면 베팅이 불가하다.
-		불가능한 경우들
-		베팅하려는 코인이 가지고 잇는 코인보다 많음
-		베팅한 코인이 0보다 작음 (0은 체크, 1이상은 베팅)
-		(베팅하려는 코인 + 이미 베팅한 코인 - 라운드 최대 베팅)이 0보다 작음 (같으면 콜이고 그 이상이면 RUN)
-		(라운드 최대 배팅금액 - 베팅하려는 코인 - 베팅한 코인)이 0보다 작음 (같으면 상대를 올인시키는 것이고 그 이상이면 봐주는 거)
-		 */
 		if (bettingMessageRequest.getAction().equals("BET")) {
 			if (bettingMessageRequest.getBettingCoin() > memberManager.getMemberGameInfo().getHaveCoin()
 				|| bettingMessageRequest.getBettingCoin() < 0
@@ -161,7 +149,6 @@ public class GameManager {
 			memberManager.getMemberGameInfo().setBettingCoin(memberManager.getMemberGameInfo().getBettingCoin()
 				+ bettingMessageRequest.getBettingCoin());
 
-			// 사용자 행동횟수 +1
 			memberManager.getMemberGameInfo().setActionCount(memberManager.getMemberGameInfo().getActionCount() + 1);
 
 			// 최소로 배팅해야 하는 코인 업데이트
@@ -188,11 +175,6 @@ public class GameManager {
 	 * DIE 상태가 아닌 모든 플레이어가 동일한 금액을 베팅했으면 해당 라운드는 종료되어야 한다.
 	 */
 	public boolean checkRoundEnd() {
-		/*
-		1. 다이를 외친 사람을 제외한 나머지의 베팅칩이 모두 같으면 라운드 종료
-		2. 다이를 외친 사람을 제외하고 혼자 남았으면 라운드 종료
-		2. 모든 사람이 액션을 최소 한 번 이상 했는 지가 중요하다.
-		 */
 		List<MemberManager> notDie = memberManagerMap.values()
 			.stream()
 			.filter(memberManager -> !memberManager.getMemberGameInfo().getIsState().equals("DIE"))
@@ -217,8 +199,7 @@ public class GameManager {
 	 * + 라운드가 종료되었을 때, 10을 들고 포기한 사람에게 10개의 코인 몰수하기
 	 */
 	public String roundEnd() {
-		// todo 10을 들고 포기한 사람 패널티 부여 + 게임방에 패널티 받은 사람들 닉네임 알려주기
-		// 승리한 사람 -> 포기하지 않은 사람 중에 카드가 가장 높은 사람
+		// todo 게임방에 패널티 받은 사람들 닉네임 알려주기, 라운드 종료 메시지에 패널티 정보 추가하기
 		List<MemberManager> notDie = memberManagerMap.values()
 			.stream()
 			.filter(memberManager -> !memberManager.getMemberGameInfo().getIsState().equals("DIE"))
@@ -327,13 +308,12 @@ public class GameManager {
 
 				// maxCoin 변경
 				maxCoin = Math.min(maxCoin, manager.getMemberGameInfo().getHaveCoin() + 1);
-			}
-			// 코인이 없는 사람은 이제 게임에서 제외된다.
-			else {
+			} else {
 				manager.getMemberGameInfo().setHaveCoin(0);
 				manager.getMemberGameInfo().setBettingCoin(0);
 				manager.getMemberGameInfo().setIsState("DIE");
 				manager.getMemberGameInfo().setActionCount(0);
+				manager.getMemberGameInfo().setCardInfo(new CardInfo(0, 0));
 			}
 		}
 	}
