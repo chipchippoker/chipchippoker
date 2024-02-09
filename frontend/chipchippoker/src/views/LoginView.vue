@@ -117,7 +117,7 @@
   }
 </script>
   
-<style scoped>
+<style lang="scss" scoped>
   
   .container {
       background-color: #99A5C1;

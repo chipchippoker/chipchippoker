@@ -1,13 +1,12 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 import webstomp from 'webstomp-client'
 import { useUserStore } from './user'
 import { useRoomStore } from './room'
 import { useMatchStore } from './match'
 import { useOpenviduStore } from './openvidu'
-import { faL } from '@fortawesome/free-solid-svg-icons'
 
 
 export const useGameStore = defineStore('game', () => {
@@ -15,6 +14,7 @@ export const useGameStore = defineStore('game', () => {
   const roomStore = useRoomStore()
   const matchStore = useMatchStore()
   const openviduStore = useOpenviduStore()
+  const route = useRoute()
   const router = useRouter()
 
   const url = `wss://chipchippoker.shop/chipchippoker`
@@ -43,9 +43,8 @@ export const useGameStore = defineStore('game', () => {
   const myPrivateSubId = ref('')
   const myGameSubId = ref('')
   const isMatch = ref(false)
-
-
   const isMatchStart = ref(false) // 매치로 시작하는 게임인가
+
   // 게임 상태 변수
   const firstStart = ref(false)
   const indexing = function (nickname) {
@@ -170,16 +169,9 @@ export const useGameStore = defineStore('game', () => {
           case "MS008": // 라운드 종료
             receiveRoundFinish(response.data)
             break
-          case "MS009": // 경쟁 게임 종료
-            receiveGameFinishRank(response.data)
-            break
-          case "MS010": // 친선 게임 종료
-            receiveGameFinishFriend(response.data)
-            break
           case "MS012": // 친구요청 받음
             isAlarmArrive.value = true
             break
-
           case "ME003": // 방장이 아닌사람이 start 한다면
             console.log("님은 방장이 아님")
             alert(response.message)
@@ -216,7 +208,7 @@ export const useGameStore = defineStore('game', () => {
           break
         case "MS003": // 방 나가기
           console.log(response.message);
-          receiveExitRoom(response.data, response.code)
+          receiveExitRoom(response.data, response.code, response.message)
           break
         case "MS004": // 강퇴(타인)
           console.log(response.message);
@@ -230,11 +222,11 @@ export const useGameStore = defineStore('game', () => {
           console.log(response.message);
           receiveRoundFinish(response.data)
           break
-        case "MS009": // 경쟁 게임 종료
-          receiveGameFinishRank(response.data)
-          break
-        case "MS010": // 친선 게임 종료
+        case "MS009": // 친선 게임 종료
           receiveGameFinishFriend(response.data)
+          break
+        case "MS010": // 경쟁 게임 종료
+          receiveGameFinishRank(response.data)
           break
         case "MB002": // 모두 준비상태가 아님
           console.log('모두 준비 상태가 아닙니다.');
@@ -259,8 +251,7 @@ export const useGameStore = defineStore('game', () => {
           break
         case "MS015": // 게임방 방장이 게임에서 나감
           console.log(response.message)
-          alert(response.message)
-          receiveExitRoom(response.data, response.code)
+          receiveExitRoom(response.data, response.code, response.message)
           break
       }
     })
@@ -341,12 +332,16 @@ export const useGameStore = defineStore('game', () => {
     stompClient.send(`/to/game/exit/${gameRoomTitle}`, JSON.stringify({}), { 'access-token': userStore.accessToken })
   }
 
-  // 손 봐야함
   // 게임방 나가기 RECEIVE
-  const receiveExitRoom = function (data, code) {
+  const receiveExitRoom = function (data, code, message) {
     countOfPeople.value = data.countOfPeople
     roomManagerNickname.value = data.roomManagerNickname
     memberInfos.value = data.memberInfos
+    if (code === 'MS015' && route.name === 'wait') {
+      if (roomManagerNickname.value === userStore.myNickname) {
+        alert('방장이 되었습니다.')
+      }
+    }
   }
 
   // 게임 준비 SEND
@@ -433,6 +428,7 @@ export const useGameStore = defineStore('game', () => {
   const sendFriendRequest = function (nickname) {
     stompClient.send("/to/friend/request", JSON.stringify({ "nickname": nickname }), { 'access-token': userStore.accessToken })
   }
+
   // 방 나가기 시 초기화 함수
   const resetGameStore = function () {
     console.log('subscriptionGame.value');
@@ -475,8 +471,6 @@ export const useGameStore = defineStore('game', () => {
   // 관전 정보
   const mySpectateSubId = ref('')
   const watchersNickname = ref([])
-
-
 
   // 관전 구독 핸들러
   const spectateHandler = (gameRoomTitle) => {
@@ -526,7 +520,6 @@ export const useGameStore = defineStore('game', () => {
     watchersNickname.value = data.spectatorList
   }
   //---------------------------------------------------관전--------------------------------------------------------
-
 
   return {
     // State
