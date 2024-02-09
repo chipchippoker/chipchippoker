@@ -158,7 +158,6 @@ watch(() => roomStore.isRoom, (newValue) => {
     }
 })
 
-
 // 메인 페이지 프로필 눌렀을 때 새로고침
 const reLoad = function() {
     router.go(0)

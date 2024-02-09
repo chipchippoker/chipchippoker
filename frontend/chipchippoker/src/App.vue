@@ -35,7 +35,7 @@ function getRandomValue(max) {
 
 const stars = ref([])
 
-for (let i = 0; i < 300; i++) {
+for (let i = 0; i < 100; i++) {
   const x = getRandomValue(windowWidth);
   const y = getRandomValue(windowHeight);
 
@@ -70,7 +70,7 @@ for (let i = 0; i < 300; i++) {
 </script>
 
 <template>
-  <div class="maple">
+  <div class="maple bg-gradation-blue">
     <!-- <div>
       <RouterLink to="/login">로그인</RouterLink> /
       <RouterLink to="/signup">회원가입</RouterLink> / 
@@ -83,7 +83,7 @@ for (let i = 0; i < 300; i++) {
       <RouterLink to="/animation">애니메이션</RouterLink> /
     </div> -->
     
-    <div class="position-relative">   
+    <div class="position-relative container">   
       <!-- 별들 -->
       <!-- <div v-for="star in stars" :key="star" :class="star.className" :style="{ top: star.y + 'px', left: star.x + 'px' }"></div> -->
 
@@ -111,7 +111,7 @@ for (let i = 0; i < 300; i++) {
       </div>
 
     
-      <div id="app" class="bg-gradation-blue d-flex justify-content-center ">
+      <div id="app" class="d-flex justify-content-center ">
         <RouterView />
       </div>
 

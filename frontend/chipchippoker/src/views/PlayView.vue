@@ -25,6 +25,7 @@
         </div>
       </div>
     </div>
+
     <!-- players -->
     <div class="w-100 position-relative" style="height: 70%;">
       <!-- 결과표 -->
@@ -34,9 +35,9 @@
         <div class="d-flex flex-column justify-content-center align-items-center text-center">
           <h2 class="fw-bold">라운드 결과</h2>
           <h3 class="m-3">{{ gameStore.winnerNickname }}님 승!!</h3>
-          
         </div>
       </div>
+
       <!-- 게임 결과 -->
       <div v-else-if="gameStore.memberEndGameInfos.length" class="position-absolute top-50 start-50 translate-middle bg-modal
        rounded-5 px-5 pt-5" style="z-index: 999; width: 40%;">
@@ -50,12 +51,18 @@
           </div>
         </div>
         <div class="text-center my-3">
-          <h3 type="button" class="btn-outline-yellow rounded-2 p-1 d-inline-block" @click="gotoMain()">메인페이지로 가기</h3>
+          <!-- 친선 매치 종료 후 대기페이지로 이동 -->
+          <h3 v-if="!!playerResult?.pointChange" type="button" class="btn-outline-yellow rounded-2 p-1 d-inline-block" @click="goToWait()">메인페이지로 가기</h3>
+          <!-- 경쟁 매치 종료 후 메인페이지로 이동 -->
+          <h3 v-else type="button" class="btn-outline-yellow rounded-2 p-1 d-inline-block" @click="gotoMain()">메인페이지로 가기</h3>
+          
         </div>
       </div>
+
       <!-- 플레이어 화면 / 카드 / 감정 / 정보 -->
       <PlayPlayerVue />
     </div>
+
     <!-- 채팅, 카드, 컨트롤러 -->
     <div class="d-flex align-items-center mb-3" style="width: 100%; height: 20%;">
       <!-- 카드 세트-->
@@ -102,13 +109,14 @@
 </template>
 
 <script setup>
-import { useUserStore } from "@/stores/user";
 import PlayControllerVue from "../components/Play/PlayController.vue";
 import PlayPlayerVue from "../components/Play/PlayPlayer.vue";
 import PlayTalkVue from "../components/Play/PlayTalk.vue";
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useUserStore } from "@/stores/user";
 import { useRoomStore } from "@/stores/room";
 import { useGameStore } from "@/stores/game";
+import { onBeforeRouteLeave } from "vue-router";
 import router from "@/router";
 
 const userStore = useUserStore()
@@ -150,10 +158,18 @@ const closeModal = function () {
   gameStore.cannotBat = false;
 };
 
-// 게임 종료하고 메인페이지로 가기
+// 경쟁모드 종료 후 메인페이지로 이동
 const gotoMain = function () {
   roomStore.leaveRoom()
-  router.push({ name: 'main' })
+}
+
+// 친선모두 종료 후 대기페이지로 이동
+const goToWait = function () {
+  router.push({
+    name: 'wait',
+    params: { roomId: roomStore.roomId },
+  })
+
 }
 
 onMounted(() => {
@@ -178,12 +194,9 @@ onMounted(() => {
   })
 })
 
-
-
 onUnmounted(() => {
   // 프로필 아이콘 보이기
   userStore.viewProfileIcon = true
-
 
   window.removeEventListener("beforeunload", (event) => {
     event.preventDefault()

@@ -16,12 +16,29 @@ import { computed, ref, watch } from 'vue';
 
 const friendStore = useFriendStore()
 const nickname = ref('')
+
+// 친구 목록 필터
 const filterFriendList = computed(()=>{
-    if (nickname.value ===''){
-        return friendStore.friendList
-    } else {
-        return friendStore.friendList.filter(friend => friend.nickname.includes(nickname.value))
+    let filterdList = friendStore.friendList
+    if (nickname.value){
+        filterdList = friendStore.friendList.filter(friend => friend.nickname.includes(nickname.value))
     }
+
+    const onlineFriends = filterdList.filter(friend => friend.isOnline);
+    const offlineFriends = filterdList.filter(friend => !friend.isOnline);
+
+    // 온라인 친구 목록 정렬
+    onlineFriends.sort((a, b) => {
+        return a.nickname.localeCompare(b.nickname);
+    });
+
+    // 오프라인 친구 목록 정렬
+    offlineFriends.sort((a, b) => {
+        return a.nickname.localeCompare(b.nickname);
+    });
+
+    // 온라인 친구 + 오프라인 친구
+    return onlineFriends.concat(offlineFriends)
 })
 
 

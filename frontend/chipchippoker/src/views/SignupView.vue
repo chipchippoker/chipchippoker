@@ -6,10 +6,12 @@
         <img class="small-logo" src="/src/assets/icons/Logo.png" alt="">
       </div>
 
+      <!-- 회원가입 -->
       <div class="formstyle">
         <div class="h2 fw-bold">회원가입</div>
-        <!-- 회원가입 -->
+        
         <form @submit.prevent="signUp" style="width: 400px;">
+
           <!-- 닉네임 -->
           <div class="mb-3">
             <label for="nickname" class="form-label">닉네임</label>
@@ -24,6 +26,7 @@
             <div v-if="nickname!=='' && isNickDuplicated===null" id="nickname" class="fw-lgitighter x-little-text text-danger">닉네임 중복확인을 해주세요.</div>
             <div v-if="isValidNickname && isNickDuplicated===false" id="id" class="fw-lgitighter x-little-text text-primary">사용 가능한 닉네임입니다.</div>
           </div>
+
           <!-- 아이디 -->
           <div class="mb-3">
             <label for="id" class="form-label">아이디</label>
@@ -38,6 +41,7 @@
             <div v-if="memberId!=='' && memberId!==null && isIdDuplicated===null" id="id" class="fw-lgitighter x-little-text text-danger">아이디 중복확인을 해주세요.</div>
             <div v-if="isValidMemberId && isIdDuplicated===false" id="id" class="fw-lgitighter x-little-text text-primary">사용 가능한 아이디입니다.</div>
           </div>
+
           <!-- 비밀번호 -->
           <div class="mb-3">
             <label for="password1" class="form-label">비밀번호</label>
@@ -45,6 +49,7 @@
             <div v-if="password1!=='' && !isValidPassword1" id="id" class="fw-lgitighter x-little-text text-danger">영어, 숫자, 특수문자를 모두 포함한 8 ~
               30 글자이어야 합니다.</div>
           </div>
+
           <!-- 비밀번호 확인 -->
           <div class="mb-3">
             <label for="password2" class="form-label">비밀번호 확인</label>
@@ -64,7 +69,8 @@
           <!-- 회원가입 버튼 -->
           <div class="d-grid gap-2 pt-3">
             <button :disabled="!(isValidMemberId && isValidPassword1 && isValidPassword2 && isValidNickname && isNickDuplicated === false && isIdDuplicated === false)"
-              type="submit" class="btn btn-primary btn-login">회원가입</button>
+              type="submit" class="btn-3-indigo"
+              ><div class="fs-6 pt-1" style="width: 100%; height: 100%;">회원가입</div></button>
           </div>
         </form>
       </div>
@@ -178,8 +184,22 @@
 </script>
 
   
-<style scoped>
-.btn-login {
+<style lang="scss" scoped>
+  .btn-3-indigo {
+    text-align: center;
+    width: 400px;
+    height: 40px;
+    margin: 0;
+    
+    &:disabled {
+      pointer-events: none;
+      background-color: #99A5C1;
+      border: 2px solid white;
+      color: #ffffff;
+    }
+  }
+  
+  .btn-login {
       box-shadow: 0 0 0 3px #ffffff inset;
       border: 0px;
       background-color: #99A5C1;
