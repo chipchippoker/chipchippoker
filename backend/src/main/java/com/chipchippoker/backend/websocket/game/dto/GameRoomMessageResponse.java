@@ -7,6 +7,7 @@ import java.util.List;
 import com.chipchippoker.backend.websocket.game.model.GameManager;
 import com.chipchippoker.backend.websocket.game.model.GameMemberInfo;
 import com.chipchippoker.backend.websocket.game.model.MemberManager;
+import com.chipchippoker.backend.websocket.game.model.PenaltyInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
@@ -24,6 +25,8 @@ public class GameRoomMessageResponse {
 	private String yourTurn;
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private String winnerNickname;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private List<PenaltyInfo> penaltyInfos;
 	private List<GameMemberInfo> gameMemberInfos = new ArrayList<>();
 
 	public static GameRoomMessageResponse createRoundProceed(
@@ -49,6 +52,7 @@ public class GameRoomMessageResponse {
 			.currentRound(gameManager.getCurrentRound())
 			.yourTurn(gameManager.getOrder().get(gameManager.getTurnNumber()))
 			.winnerNickname(winnerNickname)
+			.penaltyInfos(gameManager.getPenaltyInfos())
 			.gameMemberInfos(GameMemberInfo.createListRoundEnd(gameManager, memberManagers))
 			.build();
 	}

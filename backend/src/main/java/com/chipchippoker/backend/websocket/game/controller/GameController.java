@@ -296,14 +296,6 @@ public class GameController {
 
 		if (gameManager.checkRoundEnd()) {
 			String winnerNickname = gameManager.roundEnd();
-			if (!gameManager.getPenaltyInfos().isEmpty()) {
-				broadcastAllConnected(gameRoomTitle,
-					ResponseEntity.ok(ApiResponse.messageSuccess(MessageBase.S200_GAME_ROOM_PENALTY_HAPPEN,
-						gameManager.getPenaltyInfos())));
-				broadcastAllSpectatorConnected(gameRoomTitle,
-					ResponseEntity.ok(ApiResponse.messageSuccess(MessageBase.S200_GAME_ROOM_PENALTY_HAPPEN,
-						gameManager.getPenaltyInfos())));
-			}
 			broadcastAllConnected(gameRoomTitle,
 				ResponseEntity.ok(ApiResponse.messageSuccess(MessageBase.S200_GAME_ROOM_ROUND_END,
 					GameRoomMessageResponse.roundEnd(gameManager,
