@@ -54,11 +54,10 @@
             <div class="tab-pane fade"  id="v-pills-rank-tab-pane" role="tabpanel" aria-labelledby="v-pills-rank-tab" tabindex="0">
                 <MainRoomRankList/></div>
         </div>
-
-        
     </div>
+
+    <!-- 페이지네이션 -->
     <div>
-        
         <nav aria-label="Page navigation example">
         <ul class="pagination pagination-sm justify-content-center gap-1" type="button">
             <!-- 이전 버튼 -->
@@ -68,7 +67,7 @@
                 </a>
             </li> -->
             <!-- 숫자 버튼 -->
-            <li class="page-item xx-little-text" v-for="pagenum in roomStore?.pageArray" :key="pagenum">
+            <li class="page-item" v-for="pagenum in roomStore?.pageArray" :key="pagenum">
                 <a @click="pageRoom(pagenum)" class="btn-outline-yellow rounded-1 px-1 text-black">
                 {{pagenum }}
                 </a>
@@ -204,5 +203,8 @@ onMounted (() => {
 }
 .icon-hover:hover{
     background-color: #365aa1;
+}
+.pagination a {
+  text-decoration: none;
 }
 </style>

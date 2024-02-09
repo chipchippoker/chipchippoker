@@ -4,7 +4,7 @@ import ModalNotificationList from './components/Modal/ModalNotificationList.vue'
 import ModalMainSettings from './components/Modal/ModalMainSettings.vue';
 import { RouterLink, RouterView } from 'vue-router'
 import { useRoute, useRouter } from 'vue-router';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useUserStore } from '@/stores/user'
 import { useFriendStore } from './stores/friend';
 import { useGameStore } from './stores/game';
@@ -61,6 +61,9 @@ for (let i = 0; i < 300; i++) {
     friendStore.RequestAlarm()
     gameStore.isAlarmArrive = false
   }
+
+  // 마우스 커서 커스터마이징
+ 
 </script>
 
 <template>
@@ -126,11 +129,11 @@ for (let i = 0; i < 300; i++) {
   </div>
 </template>
 
-<style>
+<style lang="scss">
 @import "@/assets/css/color.css";
 @import "@/assets/css/size.css";
 @import "@/assets/css/animation.css";
-
+@import "@/assets/css/button.scss";
 
 html, body {
   margin: 0;
@@ -249,4 +252,7 @@ html, body {
     box-shadow: 0 0 10px 0px rgba(255, 255, 255, 0.2);
   }
 }
+
+// 마우스 커서 커스터마이징
+
 </style>

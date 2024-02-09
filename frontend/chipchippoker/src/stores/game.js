@@ -98,33 +98,44 @@ export const useGameStore = defineStore('game', () => {
         myPrivateSubId.value = message.headers.subscription
 
         switch (response.code) {
-
-          case "MB004":
-            console.log('현재 진행 중인 라운드와 일치하지 않습니다.')
-            notMatchRound.value = true
-            break
-
-          case "MB005":
-            console.log('본인의 차례가 아닙니다.')
-            notYourTurn.value = true
-            break
-
-          case "MB006":
-            console.log('배팅이 불가능합니다.')
-            cannotBat.value = true
-            break
-
-          case "MB008":
-            console.log('혼자서는 게임이 불가합니다.')
+          case "MB001": // 방장만 강제퇴장 요청 가능
+            console.log(response.message)
             alert(response.message)
             break
-
-
-          case "MS005": // 강퇴(본인)
+          case "MB002": // 모두 준비 상태가 아님
+            console.log(response.message)
+            alert(response.message)
+            notMatchRound.value = true
+            break
+          case "MB003": // 방장이 아니라 시작할 수 없음
+            console.log(response.message)
+            alert(response.message)
+            break
+          case "MB004": // 현재 진행 중인 라운드와 일치하지 않음
+            console.log('현재 진행 중인 라운드와 일치하지 않습니다.')
+            alert(response.message)
+            notMatchRound.value = true
+            break
+          case "MB005": // 내 턴이 아님
+            console.log('본인의 차례가 아닙니다.')
+            alert(response.message)
+            notYourTurn.value = true
+            break
+          case "MB006": // 배팅 불가
+            alert(response.message)
+            cannotBat.value = true
+            break
+          case "MB007": // 이미 시작한 게임 방
+            alert(response.message)
+            break
+          case "MB008": // 혼자서는 게임 시작 불가
+            alert(response.message)
+            break
+          case "MS005": // 강퇴 당함(본인)
             console.log(response.message);
+            alert(response.message)
             receiveBanMe(response.message)
             break
-
           case "MS007": // 게임 진행
             // 맨 처음 데이터 저장시에만 0.1초 미루기
             if (firstStart.value === false) {
@@ -134,7 +145,6 @@ export const useGameStore = defineStore('game', () => {
                 currentRound.value = response.data.currentRound
                 yourTurn.value = response.data.yourTurn
                 gameMemberInfos.value = response.data.gameMemberInfos
-
               }, 100)
             } else if(roundState.value === false) {
               // 새로운 라운드 저장할때는 2초 미루기
@@ -155,7 +165,6 @@ export const useGameStore = defineStore('game', () => {
                 gameMemberInfos.value = response.data.gameMemberInfos
                 console.log('배팅 저장1초 미룸');
               }, 1000)
-
             }
             break
           case "MS008": // 라운드 종료
@@ -172,7 +181,11 @@ export const useGameStore = defineStore('game', () => {
             break
 
           case "ME003": // 방장이 아닌사람이 start 한다면
-            console.log("님은 방장이 아님");
+            console.log("님은 방장이 아님")
+            alert(response.message)
+            break
+          case "MN001": // 찾을 수 없는 방
+            console.log(response.message)
             break
         }
       })
@@ -203,16 +216,18 @@ export const useGameStore = defineStore('game', () => {
           break
         case "MS003": // 방 나가기
           console.log(response.message);
-          receiveExitRoom(response.data)
+          receiveExitRoom(response.data, response.code)
           break
         case "MS004": // 강퇴(타인)
-          console.log(response)
+          console.log(response.message);
           receiveBanYou(response.data)
           break
         case "MS006": // 게임 준비 완료
+          console.log(response.message);
           receiveReady(response.data)
           break
         case "MS008": // 라운드 종료
+          console.log(response.message);
           receiveRoundFinish(response.data)
           break
         case "MS009": // 경쟁 게임 종료
@@ -228,18 +243,24 @@ export const useGameStore = defineStore('game', () => {
         case "MB003": // 방장이 아님
 
         case "MS016": // 게임방 시작
+          console.log(response.message)
           receiveStartGame(response)
           break
         case "MS011": // 매칭
           console.log(response.message)
           receiveMatching(response.data)
         case "MS013": // 관전자 입장
-          console.log(response.message);
+          console.log(response.message)
           receiveSpectaionRoom(response.data)
           break
         case "MS014": // 관전자 퇴장
-          console.log(response.message);
+          console.log(response.message)
           receiveSpectaionExit(response.data)
+          break
+        case "MS015": // 게임방 방장이 게임에서 나감
+          console.log(response.message)
+          alert(response.message)
+          receiveExitRoom(response.data, response.code)
           break
       }
     })
@@ -318,11 +339,13 @@ export const useGameStore = defineStore('game', () => {
 
   // 손 봐야함
   // 게임방 나가기 RECEIVE
-  const receiveExitRoom = function (data) {
+  const receiveExitRoom = function (data, code) {
     countOfPeople.value = data.countOfPeople
     roomManagerNickname.value = data.roomManagerNickname
     memberInfos.value = data.memberInfos
-    subscriptionGame.value.unsubscribe(myGameSubId.value)
+    if (code === 'MS003') {
+      subscriptionGame.value.unsubscribe(myGameSubId.value)
+    }
   }
 
   // 게임 준비 SEND
@@ -379,8 +402,8 @@ export const useGameStore = defineStore('game', () => {
     // 게임 관련 데이터 초기화 시켜주기
     resetGameStore()
     openviduStore.leaveSession()
+    subscriptionGame.value.unsubscribe(myGameSubId.value)
     router.push({ name: 'main' })
-    alert(message)
   }
 
   // 라운드 종료
@@ -434,8 +457,6 @@ export const useGameStore = defineStore('game', () => {
     watchersNickname.value = []
     memberEndGameInfos.value = []
   }
-
-
 
   //---------------------------------------------------관전--------------------------------------------------------
   // 관전 구독 정보

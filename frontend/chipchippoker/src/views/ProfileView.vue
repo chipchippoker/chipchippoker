@@ -12,7 +12,7 @@
       <!-- 오른쪽에 수직 탭 -->
       <div class="nav flex-column nav-pills" id="v-pills-tab">
         <a class="nav-link active" style="border-top-left-radius: 0; width: 65px;
-        border-bottom-left-radius: 0;" data-bs-toggle="pill" href="#v-pills-my-info">나의 정보</a>
+        border-bottom-left-radius: 0;" data-bs-toggle="pill" href="#v-pills-my-info">유저 정보</a>
         <a class="nav-link" style="border-top-left-radius: 0; width: 65px;
         border-bottom-left-radius: 0; " data-bs-toggle="pill" href="#v-pills-history">전적 검색</a>
       </div>

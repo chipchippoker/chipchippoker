@@ -98,20 +98,20 @@
           </div>
         </div>
 
-        <!-- 나의 프로필 -->
-        <div v-if="userStore?.profileInfo?.isMine" class="d-flex flex-row-reverse">
-          <button class="btn btn-signout" data-bs-toggle="modal" data-bs-target="#SignOutModal">회원탈퇴</button>
-          <button class="btn btn-logout" data-bs-toggle="modal" data-bs-target="#LogOutModal">로그아웃</button>
-          <button v-if="userStore.kakaoAccessToken === null || userStore.profileInfo.isKakaoConnect === false" @click="kakaoConnect()" class="btn btn-kakao">
-            <img class="kakao-logo" src="/src/assets/icons/kakaologo.png" alt="">
-            카카오 연동하기
+        <!-- 나의 프로필 버튼 -->
+        <div v-if="userStore?.profileInfo?.isMine" class="d-flex flex-row-reverse" style="margin-right: 16px;">
+          <button class="btn-2 btn-2-red" data-bs-toggle="modal" data-bs-target="#SignOutModal">회원탈퇴</button>
+          <button class="btn-2 btn-2-blue" data-bs-toggle="modal" data-bs-target="#LogOutModal">로그아웃</button>
+          <button v-if="userStore.kakaoAccessToken === null || userStore.profileInfo.isKakaoConnect === false" @click="kakaoConnect()" class="btn-2 btn-2-yellow">
+            <img class="kakao-logo" src="/src/assets/icons/kakaologo.png" style="width: 20px;" alt="">
+            <span>카카오 연동하기</span>
           </button>
         </div>
-        <!-- 친구의 프로필 -->
-        <div v-else class="d-flex flex-row-reverse">
+        <!-- 친구의 프로필 버튼 -->
+        <div v-else class="d-flex flex-row-reverse" style="margin-right: 16px;">
           <!-- 신고하기 -->
           <div>
-            <a class="btn_siren fw-bold"
+            <a class="btn-2 btn-2-red"
             href="https://docs.google.com/forms/d/e/1FAIpQLSdQLmWHJoz263PcrL3G_SLOzQUY28fVmG2wXJUtObYnEK-_WQ/viewform?usp=sf_link"
             target="_blank">
             <img style="width: 20px;" src="/src/assets/icons/siren.svg" alt="My Happy SVG" />
@@ -122,12 +122,11 @@
           <div v-if="userStore?.profileInfo?.isFriend==false">
             <!-- 버튼 누르고 바뀜 -->
             <span v-if="isSent===true || userStore?.profileInfo?.isSent" 
-            class="btn_sent">
+            class="btn-2 btn-2-yellow-done">
                 대기중
             </span>
-            <span v-else @click="friendRequest" class="btn_request">친구 신청</span>
+            <span v-else @click="friendRequest" class="btn-2 btn-2-yellow">친구 신청</span>
           </div>
-        
         </div>
       </div>
              
@@ -211,84 +210,15 @@
   })
 </script>
   
-<style scoped>
-
-
+<style lang="scss" scoped>
   .kakao-logo {
-    width: 15px;
-    height: 15px;
+    width: 20px;
     display: inline;
     margin: 0px;
   }
-  .btn-kakao {
-        width: 100px;
-        font-size: 7pt;
-        font-weight: bold;
-        background-color: #F7E409;
-        color: black;
-        border: 0;
-        padding: 4px 0px;
-        margin: 2px;
-    }
 
-  .btn-logout {
-    width: 60px;
-    font-size: 7pt;
-    background-color: #576FAC;
-    border: solid 1px salmon;
-    color: salmon;
-    font-weight: bold;
-    padding: 4px 0px;
-    margin: 2px;
-  }
-
-  .btn-signout {
-    width: 60px;
-    font-size: 7pt;
-    font-weight: bold;
-    border: solid 1px rgb(63, 63, 63);
-    color: rgb(60, 60, 60);
-    padding: 4px 0px;
-    margin: 2px;
-  }
   .detail-info {
     border: 1px solid black;
-  }
-
-  .btn_request {
-    padding: 5px 10px;
-    border: 2px solid #ffc308;
-    background-color: #ffde76;
-    border-radius: 10px;
-    margin-right: 15px;
-    cursor:pointer;
-
-  }
-  .btn_request:hover {
-    background-color: #ffc308;
-    color: white;
-    border: 2px solid #ffc308;
-  }
-  .btn_sent {
-    padding: 5px 10px;
-    border: 2px solid #afafaf;
-    border-radius: 10px;
-    margin-right: 15px;
-    background-color: #afafaf;
-  }
-
-  .btn_siren {
-    padding: 5px 10px;
-    text-decoration: none;
-    border: 2px solid #fff;
-    color: red;
-    border-radius: 10px;
-    margin-right: 15px;
-  }
-  .btn_siren:hover {
-    background-color: red;
-    color: white;
-    border: 2px solid red;
   }
 
 </style>

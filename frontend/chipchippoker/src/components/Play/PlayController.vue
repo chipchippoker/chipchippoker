@@ -19,20 +19,22 @@
           style="width: 40px; height: 40px">3</button>
         <button @click="plus5" class="rounded-circle bg-yellow d-flex justify-content-center align-items-center"
           style="width: 40px; height: 40px">5</button>
-        <button @click="all" class="rounded-circle bg-weightyellow d-flex justify-content-center align-items-center"
-          style="width: 40px; height: 40px">ALL</button>
+        <!-- <button @click="all" class="rounded-circle bg-weightyellow d-flex justify-content-center align-items-center"
+          style="width: 40px; height: 40px">ALL</button> -->
       </div>
     </div>
     <!-- 배팅 다이 -->
-    <div class="d-flex flex-column justify-content-evenly align-items-center w-25">
-      <button @click="bet">배팅</button>
-      <button @click="die">다이</button>
+    <div class="d-flex flex-column justify-content-evenly align-items-center w-25 btns">
+      <button @click="bet" class="btn-1 btn-bet">배팅</button>
+      <button @click="call" class="btn-1 btn-call">콜</button>
+      <button @click="allIn" class="btn-1 btn-allin">올인</button>
+      <button @click="die" class="btn-1 btn-die">다이</button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useGameStore } from '@/stores/game';
 import { useRoomStore } from '@/stores/room';
 import { useUserStore } from '@/stores/user';
@@ -42,25 +44,47 @@ const gameStore = useGameStore()
 const roomStore = useRoomStore()
 const bettingCoin = ref(0)
 const myGameInfo = ref({})  // 내 게임 정보
+const maxBettingCoin = ref(200)
+const minBettingCoin = ref(0)
+
+// 웹소켓 메시지 수신 시 최대 배팅 코인 업데이트
+watch(() => gameStore.gameMemberInfos, () => {
+  console.log('턴 변화 감지')
+  getGameInfo()
+  console.log(myGameInfo.value, maxBettingCoin.value, minBettingCoin.value);
+  calculateMaxBettingCoin()
+  calculateMinBettingCoin()
+})
 
 // 베팅 코인 조절 함수
 const plus1 = function () {
-  bettingCoin.value += 1
+  if (bettingCoin.value < maxBettingCoin.value) {
+    bettingCoin.value += 1
+  }
 }
 const minus1 = function () {
-  bettingCoin.value -= 1
+  if (bettingCoin.value > 0) {
+    bettingCoin.value -= 1
+  }
 }
 const plus3 = function () {
-  bettingCoin.value += 3
+  if (bettingCoin.value + 3 <= maxBettingCoin.value) {
+    bettingCoin.value += 3
+  }
 }
 const plus5 = function () {
-  bettingCoin.value += 5
+  if (bettingCoin.value + 5 <= maxBettingCoin.value) {
+    bettingCoin.value += 5
+  }
 }
+
 // 올인
-const all = function () {
-  getGameInfo()
-  bettingCoin.value = calculateAllinBetting() - myGameInfo.value.bettingCoin 
-  console.log('bettingCoin', bettingCoin.value);
+const allIn = function () {
+  bettingCoin.value = maxBettingCoin.value
+  if (betValidation()) {
+    gameStore.bet(roomStore.title, "BET", bettingCoin.value)
+    bettingCoin.value = 0
+  }
 }
 
 // 베팅
@@ -70,10 +94,23 @@ const bet = function () {
     bettingCoin.value = 0
   }
 }
-const die = function () {
+
+// 콜
+const call = function () {
+  bettingCoin.value = minBettingCoin.value
   if (betValidation()) {
-    gameStore.bet(roomStore.title, "DIE", bettingCoin.value)
+    gameStore.bet(roomStore.title, "BET", bettingCoin.value)
     bettingCoin.value = 0
+  }
+}
+
+// 다이
+const die = function () {
+  if (gameStore.yourTurn === userStore.myNickname) {
+    bettingCoin.value = 0
+    gameStore.bet(roomStore.title, "DIE", bettingCoin.value)
+  } else {
+    alert("본인 차례가 아닙니다.")
   }
 }
 
@@ -89,31 +126,33 @@ const getGameInfo = function(){
 }
 
 // 최대 배팅 코인 구하기
-const calculateAllinBetting = function(){
-  let maxBettingCoin = 200
+const calculateMaxBettingCoin = function(){
+  let maxCoin = 200
   gameStore.gameMemberInfos.forEach(info => {
     // 살아있는 사람 중에서
-    if (info.bettingCoin + info.haveCoin !== 0 && info.bettingCoin + info.haveCoin < maxBettingCoin) {
-      maxBettingCoin = info.bettingCoin + info.haveCoin
+    if (info.bettingCoin + info.haveCoin !== 0 && info.bettingCoin + info.haveCoin < maxCoin) {
+      maxCoin = info.bettingCoin + info.haveCoin
     }
   })
-  return maxBettingCoin
+  maxBettingCoin.value = maxCoin - myGameInfo.value.bettingCoin 
 }
 
-const calculateMinBetting = function(){
-  let minBettingCoin = 0
+// 최소 배팅 코인 구하기
+const calculateMinBettingCoin = function(){
+  let minCoin = 0 
   gameStore.gameMemberInfos.forEach(info => {
-    if (info.bettingCoin + info.haveCoin !== 0 && info.bettingCoin > minBettingCoin) {
-      minBettingCoin = info.bettingCoin
+    if (info.bettingCoin + info.haveCoin !== 0 && info.bettingCoin > minCoin) {
+      minCoin = info.bettingCoin
     }
   })
-  return minBettingCoin
+  console.log(minCoin, myGameInfo.value.bettingCoin);
+  minBettingCoin.value = minCoin - myGameInfo.value.bettingCoin
 }
 
 
 // 베팅 Validation ===================================================
 const betValidation = function(){
-  getGameInfo()
+  // getGameInfo()
   // 0 미만의 코인을 베팅하려고 하거나
   if (bettingCoin.value < 0)
   {
@@ -127,8 +166,9 @@ const betValidation = function(){
     return false
   }
   // 현재 필드에 나와있는 최대 베팅 금액보다 적은 금액을 베팅하려고 할 때 -> 첫 턴일 때 생각해봐야 함
-  else if (bettingCoin.value + myGameInfo.value.bettingCoin < calculateMinBetting())
+  else if (bettingCoin.value + myGameInfo.value.bettingCoin < minBettingCoin.value)
   {
+    console.log(maxBettingCoin.value);
     alert("현재 최대 베팅 코인보다 적게 베팅할 수 없습니다.")
     return false
   }
@@ -145,7 +185,8 @@ const betValidation = function(){
 
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
 input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
@@ -182,4 +223,6 @@ input[type=number]::-webkit-inner-spin-button {
   to {
     transform: rotate(-10deg);
   }
-}</style>
+}
+
+</style>
