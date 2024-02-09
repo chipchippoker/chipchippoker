@@ -129,7 +129,6 @@ const enterRoomPublic = function (title, type) {
             }
         } else { // 관전자
             roomStore.isWatcher = true
-            roomStore.watchersNickname.push(userStore.myNickname)
             roomStore.enterWatch(payload)
         }
     }

@@ -347,9 +347,6 @@ export const useGameStore = defineStore('game', () => {
     countOfPeople.value = data.countOfPeople
     roomManagerNickname.value = data.roomManagerNickname
     memberInfos.value = data.memberInfos
-    if (code === 'MS003') {
-      subscriptionGame.value.unsubscribe(myGameSubId.value)
-    }
   }
 
   // 게임 준비 SEND
@@ -406,7 +403,6 @@ export const useGameStore = defineStore('game', () => {
     // 게임 관련 데이터 초기화 시켜주기
     resetGameStore()
     openviduStore.leaveSession()
-    subscriptionGame.value.unsubscribe(myGameSubId.value)
     router.push({ name: 'main' })
   }
 
@@ -439,6 +435,16 @@ export const useGameStore = defineStore('game', () => {
   }
   // 방 나가기 시 초기화 함수
   const resetGameStore = function () {
+    console.log('subscriptionGame.value');
+    console.log(subscriptionGame.value);
+    console.log('subscriptionSpectation.value');
+    console.log(subscriptionSpectation.value);
+    if (subscriptionGame.value !== undefined) {
+      subscriptionGame.value.unsubscribe()
+    }
+    if (subscriptionSpectation.value !== undefined) {
+      subscriptionSpectation.value.unsubscribe()
+    }
     winnerNickname.value = ''
     subscriptionGame.value = undefined
     roomInfo.value = {}

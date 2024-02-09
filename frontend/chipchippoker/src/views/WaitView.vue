@@ -24,11 +24,23 @@
             <!-- 내 캠 -->
             <div class="col-6 mb-5"
               v-for="(player, index) in gameStore.memberInfos" :key="index">
-              <div
-               :class="{ 'is-ready': player.isReady }"
-                style="width: 410px; height: 310px;">
+              <div 
+                v-if="player.nickname === userStore.myNickname"
+                :class="{ 'is-ready': player.isReady }"
+                style="width: 400px; height: 300px;">
                 <UserVideo 
-                :stream-manager="findVideo(playersComputed, player.nickname, index)"
+                :stream-manager="publisherComputed" 
+                :is-manager="isManager"
+                :room-manager-nickname="roomManagerNickname"
+                @force-disconnect="forceDisconnect"
+                />
+              </div>
+              <div 
+                v-else
+                :class="{ 'is-ready': player.isReady }"
+                style="width: 400px; height: 300px;">
+                <UserVideo 
+                :stream-manager="findVideo(playersComputed, player.nickname)" 
                 :is-manager="isManager"
                 :room-manager-nickname="roomManagerNickname"
                 @force-disconnect="forceDisconnect"
@@ -37,7 +49,6 @@
             </div>
           </div>
         </div>
-
         <!-- 본인이 관전자면 -->
         <div v-if="roomStore.isWatcher===true" id="video-container">
           <div class="flex-container row g-1 p-0">
@@ -48,8 +59,9 @@
               <div :class="{ 'is-ready': player.isReady }" style="width: 410px; height: 310px;">
                 <!-- 다른 사람 캠 -->
                 <UserVideo
-                  :stream-manager="findVideo(playersComputed, player.nickname, index)"
+                  :stream-manager="findVideo(playersComputed, player.nickname)"
                   :is-manager="isManager"
+                  :room-manager-nickname="roomManagerNickname"
                   @force-disconnect="forceDisconnect"
                   />
               </div>
@@ -88,19 +100,20 @@
           </div>
         </div>
         <!-- 시작(준비), 초대, 나가기 버튼 -->
-        <div class="d-flex flex-column justify-content-center align-items-center box-btns m-0 pb-4 mt-5">
-          <div>
+        <div class="d-flex justify-content-between align-items-center box-btns m-0 pb-4 mt-5">
+          <div v-if="roomStore.isWatcher===false">
             <!-- 시작 -->
             <button v-if="myNickname === gameStore.roomManagerNickname" @click="startGame()" class="custom-btn btn-1 m-1"><span>시작해?</span><span>시작</span></button>
             <!-- 준비 -->
             <button v-else-if="myNickname !== gameStore.roomManagerNickname && isReady === false" @click="readyGame()" class="custom-btn btn-1 m-1"><span>준비해?</span><span>준비</span></button>
             <!-- 준비 취소 -->
             <button v-else-if="myNickname !== gameStore.roomManagerNickname && isReady === true" @click="readyGame()" class="custom-btn btn-1 m-1"><span>준비취소</span><span>준비완료</span></button>
-            <!-- 초대 -->
-            <button class="custom-btn btn-2 m-1"><span>초대해?</span><span>초대</span></button>
-            <!-- 나가기 -->
-            <button class="custom-btn btn-3 m-1" data-bs-toggle="modal" data-bs-target="#roomOutModal"><span>나가?</span><span>나가기</span></button>
           </div>
+          <div></div>
+          <!-- 초대 -->
+          <!-- <button class="custom-btn btn-2 m-1"><span>초대해?</span><span>초대</span></button> -->
+          <!-- 나가기 -->
+          <button class="custom-btn btn-3 m-1" data-bs-toggle="modal" data-bs-target="#roomOutModal"><span>나가?</span><span>나가기</span></button>
         </div>
 
         <!-- 나가기 모달 -->
@@ -208,10 +221,7 @@ const forceDisconnect = function(clientData) {
 // 무조건 publisherComputed.value가 나올 수 밖에 없기 때문에
 // index를 같이 넣어서 갱신되지 않고 만약 이전 그대로면 undefined로 처음부터 uservideo에 들어가지 않게 해서
 // 아무 것도 출력하지 않게 하면 나중에 playersComputed가 갱신 되었을 때 그에 맞는 카메라를 넣을 수 있음
-const findVideo = function (players, targetNickname, index) {
-  if (players.length < index) {
-    return undefined
-  }
+const findVideo = function (players, targetNickname) {
   console.log(players);
   console.log(targetNickname);
     for (let i = 0; i < players.length; i++) {
@@ -222,7 +232,7 @@ const findVideo = function (players, targetNickname, index) {
         return player.player
       }
     }
-    return publisherComputed.value
+    return undefined
   }
 
 
@@ -277,7 +287,7 @@ onMounted(() => {
     // if (roomStore.isWatcher === true  && roomStore.title !== '') {
     //   roomStore.leaveWatcher()
     // } else if (roomStore.title !== '') {
-    //     roomStore.leaveRoom()
+    //   roomStore.leaveRoom()
     // }
   })
   window.addEventListener("popstate", (event) => {
@@ -316,6 +326,7 @@ onUnmounted(() => {
         roomStore.leaveRoom()
     }
   })
+
 })
 
 </script>

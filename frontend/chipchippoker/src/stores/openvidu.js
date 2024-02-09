@@ -71,8 +71,6 @@ export const useOpenviduStore = defineStore('openvidu', () => {
         players.value.push({player:subscriber, nickname:clientData})
       } else {
         watchers.value.push({watcher:subscriber, nickname:clientData})
-        // 관전자 이름들도 추가
-        roomStore.watchersNickname.push(clientData)
       }
       console.log(players);
       console.log(watchers);
@@ -103,12 +101,6 @@ export const useOpenviduStore = defineStore('openvidu', () => {
       if (watcherIndex !== -1) {
           watchers.value.splice(watcherIndex, 1);
       }
-      
-      // 파괴된 스트림에 연결된 관전자를 제거합니다.
-      const watcherNicknameIndex = roomStore.watchersNickname.findIndex(watcher => watcher.watcher.stream === stream);
-      if (watcherNicknameIndex !== -1) {
-        roomStore.watchersNickname.splice(watcherNicknameIndex, 1);
-      }  
     })
   
     // On every asynchronous exception...
@@ -178,11 +170,11 @@ export const useOpenviduStore = defineStore('openvidu', () => {
         })
     })
   
-    window.addEventListener("beforeunload", (event) => {
-        leaveSession();
-        // Uncomment the line below if you want to show a confirmation message
-        // event.returnValue = "Are you sure you want to leave?";
-      })
+    // window.addEventListener("beforeunload", (event) => {
+    //     leaveSession();
+    //     // Uncomment the line below if you want to show a confirmation message
+    //     // event.returnValue = "Are you sure you want to leave?";
+    //   })
     }
   
   function leaveSession(){
@@ -200,7 +192,7 @@ export const useOpenviduStore = defineStore('openvidu', () => {
     OV.value = undefined;
   
     // Remove beforeunload listener
-    window.removeEventListener("beforeunload", leaveSession)
+    // window.removeEventListener("beforeunload", leaveSession)
     console.log('세션나가기')
   }
   

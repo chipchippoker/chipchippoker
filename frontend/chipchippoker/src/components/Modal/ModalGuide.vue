@@ -5,7 +5,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" >
-                <div id="carouselExampleIndicators" class="carousel slide d-flex justify-content-center align-items-center">
+                <div id="carouselExampleIndicators" class="carousel carousel-dark slide d-flex justify-content-center align-items-center">
                     <div class="carousel-indicators">
                         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
                         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -66,6 +66,10 @@ import guide5 from '@/components/Modal/Guide/guide5.vue';
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+}
+
+.carousel-control-next-icon {
+    color: aqua;
 }
 
 
