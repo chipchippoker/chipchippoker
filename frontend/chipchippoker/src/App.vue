@@ -9,7 +9,10 @@ import { useUserStore } from '@/stores/user'
 import { useFriendStore } from './stores/friend';
 import { useGameStore } from './stores/game';
 
-
+// window.addEventListener("unload", (event) => {
+//   window.localStorage.clear();
+//   })
+  
 const userStore = useUserStore()
 const friendStore = useFriendStore()
 const gameStore = useGameStore()

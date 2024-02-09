@@ -105,7 +105,7 @@ const changeType = function(type){
 }
 
 // ===================== 게임 찾기 모달 감시=======================
-const modalWatch = watch(matchStore.isSearching, (newVal, oldVal) => {
+const modalWatch = watch(() => matchStore.isSearching, (newVal, oldVal) => {
     const findGameModal = new bootstrap.Modal(document.getElementById('FindGameModal'))
     console.log(matchStore.isSearching.value)
     console.log(newVal);
@@ -183,8 +183,10 @@ onMounted(()=>{
     friendStore.getAllRankList()
     // friendStore.getMyRankList()
     // soundStore.bgmOn()
-    
-    if (roomStore.title !== '') {
+    console.log(roomStore.title);
+    if (roomStore.isWatcher === true  && roomStore.title !== '') {
+      roomStore.leaveWatcher()
+    } else if (roomStore.title !== '') {
         roomStore.leaveRoom()
     }
 })

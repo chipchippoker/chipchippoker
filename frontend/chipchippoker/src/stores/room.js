@@ -50,10 +50,9 @@ export const useRoomStore = defineStore('room', () => {
   const totalParticipantCnt = ref(0)
   const isRoom = ref(false)
 
-  // 관전자 여부, 게임 중 여부, 관전자 닉네임들
+  // 관전자 여부, 게임 중 여부
   const isWatcher = ref(false)
   const roomState = ref(null)
-  const watchersNickname = ref([])
 
   // 웹소켓
   const gameStore = useGameStore()
@@ -195,18 +194,23 @@ export const useRoomStore = defineStore('room', () => {
     .then(res => {
       console.log('방나가기 API 호출');
       console.log(res.data)
+      gameStore.sendExitRoom(title.value)
       roomId.value = ''
       title.value = ''
       totalParticipantCnt.value = 0
       isRoom.value = false
-      gameStore.sendExitRoom(title.value)
     })
     .then(()=>{
       openviduStore.leaveSession()
       gameStore.resetGameStore()
       router.push({name:'main'})
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      console.log(err)
+      openviduStore.leaveSession()
+      gameStore.resetGameStore()
+      router.push({name:'main'})
+    })
   }
 
   // 방에서 게임 시작
@@ -323,7 +327,7 @@ export const useRoomStore = defineStore('room', () => {
     // 방 생성
     createRoom, roomManagerNickname, roomId, title, totalParticipantCnt, isRoom,
     // 방 입장
-    enterRoom, isWatcher, roomState, watchersNickname,
+    enterRoom, isWatcher, roomState,
     // 방 나가기
     leaveRoom,
     // 게임 시작하기
