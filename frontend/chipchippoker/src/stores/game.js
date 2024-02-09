@@ -283,10 +283,14 @@ export const useGameStore = defineStore('game', () => {
     console.log(data.memberInfos.length, totalCountOfPeople.value);
     // 매치 인원이 다 모이면
     if (data.memberInfos.length === totalCountOfPeople.value) {
-      matchStore.isSearching = false
-      console.log('매치 성공!!')
-      isMatchStart.value = true   // 매치로 인한 게임 시작
-      roomStore.startGame(matchStore.title) // 게임 시작 send
+      memberInfos.value.forEach(info => {
+        if (info.nickname === userStore.myNickname && info.isRoomManager) {
+          matchStore.isSearching = false
+          console.log('매치 성공!!')
+          isMatchStart.value = true   // 매치로 인한 게임 시작
+          roomStore.startGame(matchStore.title) // 게임 시작 send
+        }
+      })
     } else {
       console.log('매칭 중')
       matchStore.isSearching = true

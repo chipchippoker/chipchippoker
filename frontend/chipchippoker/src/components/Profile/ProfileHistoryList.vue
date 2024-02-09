@@ -47,7 +47,7 @@
       <!-- 최근 전적 -->
       <ul
         v-if="userStore?.profileInfo?.recentPlayList?.length > 0"
-        class="profile-outline-darkblue my-3 d-flex flex-column gap-1 overflow-y-auto"
+        class="profile-outline-darkblue my-3 d-flex flex-column-reverse gap-1 overflow-y-auto"
         style="max-height: 300px"
       >
         <!-- 게임 모드, 인원 -->

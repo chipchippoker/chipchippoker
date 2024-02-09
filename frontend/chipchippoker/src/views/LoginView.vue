@@ -26,7 +26,7 @@
           </div>
           <!-- 일반 로그인 버튼 -->
           <div class="d-grid gap-2 pt-3">
-            <button type="submit" class="btn btn-primary btn-login">로그인</button>
+            <button type="submit" class="btn-3-indigo"><div class="fs-6 pt-1" style="width: 100%; height: 100%;">로그인</div></button>
           </div>
           <!-- 카카오 로그인 버튼 -->
           <div class="d-grid gap-2 pt-3">
@@ -139,14 +139,12 @@
     display: inline;
     margin: 0px;
   }
-  .btn-login {
-      box-shadow: 0 0 0 3px #ffffff inset;
-      border: 0px;
-      background-color: #99A5C1;
-      width: 100%;
-  }
-  .btn-login:hover {
-    background-color: rgb(95, 98, 136);
+ 
+  .btn-3-indigo {
+    text-align: center;
+    width: 400px;
+    height: 40px;
+    margin: 0;
   }
   
   .btn-kakao-login {

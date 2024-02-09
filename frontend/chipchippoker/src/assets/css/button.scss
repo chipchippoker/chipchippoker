@@ -51,6 +51,7 @@
   $yellow-done:#a3850d;
   $purple: #8e44ad;
   $turquoise: #1abc9c;
+  $indigo: #4160ea;
 
   // Basic Button Style
   .btn-2 {
@@ -142,6 +143,27 @@
     }
   }
 
+  .btn-3-red {
+    @extend .btn-2;
+    border: 2px solid $red;
+    color: $red;
+    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+    &:hover {
+      box-shadow: 0 0 40px 40px $red inset;
+    }
+  }
+
+  .btn-3-indigo {
+    @extend .btn-2;
+    border: 2px solid $indigo;
+    color: $indigo;
+    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+    &:hover {
+      box-shadow: 0 0 40px 40px $indigo inset;
+    }
+  }
+
+
 .btns {
   position: relative;
   display: flex;
@@ -203,8 +225,8 @@
   --btn-reflex-top-1: 0%;
   --btn-reflex-top-2: 0%;
   /* 버튼 스타일 속성 설정 */
-  // position: relative;
-  // z-index: 1;
+  position: relative;
+  z-index: 1;
   background:
   radial-gradient(
     ellipse 140% 70% at 50% 100%, hsla(144deg 100% 70%/var(--btn-reflex-bottom-1)) 0%, hsla(144deg 100% 70%/var(--btn-reflex-bottom-2)) 30%, rgba(102, 255, 163, 0) 100%
@@ -245,6 +267,35 @@
   transform: translateY(-1px);
   transition: --btn-glow-inner 200ms, --btn-inner 200ms, --btn-outer 500ms, --btn-reflex-bottom-1 500ms, --btn-reflex-bottom-2 500ms, --btn-reflex-top-1 500ms, --btn-reflex-top-2 500ms, box-shadow 200ms, text-shadow 400ms, transform 200ms;
 }
+
+
+// 배팅 버튼 스타일
+.btn-bet {
+  @extend .btn-1;
+  background-color: #40bf73; // 배팅 버튼 색상
+}
+
+// 콜 버튼 스타일
+.btn-call {
+  @extend .btn-1;
+  background-color: #ffdd00; // 콜 버튼 색상
+}
+
+// 올인 버튼 스타일
+.btn-allin {
+  @extend .btn-1;
+  background-color: #ff9933; // 올인 버튼 색상
+}
+
+// 다이 버튼 스타일
+.btn-die {
+  @extend .btn-1;
+  background-color: #ff6666; // 다이 버튼 색상
+}
+
+
+
+
 .btn-call:hover {
   /* 콜 버튼에 호버 시 내부 빛 효과 색상 및 투명도 변경 */
   --btn-glow-inner: hsla(48deg 83% 100% / 20%);
@@ -464,28 +515,4 @@
     0 2px 0 3px rgba(0, 0, 0, 0.9),
     /* 11. 위쪽 녹색 그늘 가장자리 빛 효과 */
     0 3px 0 3px rgba(255, 255, 255, 0.04);
-}
-
-// 배팅 버튼 스타일
-.btn-bet {
-  @extend .btn-1;
-  background-color: #40bf73; // 배팅 버튼 색상
-}
-
-// 콜 버튼 스타일
-.btn-call {
-  @extend .btn-1;
-  background-color: #ffdd00; // 콜 버튼 색상
-}
-
-// 올인 버튼 스타일
-.btn-allin {
-  @extend .btn-1;
-  background-color: #ff9933; // 올인 버튼 색상
-}
-
-// 다이 버튼 스타일
-.btn-die {
-  @extend .btn-1;
-  background-color: #ff6666; // 다이 버튼 색상
 }

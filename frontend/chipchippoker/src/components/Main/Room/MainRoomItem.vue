@@ -55,13 +55,13 @@
                 <div class="col-12 m-0 p-0">
                     <button v-if="item?.isPrivate" @click="showEnterPWModal('관전자')"
                         class="btn-2"
-                        :class="{ 'btn-2-blue-done': item?.currentParticipantCnt === item?.totalParticipantCnt, 'btn-2-blue': item?.currentParticipantCnt !== item?.totalParticipantCnt }">
+                        :class="{ 'btn-2-blue-done': item?.currentSpectatorCnt === 6, 'btn-2-blue': item?.currentSpectatorCnt !== 6 }">
                         관전
                         <!-- <font-awesome-icon :icon="['fas', 'caret-right']" style="color: #8f8f8f;" /> -->
                     </button>
                     <button v-else @click="enterRoomPublic(item.title, '관전자')"
                         class="btn-2 btn-2-blue"
-                        :class="{ 'btn-2-blue-done': item?.currentParticipantCnt === item?.totalParticipantCnt, 'btn-2-blue': item?.currentParticipantCnt !== item?.totalParticipantCnt }">
+                        :class="{ 'btn-2-blue-done': item?.currentSpectatorCnt === 6, 'btn-2-blue': item?.currentSpectatorCnt !== 6 }">
                         관전
                         <!-- <font-awesome-icon :icon="['fas', 'caret-right']" style="color: #8f8f8f;" /> -->
                     </button>
@@ -132,7 +132,6 @@ const enterRoomPublic = function (title, type) {
             roomStore.watchersNickname.push(userStore.myNickname)
             roomStore.enterWatch(payload)
         }
-
     }
 }
 
