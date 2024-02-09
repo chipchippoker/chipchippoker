@@ -335,9 +335,6 @@ public class GameController {
 					}
 					// 2. GameResult 저장
 					gameService.saveGameResult(memberManagers, gameRoom);
-					// 3. 게임방 상태 변경
-					gameRoom.updateGameRoomState("종료");
-					gameRoomRepository.save(gameRoom);
 
 					// 4. 게임종료 메시지 출력
 					broadcastAllConnected(gameRoomTitle, ResponseEntity.ok(
@@ -358,10 +355,6 @@ public class GameController {
 
 					// 2. GameResult 저장
 					gameService.saveGameResult(memberManagers, gameRoom);
-
-					// 3. 게임방 상태 변경
-					gameRoom.updateGameRoomState("대기");
-					gameRoomRepository.save(gameRoom);
 
 					// 4. 게임종료 메시지 출력
 					broadcastAllConnected(gameRoomTitle, ResponseEntity.ok(
