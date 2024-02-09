@@ -152,9 +152,9 @@ export const useGameStore = defineStore('game', () => {
                 currentRound.value = response.data.currentRound
                 yourTurn.value = response.data.yourTurn
                 gameMemberInfos.value = response.data.gameMemberInfos
-                console.log('라운드 저장 2초 미룸');
+                // console.log('라운드 저장 2초 미룸');
 
-              }, 2000)
+              }, 4000)
             } else{
               // 배팅은 1초 미루기
               setTimeout(() => {
@@ -162,7 +162,7 @@ export const useGameStore = defineStore('game', () => {
                 currentRound.value = response.data.currentRound
                 yourTurn.value = response.data.yourTurn
                 gameMemberInfos.value = response.data.gameMemberInfos
-                console.log('배팅 저장1초 미룸');
+                // console.log('배팅 저장1초 미룸');
               }, 1000)
             }
             break

@@ -35,6 +35,14 @@
         <div class="d-flex flex-column justify-content-center align-items-center text-center">
           <h2 class="fw-bold">라운드 결과</h2>
           <h3 class="m-3">{{ gameStore.winnerNickname }}님 승!!</h3>
+          <div class="" v-for="playerResult in gameStore.gameMemberInfos" :key="playerResult.nickname">
+            <div class="d-flex gap-2 fs-4">
+              <span><strong>{{ playerResult.nickname }}님 </strong> 카드</span>
+              <span>{{ cardSetName[playerResult.cardInfo.cardSet]}}</span>
+              <span>{{playerResult.cardInfo.cardNumber}}</span>
+            </div>
+          </div>
+          <p class="text-danger">※ 같은 숫자일 경우 : 스페이드 > 다이아몬드 > 하트 > 클로버</p>
         </div>
       </div>
 
@@ -170,6 +178,13 @@ const goToWait = function () {
     params: { roomId: roomStore.roomId },
   })
 
+}
+
+const cardSetName = {
+  1:'클로버',
+  2:'하트',
+  3:'다이아몬드',
+  4:'스페이드'
 }
 
 onMounted(() => {
