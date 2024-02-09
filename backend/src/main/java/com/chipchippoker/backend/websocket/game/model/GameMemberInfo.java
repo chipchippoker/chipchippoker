@@ -18,6 +18,7 @@ public class GameMemberInfo {
 	private Integer haveCoin;
 	private Integer bettingCoin;
 	private CardInfo cardInfo;
+	private String isState;
 
 	public static ArrayList<GameMemberInfo> createListInRoundProceed(
 		GameManager gameManager,
@@ -29,14 +30,16 @@ public class GameMemberInfo {
 				new GameMemberInfo(isNotTurnMemberManager.getMemberInfo().getNickname()
 					, isNotTurnMemberManager.getMemberGameInfo().getHaveCoin(),
 					isNotTurnMemberManager.getMemberGameInfo().getBettingCoin(),
-					isNotTurnMemberManager.getMemberGameInfo().getCardInfo()));
+					isNotTurnMemberManager.getMemberGameInfo().getCardInfo(),
+					isNotTurnMemberManager.getMemberGameInfo().getIsState()));
 		}
 
 		temp.put(isTurnMemberManager.getMemberInfo().getNickname(),
 			new GameMemberInfo(isTurnMemberManager.getMemberInfo().getNickname(),
 				isTurnMemberManager.getMemberGameInfo().getHaveCoin(),
 				isTurnMemberManager.getMemberGameInfo().getBettingCoin(),
-				new CardInfo(0, 0)));
+				new CardInfo(0, 0),
+				isTurnMemberManager.getMemberGameInfo().getIsState()));
 
 		ArrayList<GameMemberInfo> result = new ArrayList<>();
 
@@ -55,7 +58,8 @@ public class GameMemberInfo {
 				new GameMemberInfo(memberManager.getMemberInfo().getNickname(),
 					memberManager.getMemberGameInfo().getHaveCoin(),
 					memberManager.getMemberGameInfo().getBettingCoin(),
-					memberManager.getMemberGameInfo().getCardInfo()));
+					memberManager.getMemberGameInfo().getCardInfo(),
+					memberManager.getMemberGameInfo().getIsState()));
 		}
 
 		ArrayList<GameMemberInfo> result = new ArrayList<>();

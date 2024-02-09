@@ -309,15 +309,6 @@ public class GameController {
 			try {
 				gameManager.newRoundSetting(gameManager.getCurrentRound());
 			} catch (RuntimeException e) {
-				// 게임 전체 종료
-				// 라운드 종료 메시지는 이미 보내짐.
-				// 아래에는 게임 전체종료 메시지를 내려준다.
-				/*
-				1. 유저의 닉네임
-				2. 승/무/패 여부
-				3. 포인트 변동
-				 */
-
 				GameRoom gameRoom = gameRoomRepository.findByTitleAndState(gameRoomTitle);
 				if (gameRoom.getType().equals("경쟁")) {
 					// 1. Point 저장
@@ -365,15 +356,15 @@ public class GameController {
 					);
 
 					// 5. 대기방 정보 전달
-					broadcastAllConnected(gameRoomTitle,
-						gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_NORMAL_MATCH_END_READY_ROOM,
-							gameManager));
-					broadcastAllSpectatorConnected(gameRoomTitle,
-						gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_NORMAL_MATCH_END_READY_ROOM,
-							gameManager));
+					// broadcastAllConnected(gameRoomTitle,
+					// 	gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_NORMAL_MATCH_END_READY_ROOM,
+					// 		gameManager));
+					// broadcastAllSpectatorConnected(gameRoomTitle,
+					// 	gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_NORMAL_MATCH_END_READY_ROOM,
+					// 		gameManager));
 
 					// 6. GameManager 상태 변경
-					gameManager.setGameState("대기");
+					mapManager.getGameManagerMap().remove(gameRoomTitle);
 				}
 				return;
 			}
