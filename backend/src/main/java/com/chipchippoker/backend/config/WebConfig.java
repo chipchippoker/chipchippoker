@@ -18,7 +18,8 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry reg) {
 		reg.addInterceptor(authenticationInterceptor)
 			.addPathPatterns("/**")
-			.excludePathPatterns("/api/auth/**");
+			.excludePathPatterns("/api/auth/**")
+			.excludePathPatterns("/actuator/prometheus");
 	}
 
 	@Override
