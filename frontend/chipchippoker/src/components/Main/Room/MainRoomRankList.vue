@@ -1,6 +1,6 @@
 <template>
     <div class="container m-0 p-0"> 
-        <div class="bg-lightblue row m-0 tab-radius-2 py-2 ps-0 pe-2" style="height: 350px; width: 100%;">
+        <div class="bg-lightblue row m-0 tab-radius-2 py-2 ps-0 pe-2" style="height: 350px; width: 100%;;">
             <div class="col-6 h-25 pe-1" v-for="item in roomStore.allRoomList" :key="item.id">
                 <MainRoomItem
                 :item="item"/>
