@@ -57,6 +57,8 @@ public class GameManager {
 	private Integer lastBettingMaxCoin;
 	private Integer maxCoin;
 	private List<PenaltyInfo> penaltyInfos;
+	private Integer leftMemberHaveCoin;
+	private Integer leftMemberBettingCoin;
 
 	public GameManager(String roomTitle, Integer countOfPeople, String nickname) {
 		log.info("게임방을 생성합니다.");
@@ -72,6 +74,7 @@ public class GameManager {
 		this.lastBettingMaxCoin = 1;
 		this.maxCoin = 1;
 		this.penaltyInfos = new ArrayList<>();
+		this.leftMemberHaveCoin = 0;
 		log.info("게임방을 생성했습니다.");
 	}
 
@@ -224,9 +227,12 @@ public class GameManager {
 		}
 
 		// 승리한 사람에게 베팅한 모든 코인 더해주기
-		int getCoin = 0;
+		int getCoin = leftMemberBettingCoin;
 		Collection<MemberManager> values = memberManagerMap.values();
 		for (MemberManager manager : values) {
+			// 나간 사람의 코인을 1/n 만큼 모두에게 배분
+			manager.getMemberGameInfo()
+				.setHaveCoin(manager.getMemberGameInfo().getHaveCoin() + leftMemberHaveCoin / values.size());
 			getCoin += manager.getMemberGameInfo().getBettingCoin();
 		}
 		MemberManager winnerManager = memberManagerMap.get(winner);
@@ -290,6 +296,8 @@ public class GameManager {
 		lastBettingMaxCoin = 1;
 		maxCoin = Integer.MAX_VALUE;
 		penaltyInfos = new ArrayList<>();
+		leftMemberHaveCoin = 0;
+		leftMemberBettingCoin = 0;
 
 		for (MemberManager manager : memberManagers) {
 			// 코인이 남은 사람만 남은 라운드에 진출할 수 있다.
@@ -340,6 +348,16 @@ public class GameManager {
 	}
 
 	/**
+	 * 게임방 중간에 나감
+	 */
+	public void deleteMemberInGameRoom(String nickname) {
+		MemberManager manager = memberManagerMap.get(nickname);
+		this.leftMemberHaveCoin += manager.getMemberGameInfo().getHaveCoin();
+		this.leftMemberBettingCoin += manager.getMemberGameInfo().getBettingCoin();
+		memberManagerMap.remove(nickname);
+	}
+
+	/**
 	 * 모든 인원이 레디상태인지 확인한다
 	 * 단 방장은 제외한다.
 	 */
@@ -362,4 +380,5 @@ public class GameManager {
 			.sorted(Comparator.comparing(MemberManager::getCreatedAt))
 			.toList();
 	}
+
 }
