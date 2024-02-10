@@ -25,6 +25,7 @@ export const useUserStore = defineStore('user', () => {
   const myIcon = ref('1')
   const profileInfo = ref({})
   const profileNickname = ref('')
+  Kakao.init(KAKAO_JAVASCRIPT_KEY)
 
   // 프로필 아이콘 보여주기
   const viewProfileIcon = ref(true)
@@ -104,7 +105,6 @@ export const useUserStore = defineStore('user', () => {
   // 카카오 인가코드 받기
   const getKakaoCode = function () {
     console.log('카카오 인가코드 받기')
-    Kakao.init(KAKAO_JAVASCRIPT_KEY)
     Kakao.Auth.authorize({
       redirectUri: REDIRECT_URI,
     })
@@ -112,7 +112,6 @@ export const useUserStore = defineStore('user', () => {
 
   const getKakaoCodeToSink = function () {
     console.log('카카오 인가코드 받기')
-    Kakao.init(KAKAO_JAVASCRIPT_KEY)
     Kakao.Auth.authorize({
       redirectUri: REDIRECT_SINK_URI,
     })

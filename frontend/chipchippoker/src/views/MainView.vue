@@ -46,7 +46,7 @@
 
         <!-- 게임 찾는중 모달 -->
         <div class="modal fade" id="FindGameModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="findGameModalLabel" aria-hidden="true">
-            <ModalFindGame/>
+            <ModalFindGame @closeModal="closeModalHandler"/>
         </div>
 
         <!-- 친선 방이 없는 것을 말해주는 모달 -->
@@ -90,6 +90,7 @@ import { useUserStore } from '@/stores/user'
 import { useRoomStore } from '@/stores/room'
 import { useMatchStore } from '@/stores/match'
 import { useGameStore } from '@/stores/game'
+import { useOpenviduStore } from '@/stores/openvidu';
 
 const userStore = useUserStore()
 const soundStore = useSoundStore()
@@ -107,15 +108,22 @@ const changeType = function(type){
 // ===================== 게임 찾기 모달 감시=======================
 const modalWatch = watch(() => matchStore.isSearching, (newVal, oldVal) => {
     const findGameModal = new bootstrap.Modal(document.getElementById('FindGameModal'))
-    console.log(matchStore.isSearching.value)
+    console.log(matchStore.isSearching)
     console.log(newVal);
     if (!newVal) {
-        findGameModal.hide()
+        console.log('모달 닫기');
+        // findGameModal.hide()
     } else {
-        // findGameModal.show()
+        console.log('모달 열기');
+        findGameModal.show()
     }
 })
 
+const closeModalHandler = function () {
+    console.log('닫기 이벤트 발생!!');
+    const findGameModal = new bootstrap.Modal(document.getElementById('FindGameModal'))
+    findGameModal.hide()
+}
 
 // ================================================================
 // -------------------모달 테스트-------------------
@@ -126,7 +134,7 @@ const handleShowFindGame = function (payload) {
         matchStore.matchCompete(payload)
         .then(code => {
             if (code === '성공') {
-                modalInstance.show()
+                // modalInstance.show()
                 console.log(matchStore.title, matchStore.totalParticipantCnt);
                 gameStore.sendMatching(matchStore.title, matchStore.totalParticipantCnt)
             }
@@ -194,7 +202,7 @@ onMounted(()=>{
 
 <style scoped>
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 1000px) {
   .mainstyle {
     display: none;
   }

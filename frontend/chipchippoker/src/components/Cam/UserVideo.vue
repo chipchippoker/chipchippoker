@@ -4,9 +4,9 @@
     :class="{ 'is-turn': clientData === gameStore.yourTurn, 'is-die' : isDie() }"
     :stream-manager="streamManager" @sendEmotion="sendEmotion"/>
     <!-- {{ clientData }}이게 내 현재 이름임 이거 지우면 실행 안됨, 안보이게 투명하게 해야하나? -->
-    <img class="xx-small-icon"  :src='friendStore.getTierIconUrl(userInfo?.tier)'>
+    <!-- <img class="xx-small-icon"  :src='friendStore.getTierIconUrl(userInfo?.tier)'> -->
     <span class="mx-2" style="color: white;">{{ clientData }}</span>
-    <span style="color: white;">{{ userInfo?.rank }}등</span>
+    <!-- <span style="color: white;">{{ userInfo?.rank }}등</span> -->
     
 
     <!-- 감정 이모지 -->

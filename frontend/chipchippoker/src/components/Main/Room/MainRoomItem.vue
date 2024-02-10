@@ -188,6 +188,7 @@ const showEnterPWModal = function (type) {
     padding: 10px;
     margin: 5px 10px 10px 0px;
     border-radius: 10px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5); /* 그림자의 진하기 조절 */
 }
 
 #room-item:hover {
