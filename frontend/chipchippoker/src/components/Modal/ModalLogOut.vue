@@ -8,7 +8,7 @@
         <div class="modal-body d-flex flex-column justify-content-center align-items-center gap-4">
             <h3>로그아웃 하시겠습니까?</h3>
             <div class="d-flex gap-5">
-                <button class="btn-2 btn-2-blue" data-bs-dismiss="modal" aria-label="Close">돌아가기</button>
+                <button class="btn-2 btn-3-blue" data-bs-dismiss="modal" aria-label="Close">돌아가기</button>
                 <button class="btn-2 btn-3-red" data-bs-dismiss="modal" @click="logOut">로그아웃</button>
             </div>
         </div>

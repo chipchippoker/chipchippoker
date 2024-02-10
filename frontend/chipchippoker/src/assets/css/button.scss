@@ -44,9 +44,9 @@
   //Colours
   $green: #2ecc71;
   $red: #e74c3c;
-  $red-done: #815a5a;
+  $red-done: #8e8c8c;
   $blue: #3498db;
-  $blue-done: #36566c;
+  $blue-done: #8e8c8c;
   $yellow: #f1c40f;
   $yellow-done:#a3850d;
   $purple: #8e44ad;
@@ -86,7 +86,7 @@
     
     &:hover {
       box-shadow: 0 0 10px 0 $red inset, 0 0 10px 4px $red;
-      color: $red;
+      color: white;
     }
   }
   .btn-2-red-done {
@@ -108,7 +108,7 @@
     
     &:hover {
       box-shadow: 0 0 10px 0 $blue inset, 0 0 10px 4px $blue;
-      color: $blue;
+      color: white;
     }
   }
   .btn-2-blue-done {
@@ -150,6 +150,15 @@
     transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
     &:hover {
       box-shadow: 0 0 40px 40px $red inset;
+    }
+  }
+  .btn-3-blue {
+    @extend .btn-2;
+    border: 2px solid $blue;
+    color: $blue;
+    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+    &:hover {
+      box-shadow: 0 0 40px 40px $blue inset;
     }
   }
 
