@@ -29,6 +29,7 @@ export const useGameStore = defineStore('game', () => {
   const receiveMessage = ref('')
   // 게임 종료 결과 리스트
   const memberEndGameInfos = ref([])
+  const kindGame = ref(null)
   // 라운드 승자
   const winnerNickname = ref('')
   // 게임 방 정보
@@ -222,10 +223,14 @@ export const useGameStore = defineStore('game', () => {
           console.log(response.message);
           receiveRoundFinish(response.data)
           break
-        case "MS009": // 친선 게임 종료
+        case "MS010": // 친선 게임 종료
+          console.log(response.data);
+          kindGame.value = '친선'
           receiveGameFinishFriend(response.data)
           break
-        case "MS010": // 경쟁 게임 종료
+        case "MS009": // 경쟁 게임 종료
+          console.log(response.data);
+          kindGame.value = '경쟁'
           receiveGameFinishRank(response.data)
           break
         case "MB002": // 모두 준비상태가 아님
@@ -253,6 +258,9 @@ export const useGameStore = defineStore('game', () => {
           console.log(response.message)
           receiveExitRoom(response.data, response.code, response.message)
           break
+        case "MS017": // 매치 종료 이후 대기방 상태
+          console.log(response.data)
+          receiveWaitRoom(response.data)
       }
     })
   }
@@ -325,6 +333,25 @@ export const useGameStore = defineStore('game', () => {
       name: 'wait',
       params: { roomId: roomStore.roomId },
     })
+  }
+
+
+  // 게임 종료 후 다시 대기방 입장 RECEIVE
+  const receiveWaitRoom = function (data) {
+    countOfPeople.value = data.countOfPeople
+    memberInfos.value = data.memberInfos
+    roomManagerNickname.value = data.roomManagerNickname
+    winnerNickname.value = ''
+    roomInfo.value = {}
+    totalCountOfPeople.value = 0
+    myOrder.value = 0
+    isMatch.value = false
+    roundState.value = false
+    currentRound.value = 0
+    yourTurn.value = null
+    gameMemberInfos.value = []
+    bettingCoin.value = 0
+    memberEndGameInfos.value = []
   }
 
   // 게임방 나가기 SEND
@@ -539,7 +566,7 @@ export const useGameStore = defineStore('game', () => {
     subscriptionGame, myGameSubId,
 
     // 게임 상태 변수
-    firstStart,
+    firstStart, kindGame,
 
     // 관전 정보
     spectateHandler, sendSpectationRoom, receiveSpectaionRoom, watchersNickname, sendSpectationExit, receiveSpectaionExit,
