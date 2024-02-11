@@ -30,6 +30,7 @@ public enum MessageBase {
 	S200_GAME_ROOM_START(OK, false, "MS016", "게임방이 시작되었습니다."),
 	S200_GAME_ROOM_NORMAL_MATCH_END_READY_ROOM(OK, false, "MS017", "친선 매치가 종료된 후 대기방의 상태입니다."),
 	S200_GAME_ROOM_PENALTY_HAPPEN(OK, false, "MS018", "패널티를 받았습니다."),
+	S200_GAME_ROOM_DISAPPEAR(OK, false, "MS019", "게임방이 존재하지 않습니다."),
 	/**
 	 * 400 Bad Request (잘못된 요청)
 	 */
