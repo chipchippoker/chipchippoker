@@ -79,8 +79,15 @@ public class GameController {
 		GameManager gameManager = mapManager.getGameManagerMap().get(gameRoomTitle);
 		gameManager.insertMember(nickname, Boolean.FALSE);
 
+		SpectationManager spectationManager = mapManager.getSpectationManagerMap().get(gameRoomTitle);
+		if (spectationManager == null) {
+			spectationManager = new SpectationManager(gameRoomTitle);
+			mapManager.getSpectationManagerMap().put(gameRoomTitle, spectationManager);
+		}
+
 		broadcastAllConnected(gameRoomTitle,
-			gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_NEW_MEMBER_ENTER, gameManager));
+			gameService.allMemberAndSpectatorInfoInReadyRoom(MessageBase.S200_GAME_ROOM_NEW_MEMBER_ENTER, gameManager,
+				spectationManager));
 
 		broadcastAllSpectatorConnected(gameRoomTitle,
 			gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_NEW_MEMBER_ENTER, gameManager));
@@ -110,6 +117,8 @@ public class GameController {
 
 			// 방장이 마지막으로 나가서 게임방이 종료상태로 전환된 경우
 			if (gameRoom.getState().equals("종료")) {
+				broadcastAllSpectatorConnected(gameRoomTitle,
+					gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_DISAPPEAR, gameManager));
 				// 게임방 관리를 더 이상 하지 않는다.
 				mapManager.getGameManagerMap().remove(gameRoomTitle);
 				return;

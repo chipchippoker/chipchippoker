@@ -12,9 +12,11 @@ import com.chipchippoker.backend.common.dto.ApiResponse;
 import com.chipchippoker.backend.common.dto.MessageBase;
 import com.chipchippoker.backend.common.entity.GameRoom;
 import com.chipchippoker.backend.websocket.game.dto.GameRoomMessageResponse;
+import com.chipchippoker.backend.websocket.game.dto.MemberAndSpectatorInfoMessageResponse;
 import com.chipchippoker.backend.websocket.game.dto.ReadyRoomMessageResponse;
 import com.chipchippoker.backend.websocket.game.model.GameManager;
 import com.chipchippoker.backend.websocket.game.model.MemberManager;
+import com.chipchippoker.backend.websocket.spectation.model.SpectationManager;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,15 @@ public class GameServiceImpl implements GameService {
 		GameManager gameManager) {
 		return ResponseEntity.ok(
 			ApiResponse.messageSuccess(messageBase, ReadyRoomMessageResponse.create(gameManager))
+		);
+	}
+
+	@Override
+	public ResponseEntity<ApiResponse<MemberAndSpectatorInfoMessageResponse>> allMemberAndSpectatorInfoInReadyRoom(
+		MessageBase messageBase, GameManager gameManager, SpectationManager spectationManager) {
+		return ResponseEntity.ok(
+			ApiResponse.messageSuccess(messageBase,
+				MemberAndSpectatorInfoMessageResponse.create(gameManager, spectationManager))
 		);
 	}
 
