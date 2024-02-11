@@ -12,6 +12,7 @@
                         
                         <ModalIconItemVue
                         @click="selectIcon(number)"
+                        data-bs-dismiss="modal"
                         :number = number
                         /> 
                     </div>

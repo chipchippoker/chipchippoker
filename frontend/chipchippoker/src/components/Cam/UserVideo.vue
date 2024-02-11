@@ -29,7 +29,7 @@
       <button id="mute-activate" @click="handleMuteBtn()">Sound Off</button>
       <button id="show-emotion" @click="showExpression()">감정 인식 표</button>
       <!-- 방장일 때만 강퇴가 보이기 / 방장 자신은 안보이기 -->
-      <button v-if="isManager===true && clientData!==roomManagerNickname" @click="forceDisconnect()">강퇴</button>
+      <button class="m-1" v-if="isManager===true && clientData!==roomManagerNickname" @click="forceDisconnect()">강퇴</button>
     </div>
 
   </div>
@@ -138,12 +138,6 @@
     if (!props.streamManager) return;
     // 카메라 상태 토글
     camerOff.value = !camerOff.value;
-    const cameraActivate = document.getElementById('camera-activate')
-    if(camerOff.value){   //카메라 비활성화상태
-      cameraActivate.innerText = 'Video On'
-    }else{                //카메라 활성화상태
-      cameraActivate.innerText = 'Video Off'
-    }
     // remote가 true면 상대방, false면 자신
     const remote = props.streamManager.remote
     // 카메라 작동 상태를 적용
@@ -152,6 +146,12 @@
     } else {
       props.streamManager.publishVideo(!camerOff.value);
     }
+    // const cameraActivate = document.getElementById('camera-activate')
+    // if(camerOff.value){   //카메라 비활성화상태
+    //   cameraActivate.innerText = 'Video On'
+    // }else{                //카메라 활성화상태
+    //   cameraActivate.innerText = 'Video Off'
+    // }
   }
 
   function handleMuteBtn() {
@@ -159,12 +159,12 @@
 
     // 음소거 상태 토글
     muted.value = !muted.value;
-    const muteActivate = document.getElementById('mute-activate')
-    if(muted.value){   //음소거 활성화상태
-      muteActivate.innerText = 'Sound On'
-    }else{                //음소거 비활성화상태
-      muteActivate.innerText = 'Sound Off'
-    }
+    // const muteActivate = document.getElementById('mute-activate')
+    // if(muted.value){   //음소거 활성화상태
+    //   muteActivate.innerText = 'Sound On'
+    // }else{                //음소거 비활성화상태
+    //   muteActivate.innerText = 'Sound Off'
+    // }
     // remote가 true면 상대방, false면 자신
     const remote = props.streamManager.remote
     // 음소거 설정을 적용

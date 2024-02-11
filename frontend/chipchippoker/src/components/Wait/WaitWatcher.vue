@@ -2,7 +2,7 @@
     <div class="watcher-list bg-lightblue h-100 p-2">
         <p>관전자</p>
         <ul class="not-overflow-text">
-            <li v-for="watcher in watchersNickname" :key="watcher">{{ watcher }}</li>
+            <li v-for="watcher in gameStore.watchersNickname" :key="watcher">{{ watcher }}</li>
         </ul>
     </div>
 </template>
@@ -16,7 +16,6 @@ import { useGameStore } from '../../stores/game';
 const roomStore = useRoomStore()
 const gameStore = useGameStore()
 const watchersNickname = computed(() => gameStore.watchersNickname)
-console.log(watchersNickname.value);
 
 </script>
 

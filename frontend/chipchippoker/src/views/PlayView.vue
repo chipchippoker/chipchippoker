@@ -203,9 +203,6 @@ if (refreshCount === 2) {
 }
 
 onMounted(() => {
-  // 프로필 아이콘 안보이기
-  userStore.viewProfileIcon = false
-
   window.addEventListener("beforeunload", (event) => {
     event.preventDefault()
     event.returnValue = '';
@@ -229,9 +226,6 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  // 프로필 아이콘 보이기
-  userStore.viewProfileIcon = true
-
   window.removeEventListener("beforeunload", (event) => {
     event.preventDefault()
     event.returnValue = '';

@@ -27,9 +27,6 @@ export const useUserStore = defineStore('user', () => {
   const profileNickname = ref('')
   Kakao.init(KAKAO_JAVASCRIPT_KEY)
 
-  // 프로필 아이콘 보여주기
-  const viewProfileIcon = ref(true)
-
   // 토큰 재발행 요청
   const renewToken = function () {
     axios({
@@ -384,6 +381,6 @@ export const useUserStore = defineStore('user', () => {
 
     // 프로필 아이콘, 프로필 정보 받아오기
     getIconUrl, getTierIconUrl, getProfileInfo, changeIcon,
-    myIcon, myNickname, profileInfo, viewProfileIcon, profileNickname
+    myIcon, myNickname, profileInfo,  profileNickname
     }
 },{persist:true})

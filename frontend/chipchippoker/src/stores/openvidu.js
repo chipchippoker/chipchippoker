@@ -139,9 +139,10 @@ export const useOpenviduStore = defineStore('openvidu', () => {
     // --- Connect to the session with a valid user token ---
     // Get a token from the OpenVidu deployment
     getToken(String(roomStore.roomId)).then((token) => {
+      if (session.value === undefined) {
+        return
+      }
       console.log("토큰 만들어지나");
-      console.log(token);
-      console.log(roomStore.isWatcher);
       session.value.connect(token, {clientData: userStore.myNickname, isWatcher: roomStore.isWatcher})
       .then(() => {
           // Get your own camera stream with the desired properties ---

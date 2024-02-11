@@ -220,10 +220,6 @@ export const useGameStore = defineStore('game', () => {
           console.log(response.message);
           receiveReady(response.data)
           break
-        case "MS008": // 라운드 종료
-          console.log(response.message);
-          receiveRoundFinish(response.data)
-          break
         case "MS010": // 친선 게임 종료
           receiveGameFinishFriend(response.data)
           break
@@ -318,13 +314,10 @@ export const useGameStore = defineStore('game', () => {
 
   // 게임방 입장 RECEIVE
   const receiveJoinRoom = function (data) {
-    console.log('★★★★★★★★★★★★★★★★★★★★★');
-    console.log('입장시 데이터', data);
-    console.log('★★★★★★★★★★★★★★★★★★★★★');
     countOfPeople.value = data.countOfPeople
     memberInfos.value = data.memberInfos
     roomManagerNickname.value = data.roomManagerNickname
-    console.log('저장된 매니저 닉네임', roomManagerNickname.value);
+    watchersNickname.value = data.spectatorList
     gameRoomTitle.value = roomStore.title
     router.push({
       name: 'wait',
@@ -522,6 +515,67 @@ export const useGameStore = defineStore('game', () => {
           console.log(response.message);
           receiveSpectaionExit(response.data)
           break
+        case "MS002": // 방 입장
+          console.log(response.message);
+          receiveJoinRoom(response.data)
+          break
+        case "MS003": // 방 나가기
+          console.log(response.message);
+          receiveExitRoom(response.data, response.code, response.message)
+          break
+        case "MS015": // 게임방 방장이 게임에서 나감
+          console.log(response.message)
+          receiveExitRoom(response.data, response.code, response.message)
+          break
+        case "MS004": // 강퇴(타인)
+          console.log(response.message);
+          receiveBanYou(response.data)
+          break
+        case "MS006": // 게임 준비 완료
+          console.log(response.message);
+          receiveReady(response.data)
+          break
+        case "MS016": // 게임방 시작
+          console.log(response.message)
+          receiveStartGame(response)
+          break
+        case "MS007": // 게임 진행
+          // 맨 처음 데이터 저장시에만 0.1초 미루기
+          if (firstStart.value === false) {
+            firstStart.value = true
+            setTimeout(() => {
+              roundState.value = response.data.roundState
+              currentRound.value = response.data.currentRound
+              yourTurn.value = response.data.yourTurn
+              gameMemberInfos.value = response.data.gameMemberInfos
+            }, 100)
+          } else if(roundState.value === false) {
+            // 새로운 라운드 저장할때는 2초 미루기
+            setTimeout(() => {
+              roundState.value = response.data.roundState
+              currentRound.value = response.data.currentRound
+              yourTurn.value = response.data.yourTurn
+              gameMemberInfos.value = response.data.gameMemberInfos
+              // console.log('라운드 저장 2초 미룸');
+
+            }, 4000)
+          } else{
+            // 배팅은 1초 미루기
+            setTimeout(() => {
+              roundState.value = response.data.roundState
+              currentRound.value = response.data.currentRound
+              yourTurn.value = response.data.yourTurn
+              gameMemberInfos.value = response.data.gameMemberInfos
+              // console.log('배팅 저장1초 미룸');
+            }, 1000)
+          }
+          break
+        case "MS008": // 라운드 종료
+          receiveRoundFinish(response.data)
+          break
+        case "MS010": // 게임 종료
+          receiveGameFinishFriend(response.data)
+          break
       }
     })
   }
@@ -535,6 +589,7 @@ export const useGameStore = defineStore('game', () => {
   const receiveSpectaionRoom = function (data) {
     watchersNickname.value = data.spectatorList
     memberInfos.value = data.memberInfos
+    firstStart.value = false
   }
 
   // 관전 나가기 SEND
