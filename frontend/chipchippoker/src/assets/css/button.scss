@@ -235,7 +235,6 @@
   --btn-reflex-top-1: 0%;
   --btn-reflex-top-2: 0%;
   /* 버튼 스타일 속성 설정 */
-  position: relative;
   z-index: 1;
   background:
   radial-gradient(
@@ -250,11 +249,11 @@
   radial-gradient(var(--btn-inner), var(--btn-outer));
   border: none;
   font-size: 18px;
-  width: 80px;
+  width: 60px;
+  font-size: 20px;
   height: 40px;
-  font-family: "Raleway", sans-serif;
-  font-weight: 400;
-  letter-spacing: 0.04em;
+  font-weight: 900;
+  // letter-spacing: 0.04em;
   color: rgba(232, 247, 238, 0.7);
   border-radius: 99em;
   text-shadow: 0 -1px rgba(38, 115, 69, 0.4);
