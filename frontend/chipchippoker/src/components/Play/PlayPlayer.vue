@@ -2,52 +2,50 @@
   <div class="w-100 h-100">
     <!-- 플레이어 감정, 동영상, 카드 -->
     <div class="w-100 h-100 position-relative">
-      <div>
-        <!-- 플레이어 정보 -->
-        <div :class="classNameList[index]" :id="'player' + (index + 1)" v-for="(player, index) in gameStore.gameMemberInfos"
-          :key="index">
-          <div class="text-white align-self-center ">{{ player.nickname }}
+      <!-- 플레이어 정보 -->
+      <div :class="classNameList[index]" :id="'player' + (index + 1)" v-for="(player, index) in gameStore.gameMemberInfos"
+        :key="index">
+        <div class="text-white align-self-center ">{{ player.nickname }}
+        </div>
+        <!-- 1, 3번 플레이어 -->
+        <div v-if="[0, 2].includes(index)" class="d-flex h-100 m-2 mt-0 position-relative" style="width: 460px;">
+          <div class="m-2 position-absolute top-50 start-0 translate-middle-y">
+            <UserVideoVue :stream-manager="findVideo(playersComputed, player.nickname)" />
           </div>
-          <!-- 1, 3번 플레이어 -->
-          <div v-if="[0, 2].includes(index)" class="d-flex h-100 m-2 mt-0">
-            <div class="m-2">
-              <UserVideoVue :stream-manager="findVideo(playersComputed, player.nickname)" />
-            </div>
-            <!-- 애니메이션 X 카드 -->
-            <div>
-              <img :src="getCardUrl(player.cardInfo?.cardSet, player.cardInfo?.cardNumber)" alt="앞장">
-            </div>
-            <!-- <div class="flip-card" id="flip-card">
-              <div class="flip-card-inner">
-                <div class="flip-card-front">
-                  <img :src="getCardUrl(0, 0)" alt="뒷면카드">
-                </div>
-                <div class="flip-card-back">
-                  <img :src="getCardUrl(player.cardInfo?.cardSet, player.cardInfo?.cardNumber)" alt="앞장">
-                </div>
+          <!-- 애니메이션 X 카드 -->
+          <div class="position-absolute top-50 end-0 translate-middle-y z-1">
+            <img :src="getCardUrl(player.cardInfo?.cardSet, player.cardInfo?.cardNumber)" alt="앞장" style="width: 120px;">
+          </div>
+          <!-- <div class="flip-card" id="flip-card">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <img :src="getCardUrl(0, 0)" alt="뒷면카드">
               </div>
-            </div> -->
-          </div>
-          <!-- 2, 4번 플레이어 -->
-          <div v-else class="d-flex flex-row-reverse h-100 m-2 mt-0">
-            <div class="m-2">
-              <UserVideoVue :stream-manager="findVideo(playersComputed, player.nickname)" />
-            </div>
-            <!-- 애니메이션 X 카드 -->
-            <div>
-              <img :src="getCardUrl(player.cardInfo?.cardSet, player.cardInfo?.cardNumber)" alt="앞장">
-            </div>
-            <!-- <div class="flip-card" id="flip-card">
-              <div class="flip-card-inner">
-                <div class="flip-card-front">
-                  <img :src="getCardUrl(0, 0)" alt="뒷면카드">
-                </div>
-                <div class="flip-card-back">
-                  <img :src="getCardUrl(player.cardInfo?.cardSet, player.cardInfo?.cardNumber)" alt="앞장">
-                </div>
+              <div class="flip-card-back">
+                <img :src="getCardUrl(player.cardInfo?.cardSet, player.cardInfo?.cardNumber)" alt="앞장">
               </div>
-            </div> -->
+            </div>
+          </div> -->
+        </div>
+        <!-- 2, 4번 플레이어 -->
+        <div v-else class="d-flex flex-row-reverse h-100 m-2 mt-0 position-relative" style="width: 460px;">
+          <div class="m-2 position-absolute top-50 end-0 translate-middle-y">
+            <UserVideoVue :stream-manager="findVideo(playersComputed, player.nickname)" />
           </div>
+          <!-- 애니메이션 X 카드 -->
+          <div class="position-absolute top-50 start-0 translate-middle-y z-1">
+            <img :src="getCardUrl(player.cardInfo?.cardSet, player.cardInfo?.cardNumber)" alt="앞장" style="width: 120px;">
+          </div>
+          <!-- <div class="flip-card" id="flip-card">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <img :src="getCardUrl(0, 0)" alt="뒷면카드">
+              </div>
+              <div class="flip-card-back">
+                <img :src="getCardUrl(player.cardInfo?.cardSet, player.cardInfo?.cardNumber)" alt="앞장">
+              </div>
+            </div>
+          </div> -->
         </div>
       </div>
 
@@ -55,10 +53,10 @@
       <PlayBattingVue />
 
       <!-- 남은 시간, 총 배팅 코인 -->
-      <div class="position-absolute top-0 start-50 translate-middle mt-4 d-flex flex-column align-items-center">
+      <!-- <div class="position-absolute top-0 start-50 translate-middle mt-4 d-flex flex-column align-items-center">
         <div class="text-white fs-3 fw-bold"> 초</div>
         <div class="text-white fw-bold">턴: {{ gameStore.yourTurn }}</div>
-      </div>
+      </div> -->
     </div>
     <!-- 나가기 -->
     <div class="position-absolute bottom-0 end-0">
