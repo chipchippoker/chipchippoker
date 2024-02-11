@@ -10,7 +10,9 @@ import { useFriendStore } from './stores/friend';
 import { useGameStore } from './stores/game';
 
 // window.addEventListener("unload", (event) => {
-//   window.localStorage.clear();
+//     localStorage.removeItem('game')
+//     localStorage.removeItem('room')
+//     localStorage.removeItem('openvidu')
 //   })
   
 const userStore = useUserStore()
@@ -18,6 +20,10 @@ const friendStore = useFriendStore()
 const gameStore = useGameStore()
 const route = useRoute()
 const router = useRouter()
+
+const showIcon = computed(() => {
+  return !['wait', 'play'].includes(route.name);
+});
 
 const goProfile = function(){
   userStore.profileNickname = userStore.myNickname
@@ -107,7 +113,7 @@ for (let i = 0; i < 100; i++) {
           </div>
         </div>
         <!-- 유저 아이콘 -->
-        <img v-if="userStore.viewProfileIcon" type="button" class="z-3" @click="goProfile()" :src='userStore.getIconUrl(userStore.myIcon)' style="width: 60px; height: 60px; border-radius: 50%;">
+        <img v-if="showIcon" type="button" class="z-3" @click="goProfile()" :src='userStore.getIconUrl(userStore.myIcon)' style="width: 60px; height: 60px; border-radius: 50%;">
       </div>
 
     

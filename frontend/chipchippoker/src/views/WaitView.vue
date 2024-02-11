@@ -38,6 +38,7 @@
               <!-- 다른 유저 캠 -->
               <div 
                 v-else
+                
                 style="width: 400px; height: 300px;">
                 <UserVideo 
                 :stream-manager="findVideo(playersComputed, player.nickname)" 
@@ -46,8 +47,6 @@
                 @force-disconnect="forceDisconnect"
                 />
               </div>
-              <!-- 닉네임 -->
-              <!-- <div style="margin-top: 10px; width: 400px; color: white; text-align: center;">{{ player.nickname }}</div> -->
             </div>
           </div>
         </div>
@@ -59,7 +58,7 @@
               class="col-6 mb-5"
               v-for="(player, index) in gameStore.memberInfos"
               :key="index">
-              <div style="width: 410px; height: 310px;">
+              <div :class="{ 'is-ready': player.isReady }" style="width: 410px; height: 310px;">
                 <!-- 다른 사람 캠 -->
                 <UserVideo
                   :stream-manager="findVideo(playersComputed, player.nickname)"
@@ -80,7 +79,6 @@
         
         <!-- 관전자 목록, 채팅창 -->
         <div>
-
           <!-- 관전자 목록 -->
           <div id="watcher-container">
             <WaitWatcher />
@@ -147,196 +145,227 @@
 </template>
 
 <script setup>
-import WaitWatcher from "@/components/Wait/WaitWatcher.vue";
-import UserVideo from "@/components/Cam/UserVideo.vue";
+  import WaitWatcher from "@/components/Wait/WaitWatcher.vue";
+  import UserVideo from "@/components/Cam/UserVideo.vue";
 
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
-import { useRoute, useRouter } from "vue-router";
-import { useUserStore } from '@/stores/user'
-import { useRoomStore } from "@/stores/room";
-import { useGameStore } from '@/stores/game'
-import { useOpenviduStore } from "@/stores/openvidu";
+  import { ref, computed, onMounted, onUnmounted, watch, onBeforeUnmount } from 'vue'
+  import { useRoute, useRouter } from "vue-router";
+  import { useUserStore } from '@/stores/user'
+  import { useRoomStore } from "@/stores/room";
+  import { useGameStore } from '@/stores/game'
+  import { useOpenviduStore } from "@/stores/openvidu";
 
-const userStore = useUserStore()
-const roomStore = useRoomStore()
-const gameStore = useGameStore()
-const openviduStore = useOpenviduStore()
+  const userStore = useUserStore()
+  const roomStore = useRoomStore()
+  const gameStore = useGameStore()
+  const openviduStore = useOpenviduStore()
 
-const roomId = ref('')
-const roomTitle = ref('')
-const totalParticipantCnt = ref('')
-const myNickname = ref('')
+  const roomId = ref('')
+  const roomTitle = ref('')
+  const totalParticipantCnt = ref('')
+  const myNickname = ref('')
 
-/// 플레이어, 관전을 위한 변수들 크헝헝
-const publisherComputed = computed(() => openviduStore.publisher)
-const subscribersComputed = computed(() => openviduStore.subscribers)
-const playersComputed = computed(() => openviduStore.players)
-const watchersComputed = computed(() => openviduStore.watchers)
+  /// 플레이어, 관전을 위한 변수들
+  const publisherComputed = computed(() => openviduStore.publisher)
+  const subscribersComputed = computed(() => openviduStore.subscribers)
+  const playersComputed = computed(() => openviduStore.players)
+  const watchersComputed = computed(() => openviduStore.watchers)
 
-const roomManagerNickname = computed(() => gameStore.roomManagerNickname)
-const isManager = computed(() => {
-  if (myNickname.value === roomManagerNickname.value) {
-    return true
-  } else {
-    return false
+  const roomManagerNickname = computed(() => gameStore.roomManagerNickname)
+  const isManager = computed(() => {
+    if (myNickname.value === roomManagerNickname.value) {
+      return true
+    } else {
+      return false
+    }
+  })
+  const isReady = ref(false)
+
+  roomId.value = roomStore.roomId
+  roomTitle.value = roomStore.title
+  myNickname.value = userStore.myNickname
+
+  // 방 나가기
+  const leaveRoom = function() {
+    // 관전자면
+    if (roomStore.isWatcher === true) {
+      roomStore.isWatcher = false
+      roomStore.leaveWatcher()
+    } else {
+      roomStore.leaveRoom()
+    }
   }
-})
-const isReady = ref(false)
 
-roomId.value = roomStore.roomId
-roomTitle.value = roomStore.title
-myNickname.value = userStore.myNickname
-
-// 방 나가기
-const leaveRoom = function() {
-  // 관전자면
-  if (roomStore.isWatcher === true) {
-    roomStore.isWatcher = false
-    roomStore.leaveWatcher()
-  } else {
-    roomStore.leaveRoom()
+  // 게임 시작
+  const startGame = function () {
+    const payload = {
+      title: roomTitle.value
+    }
+    roomStore.startGame(payload)
   }
-}
 
-// 게임 시작
-const startGame = function () {
-  const payload = {
-    title: roomTitle.value
+  // 게임 준비
+  const readyGame = function () {
+    // 해당 플레이어 준비 상태 반전
+    isReady.value = !isReady.value
+    gameStore.sendReady(roomTitle.value, isReady.value)
   }
-  roomStore.startGame(payload)
-}
 
-// 게임 준비
-const readyGame = function () {
-  // 해당 플레이어 준비 상태 반전
-  isReady.value = !isReady.value
-  gameStore.sendReady(roomTitle.value, isReady.value)
-}
-
-// 강퇴
-const forceDisconnect = function(clientData) {
-  const payload = {
-    title: roomTitle.value,
-    nickname: clientData
+  // 강퇴
+  const forceDisconnect = function(clientData) {
+    const payload = {
+      title: roomTitle.value,
+      nickname: clientData
+    }
+    console.log(payload);
+    roomStore.forceMemberOut(payload)
   }
-  console.log(payload);
-  roomStore.forceMemberOut(payload)
-}
 
-// 캠 - 아 드디어 했다 와 진짜 죽을거같다 playersComputed가 갱신되기 전에 이 함수가 실행되면서 그렇게 되면
-// 무조건 publisherComputed.value가 나올 수 밖에 없기 때문에
-// index를 같이 넣어서 갱신되지 않고 만약 이전 그대로면 undefined로 처음부터 uservideo에 들어가지 않게 해서
-// 아무 것도 출력하지 않게 하면 나중에 playersComputed가 갱신 되었을 때 그에 맞는 카메라를 넣을 수 있음
-const findVideo = function (players, targetNickname) {
-  console.log(players);
-  console.log(targetNickname);
-    for (let i = 0; i < players.length; i++) {
-      const player = players[i]
-      if (player.nickname === targetNickname) {
-        console.log(player)
-        console.log(targetNickname)
-        return player.player
+  // 캠 - playersComputed가 갱신되기 전에 이 함수가 실행되면서 그렇게 되면 안되므로
+  // undefined를 출력하게게 하면 나중에 playersComputed가 갱신 되었을 때 그에 맞는 카메라를 넣을 수 있음
+  const findVideo = function (players, targetNickname) {
+    console.log(players);
+    console.log(targetNickname);
+      for (let i = 0; i < players.length; i++) {
+        const player = players[i]
+        if (player.nickname === targetNickname) {
+          console.log(player)
+          console.log(targetNickname)
+          return player.player
+        }
       }
+      return undefined
     }
-    return undefined
+
+
+  /////////////////////채팅창을 위한 부분
+  const inputMessage = ref("")
+  const messages = ref([])
+
+  const sendMessage = function(input) {
+    openviduStore.sendMessage(input)
+    inputMessage.value = ''
+  }
+
+  // scroll 함수
+  function scrollUl() {
+    // 채팅창 form 안의 ul 요소, (ul 요소 안에 채팅 내용들이 li 요소로 입력된다.)
+    let chatUl = document.querySelector('.chat_ul');
+    chatUl.scrollTop = chatUl.scrollHeight; // 스크롤의 위치를 최하단으로
+  }
+
+  messages.value = computed(() => openviduStore.messages)
+
+  // messages 배열이 변경될 때마다 scrollUl 함수를 호출하여 스크롤 갱신
+  watch([openviduStore.messages], () => {
+    window.setTimeout(scrollUl, 50);
+  })
+
+
+  // 이전에 페이지가 새로고침된 횟수를 가져옵니다.
+  let refreshCount = localStorage.getItem('refreshCount');
+
+  // 새로고침 횟수를 증가시킵니다.
+  refreshCount = parseInt(refreshCount) + 1 || 1;
+
+  // 현재 새로고침 횟수를 로컬 스토리지에 저장합니다.
+  localStorage.setItem('refreshCount', refreshCount);
+
+  // 새로고침 횟수를 출력합니다.
+  console.log('새로고침 횟수:', refreshCount);
+
+  // 새로고침 횟수가 2회가 넘어가면 새로고침을 했다는 것이므로
+  if (refreshCount === 2) {
+      if (roomStore.isWatcher === true) {
+        roomStore.leaveWatcher()
+      } else {
+        roomStore.leaveRoom()
+      }
   }
 
 
-/////////////////////채팅창을 위한 부분
-const inputMessage = ref("")
-const messages = ref([])
+  // gameStore.memberInfos 배열 감시 - 관전자 빼고 모든 플레이어가 방을 나가면 관전자도 나가도록
+  watch(gameStore.memberInfos, (newMemberInfos, oldMemberInfos) => {
+    // 새로운 배열이 비어 있는지 확인
+    if (newMemberInfos.length === 0) {
+      // 빈 배열이면 leaveWatcher 함수 호출
+      roomStore.leaveWatcher()
+      alert('모든 플레이어가 방을 나갔습니다.')
+    }
+  })
 
-const sendMessage = function(input) {
-  openviduStore.sendMessage(input)
-  inputMessage.value = ''
-}
 
-// scroll 함수
-function scrollUl() {
-  // 채팅창 form 안의 ul 요소, (ul 요소 안에 채팅 내용들이 li 요소로 입력된다.)
-  let chatUl = document.querySelector('.chat_ul');
-  console.log('스크롤 갱싱 함수');
-  console.log(chatUl.scrollTop);
-  console.log(chatUl.scrollHeight);
-  chatUl.scrollTop = chatUl.scrollHeight; // 스크롤의 위치를 최하단으로
-  console.log(chatUl.scrollTop);
-}
+  onMounted(() => {
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+      .then((stream) => {
+        // 카메라 및 마이크에 대한 성공적인 액세스 처리
+      })
+      .catch((error) => {
+        console.error('카메라 및 마이크 액세스 오류:', error);
+      });
 
-messages.value = computed(() => openviduStore.messages)
+    roomId.value = roomStore.roomId
+    roomTitle.value = roomStore.title
+    totalParticipantCnt.value = roomStore.totalParticipantCnt
+    myNickname.value = userStore.myNickname
 
-// messages 배열이 변경될 때마다 scrollUl 함수를 호출하여 스크롤 갱신
-watch([openviduStore.messages], () => {
-  console.log('스크롤 갱신');
-  window.setTimeout(scrollUl, 50);
-})
+    // 메인페이지 -> 방 만들기 : 세션 생성
+    openviduStore.joinSession()
 
-onMounted(() => {
-
-  navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-    .then((stream) => {
-      // 카메라 및 마이크에 대한 성공적인 액세스 처리
+    window.addEventListener("beforeunload", (event) => {
+      event.returnValue = '';
+      event.preventDefault()
     })
-    .catch((error) => {
-      console.error('카메라 및 마이크 액세스 오류:', error);
-    });
-  // 프로필 아이콘 안보이기
-  userStore.viewProfileIcon = false
 
-  roomId.value = roomStore.roomId
-  roomTitle.value = roomStore.title
-  totalParticipantCnt.value = roomStore.totalParticipantCnt
-  myNickname.value = userStore.myNickname
-
-  // 메인페이지 -> 방 만들기 : 세션 생성
-  openviduStore.joinSession()
-
-  window.addEventListener("beforeunload", (event) => {
-    event.returnValue = '';
-    event.preventDefault()
-    // if (roomStore.isWatcher === true  && roomStore.title !== '') {
-    //   roomStore.leaveWatcher()
-    // } else if (roomStore.title !== '') {
-    //   roomStore.leaveRoom()
-    // }
-  })
-  window.addEventListener("popstate", (event) => {
-    if (roomStore.isWatcher === true  && roomStore.title !== '') {
-      roomStore.leaveWatcher()
-    } else if (roomStore.title !== '') {
+    window.addEventListener("unload", (event) => {
+      if (roomStore.isWatcher === true) {
+        roomStore.leaveWatcher()
+      } else {
         roomStore.leaveRoom()
-    }
-  })
-})
+      }
+    }) 
 
-// localStorage에서 불러오기
-onUnmounted(() => {
-  // 프로필 아이콘 보이기
-  userStore.viewProfileIcon = true
-  roomId.value = roomStore.roomId
-  roomTitle.value = roomStore.title
-  totalParticipantCnt.value = roomStore.totalParticipantCnt
-  myNickname.value = userStore.myNickname
-
-  console.log('방 정보 가져오기 성공!!');
-
-  window.removeEventListener("beforeunload", (event) => {
-    event.preventDefault()
-    event.returnValue = '';
-    // if (roomStore.isWatcher === true  && roomStore.title !== '') {
-    //   roomStore.leaveWatcher()
-    // } else if (roomStore.title !== '') {
-    //     roomStore.leaveRoom()
-    // }
-  })
-  window.removeEventListener("popstate", (event) => {
-    if (roomStore.isWatcher === true  && roomStore.title !== '') {
-      roomStore.leaveWatcher()
-    } else if (roomStore.title !== '') {
+    window.addEventListener("popstate", (event) => {
+      if (roomStore.isWatcher === true) {
+        roomStore.leaveWatcher()
+      } else {
         roomStore.leaveRoom()
-    }
+      }
+    })
   })
 
-})
+  // localStorage에서 불러오기
+  onUnmounted(() => {
+    
+    roomId.value = roomStore.roomId
+    roomTitle.value = roomStore.title
+    totalParticipantCnt.value = roomStore.totalParticipantCnt
+    myNickname.value = userStore.myNickname
+
+    console.log('방 정보 가져오기 성공!!');
+
+    window.removeEventListener("beforeunload", (event) => {
+      event.preventDefault()
+      event.returnValue = '';
+    })
+
+    window.removeEventListener("unload", (event) => {
+      if (roomStore.isWatcher === true) {
+        roomStore.leaveWatcher()
+      } else {
+        roomStore.leaveRoom()
+      }
+    }) 
+
+    window.removeEventListener("popstate", (event) => {
+      if (roomStore.isWatcher === true) {
+        roomStore.leaveWatcher()
+      } else {
+          roomStore.leaveRoom()
+      }
+    })
+
+  })
 
 </script>
 
