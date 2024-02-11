@@ -1,15 +1,15 @@
 <template>
   <div class="position-relative text-center" v-if="streamManager" @mouseover="showControls = true" @mouseleave="showControls = false">
     <ov-video 
-    class="cam"
+    class="position-absolute top-50 start-50 translate-middle"
     :class="{ 'is-turn': clientData === gameStore.yourTurn, 'is-die' : isDie, 'is-ready': isReady  }"
     :stream-manager="streamManager"
     @sendEmotion="sendEmotion"
     />
-    <div :class="{'ready-effect': isReady}">Ready</div>
+    <div class="position-absolute" :class="{'ready-effect': isReady}" style="color: transparent;">Ready</div>
     <!-- {{ clientData }}이게 내 현재 이름임 이거 지우면 실행 안됨, 안보이게 투명하게 해야하나? -->
     <!-- <img class="xx-small-icon"  :src='friendStore.getTierIconUrl(userInfo?.tier)'> -->
-    <span class="mx-2" id="text" style="color: white;">{{ clientData }}</span>
+    <span class="mx-2 position-absolute" id="text" style="color: transparent;">{{ clientData }}</span>
     <!-- <span style="color: white;">{{ userInfo?.rank }}등</span> -->
     
 
@@ -25,9 +25,15 @@
     </div>
 
     <div v-if="showControls" class="position-absolute top-0 end-0 d-flex flex-column">
-      <button id="camera-activate" @click="handleCameraBtn()">Video Off</button>
-      <button id="mute-activate" @click="handleMuteBtn()">Sound Off</button>
-      <button id="show-emotion" @click="showExpression()">감정 인식 표</button>
+      <div class="m-1">
+        <button v-if="!camerOff" id="camera-activate" @click="handleCameraBtn()">Video Off</button>
+        <button v-else id="camera-activate" @click="handleCameraBtn()">Video On</button>
+      </div>
+      <div class="m-1">
+        <button v-if="!muted" id="mute-activate" @click="handleMuteBtn()">Sound Off</button>
+        <button v-else id="mute-activate" @click="handleMuteBtn()">Sound On</button>
+      </div>
+      <button class="m-1" id="show-emotion" @click="showExpression()">감정 인식 표</button>
       <!-- 방장일 때만 강퇴가 보이기 / 방장 자신은 안보이기 -->
       <button class="m-1" v-if="isManager===true && clientData!==roomManagerNickname" @click="forceDisconnect()">강퇴</button>
     </div>
