@@ -90,7 +90,8 @@ public class GameController {
 				spectationManager));
 
 		broadcastAllSpectatorConnected(gameRoomTitle,
-			gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_NEW_MEMBER_ENTER, gameManager));
+			gameService.allMemberAndSpectatorInfoInReadyRoom(MessageBase.S200_GAME_ROOM_NEW_MEMBER_ENTER, gameManager,
+				spectationManager));
 		log.info("게임방 입장 성공");
 	}
 
