@@ -76,6 +76,7 @@ export const useGameStore = defineStore('game', () => {
   // 웹소켓 연결 끊김 이벤트
   stompClient.ws.onclose = function (event) {
     console.log('웹소켓 연결 끊김 감지')
+    window.location.reload()
   }
   console.log(stompClient)
 
@@ -224,13 +225,9 @@ export const useGameStore = defineStore('game', () => {
           receiveRoundFinish(response.data)
           break
         case "MS010": // 친선 게임 종료
-          console.log(response.data);
-          kindGame.value = '친선'
           receiveGameFinishFriend(response.data)
           break
         case "MS009": // 경쟁 게임 종료
-          console.log(response.data);
-          kindGame.value = '경쟁'
           receiveGameFinishRank(response.data)
           break
         case "MB002": // 모두 준비상태가 아님
@@ -391,6 +388,9 @@ export const useGameStore = defineStore('game', () => {
   // 게임 시작 RECEIVE
   const receiveStartGame = function (body) {
     console.log('receiveStartGame', body)
+    // 새로고침 횟수를 삭제합니다.
+    localStorage.removeItem('refreshCount')
+    
     router.push({
       name: 'play',
       params: { roomId: roomStore.roomId },
@@ -448,7 +448,7 @@ export const useGameStore = defineStore('game', () => {
   }
   // 친선 게임 종료
   const receiveGameFinishFriend = function (data) {
-   memberEndGameInfos.value = data.memberEndGameInfos
+    memberEndGameInfos.value = data.memberEndGameInfos
   }
 
   // 친구신청 Send
@@ -458,14 +458,10 @@ export const useGameStore = defineStore('game', () => {
 
   // 방 나가기 시 초기화 함수
   const resetGameStore = function () {
-    console.log('subscriptionGame.value');
-    console.log(subscriptionGame.value);
-    console.log('subscriptionSpectation.value');
-    console.log(subscriptionSpectation.value);
-    if (subscriptionGame.value !== undefined) {
+    if (subscriptionGame.value !== undefined && subscriptionGame.value.unsubscribe) {
       subscriptionGame.value.unsubscribe()
     }
-    if (subscriptionSpectation.value !== undefined) {
+    if (subscriptionSpectation.value !== undefined && subscriptionSpectation.value.unsubscribe) {
       subscriptionSpectation.value.unsubscribe()
     }
     winnerNickname.value = ''
