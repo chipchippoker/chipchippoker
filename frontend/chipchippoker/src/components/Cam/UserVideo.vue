@@ -24,13 +24,14 @@
       <i v-if="maxEmotion == 'surprised'" class="fa-solid fa-face-surprise fa-2xl" style="color: #74C0FC;"></i>
     </div>
 
-
     <div v-if="showControls" class="position-absolute top-0 end-0 d-flex flex-column">
       <button id="camera-activate" @click="handleCameraBtn()">Video Off</button>
       <button id="mute-activate" @click="handleMuteBtn()">Sound Off</button>
+      <button id="show-emotion" @click="showExpression()">감정 인식 표</button>
       <!-- 방장일 때만 강퇴가 보이기 / 방장 자신은 안보이기 -->
       <button v-if="isManager===true && clientData!==roomManagerNickname" @click="forceDisconnect()">강퇴</button>
     </div>
+
   </div>
 </template>
 
@@ -62,12 +63,7 @@
     roomManagerNickname:String,
   })
 
-  // emit으로 올라온 감정 추출
-  const maxEmotion = ref(null)
-  const sendEmotion = function (...args){
-    maxEmotion.value = args[0]
-    // console.log(maxEmotion.value);
-  }
+ 
   const showControls = ref(false);
 
 
@@ -84,7 +80,22 @@
   });
   // console.log(clientData)
   
-  // 게임 준비 상태
+
+   // emit으로 올라온 감정 추출
+  const maxEmotion = ref(null)
+  const emotion = ref(null)
+  const sendEmotion = function (...args){
+    maxEmotion.value = args[0]
+    emotion.value = args[1]
+    // 스토어에 닉네임에 따라 감정 저장
+    gameStore.playerEmotion[clientData.value] = emotion.value
+  }
+  // 감정표현 표 보여줄 사람 닉네임 저장
+  const showExpression = function(){
+    gameStore.showEmotionNickname = clientData.value
+  }
+
+
   const isReady = computed(() => {
     console.log(gameStore.player);
     console.log(clientData);

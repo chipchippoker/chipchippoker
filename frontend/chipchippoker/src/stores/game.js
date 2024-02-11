@@ -455,6 +455,10 @@ export const useGameStore = defineStore('game', () => {
   const sendFriendRequest = function (nickname) {
     stompClient.send("/to/friend/request", JSON.stringify({ "nickname": nickname }), { 'access-token': userStore.accessToken })
   }
+  // ------------------------------감정표현-------------------------------------------
+  const playerEmotion = ref({})
+  const showEmotionNickname = ref(userStore.myNickname)
+  // ------------------------------감정표현-------------------------------------------
 
   // 방 나가기 시 초기화 함수
   const resetGameStore = function () {
@@ -485,6 +489,8 @@ export const useGameStore = defineStore('game', () => {
     mySpectateSubId.value = []
     watchersNickname.value = []
     memberEndGameInfos.value = []
+    playerEmotion.value = {}
+    showEmotionNickname.value = userStore.myNickname
   }
 
   //---------------------------------------------------관전--------------------------------------------------------
@@ -557,7 +563,8 @@ export const useGameStore = defineStore('game', () => {
     memberEndGameInfos,
     roomManagerNickname,
     resetGameStore,
-
+    playerEmotion,
+    showEmotionNickname,
     // 구독 정보
     subscriptionGame, myGameSubId,
 

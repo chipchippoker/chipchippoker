@@ -87,13 +87,7 @@
       </div>
       <!-- 이모지 or 로로 -->
       <div class="h-100 w-25 d-flex justify-content-center align-items-center">
-
-        <!-- <div class="d-flex justify-content-around w-100 animate__jackInTheBox ">
-          <font-awesome-icon :icon="['fas', 'face-angry']" class="fa-5x" style="color: #9f0909;" />
-          <font-awesome-icon :icon="['fas', 'face-sad-cry']" class="fa-5x" style="color: #ece513;" />
-          <font-awesome-icon :icon="['fas', 'face-grin-tongue-wink']" class="fa-5x" style="color: #ffffff;" />
-        </div> -->
-        <!-- <img class="middle-logo mb-5 me-5" src="/src/assets/icons/Logo.png" alt=""> -->
+        <PlayEmotionVue/>
       </div>
     </div>
     <!-- 배팅 오류 모달 -->
@@ -118,6 +112,8 @@
 import PlayControllerVue from "../components/Play/PlayController.vue";
 import PlayPlayerVue from "../components/Play/PlayPlayer.vue";
 import PlayTalkVue from "../components/Play/PlayTalk.vue";
+import PlayEmotionVue from "../components/Play/PlayEmotion.vue";
+
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useUserStore } from "@/stores/user";
 import { useRoomStore } from "@/stores/room";
