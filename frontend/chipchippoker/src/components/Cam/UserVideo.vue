@@ -47,11 +47,13 @@
   import { useUserStore } from '@/stores/user';
   import { useGameStore } from '@/stores/game';
   import { useFriendStore } from '@/stores/friend';
+  import { useRoute } from 'vue-router';
 
   const userStore = useUserStore()
   const gameStore = useGameStore()
   const friendStore = useFriendStore()
   const userInfo = ref({})
+  const route = useRoute()
 
   ///////////////////카메라 및 오디오 설정을 위한 부분임
   const muted = ref(false)       // 기본은 음소거 비활성화
@@ -95,14 +97,18 @@
     gameStore.showEmotionNickname = clientData.value
   }
 
-
+  // 게임 준비 체크
   const isReady = computed(() => {
     console.log(gameStore.player);
     console.log(clientData);
     const memberInfo = gameStore.memberInfos.find(info => info.nickname === clientData.value);
     console.log(memberInfo);
     console.log(memberInfo.isReady);
-    return memberInfo ? memberInfo.isReady : false;
+    if (route.name === 'wait') {
+      return memberInfo ? memberInfo.isReady : false;
+    } else {
+      return false
+    }
   })
 
   // 죽은 상태 체크
