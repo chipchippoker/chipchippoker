@@ -1,5 +1,5 @@
 <template>
-  <video class="cam" ref="videoEl" autoplay @click="clickVideo" :style="videoStyle"/>
+  <video class="cam" ref="videoEl" autoplay :style="videoStyle" />
 </template>
 
 <script>
@@ -11,7 +11,7 @@ export default {
 
 <script setup>
 import * as faceAPI from 'face-api.js'
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useRoute } from 'vue-router';
 import { useGameStore } from '@/stores/game';
 
@@ -24,46 +24,54 @@ const props = defineProps({
 const videoEl = ref(null);
 
 const videoStyle = ref({ width: "400px", height: "300px" });
+const emit = defineEmits(['sendEmotion'])
 
 if (route.name === 'play') {
   videoStyle.value = { width: "280px", height: "210px" }
 }
 
-// mouted되면 videoEl의 값을 addVideoElement에 추가함.
-onMounted(() => {
-  props.streamManager.addVideoElement(videoEl.value);
-})
+const startEmotionDetection = setInterval(async () => {
+  const detections = await faceAPI.detectSingleFace(videoEl.value,
+    new faceAPI.TinyFaceDetectorOptions())
+    .withFaceLandmarks().withFaceExpressions()
 
-const emit = defineEmits(['sendEmotion'])
-const clickVideo = function() {
-  Promise.all([
+  const emotion = {
+    'angry': detections.expressions.angry * 100,
+    'disgusted': detections.expressions.disgusted * 100,
+    'fearful': detections.expressions.fearful * 100,
+    'happy': detections.expressions.happy,
+    'neutral': detections.expressions.neutral,
+    'sad': detections.expressions.sad,
+    'surprised': detections.expressions.surprised * 100
+  }
+  // console.log(emotion)
+  // 가장 큰 감정 추출
+  const maxEmotion = Object.keys(emotion).reduce((maxEmotion, key) => {
+    return emotion[key] > emotion[maxEmotion] ? key : maxEmotion;
+  }, Object.keys(emotion)[0]);
+  emit('sendEmotion', maxEmotion,emotion)
+}, 1000)
+
+
+// mouted되면 videoEl의 값을 addVideoElement에 추가함.
+onMounted(async () => {
+  props.streamManager.addVideoElement(videoEl.value);
+  const models = await Promise.all([
     faceAPI.nets.tinyFaceDetector.loadFromUri('/models'),
     faceAPI.nets.faceExpressionNet.loadFromUri('/models'),
     faceAPI.nets.faceLandmark68Net.loadFromUri('/models'),
-    ]).then(
-    setInterval(async () => {
-      const detections = await faceAPI.detectSingleFace(videoEl.value,
-        new faceAPI.TinyFaceDetectorOptions())
-        .withFaceLandmarks().withFaceExpressions()
-      
-      const emotion = {
-        'angry':detections.expressions.angry*100,
-        'disgusted':detections.expressions.disgusted*100,
-        'fearful':detections.expressions.fearful*100,
-        'happy':detections.expressions.happy,
-        'neutral':detections.expressions.neutral,
-        'sad':detections.expressions.sad,
-        'surprised':detections.expressions.surprised*100
-      }
-      // console.log(emotion)
-      // 가장 큰 감정 추출
-      const maxEmotion = Object.keys(emotion).reduce((maxEmotion, key) => {
-        return emotion[key] > emotion[maxEmotion] ? key : maxEmotion;
-      }, Object.keys(emotion)[0]);
-      emit('sendEmotion',maxEmotion)
-    }, 1000))
-}
+  ])
 
+  // 모델 로딩 후 처리
+  console.log('Models loaded:', models)
+
+  startEmotionDetection()
+})
+
+// 나갈때 중지
+onUnmounted(() => {
+  clearInterval(startEmotionDetection);
+});
 
 </script>
 
@@ -71,5 +79,4 @@ const clickVideo = function() {
 .cam {
   border-radius: 30px;
 }
-
 </style>
