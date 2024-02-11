@@ -59,10 +59,8 @@
           </div>
         </div>
         <div class="text-center my-3">
-          <!-- 친선 매치 종료 후 대기페이지로 이동 -->
-          <h3 v-if="gameStore.kindGame==='친선'" type="button" class="btn-outline-yellow rounded-2 p-1 d-inline-block" @click="goToWait()">대기페이지로 가기</h3>
-          <!-- 경쟁 매치 종료 후 메인페이지로 이동 -->
-          <h3 v-else type="button" class="btn-outline-yellow rounded-2 p-1 d-inline-block" @click="gotoMain()">메인페이지로 가기</h3>
+          <!-- 매치 종료 후 메인페이지로 이동 -->
+          <h3 type="button" class="btn-outline-yellow rounded-2 p-1 d-inline-block" @click="gotoMain()">메인페이지로 가기</h3>
           
         </div>
       </div>
@@ -177,7 +175,6 @@ const goToWait = function () {
     name: 'wait',
     params: { roomId: roomStore.roomId },
   })
-
 }
 
 const cardSetName = {
@@ -187,6 +184,28 @@ const cardSetName = {
   4:'스페이드'
 }
 
+
+// 이전에 페이지가 새로고침된 횟수를 가져옵니다.
+let refreshCount = localStorage.getItem('refreshCount');
+
+// 새로고침 횟수를 증가시킵니다.
+refreshCount = parseInt(refreshCount) + 1 || 1;
+
+// 현재 새로고침 횟수를 로컬 스토리지에 저장합니다.
+localStorage.setItem('refreshCount', refreshCount);
+
+// 새로고침 횟수를 출력합니다.
+console.log('새로고침 횟수:', refreshCount);
+
+// 새로고침 횟수가 2회가 넘어가면 새로고침을 했다는 것이므로 out
+if (refreshCount === 2) {
+    if (roomStore.isWatcher === true) {
+      roomStore.leaveWatcher()
+    } else {
+      roomStore.leaveRoom()
+    }
+}
+
 onMounted(() => {
   // 프로필 아이콘 안보이기
   userStore.viewProfileIcon = false
@@ -194,16 +213,20 @@ onMounted(() => {
   window.addEventListener("beforeunload", (event) => {
     event.preventDefault()
     event.returnValue = '';
-    // if (roomStore.isWatcher === true  && roomStore.title !== '') {
-    //   roomStore.leaveWatcher()
-    // } else if (roomStore.title !== '') {
-    //     roomStore.leaveRoom()
-    // }
   })
-  window.addEventListener("popstate", (event) => {
-    if (roomStore.isWatcher === true && roomStore.title !== '') {
+
+  window.addEventListener("unload", (event) => {
+    if (roomStore.isWatcher === true) {
       roomStore.leaveWatcher()
-    } else if (roomStore.title !== '') {
+    } else {
+      roomStore.leaveRoom()
+    }
+  }) 
+
+  window.addEventListener("popstate", (event) => {
+    if (roomStore.isWatcher === true) {
+      roomStore.leaveWatcher()
+    } else {
       roomStore.leaveRoom()
     }
   })
@@ -216,21 +239,23 @@ onUnmounted(() => {
   window.removeEventListener("beforeunload", (event) => {
     event.preventDefault()
     event.returnValue = '';
-    // if (roomStore.isWatcher === true  && roomStore.title !== '') {
-    //   roomStore.leaveWatcher()
-    // } else if (roomStore.title !== '') {
-    //     roomStore.leaveRoom()
-    // }
   })
-  window.removeEventListener("popstate", (event) => {
-    if (roomStore.isWatcher === true && roomStore.title !== '') {
+
+  window.removeEventListener("unload", (event) => {
+    if (roomStore.isWatcher === true) {
       roomStore.leaveWatcher()
-    } else if (roomStore.title !== '') {
+    } else {
+      roomStore.leaveRoom()
+    }
+  }) 
+
+  window.removeEventListener("popstate", (event) => {
+    if (roomStore.isWatcher === true) {
+      roomStore.leaveWatcher()
+    } else {
       roomStore.leaveRoom()
     }
   })
-
-  // roomStore.leaveRoom()
 })
 
 </script>

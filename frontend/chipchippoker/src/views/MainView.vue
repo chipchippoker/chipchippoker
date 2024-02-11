@@ -171,6 +171,7 @@ const reLoad = function() {
     router.go(0)
 }
 
+
 // 메인페이지 떠나기 전에
 onBeforeRouteLeave((to, from, next) => {
     const modalInstance = new bootstrap.Modal(document.getElementById('FindGameModal'))
@@ -190,12 +191,6 @@ onMounted(()=>{
     friendStore.getAllRankList()
     // friendStore.getMyRankList()
     // soundStore.bgmOn()
-    console.log(roomStore.title);
-    if (roomStore.isWatcher === true  && roomStore.title !== '') {
-      roomStore.leaveWatcher()
-    } else if (roomStore.title !== '') {
-        roomStore.leaveRoom()
-    }
 })
 
 </script>
