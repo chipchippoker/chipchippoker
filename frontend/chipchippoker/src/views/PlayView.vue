@@ -55,12 +55,12 @@
             <h3 class="m-3">{{ playerResult.nickname }}님 <span
                 :class="[{ 'text-danger': playerResult.isResult == '승' }, { 'text-primary': playerResult.isResult == '패' }]">{{
                   playerResult.isResult }}</span></h3>
-            <p v-if="playerResult?.pointChange">pointChange: {{ playerResult.pointChange }}</p>
+            <p v-if="gameStore.kindGame==='경쟁'">pointChange: {{ playerResult.pointChange }}</p>
           </div>
         </div>
         <div class="text-center my-3">
           <!-- 친선 매치 종료 후 대기페이지로 이동 -->
-          <h3 v-if="!!playerResult?.pointChange" type="button" class="btn-outline-yellow rounded-2 p-1 d-inline-block" @click="goToWait()">메인페이지로 가기</h3>
+          <h3 v-if="gameStore.kindGame==='친선'" type="button" class="btn-outline-yellow rounded-2 p-1 d-inline-block" @click="goToWait()">대기페이지로 가기</h3>
           <!-- 경쟁 매치 종료 후 메인페이지로 이동 -->
           <h3 v-else type="button" class="btn-outline-yellow rounded-2 p-1 d-inline-block" @click="gotoMain()">메인페이지로 가기</h3>
           
@@ -230,7 +230,7 @@ onUnmounted(() => {
     }
   })
 
-  roomStore.leaveRoom()
+  // roomStore.leaveRoom()
 })
 
 </script>
