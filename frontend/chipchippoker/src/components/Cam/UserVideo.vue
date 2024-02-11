@@ -175,14 +175,6 @@
     }
   }
   
-
-  // const isReady = function(){
-
-  // }
-
-
-
-
 </script>
 
 <style lang="scss" scope>
