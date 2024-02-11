@@ -61,7 +61,7 @@
             <div>{{ recentPlay.memberNum }}인</div>
           </div>
           <!-- 같이한 사람 이름 -->
-          <div class="d-flex justify-content-between me-2">
+          <div class="d-flex justify-content-between me-2 not-overflow-text">
             <div class="d-flex gap-3">
               <div
                 v-for="(result, player) in recentPlay.opponents"
@@ -105,6 +105,14 @@ const userStore = useUserStore();
 
 onMounted(() => {
   profileInfo.value = userStore.profileInfo;
+
+  // 스크롤 최상단에 두기
+  const ulTag = document.querySelector('ul')
+  console.log(ulTag);
+  ulTag.scrollTop = ulTag.scrollHeight
+  console.log(ulTag.scrollHeight);
+  console.log(ulTag.scrollTop);
+
 });
 </script>
 
@@ -121,4 +129,20 @@ onMounted(() => {
 ::-webkit-scrollbar-track {
   background-color: transparent; /* 스크롤바 트랙의 배경색 투명하게 */
 }
+
+.not-overflow-text {
+    overflow: hidden;
+    /* 텍스트 오버플로우를 숨김 */
+    text-overflow: ellipsis;
+    /* 텍스트 오버플로우시 말줄임(...) 표시 */
+    white-space: nowrap;
+    /* 텍스트가 넘치면 줄바꿈을 하지 않음 */
+}
+
+.not-overflow-text:hover {
+    overflow: visible;
+    /* cursor: pointer; */
+}
+
+
 </style>

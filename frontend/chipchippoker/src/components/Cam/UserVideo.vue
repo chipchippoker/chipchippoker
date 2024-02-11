@@ -1,11 +1,15 @@
 <template>
   <div class="position-relative text-center" v-if="streamManager" @mouseover="showControls = true" @mouseleave="showControls = false">
     <ov-video 
-    :class="{ 'is-turn': clientData === gameStore.yourTurn, 'is-die' : isDie() }"
-    :stream-manager="streamManager" @sendEmotion="sendEmotion"/>
+    class="cam"
+    :class="{ 'is-turn': clientData === gameStore.yourTurn, 'is-die' : isDie, 'is-ready': isReady  }"
+    :stream-manager="streamManager"
+    @sendEmotion="sendEmotion"
+    />
+    <div :class="{'ready-effect': isReady}">Ready</div>
     <!-- {{ clientData }}이게 내 현재 이름임 이거 지우면 실행 안됨, 안보이게 투명하게 해야하나? -->
     <!-- <img class="xx-small-icon"  :src='friendStore.getTierIconUrl(userInfo?.tier)'> -->
-    <span class="mx-2" style="color: white;">{{ clientData }}</span>
+    <span class="mx-2" id="text" style="color: white;">{{ clientData }}</span>
     <!-- <span style="color: white;">{{ userInfo?.rank }}등</span> -->
     
 
@@ -80,13 +84,24 @@
   });
   // console.log(clientData)
   
+  // 게임 준비 상태
   const isReady = computed(() => {
     console.log(gameStore.player);
     console.log(clientData);
-    const memberInfo = gameStore.player.find(info => info.nickname === clientData.value);
+    const memberInfo = gameStore.memberInfos.find(info => info.nickname === clientData.value);
     console.log(memberInfo);
     console.log(memberInfo.isReady);
     return memberInfo ? memberInfo.isReady : false;
+  })
+
+  // 죽은 상태 체크
+  const isDie = computed(() => {
+    const memberInfo = gameStore.memberInfos.find(info => info.nickname === clientData.value);
+    if (memberInfo.isState === 'Die') {
+      return true
+    } else {
+      return false
+    }
   })
 
   const emit = defineEmits(['clientData', 'forceDisconnect'])
@@ -143,22 +158,17 @@
     }
   }
   
-  const isDie = function(){
-    gameStore.gameMemberInfos?.forEach(info=>{
-      if (info.nickname === clientData.value && info.haveCoin + info.bettingCoin === 0) {
-        return true
-      } else {
-        return false
-      }
-    })
-  }
+
+  // const isReady = function(){
+
+  // }
 
 
 
 
 </script>
 
-<style scope>
+<style lang="scss" scope>
 .ready-border {
   border: 3px solid #ffcc00; /* 두껍고 밝은 색상 테두리 */
 }
@@ -183,6 +193,22 @@
 
 .is-die {
   filter: grayscale(100%)
+}
+
+.is-ready {
+  border: 5px solid green; /* 준비가 완료되었을 때의 테두리 색상 */
+  border-radius: 30px;
+  animation: pulse 1s infinite alternate; /* 테두리에 깜빡거리는 애니메이션 효과 */
+}
+
+.cam {
+  position: relative;
+}
+
+.ready-effect {
+  position: absolute;
+  bottom: 30px;
+  font-size: 50px;
 }
 </style>
   

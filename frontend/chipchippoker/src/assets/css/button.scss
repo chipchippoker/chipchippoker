@@ -65,6 +65,7 @@
     display: flex;
     text-align: center;
     align-self: center;
+    align-items: center;
     margin-left: 10px;
     font-size: 10pt;
     text-decoration: none;
@@ -524,4 +525,45 @@
     0 2px 0 3px rgba(0, 0, 0, 0.9),
     /* 11. 위쪽 녹색 그늘 가장자리 빛 효과 */
     0 3px 0 3px rgba(255, 255, 255, 0.04);
+}
+
+
+// 텍스트
+$text-size: 60vmin;
+$text-color: $red;
+$shadow-colors: rgba($red, 0.4) rgba($red, 0.3) rgba($red, 0.2) rgba($red, 0.1);
+$animation-duration: 1200ms;
+$shadow-distance-step: 0.033333em;
+$background-color: #ff3700;
+
+@function layerize($state) {
+  $shadow: 0 0 transparent;
+  @for $i from 1 through length($shadow-colors) {
+    $shadow: #{$shadow}, #{$shadow-distance-step * $i * $state} #{$shadow-distance-step * $i * $state} #{nth($shadow-colors, $i)};
+  }
+  @return $shadow;
+}
+
+.ready-effect {
+  animation: layerize cubic-bezier(0.4, 0.0, 0.2, 1) $animation-duration 200ms infinite alternate;
+  opacity: 0;
+  width: 100%;
+  color: $text-color;
+  cursor: default;
+  user-select: none;
+  text-align: center;
+  font-style: italic; /* 폰트를 기울임 */
+  letter-spacing: 2px; /* 글자 간 간격을 늘림 */
+}
+
+@keyframes layerize {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+    text-shadow: layerize(0);
+  } 100% {
+    opacity: 1;
+    transform: translate($shadow-distance-step * length($shadow-colors) / -2, $shadow-distance-step * length($shadow-colors) / -2);
+    text-shadow: layerize(1);
+  }
 }

@@ -197,6 +197,8 @@
       if (result) {
         authorizationCode.value = null
         console.log('카카오 연동 성공');
+        alert("카카오 연동 성공하였습니다.")
+        router.go(0)
       } else {
         alert("카카오 연동 실패했습니다.")
       }
@@ -221,4 +223,10 @@
     border: 1px solid black;
   }
 
+  .btn-2 {
+    height: 35px;
+    font-size: 1.2em;
+    align-items: center;
+    padding: 10px;
+  }
 </style>
