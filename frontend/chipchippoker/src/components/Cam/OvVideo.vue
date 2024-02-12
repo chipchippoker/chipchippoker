@@ -34,22 +34,24 @@ const startEmotionDetection = setInterval(async () => {
   const detections = await faceAPI.detectSingleFace(videoEl.value,
     new faceAPI.TinyFaceDetectorOptions())
     .withFaceLandmarks().withFaceExpressions()
-
-  const emotion = {
-    'angry': detections.expressions.angry * 100,
-    'disgusted': detections.expressions.disgusted * 100,
-    'fearful': detections.expressions.fearful * 100,
-    'happy': detections.expressions.happy,
-    'neutral': detections.expressions.neutral,
-    'sad': detections.expressions.sad,
-    'surprised': detections.expressions.surprised * 100
+    // 인식 될때만 올리기
+  if (detections){
+    const emotion = {
+      'angry': detections.expressions.angry * 100,
+      'disgusted': detections.expressions.disgusted * 100,
+      'fearful': detections.expressions.fearful * 100,
+      'happy': detections.expressions.happy,
+      'neutral': detections.expressions.neutral,
+      'sad': detections.expressions.sad,
+      'surprised': detections.expressions.surprised * 100
+    }
+    // console.log(emotion)
+    // 가장 큰 감정 추출
+    const maxEmotion = Object.keys(emotion).reduce((maxEmotion, key) => {
+      return emotion[key] > emotion[maxEmotion] ? key : maxEmotion;
+    }, Object.keys(emotion)[0]);
+    emit('sendEmotion', maxEmotion,emotion)
   }
-  // console.log(emotion)
-  // 가장 큰 감정 추출
-  const maxEmotion = Object.keys(emotion).reduce((maxEmotion, key) => {
-    return emotion[key] > emotion[maxEmotion] ? key : maxEmotion;
-  }, Object.keys(emotion)[0]);
-  emit('sendEmotion', maxEmotion,emotion)
 }, 1000)
 
 
