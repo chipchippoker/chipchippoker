@@ -111,19 +111,20 @@ public class GameController {
 			mapManager.getSpectationManagerMap().put(gameRoomTitle, spectationManager);
 		}
 		try {
-			// 게임방 가져오기 REST API 연결시
-			GameRoom gameRoom = gameRoomRepository.findByTitleAndState(gameRoomTitle);
-			if (gameRoom == null)
-				throw new NotFoundException(MessageBase.E404_CAN_NOT_FIND_GAME_ROOM);
-
 			// 방장이 마지막으로 나가서 게임방이 종료상태로 전환된 경우
-			if (gameRoom.getState().equals("종료")) {
+			if (gameManager.getRoomManager().equals(nickname) &&
+				gameManager.getMemberManagerMap().size() == 1) {
 				broadcastAllSpectatorConnected(gameRoomTitle,
 					gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_DISAPPEAR, gameManager));
 				// 게임방 관리를 더 이상 하지 않는다.
 				mapManager.getGameManagerMap().remove(gameRoomTitle);
 				return;
 			}
+
+			// 게임방 가져오기 REST API 연결시
+			GameRoom gameRoom = gameRoomRepository.findByTitleAndState(gameRoomTitle);
+			if (gameRoom == null)
+				throw new NotFoundException(MessageBase.E404_CAN_NOT_FIND_GAME_ROOM);
 
 			// 게임 중간에 나가는 경우
 			if (gameManager.getGameState().equals("진행")) {
