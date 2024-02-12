@@ -96,7 +96,9 @@
     maxEmotion.value = args[0]
     emotion.value = args[1]
     // 스토어에 닉네임에 따라 감정 저장
-    gameStore.playerEmotion[clientData.value] = emotion.value
+    if (clientData.value){
+      gameStore.playerEmotion[clientData.value] = emotion.value
+    }
   }
   // 감정표현 표 보여줄 사람 닉네임 저장
   const showExpression = function(){
