@@ -1,7 +1,7 @@
 <template>
   <div class="position-relative text-center" v-if="streamManager" @mouseover="showControls = true" @mouseleave="showControls = false">
     <ov-video 
-    class="position-absolute top-50 start-50 translate-middle"
+    class=""
     :class="{ 'is-turn': clientData === gameStore.yourTurn, 'is-die' : isDie, 'is-ready': isReady  }"
     :stream-manager="streamManager"
     @sendEmotion="sendEmotion"

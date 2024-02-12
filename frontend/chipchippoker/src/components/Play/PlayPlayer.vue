@@ -13,9 +13,9 @@
             <UserVideoVue :stream-manager="findVideo(playersComputed, player.nickname)" />
           </div>
           <!-- 애니메이션 X 카드 -->
-          <div class="position-absolute top-50 end-0 translate-middle-y z-1">
+          <!-- <div class="position-absolute top-50 end-0 translate-middle-y z-1">
             <img :src="getCardUrl(player.cardInfo?.cardSet, player.cardInfo?.cardNumber)" alt="앞장" style="width: 120px;">
-          </div>
+          </div> -->
           <!-- <div class="flip-card" id="flip-card">
             <div class="flip-card-inner">
               <div class="flip-card-front">
@@ -33,9 +33,9 @@
             <UserVideoVue :stream-manager="findVideo(playersComputed, player.nickname)" />
           </div>
           <!-- 애니메이션 X 카드 -->
-          <div class="position-absolute top-50 start-0 translate-middle-y z-1">
+          <!-- <div class="position-absolute top-50 start-0 translate-middle-y z-1">
             <img :src="getCardUrl(player.cardInfo?.cardSet, player.cardInfo?.cardNumber)" alt="앞장" style="width: 120px;">
-          </div>
+          </div> -->
           <!-- <div class="flip-card" id="flip-card">
             <div class="flip-card-inner">
               <div class="flip-card-front">
