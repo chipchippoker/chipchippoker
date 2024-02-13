@@ -209,7 +209,8 @@ public class GameManager {
 		for (MemberManager manager : notLeft) {
 			manager.getMemberGameInfo()
 				.setHaveCoin(
-					manager.getMemberGameInfo().getHaveCoin() + leftMemberHaveCoin / (notLeft.size() - leftCount));
+					manager.getMemberGameInfo().getHaveCoin() + leftMemberHaveCoin / (memberManagerMap.size()
+						- leftCount));
 			getCoin += manager.getMemberGameInfo().getBettingCoin();
 		}
 		MemberManager winnerManager = memberManagerMap.get(winner);
