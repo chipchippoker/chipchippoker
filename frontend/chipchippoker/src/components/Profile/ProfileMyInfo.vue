@@ -74,8 +74,8 @@
             <div class="col-6 my-3">
               <strong>승패(경쟁 / 친선)</strong>
             </div>
-            <div class="col-6 my-3">{{ userStore?.profileInfo?.friendlyWin }}승 {{ userStore?.profileInfo?.friendlyDraw }}무 {{ userStore?.profileInfo?.friendlyLose }}패 / 
-              {{ userStore?.profileInfo?.competitiveWin }}승 {{ userStore?.profileInfo?.competitiveDraw }}무 {{ userStore?.profileInfo?.competitiveLose }}패</div>
+            <div class="col-6 my-3">{{ userStore?.profileInfo?.competitiveWin }}승 {{ userStore?.profileInfo?.competitiveDraw }}무 {{ userStore?.profileInfo?.competitiveLose }}패 / 
+              {{ userStore?.profileInfo?.friendlyWin }}승 {{ userStore?.profileInfo?.friendlyDraw }}무 {{ userStore?.profileInfo?.friendlyLose }}패</div>
           </div>
 
           <!-- 오른쪽 -->

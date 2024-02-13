@@ -315,9 +315,9 @@ export const useRoomStore = defineStore('room', () => {
       isWatcher.value = false
     })
     .then(()=>{
+      router.push({name:'main'})
       openviduStore.leaveSession()
       gameStore.resetGameStore()
-      router.push({name:'main'})
       // 새로고침 횟수를 삭제합니다.
       localStorage.removeItem('refreshCount')
     })

@@ -351,6 +351,12 @@ export const useGameStore = defineStore('game', () => {
 
   // 게임방 나가기 RECEIVE
   const receiveExitRoom = function (data, code, message) {
+    // 대기방에서 모든 플레이어가 방을 나가면 관전자도 자동으로 나가도록
+    if (code === 'MS019') {
+      alert('모든 플레이어가 방을 나갔습니다.')
+      roomStore.leaveWatcher()
+      return
+    }
     countOfPeople.value = data.countOfPeople
     roomManagerNickname.value = data.roomManagerNickname
     memberInfos.value = data.memberInfos
@@ -576,6 +582,10 @@ export const useGameStore = defineStore('game', () => {
         case "MS010": // 게임 종료
           receiveGameFinishFriend(response.data)
           break
+        case "MS019": // 플레이어가 모두 나가고 아무도 없을 때
+          console.log(response.message);
+          receiveExitRoom(response.data, response.code, response.message)
+          break
       }
     })
   }
@@ -594,8 +604,6 @@ export const useGameStore = defineStore('game', () => {
 
   // 관전 나가기 SEND
   const sendSpectationExit = function (gameRoomTitle) {
-    console.log(gameRoomTitle);
-    console.log(userStore.accessToken);
     stompClient.send(`/to/spectation/exit/${gameRoomTitle}`, JSON.stringify({}), { 'access-token': userStore.accessToken })
   }
 

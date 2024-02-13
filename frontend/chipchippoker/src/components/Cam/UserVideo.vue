@@ -26,16 +26,16 @@
 
     <div v-if="showControls" class="position-absolute top-0 end-0 d-flex flex-column">
       <div class="m-1">
-        <button v-if="!camerOff" id="camera-activate" @click="handleCameraBtn()">Video Off</button>
-        <button v-else id="camera-activate" @click="handleCameraBtn()">Video On</button>
+        <button class="btn-2-blue-done" v-if="!camerOff" id="camera-activate" @click="handleCameraBtn()">Video Off</button>
+        <button class="btn-2-blue" v-else id="camera-activate" @click="handleCameraBtn()">Video On</button>
       </div>
       <div class="m-1">
-        <button v-if="!muted" id="mute-activate" @click="handleMuteBtn()">Sound Off</button>
-        <button v-else id="mute-activate" @click="handleMuteBtn()">Sound On</button>
+        <button class="btn-2-yellow-done" v-if="!muted" id="mute-activate" @click="handleMuteBtn()">Sound Off</button>
+        <button class="btn-2-yellow" v-else id="mute-activate" @click="handleMuteBtn()">Sound On</button>
       </div>
-      <button class="m-1" id="show-emotion" @click="showExpression()">감정 인식 표</button>
+      <button class="m-1 btn-2-green" id="show-emotion" @click="showExpression()">감정 인식 표</button>
       <!-- 방장일 때만 강퇴가 보이기 / 방장 자신은 안보이기 -->
-      <button class="m-1" v-if="isManager===true && clientData!==roomManagerNickname" @click="forceDisconnect()">강퇴</button>
+      <button class="m-1 btn-2-red" v-if="isManager===true && clientData!==roomManagerNickname" @click="forceDisconnect()">강퇴</button>
     </div>
 
   </div>
