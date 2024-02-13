@@ -26,7 +26,6 @@ public class GameMatchingController {
 	private final JwtUtil jwtUtil;
 	private final MapManager mapManager;
 
-	//경쟁전 매칭이 되었을 때
 	@MessageMapping("/game/matching/{gameRoomTitle}")
 	public void gameMatching(
 		@Header(name = "access-token") String accessToken,

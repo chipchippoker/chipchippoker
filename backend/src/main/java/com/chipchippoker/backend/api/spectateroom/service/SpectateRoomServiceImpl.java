@@ -31,26 +31,22 @@ public class SpectateRoomServiceImpl implements SpectateRoomService {
 		Member member = memberRepository.findById(id)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
 
-		// 관전방에 이미 들어가 있는 사용자인 경우
 		if (member.getSpectateRoom() != null) {
 			throw new ForbiddenException(ErrorBase.E403_FORBIDDEN_ALREADY_IN_SPECTATE_ROOM);
 		}
 
 		GameRoom gameRoom = gameRoomRepository.findByTitleAndState(title);
-		GameRoomServiceHelper.isExistGameRoom(gameRoom); // 게임방이 존재하지 않는 경우
+		GameRoomServiceHelper.isExistGameRoom(gameRoom);
 
 		SpectateRoom spectateRoom = spectateRoomRepository.findByGameRoom(gameRoom);
 		SpectateRoomServiceHelper.isExistSpectateRoom(spectateRoom);
 
-		// 비공개 게임방인 경우, 비밀번호 확인
 		if (gameRoom.getIsPrivate())
 			GameRoomServiceHelper.isCorrectGameRoomPassword(password, gameRoom.getPassword());
 
-		// 관전 최대 인원은 6명이기 때문에, 인원 초과 여부 확인
 		if (spectateRoom.getMembers().size() > 5)
 			throw new ForbiddenException(ErrorBase.E403_ALREADY_FULL_SPECTATE_ROOM);
 
-		// 관전방 입장
 		member.enterSpectateRoom(spectateRoom);
 
 		return EnterSpectateRoomResponse.enterSpectateRoomResponse(gameRoom.getId(), gameRoom.getTitle(),

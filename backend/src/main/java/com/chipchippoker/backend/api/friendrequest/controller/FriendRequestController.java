@@ -29,7 +29,6 @@ public class FriendRequestController {
 	private final HttpServletRequest request;
 	private final FriendRequestService friendRequestService;
 
-	// 친구 신청
 	@PostMapping("")
 	public ResponseEntity<ApiResponse<Void>> requestFriend(@RequestBody RequestFriendRequest requestFriendRequest) {
 		Long fromMemberId = (Long)request.getAttribute("id");
@@ -37,7 +36,6 @@ public class FriendRequestController {
 		return ResponseEntity.ok(ApiResponse.success());
 	}
 
-	// 친구 신청 수락
 	@PostMapping("/accept")
 	public ResponseEntity<ApiResponse<Void>> acceptFriendRequest(
 		@RequestBody AcceptFriendRequestRequest acceptFriendRequestRequest) {
@@ -46,7 +44,6 @@ public class FriendRequestController {
 		return ResponseEntity.ok(ApiResponse.success());
 	}
 
-	// 친구 신청 거절
 	@DeleteMapping("/reject")
 	public ResponseEntity<ApiResponse<Void>> rejectFriendRequest(@RequestBody RejectFriendRequest rejectFriendRequest) {
 		Long toMemberId = (Long)request.getAttribute("id");
@@ -54,7 +51,6 @@ public class FriendRequestController {
 		return ResponseEntity.ok(ApiResponse.success());
 	}
 
-	// 친구 신청 요청 알림 목록
 	@GetMapping("/list")
 	public ResponseEntity<ApiResponse<List<GetFriendRequestListResponse>>> getFriendRequestList() {
 		Long id = (Long)request.getAttribute("id");

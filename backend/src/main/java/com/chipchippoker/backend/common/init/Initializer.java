@@ -31,7 +31,6 @@ public class Initializer implements ApplicationRunner {
 
 	@Override
 	public void run(ApplicationArguments args) {
-		// 더미 데이터 작성
 		dropCollection("game_result");
 
 		List<String> memberList1 = makeMemberList("임세환닉네임", "권순준닉네임", "선수연닉네임");

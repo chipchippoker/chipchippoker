@@ -42,28 +42,24 @@ public class GameRoomServiceImpl implements GameRoomService {
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
 		String nickname = member.getNickname();
 
-		// 게임방에 이미 들어가 있는 사용자인 경우
 		if (member.getGameRoom() != null) {
 			throw new ForbiddenException(ErrorBase.E403_FORBIDDEN_ALREADY_IN_GAME_ROOM);
 		}
 
-		// 방 개수가 100개를 초과하는 경우, 생성 불가
 		Integer gameRoomListSize = gameRoomRepository.findByStateCnt();
 		if (gameRoomListSize >= 100)
 			throw new ForbiddenException(ErrorBase.E403_OVER_MAX_GAME_ROOM_CNT);
 
 		GameRoomServiceHelper.isDuplicatedGameRoom(gameRoomRepository,
-			createGameRoomRequest.getTitle()); // 이미 중복되는 방제목이 있는 경우
+			createGameRoomRequest.getTitle());
 
 		GameRoom gameRoom = GameRoom.createGameRoom(createGameRoomRequest.getTitle(),
 			createGameRoomRequest.getPassword(), createGameRoomRequest.getTotalParticipantCnt(),
 			createGameRoomRequest.getIsPrivate(), "친선", nickname);
 		gameRoomRepository.save(gameRoom);
 
-		// 연관관계 매핑
 		member.enterGameRoom(gameRoom);
 
-		// 관전방 생성
 		SpectateRoom spectateRoom = SpectateRoom.createSpectateRoom(gameRoom);
 		spectateRoomRepository.save(spectateRoom);
 
@@ -74,23 +70,17 @@ public class GameRoomServiceImpl implements GameRoomService {
 		Member member = memberRepository.findById(id)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
 		GameRoom gameRoom = gameRoomRepository.findByTitleAndState(enterGameRoomRequest.getTitle());
-		GameRoomServiceHelper.isExistGameRoom(gameRoom); // 게임방이 존재하지 않는 경우
+		GameRoomServiceHelper.isExistGameRoom(gameRoom);
 
-		// 게임방에 이미 들어가 있는 사용자인 경우
 		if (member.getGameRoom() != null) {
 			throw new ForbiddenException(ErrorBase.E403_FORBIDDEN_ALREADY_IN_GAME_ROOM);
 		}
-		// 블랙리스트 사용자인 경우
 		GameRoomServiceHelper.isBlackListMember(memberGameRoomBlackListRepository, member, gameRoom);
-		// 게임 방 입장 비밀번호가 다른 경우
 		if (gameRoom.getIsPrivate())
 			GameRoomServiceHelper.isCorrectGameRoomPassword(enterGameRoomRequest.getPassword(), gameRoom.getPassword());
-		// 이미 게임이 시작된 경우
 		GameRoomServiceHelper.isStartedGameRoom(gameRoom.getState());
-		// 게임 방 충원 인원이 모두 채워진 경우
 		GameRoomServiceHelper.isFullGameRoom(gameRoom);
 
-		// 입장 가능한 경우
 		member.enterGameRoom(gameRoom);
 		return EnterGameRoomResponse.enterGameRoomResponse(gameRoom);
 	}
@@ -115,13 +105,12 @@ public class GameRoomServiceImpl implements GameRoomService {
 		Member member = memberRepository.findById(id)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
 		GameRoom gameRoom = gameRoomRepository.findByTitleAndState(title);
-		GameRoomServiceHelper.isExistGameRoom(gameRoom); // 게임방이 존재하지 않는 경우
+		GameRoomServiceHelper.isExistGameRoom(gameRoom);
 
-		if (member.getNickname().equals(gameRoom.getRoomManagerNickname())) { // 나가려는 사용자가 방장인 경우
-			if (gameRoom.getMembers().size() == 1) { // 나가려는 방장이 남은 인원 중 마지막 인원인 경우
+		if (member.getNickname().equals(gameRoom.getRoomManagerNickname())) {
+			if (gameRoom.getMembers().size() == 1) {
 				gameRoom.updateGameRoomState("종료");
-			} else { // 나가려는 방장이 남은 인원 중 마지막 인원이 아닌 경우
-				// 방장을 제외한 방의 남은 인원 중 한명을 방장으로 변경
+			} else {
 				for (Member leftMember : gameRoom.getMembers()) {
 					if (!leftMember.equals(member)) {
 						gameRoom.updateGameRoomManagerNickname(leftMember.getNickname());
@@ -131,22 +120,20 @@ public class GameRoomServiceImpl implements GameRoomService {
 			}
 		}
 
-		// 방 나가기
 		member.leaveGameRoom();
 		memberRepository.save(member);
 	}
 
 	public void playGameRoom(String title) {
 		GameRoom gameRoom = gameRoomRepository.findByTitleAndState(title);
-		GameRoomServiceHelper.isExistGameRoom(gameRoom); // 게임방이 존재하지 않는 경우
+		GameRoomServiceHelper.isExistGameRoom(gameRoom);
 		gameRoom.updateGameRoomState("진행");
 	}
 
 	public void memberOutGameRoom(MemberOutGameRoomRequest memberOutGameRoomRequest, Long id) {
 		GameRoom gameRoom = gameRoomRepository.findByTitleAndState(memberOutGameRoomRequest.getTitle());
-		GameRoomServiceHelper.isExistGameRoom(gameRoom); // 게임방이 존재하지 않는 경우
+		GameRoomServiceHelper.isExistGameRoom(gameRoom);
 
-		// 요청 사용자가 방장인지 확인
 		Member requestMember = memberRepository.findById(id)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
 		GameRoomServiceHelper.isGameRoomManager(requestMember.getNickname(), gameRoom.getRoomManagerNickname());
@@ -158,7 +145,6 @@ public class GameRoomServiceImpl implements GameRoomService {
 		leavingMember.leaveGameRoom();
 		memberRepository.save(leavingMember);
 
-		// blackList에 강제 퇴장 사용자 추가
 		MemberGameRoomBlackList memberGameRoomBlackList = MemberGameRoomBlackList.createMemberGameRoomBlackList(
 			leavingMember, gameRoom);
 		memberGameRoomBlackListRepository.save(memberGameRoomBlackList);
@@ -167,7 +153,7 @@ public class GameRoomServiceImpl implements GameRoomService {
 	@Override
 	public List<String> findMemberNicknames(String gameRoomTitle) {
 		GameRoom gameRoom = gameRoomRepository.findByTitleAndState(gameRoomTitle);
-		GameRoomServiceHelper.isExistGameRoom(gameRoom); // 게임방이 존재하지 않는 경우
+		GameRoomServiceHelper.isExistGameRoom(gameRoom);
 		List<Member> members = gameRoom.getMembers();
 		return members.stream().map(Member::getNickname).collect(Collectors.toList());
 

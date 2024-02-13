@@ -15,14 +15,6 @@ import lombok.RequiredArgsConstructor;
 public class GameResultRepositoryCustomImpl implements GameResultRepositoryCustom {
 	private final MongoTemplate mongoTemplate;
 
-	// @Override
-	// public Integer getCoin() {
-	//     GameResult gameResult = mongoTemplate.findOne(
-	//             Query.query(Criteria.where("memberAId").is(123456789)), GameResult.class
-	//     );
-	//     return gameResult.getMemberACoin();
-	// }
-
 	public List<GameResult> findRecentPlayList(String nickname) {
 		List<GameResult> recentPlayList = mongoTemplate.find(
 			Query.query(Criteria.where("memberList").elemMatch(Criteria.where("$eq").is(nickname)))
@@ -30,8 +22,4 @@ public class GameResultRepositoryCustomImpl implements GameResultRepositoryCusto
 			GameResult.class);
 		return recentPlayList;
 	}
-
-	// public List<GameResult> findRecentPlayList(){
-	//     List<GameResult> recentPlayList = mongoTemplate.find(Query.query(Criteria.where("memberAId").is()))
-	// }
 }

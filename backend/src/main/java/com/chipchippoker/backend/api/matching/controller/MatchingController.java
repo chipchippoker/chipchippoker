@@ -28,7 +28,6 @@ public class MatchingController {
 	private final HttpServletRequest request;
 	private final MatchingService matchingService;
 
-	// 친선전 빠른 게임 시작
 	@PostMapping("/friendly")
 	public ResponseEntity<ApiResponse<?>> startFriendlyMatching(
 		@RequestBody StartFriendlyMatchingRequest startFriendlyMatchingRequest) {
@@ -41,7 +40,6 @@ public class MatchingController {
 			return ResponseEntity.ok(ApiResponse.success(startFriendlyMatchingResponse));
 	}
 
-	// 경쟁전 빠른 게임 시작
 	@PostMapping("/competition")
 	public ResponseEntity<ApiResponse<StartCompetitionMatchingResponse>> startCompetitionMatching(
 		@RequestBody StartCompetitionMatchingRequest startCompetitionMatchingRequest) {
@@ -51,7 +49,6 @@ public class MatchingController {
 		return ResponseEntity.ok(ApiResponse.success(startCompetitionMatchingResponse));
 	}
 
-	// 빠른 게임 시작 중단
 	@PostMapping("/quit")
 	public ResponseEntity<ApiResponse<QuitMatchingResponse>> quitMatching() {
 		Long id = (Long)request.getAttribute("id");

@@ -23,7 +23,6 @@ public class SpectateRoomController {
 	private final HttpServletRequest request;
 	private final SpectateRoomService spectateRoomService;
 
-	// 관전방 입장
 	@PostMapping("/enter")
 	public ResponseEntity<ApiResponse<EnterSpectateRoomResponse>> enterSpectateRoom(
 		@RequestBody EnterSpectateRoomRequest enterSpectateRoomRequest) {
@@ -34,7 +33,6 @@ public class SpectateRoomController {
 		return ResponseEntity.ok(ApiResponse.success(enterSpectateRoomResponse));
 	}
 
-	// 관전방 나가기
 	@PostMapping("leave")
 	public ResponseEntity<ApiResponse<Void>> leaveSpectateRoom() {
 		Long id = (Long)request.getAttribute("id");

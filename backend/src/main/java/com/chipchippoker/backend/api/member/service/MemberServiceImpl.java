@@ -51,10 +51,8 @@ public class MemberServiceImpl implements MemberService {
 	public ProfilePageResponse getProfilePage(Long id, String nickname) {
 		Member member = memberRepository.findById(id)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
-		//해당 닉네임의 사용자가 없으면 에러
 		Member searchMember = memberRepository.findByNickname(nickname)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
-		//현재 확인하는 프로필 페이지가 내 페이지인지 확인
 		boolean isMine = member.getNickname().equals(nickname);
 
 		//최근 10게임의 대한 정보를 가져오는 리스트
@@ -62,7 +60,6 @@ public class MemberServiceImpl implements MemberService {
 		//최근 10개임의 정보를 원하는 응답값으로 매핑하는 메소드
 		List<RecentPlayListResponse> recentPlayList = getRecentPlayList(list, nickname);
 
-		// 친구인지 확인
 		Boolean isFriend = Boolean.FALSE;
 		Friend friend = friendRepository.findByMemberAIdAndMemberBId(id, searchMember.getId());
 		if (friend != null)
@@ -76,7 +73,6 @@ public class MemberServiceImpl implements MemberService {
 		if (friendRequest != null && friendRequest.getStatus().equals("대기"))
 			isSent = Boolean.TRUE;
 
-		//내 전체 랭킹 조회
 		Integer myTotalRank = 0;
 		List<Point> totalRankList = memberRepository.getTotalRank(0);
 		for (int i = 0; i < totalRankList.size(); i++) {
@@ -85,9 +81,7 @@ public class MemberServiceImpl implements MemberService {
 				myTotalRank = i + 1;
 			}
 		}
-		// 내 친구 랭킹 조회
 		Integer myFriendRank = null;
-		//내 친구 랭킹은 내 프로필페이지에서만 조회 가능
 		if (isMine) {
 			myFriendRank = 1;
 			Integer myPoint = searchMember.getPoint().getPointScore();
@@ -119,12 +113,9 @@ public class MemberServiceImpl implements MemberService {
 
 	private static List<RecentPlayListResponse> getRecentPlayList(List<GameResult> list, String nickname) {
 		List<RecentPlayListResponse> recentPlayList = new ArrayList<>();
-		// 최근 10게임 리스트
 		for (GameResult gameResult : list) {
 			Map<String, String> opponents = new HashMap<>();
-			//해당 게임에서 바뀐 점수
 			int changePoint = 0;
-			//게임당 결과
 			for (int i = 0; i < gameResult.getMemberList().size(); i++) {
 				if (gameResult.getGameMode().equals("경쟁")) {
 					if (gameResult.getMemberList().get(i).equals(nickname)) {
@@ -170,7 +161,6 @@ public class MemberServiceImpl implements MemberService {
 				.retrieve();
 		}
 
-		// 회원 테이블에서 해당 회원 삭제
 		memberRepository.deleteById(id);
 	}
 
