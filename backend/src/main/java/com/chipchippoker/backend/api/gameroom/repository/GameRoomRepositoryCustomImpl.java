@@ -94,7 +94,7 @@ public class GameRoomRepositoryCustomImpl implements GameRoomRepositoryCustom {
 			.selectFrom(gameRoom)
 			.where(gameRoom.type.eq("경쟁"), gameRoom.state.eq("대기"),
 				gameRoom.totalParticipantCnt.eq(totalParticipantCnt))
-			.fetchOne();
+			.fetchFirst();
 	}
 
 	@Override
