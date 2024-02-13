@@ -223,8 +223,6 @@
   // 캠 - playersComputed가 갱신되기 전에 이 함수가 실행되면서 그렇게 되면 안되므로
   // undefined를 출력하게게 하면 나중에 playersComputed가 갱신 되었을 때 그에 맞는 카메라를 넣을 수 있음
   const findVideo = function (players, targetNickname) {
-    console.log(players);
-    console.log(targetNickname);
       for (let i = 0; i < players.length; i++) {
         const player = players[i]
         if (player.nickname === targetNickname) {

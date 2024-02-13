@@ -190,15 +190,16 @@
   userStore.authorizationCode = authorizationCode.value
   
   // 인가코드 받으면
-  if (authorizationCode.value) {
+  if (authorizationCode.value && userStore.isKakaoConnect){
     console.log('카카오 연동 요청');
     userStore.kakaoConnect(authorizationCode.value)
     .then(result => {
       if (result) {
         authorizationCode.value = null
         console.log('카카오 연동 성공');
+        userStore.isKakaoConnect = true
         alert("카카오 연동 성공하였습니다.")
-        router.go(0)
+        router.push({name:'profile'})
       } else {
         alert("카카오 연동 실패했습니다.")
       }

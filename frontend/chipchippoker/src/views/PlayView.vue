@@ -86,7 +86,7 @@
       </div>
       <!-- 이모지 or 로로 -->
       <div class="h-100 w-25 d-flex justify-content-center align-items-center">
-        <PlayEmotionVue/>
+        <!-- <PlayEmotionVue/> -->
       </div>
     </div>
   </div>
