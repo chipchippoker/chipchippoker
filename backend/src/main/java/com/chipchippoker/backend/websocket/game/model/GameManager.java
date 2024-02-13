@@ -39,6 +39,7 @@ public class GameManager {
 	private Integer lastBettingMaxCoin;
 	private Integer maxCoin;
 	private List<PenaltyInfo> penaltyInfos;
+	private Integer leftCount;
 	private Integer leftMemberHaveCoin;
 	private Integer leftMemberBettingCoin;
 
@@ -56,7 +57,9 @@ public class GameManager {
 		this.lastBettingMaxCoin = 1;
 		this.maxCoin = 1;
 		this.penaltyInfos = new ArrayList<>();
+		this.leftCount = 0;
 		this.leftMemberHaveCoin = 0;
+		this.leftMemberBettingCoin = 0;
 		log.info("게임방을 생성했습니다.");
 	}
 
@@ -154,7 +157,7 @@ public class GameManager {
 	public boolean checkRoundEnd() {
 		List<MemberManager> notDie = memberManagerMap.values()
 			.stream()
-			.filter(memberManager -> !memberManager.getMemberGameInfo().getIsState().equals("DIE"))
+			.filter(memberManager -> memberManager.getMemberGameInfo().getIsState().equals("BET"))
 			.toList();
 
 		if (notDie.size() == 1)
@@ -176,10 +179,9 @@ public class GameManager {
 	 * + 라운드가 종료되었을 때, 10을 들고 포기한 사람에게 10개의 코인 몰수하기
 	 */
 	public String roundEnd() {
-		// todo 게임방에 패널티 받은 사람들 닉네임 알려주기, 라운드 종료 메시지에 패널티 정보 추가하기
 		List<MemberManager> notDie = memberManagerMap.values()
 			.stream()
-			.filter(memberManager -> !memberManager.getMemberGameInfo().getIsState().equals("DIE"))
+			.filter(memberManager -> memberManager.getMemberGameInfo().getIsState().equals("BET"))
 			.toList();
 
 		String winner = "";
@@ -200,10 +202,14 @@ public class GameManager {
 		}
 
 		int getCoin = leftMemberBettingCoin;
-		Collection<MemberManager> values = memberManagerMap.values();
-		for (MemberManager manager : values) {
+		Collection<MemberManager> notLeft = memberManagerMap.values()
+			.stream()
+			.filter(memberManager -> !memberManager.getMemberGameInfo().getIsState().equals("FOLD"))
+			.toList();
+		for (MemberManager manager : notLeft) {
 			manager.getMemberGameInfo()
-				.setHaveCoin(manager.getMemberGameInfo().getHaveCoin() + leftMemberHaveCoin / values.size());
+				.setHaveCoin(
+					manager.getMemberGameInfo().getHaveCoin() + leftMemberHaveCoin / (notLeft.size() - leftCount));
 			getCoin += manager.getMemberGameInfo().getBettingCoin();
 		}
 		MemberManager winnerManager = memberManagerMap.get(winner);
@@ -311,9 +317,10 @@ public class GameManager {
 	 */
 	public void deleteMemberInGameRoom(String nickname) {
 		MemberManager manager = memberManagerMap.get(nickname);
+		this.leftCount += 1;
 		this.leftMemberHaveCoin += manager.getMemberGameInfo().getHaveCoin();
 		this.leftMemberBettingCoin += manager.getMemberGameInfo().getBettingCoin();
-		manager.getMemberGameInfo().setIsState("DIE");
+		manager.getMemberGameInfo().setIsState("FOLD");
 		manager.getMemberGameInfo().setHaveCoin(0);
 	}
 
