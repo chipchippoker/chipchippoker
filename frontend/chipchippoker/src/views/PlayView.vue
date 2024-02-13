@@ -90,21 +90,6 @@
         <PlayEmotionVue/>
       </div>
     </div>
-    <!-- 배팅 오류 모달 -->
-    <!-- <div class="modal fade" id="IsPlayingModal" tabindex="-1" aria-labelledby="IsPlayingModal" aria-hidden="true"> 
-      <div class="modal-dialog modal-dialog-centered" @close="closeModal">
-          <div class="modal-content pb-3" style="background-color: #fff0c0;">
-          <div class="modal-header border-0">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body d-flex flex-column justify-content-center align-items-center">
-            <h3 v-if="notMatchRound">현재 진행 중인 라운드가 아닙니다.</h3>
-            <h3 v-else-if="notYourTurn">본인의 배팅 차례가 아닙니다.</h3>
-            <h3 v-else-if="cannotBat">배팅 불가능한 코인 개수입니다.</h3>
-        </div>
-        </div>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -162,7 +147,11 @@ const closeModal = function () {
 
 // 경쟁모드 종료 후 메인페이지로 이동
 const gotoMain = function () {
-  roomStore.leaveRoom()
+  if (roomStore.isWatcher === true) {
+    roomStore.leaveWatcher()
+  } else {
+    roomStore.leaveRoom()
+  }
 }
 
 // 친선모두 종료 후 대기페이지로 이동
@@ -194,7 +183,7 @@ localStorage.setItem('refreshCount', refreshCount);
 console.log('새로고침 횟수:', refreshCount);
 
 // 새로고침 횟수가 2회가 넘어가면 새로고침을 했다는 것이므로 out
-if (refreshCount === 2) {
+if (refreshCount >= 2) {
     if (roomStore.isWatcher === true) {
       roomStore.leaveWatcher()
     } else {

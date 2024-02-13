@@ -93,7 +93,7 @@
 <script setup>
 import PlayBattingVue from "@/components/Play/PlayBatting.vue";
 import UserVideoVue from "../Cam/UserVideo.vue";
-import { ref, defineProps, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useGameStore } from "@/stores/game";
 import { useRoomStore } from "@/stores/room";

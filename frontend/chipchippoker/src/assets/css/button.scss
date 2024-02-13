@@ -79,6 +79,17 @@
     }
   }
 
+  .btn-2-green {
+    border-color: $green;
+    color: #fff;
+    box-shadow: 0 0 40px 40px $green inset, 0 0 0 0 $green;
+    transition: all 150ms ease-in-out;
+    
+    &:hover {
+      box-shadow: 0 0 10px 0 $green inset, 0 0 10px 4px $green;
+      color: white;
+    }
+  }
   .btn-2-red {
     border-color: $red;
     color: #fff;

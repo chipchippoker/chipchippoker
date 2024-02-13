@@ -275,7 +275,7 @@
   console.log('새로고침 횟수:', refreshCount);
 
   // 새로고침 횟수가 2회가 넘어가면 새로고침을 했다는 것이므로
-  if (refreshCount === 2) {
+  if (refreshCount >= 2) {
       if (roomStore.isWatcher === true) {
         roomStore.leaveWatcher()
       } else {
