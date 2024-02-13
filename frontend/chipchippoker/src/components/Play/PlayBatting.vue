@@ -253,12 +253,12 @@ const updateTotalBettingCoin = function(){
 
 
 const getCoinUrl = function (num) {
-  return new URL(`/src/assets/coins/coin${num}.png`, import.meta.url).href;
+  return new URL(`/src/assets/coins/coin${num}.svg`, import.meta.url).href;
 };
 
 // 카드 가져오기
 const getCardUrl = function (setnum, cardnum) {
-  return new URL(`/src/assets/cards/set${setnum}/card${cardnum}.png`, import.meta.url).href;
+  return new URL(`/src/assets/cards/set${setnum}/card${cardnum}.svg`, import.meta.url).href;
 };
 
 // 데이터 저장하기
@@ -314,6 +314,7 @@ const gameStart = ref(false)
 
 // 라운드 시작 콜백함수
 async function startRoundAnimation () {
+  
     // 0. 코인 보여주기
     await gameStore.gameMemberInfos.forEach((info, index) => {
         const totalCoinId = document.getElementById('total-coin')
@@ -354,15 +355,25 @@ watch(() => nextRoundState.value, (newValue, oldValue) => {
     if (gameStore.nextCurrentRound === 1) {
       console.log('게임시작')
       // 게임 시작
-      startGameAnimation()
-      updateData()
+      try {
+        startGameAnimation()
+        updateData()
+      } catch (error) {
+        updateData()
+      }
       
     } else {
       // 라운드 시작
       console.log('라운드시작')
-      startRoundAnimation()
-      updateData()
-      updateTotalBettingCoin()
+      try {
+        startRoundAnimation()
+        updateData()
+        updateTotalBettingCoin()
+      } catch (error) {
+        updateData()
+        updateTotalBettingCoin()
+        
+      }
     }
   }
   else if (newValue === false && oldValue === true) {
@@ -370,7 +381,10 @@ watch(() => nextRoundState.value, (newValue, oldValue) => {
     console.log('라운드종료')
     updateEndData()
     updateTotalBettingCoin()
-    endRoundAnimation()
+    try {
+      endRoundAnimation()
+    } catch (error) {
+    }
   }
 })
 
@@ -428,7 +442,7 @@ async function createCard() {
   for (let i = 1; i < gameStore.memberInfos.length+1; i++) {
     const cardElement = document.createElement('img')
     cardElement.id = `card-deck${i}`
-    cardElement.src = '/src/assets/cards/set0/card0.png'
+    cardElement.src = '/src/assets/cards/set0/card0.svg'
     cardElement.style.width = "100px"
     cardElement.style.zIndex = "9999"
     cardElement.style.position = "absolute"

@@ -25,6 +25,8 @@ export const useUserStore = defineStore('user', () => {
   const myIcon = ref('1')
   const profileInfo = ref({})
   const profileNickname = ref('')
+  const isKakaoConnect = ref(false)
+
   Kakao.init(KAKAO_JAVASCRIPT_KEY)
 
   // 토큰 재발행 요청
@@ -205,6 +207,7 @@ export const useUserStore = defineStore('user', () => {
         headers: { 'access-token': accessToken.value }
       })
       console.log('카카오 연동 성공!')
+      router.push({name:'profile'})
       return true
     } catch (err) {
       console.log(err)
@@ -378,7 +381,7 @@ export const useUserStore = defineStore('user', () => {
     // 로그인, 로그아웃, 회원가입, 회원탈퇴, 카카오 연동
     generalLogIn, getKakaoCode, simpleLogInRequest, kakaoSignUp,
     logOut, signUp, signOut, checkMemberId, checkNickname, validateId, validatePassword, validateNickname, kakaoConnect, getKakaoCodeToSink,
-    accessToken, refreshToken, authorizationCode, kakaoAccessToken,
+    accessToken, refreshToken, authorizationCode, kakaoAccessToken, isKakaoConnect,
 
     // 프로필 아이콘, 프로필 정보 받아오기
     getIconUrl, getTierIconUrl, getProfileInfo, changeIcon,

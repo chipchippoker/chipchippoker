@@ -11,14 +11,14 @@
         <!-- 1, 3번 플레이어 -->
         <div v-if="[0, 2].includes(index)" class="d-flex h-100 m-2 mt-0 position-relative" style="width: 460px;">
           <div class="m-2 position-absolute top-50 start-0 translate-middle-y">
-            <UserVideoVue :stream-manager="findVideo(playersComputed, player.nickname)" />
+            <UserVideoVue :stream-manager="findVideo(playersComputed, player.nickname, index)" />
           </div>
         </div>
-
+        
         <!-- 2, 4번 플레이어 -->
         <div v-else class="d-flex flex-row-reverse h-100 m-2 mt-0 position-relative" style="width: 460px;">
           <div class="m-2 position-absolute top-50 end-0 translate-middle-y">
-            <UserVideoVue :stream-manager="findVideo(playersComputed, player.nickname)" />
+            <UserVideoVue :stream-manager="findVideo(playersComputed, player.nickname, index)" />
           </div>
         </div>
 
@@ -93,7 +93,10 @@ roomId.value = props.roomId
 myNickname.value = props.myNickname
 
 // ----------------------------------------------------------------------------------------------------------
-const findVideo = function (players, targetNickname) {
+const findVideo = function (players, targetNickname, index) {
+  // if (players.length < gameMemberInfos.length) {
+  //   return undefined
+  // }
   for (let i = 0; i < players.length; i++) {
     const player = players[i]
     if (player.nickname === targetNickname) {

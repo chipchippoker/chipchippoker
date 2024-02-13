@@ -82,7 +82,7 @@ import ModalNotExistRoom from '@/components/Modal/ModalNotExistRoom.vue';
 import ModalCreateRoom from '@/components/Modal/ModalCreateRoom.vue';
 import ModalFindFriend from '@/components/Modal/ModalFindFriend.vue';
 import ModalIsExistRoom from '@/components/Modal/ModalIsExistRoom.vue';
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { useRouter, onBeforeRouteLeave  } from 'vue-router';
 import { useFriendStore } from '@/stores/friend'
 import { useSoundStore } from '@/stores/sound'
@@ -106,13 +106,15 @@ const changeType = function(type){
 }
 
 // ===================== 게임 찾기 모달 감시=======================
-const modalWatch = watch(() => matchStore.isSearching, (newVal, oldVal) => {
+
+const isSearching = computed(() => matchStore.isSearching)
+watch(() => isSearching.value, (newVal, oldVal) => {
     const findGameModal = new bootstrap.Modal(document.getElementById('FindGameModal'))
     console.log(matchStore.isSearching)
     console.log(newVal);
     if (!newVal) {
         console.log('모달 닫기');
-        // findGameModal.hide()
+        findGameModal.hide()
     } else {
         console.log('모달 열기');
         findGameModal.show()

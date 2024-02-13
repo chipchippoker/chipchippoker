@@ -117,8 +117,8 @@
 
   // 죽은 상태 체크
   const isDie = computed(() => {
-    const memberInfo = gameStore.memberInfos.find(info => info.nickname === clientData.value);
-    if (memberInfo.isState === 'DIE' || memberInfo.haveCoin + memberInfo.bettingCoin === 0) {
+    const memberInfo = gameStore.gameMemberInfos.find(info => info.nickname === clientData.value);
+    if (memberInfo?.isState === 'DIE' || memberInfo?.haveCoin + memberInfo?.bettingCoin === 0) {
       return true
     } else {
       return false
