@@ -220,6 +220,7 @@ import { watch, computed, ref } from 'vue';
 
 const userStore = useUserStore()
 const gameStore = useGameStore()
+const roomStore = useRoomStore()
 
 // 내 인덱스 구하기
 const getMyIndex = function () {
@@ -292,23 +293,23 @@ const gameStart = ref(false)
 
 
 // 비디오 요소에 스타일을 적용합니다.
-const videoElement = document.createElement('video')
-videoElement.src = "/src/assets/icons/chipchippoker.mp4"
-videoElement.autoplay = true
-videoElement.style.zIndex = "2000"
-videoElement.style.position = "fixed"
-videoElement.style.width = "100vw"
-videoElement.style.height = "100vh"
-const container = document.querySelector('.container')
-container.appendChild(videoElement)
+// const videoElement = document.createElement('video')
+// videoElement.src = "/src/assets/icons/chipchippoker.mp4"
+// videoElement.autoplay = true
+// videoElement.style.zIndex = "2000"
+// videoElement.style.position = "fixed"
+// videoElement.style.width = "100vw"
+// videoElement.style.height = "100vh"
+// const container = document.querySelector('.container')
+// container.appendChild(videoElement)
 
-videoElement.addEventListener('ended', () => {
-  gameStart.value = false
-  videoElement.remove()
-  console.log(gameStart.value)
-  console.log('비디오 재생 완료!')
-  startRoundAnimation()
-})
+// videoElement.addEventListener('ended', () => {
+//   gameStart.value = false
+//   videoElement.remove()
+//   console.log(gameStart.value)
+//   console.log('비디오 재생 완료!')
+//   startRoundAnimation()
+// })
 
 
 // 라운드 시작 콜백함수
@@ -336,6 +337,14 @@ function startGameAnimation () {
   // 1. 플레이페이지 진입하면 텍스트 애니메이션 (3초 정도)
   gameStart.value = true
   console.log('게임 비디오 시작', gameStart.value)
+
+  setTimeout(()=>{
+    gameStart.value = false
+    console.log('비디오 끌거임');
+    // // const videoElement = document.getElementById('video')
+    // videoElement.remove()
+    startRoundAnimation()
+  },5000)
 }
 
 // 라운드 상태 감지
@@ -479,16 +488,18 @@ async function removeCard() {
 
 // 내 카드 뒤집기
 async function filpMyCard() {
-  const myIndex = getMyIndex()
-  const cardElement = document.getElementById(`flip-card${myIndex}`)
-  cardElement.classList.add('flipped')
-
-  return new Promise(resolve => {
-    setTimeout(() => {
-      console.log('카드 모으기 애니메이션 완료');
-      resolve(); // 생성 완료
-    }, 1000);
-  });
+  if (!roomStore.isWatcher) {
+    const myIndex = getMyIndex()
+    const cardElement = document.getElementById(`flip-card${myIndex}`)
+    cardElement.classList.add('flipped')
+  
+    return new Promise(resolve => {
+      setTimeout(() => {
+        console.log('카드 모으기 애니메이션 완료');
+        resolve(); // 생성 완료
+      }, 1000);
+    })
+  }
 }
 
 // 내 카드 빼고 뒤집기
@@ -496,7 +507,7 @@ async function flipCard() {
   const myIndex = getMyIndex()
   for (let i = 1; i < gameStore.memberInfos.length+1; i++) {
     // 내 카드는 넘긴다.
-    if(i === myIndex){
+    if(i === myIndex && !roomStore.isWatcher){
       continue
     }
     const cardElement = document.getElementById(`flip-card${i}`)
@@ -504,10 +515,10 @@ async function flipCard() {
   }
   return new Promise(resolve => {
     setTimeout(() => {
-      console.log('카드 모으기 애니메이션 완료');
+      console.log('카드 모으기 애니메이션 완료')
       resolve(); // 생성 완료
-    }, 1000);
-  });
+    }, 1000)
+  })
 }
 
 // 모든 카드 뒤로 뒤집기

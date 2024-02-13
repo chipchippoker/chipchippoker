@@ -314,7 +314,7 @@ export const useRoomStore = defineStore('room', () => {
       roomState.value = ''
       isWatcher.value = false
     })
-    .then(()=>{
+    .then(res => {
       router.push({name:'main'})
       openviduStore.leaveSession()
       gameStore.resetGameStore()
