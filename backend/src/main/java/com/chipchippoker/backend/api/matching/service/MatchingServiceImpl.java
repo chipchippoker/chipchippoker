@@ -33,7 +33,6 @@ public class MatchingServiceImpl implements MatchingService {
 		Member member = memberRepository.findById(id)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
 
-		// 게임방에 이미 들어가 있는 사용자인 경우
 		if (member.getGameRoom() != null) {
 			throw new ForbiddenException(ErrorBase.E403_FORBIDDEN_ALREADY_IN_GAME_ROOM);
 		}
@@ -41,7 +40,7 @@ public class MatchingServiceImpl implements MatchingService {
 		// 친선, 공개, 대기, 총 인원수, 빈방을 만족하는 게임방 조회
 		List<GameRoom> gameRoomList = gameRoomRepository.findByStartFriendlyMatchingSearchOption(totalParticipantCnt);
 
-		if (!gameRoomList.isEmpty()) { // 조회된 게임방이 있는 경우
+		if (!gameRoomList.isEmpty()) {
 			for (GameRoom gameRoom : gameRoomList) {
 				// 블랙리스트 사용자인가
 				MemberGameRoomBlackList memberGameRoomBlackList = memberGameRoomBlackListRepository.findByMemberAndGameRoom(
@@ -62,7 +61,6 @@ public class MatchingServiceImpl implements MatchingService {
 		Member member = memberRepository.findById(id)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
 
-		// 게임방에 이미 들어가 있는 사용자인 경우
 		if (member.getGameRoom() != null) {
 			throw new ForbiddenException(ErrorBase.E403_FORBIDDEN_ALREADY_IN_GAME_ROOM);
 		}
@@ -71,27 +69,24 @@ public class MatchingServiceImpl implements MatchingService {
 		GameRoom gameRoom = gameRoomRepository.findByStartCompetitionMatchingSearchOption(
 			totalParticipantCnt);
 
-		if (gameRoom != null) { // 입장 가능한 게임방이 있다면
-			member.enterGameRoom(gameRoom); // 게임방 입장
+		if (gameRoom != null) {
+			member.enterGameRoom(gameRoom);
 
 			if (gameRoom.getMembers().size() == totalParticipantCnt - 1) { // 인원 수가 모두 충족되었다면
 				gameRoom.updateGameRoomState("진행");
 			}
 		} else { // 입장 가능한 게임방이 없다면
-			// 새로운 경쟁전 게임방 생성
 			String title = "경쟁전 " + (gameRoomRepository.findAll().size() + 1);
 			gameRoom = GameRoom.createGameRoom(title, null, totalParticipantCnt, Boolean.FALSE, "경쟁", null);
 			gameRoomRepository.save(gameRoom);
 
-			// 방에 입장
 			member.enterGameRoom(gameRoom);
 		}
 
-		// 게임방에 처음 들어가는 사용자인가
 		Boolean isFirstParticipant = Boolean.FALSE;
 		if (gameRoom.getMembers() == null || gameRoom.getMembers().isEmpty())
 			isFirstParticipant = Boolean.TRUE;
-		return StartCompetitionMatchingResponse.startCompetitionMatchingResponse(gameRoom, isFirstParticipant); // 응답
+		return StartCompetitionMatchingResponse.startCompetitionMatchingResponse(gameRoom, isFirstParticipant);
 	}
 
 	@Override

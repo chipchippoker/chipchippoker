@@ -32,7 +32,6 @@ public class GameRoomController {
 	private final HttpServletRequest request;
 	private final GameRoomService gameRoomService;
 
-	// 방 생성
 	@PostMapping("/api/rooms")
 	public ResponseEntity<ApiResponse<CreateGameRoomResponse>> createGameRoom(
 		@RequestBody @Valid CreateGameRoomRequest createGameRoomRequest) {
@@ -41,7 +40,6 @@ public class GameRoomController {
 		return ResponseEntity.ok(ApiResponse.success(createGameRoomResponse));
 	}
 
-	// 방 입장
 	@PostMapping("/api/rooms/enter")
 	public ResponseEntity<ApiResponse<EnterGameRoomResponse>> enterGameRoom(
 		@RequestBody EnterGameRoomRequest enterGameRoomRequest) {
@@ -50,7 +48,6 @@ public class GameRoomController {
 		return ResponseEntity.ok(ApiResponse.success(enterGameRoomResponse));
 	}
 
-	// 방 목록
 	@GetMapping("/api/rooms")
 	public ResponseEntity<ApiResponse<Page<GetGameRoomListResponse>>> getGameRoomList(
 		@RequestParam(value = "type") String type,
@@ -64,7 +61,6 @@ public class GameRoomController {
 		return ResponseEntity.ok(ApiResponse.success(getGameRoomListResponse));
 	}
 
-	// 방 나가기
 	@PostMapping("/api/rooms/leave")
 	public ResponseEntity<ApiResponse<Void>> leaveGameRoom(@RequestBody LeaveGameRoomRequest leaveGameRoomRequest) {
 		Long id = (Long)request.getAttribute("id");
@@ -72,14 +68,12 @@ public class GameRoomController {
 		return ResponseEntity.ok(ApiResponse.success());
 	}
 
-	// 방 게임 시작하기
 	@PostMapping("/api/rooms/play")
 	public ResponseEntity<ApiResponse<Void>> playGameRoom(@RequestBody PlayGameRoomRequest playGameRoomRequest) {
 		gameRoomService.playGameRoom(playGameRoomRequest.getTitle());
 		return ResponseEntity.ok(ApiResponse.success());
 	}
 
-	// 방에서 사용자 강제 퇴장 시키기
 	@PostMapping("/api/rooms/member/out")
 	public ResponseEntity<ApiResponse<Void>> memberOutGameRoom(
 		@RequestBody MemberOutGameRoomRequest memberOutGameRoomRequest) {

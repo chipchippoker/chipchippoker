@@ -11,10 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FriendRequestServiceHelper {
 	public static void isFriendRequestExist(FriendRequest friendRequest) {
-		// 친구 요청 상태가 대기인 경우
 		if (friendRequest.getStatus().equals("대기"))
 			throw new ForbiddenException(ErrorBase.E403_ALREADY_SENT_FRIEND_REQUEST);
-		// 친구 요청 상태가 거절인 경우
 		if (friendRequest.getStatus().equals("거절"))
 			friendRequest.updateStatus("대기");
 	}

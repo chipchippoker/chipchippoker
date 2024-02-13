@@ -26,7 +26,6 @@ public class FriendController {
 	private final HttpServletRequest request;
 	private final FriendService friendService;
 
-	// 친구 찾기 검색
 	@GetMapping("/search")
 	public ResponseEntity<ApiResponse<?>> searchFriend(
 		@RequestParam(value = "nickname") String nickname) {
@@ -38,7 +37,6 @@ public class FriendController {
 			return ResponseEntity.ok(ApiResponse.success(searchFriendResponse));
 	}
 
-	// 친구 찾기 목록 검색
 	@GetMapping("/list/search")
 	public ResponseEntity<ApiResponse<?>> searchFriendList(
 		@RequestParam(value = "nickname") String nickname) {

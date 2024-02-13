@@ -36,18 +36,14 @@ public class FriendRequestServiceImpl implements FriendRequestService {
 		FriendRequest friendRequest = friendRequestRepository.findByFromMemberIdAndToMemberId(fromMember.getId(),
 			toMember.getId());
 
-		// 나 자신에서 친구 요청을 보낸 경우
 		if (fromMemberId.equals(toMember.getId()))
 			throw new ForbiddenException(ErrorBase.E403_FORBIDDEN);
 
-		// 나와 상대방은 이미 친구인 경우
 		FriendRequestServiceHelper.isAlreadyFriend(friendRepository, fromMember.getId(), toMember.getId());
 
 		if (friendRequest != null) {
-			// 이미 친구 신청 요청을 한 적이 있는 경우
 			FriendRequestServiceHelper.isFriendRequestExist(friendRequest);
 		} else {
-			// 상대방에게 처음 친구 신청을 하는 경우
 			friendRequest = FriendRequest.createFriendRequest("대기", fromMember, toMember);
 			friendRequestRepository.save(friendRequest);
 		}
@@ -60,16 +56,13 @@ public class FriendRequestServiceImpl implements FriendRequestService {
 		Member fromMember = memberRepository.findByNickname(fromMemberNickname)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
 
-		// 나와 상대방은 이미 친구인 경우
 		FriendRequestServiceHelper.isAlreadyFriend(friendRepository, toMember.getId(), fromMember.getId());
 
-		// 상대방이 보낸 친구 신청 요청의 상태를 수락으로 변경
 		FriendRequest fromMemberFriendRequest = friendRequestRepository.findByFromMemberIdAndToMemberId(
 			fromMember.getId(),
 			toMember.getId());
 		fromMemberFriendRequest.updateStatus("수락");
 
-		// 친구 추가
 		Friend fromMemberFriend = Friend.createFriend(fromMember, toMember);
 		friendRepository.save(fromMemberFriend);
 		Friend toMemberFriend = Friend.createFriend(toMember, fromMember);
@@ -83,7 +76,6 @@ public class FriendRequestServiceImpl implements FriendRequestService {
 		Member fromMember = memberRepository.findByNickname(fromMemberNickname)
 			.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
 
-		// 나와 상대방은 이미 친구인 경우
 		FriendRequestServiceHelper.isAlreadyFriend(friendRepository, toMember.getId(), fromMember.getId());
 
 		FriendRequest friendRequest = friendRequestRepository.findByFromMemberIdAndToMemberId(fromMember.getId(),
@@ -103,7 +95,6 @@ public class FriendRequestServiceImpl implements FriendRequestService {
 			Member fromMember = friendRequest.getFromMember();
 			Friend friend = friendRepository.findByMemberAIdAndMemberBId(fromMember.getId(),
 				toMember.getId());
-			// 친구 신청 요청자와 이미 친구가 아니라면
 			if (friend == null) {
 				GetFriendRequestListResponse getFriendRequestListResponse = GetFriendRequestListResponse.getFriendRequestListResponse(
 					fromMember.getNickname());

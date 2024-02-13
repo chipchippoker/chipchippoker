@@ -76,16 +76,12 @@ public class AuthController {
 			throw new InvalidException(ErrorBase.E400_INVALID_AUTHORIZATION_CODE);
 		}
 		Token token = authService.getToken(authorizationCode);
-		// 3 인가 코드로 발급이 불가능한 경우
 		if (token == null) {
 			throw new InvalidException(ErrorBase.E400_INVALID_AUTH_TOKEN);
 		} else {
-			// 인가 코드로 토큰을 발급 받았음
 			Long kakaoSocialId = authService.getKakaoSocialId(token.getAccess_token());
 
-			// 이미 계정이 있는 유저
 			if (authService.validateExistsUser(kakaoSocialId)) {
-				// 로그인을 진행한다.
 				SimpleLoginResponse loginResponse = authService.kakaoLogin(token);
 				AuthorizationCodeAlreadyAccountResponse authorizationCodeAlreadyAccountResponse = new AuthorizationCodeAlreadyAccountResponse(
 					200, "로그인을 완료했습니다.",
@@ -94,7 +90,6 @@ public class AuthController {
 				return new ResponseEntity<>(ApiResponse.success(authorizationCodeAlreadyAccountResponse),
 					HttpStatus.valueOf(200));
 			} else {
-				// 계정이 없는 유저
 				AuthorizationCodeMoreInformationResponse authorizationCodeMoreInformationResponse = new AuthorizationCodeMoreInformationResponse(
 					202, "추가 정보가 필요합니다.", authService.encryptionToken(token.getAccess_token()));
 				return new ResponseEntity<>(ApiResponse.success(authorizationCodeMoreInformationResponse),

@@ -5,7 +5,6 @@ import java.util.List;
 import com.chipchippoker.backend.common.collection.GameResult;
 
 public interface GameResultRepositoryCustom {
-    // Integer getCoin();
 
-    public List<GameResult> findRecentPlayList(String nickname);
+	public List<GameResult> findRecentPlayList(String nickname);
 }

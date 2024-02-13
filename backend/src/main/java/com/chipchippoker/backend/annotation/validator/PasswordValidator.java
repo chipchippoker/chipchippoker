@@ -8,7 +8,7 @@ import jakarta.validation.ConstraintValidatorContext;
 public class PasswordValidator implements ConstraintValidator<Password, String> {
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-		if (value.isBlank()) { // null, 빈 문자열, 공백 불가
+		if (value.isBlank()) {
 			return false;
 		}
 		return value.matches(

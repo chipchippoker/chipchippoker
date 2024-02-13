@@ -46,7 +46,6 @@ public class RankServiceImpl implements RankService {
 		Friend myRankInFriend = memberRepository.getMyInformInFriend(id);
 		friendRankList.add(myRankInFriend);
 
-		//친구가 한명도 없는 경우
 		if (myRankInFriend == null) {
 			Member member = memberRepository.findById(id)
 				.orElseThrow(() -> new NotFoundException(ErrorBase.E404_NOT_EXISTS_MEMBER));
