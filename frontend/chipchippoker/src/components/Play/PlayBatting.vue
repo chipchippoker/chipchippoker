@@ -4,7 +4,7 @@
   <div id="bettingField" class="container position-absolute top-50 start-50 translate-middle battingstyle p-0 z-0 card-winner" style="width: calc(100% - 620px); height: 90%;">
     <video
       id="video"
-      v-show="gameStart"
+      v-if="gameStart"
       style="z-index: 2000;
       position: fixed;
       width: 100vw;
@@ -299,7 +299,6 @@ videoElement.style.zIndex = "2000"
 videoElement.style.position = "fixed"
 videoElement.style.width = "100vw"
 videoElement.style.height = "100vh"
-
 const container = document.querySelector('.container')
 container.appendChild(videoElement)
 
@@ -548,7 +547,7 @@ async function joinCard () {
     
     if (gameStore.winnerNickname === data.nickname) {
       const winnerTag = document.createElement('h5')
-      winnerTag.style.color = 'white'
+      winnerTag.style.color = 'blue'
       winnerTag.style.fontWeight = 'bold'
       winnerTag.style.zIndex = '10001'
       winnerTag.innerText = '승'
