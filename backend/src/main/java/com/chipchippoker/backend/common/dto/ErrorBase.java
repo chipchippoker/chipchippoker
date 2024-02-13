@@ -76,6 +76,7 @@ public enum ErrorBase {
 	E409_DUPLICATE_MEMBER(CONFLICT, false, "CF002", "이미 회원가입하셨습니다.\n해당 계정으로 로그인 해주세요"),
 	E409_ALREADY_CONNECTED_SOCIAL(CONFLICT, false, "CF004", "이미 소셜 계정에 연결된 회원입니다"),
 	E409_DUPLICATE_ROOM_TITLE(CONFLICT, false, "CF005", "이미 사용중인 방제목 입니다."),
+	E409_DUPLICATE_SOCIAL_ID(CONFLICT, false, "CF006", "이미 연결된 소셜 계정입니다."),
 
 	/**
 	 * 415 Unsupported Media Type
