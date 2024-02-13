@@ -20,24 +20,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
-/*
-  게임에 필요한 로직을 관리한다.
-  필요한 요소는 아래와 같다.
-  1. 게임 세팅
-  1-1. 게임에 참여한 유저에 대한 정보(유저의 수, 각 유저의 정보)
-  1-2. 게임상태(시작전, 시작후, 시작) O
-  1-3. 각 유저의 레디 상태
-  1-4. 몇 명이 참여 가능한 방인지에 대한 정보
-  2. 현재 라운드의 상황
-  2-1. 현재 몇 라운드인지
-  2-2. 각 라운드에서 각 유저가 가지고 있는 패의 정보
-  2-3. 각 라운드에서 각 유저가 가지고 있는 칩의 개수
-  2-4. 각 라운드에서 각 유저가 배팅한 칩의 개수
-  2-5. 각 라운드에서 가운데 배팅된 총 칩의 개수
-  2-6. 각 라운드에서 누구의 배팅턴인지
-  2-7. 각 라운드에서 누군가의 배팅시간이 얼마나 남았는 지
- */
-
 @Slf4j
 @Getter
 @Setter
@@ -80,7 +62,6 @@ public class GameManager {
 
 	public void nextTurn() {
 		for (int i = 0; i < 5; i++) {
-			// 다음 사람이 배팅중이라면 턴을 넘겨준다.
 			if (memberManagerMap.get(order.get((turnNumber + 1) % memberManagerMap.size()))
 				.getMemberGameInfo()
 				.getIsState()
@@ -101,10 +82,7 @@ public class GameManager {
 			}
 		}
 
-		// Stack 생성
-		// 각 세트에 대해 랜덤으로 숫자를 섞어서 Stack에 삽입
 		Stack<CardInfo> stack = new Stack<>();
-		// 리스트를 섞기
 		Collections.shuffle(numbers, new Random());
 		for (CardInfo cardInfo : numbers) {
 			stack.push(cardInfo);
@@ -113,11 +91,9 @@ public class GameManager {
 	}
 
 	public void gameStart() {
-		// 게임이 이미 진행 중
 		if (this.gameState.equals("진행"))
 			throw new InvalidException(MessageBase.E400_CAN_NOT_START_ALREADY_START);
 
-		// 모두 준비된 상태이고 최소인원인 2명이상을 충족한다.
 		if (memberManagerMap.size() < 2) {
 			throw new InvalidException(MessageBase.E400_CAN_NOT_START_ALONE);
 		} else if (!isAllReady()) {
@@ -154,8 +130,6 @@ public class GameManager {
 
 			memberManager.getMemberGameInfo().setActionCount(memberManager.getMemberGameInfo().getActionCount() + 1);
 
-			// 최소로 배팅해야 하는 코인 업데이트
-			// 본인이 베팅해야하는 최소 베팅금액은 마지막으로 베팅했던 사람의 베팅금액에서 자신이 베팅했던 금액을 뺀 것이다.
 			lastBettingMaxCoin = memberManager.getMemberGameInfo().getBettingCoin();
 
 		} else if (bettingMessageRequest.getAction().equals("DIE")) {
@@ -212,7 +186,6 @@ public class GameManager {
 		int cardNum = 0;
 		int cardSet = 0;
 
-		// 승리한 사람과 카드 넘버 저장
 		for (MemberManager manager : notDie) {
 			if (manager.getMemberGameInfo().getCardInfo().getCardNumber() > cardNum) {
 				winner = manager.getMemberInfo().getNickname();
@@ -226,11 +199,9 @@ public class GameManager {
 			}
 		}
 
-		// 승리한 사람에게 베팅한 모든 코인 더해주기
 		int getCoin = leftMemberBettingCoin;
 		Collection<MemberManager> values = memberManagerMap.values();
 		for (MemberManager manager : values) {
-			// 나간 사람의 코인을 1/n 만큼 모두에게 배분
 			manager.getMemberGameInfo()
 				.setHaveCoin(manager.getMemberGameInfo().getHaveCoin() + leftMemberHaveCoin / values.size());
 			getCoin += manager.getMemberGameInfo().getBettingCoin();
@@ -238,8 +209,6 @@ public class GameManager {
 		MemberManager winnerManager = memberManagerMap.get(winner);
 		winnerManager.getMemberGameInfo().setHaveCoin(winnerManager.getMemberGameInfo().getHaveCoin() + getCoin);
 
-		// 다이한 사람들 중 10을 들고 있던 사람들에게서 칩 10개를 몰수해서 우승자에게 주기
-		// 10을 들고 포기한 사람들의 MemberManager 가져오기
 		List<MemberManager> dieHaveTen = memberManagerMap.values()
 			.stream()
 			.filter(memberManager -> memberManager.getMemberGameInfo().getIsState().equals("DIE"))
@@ -272,14 +241,12 @@ public class GameManager {
 			}
 		}
 
-		// 이긴 사람이 다음 라운드 배팅 턴 잡기
 		turnNumber = order.indexOf(winner);
 		return winner;
 	}
 
 	public void newRoundSetting(int prevRound) {
 		currentRound = prevRound + 1;
-		// 라운드가 10라운드라면 게임이 끝난다.
 		if (currentRound > gameEndRound)
 			throw new RuntimeException();
 
@@ -289,7 +256,6 @@ public class GameManager {
 			.filter(memberManager -> memberManager.getMemberGameInfo().getHaveCoin() >= 1)
 			.count();
 
-		// 코인이 남은 사람이 1명이면 게임 종료
 		if (leftMember == 1)
 			throw new RuntimeException();
 
@@ -300,21 +266,14 @@ public class GameManager {
 		leftMemberBettingCoin = 0;
 
 		for (MemberManager manager : memberManagers) {
-			// 코인이 남은 사람만 남은 라운드에 진출할 수 있다.
 			if (manager.getMemberGameInfo().getHaveCoin() >= 1) {
 				leftMember++;
-				// 카드를 받는다.
 				manager.getMemberGameInfo().setCardInfo(cardStack.pop());
-				// 한 개의 기본베팅을 한다.
 				manager.getMemberGameInfo().setHaveCoin(manager.getMemberGameInfo().getHaveCoin() - 1);
-				// 베팅 코인이 1개가 된다.
 				manager.getMemberGameInfo().setBettingCoin(1);
-				// 베팅중인 상태로 전환한다.
 				manager.getMemberGameInfo().setIsState("BET");
-				// action 은 0으로 초기화해준다.
 				manager.getMemberGameInfo().setActionCount(0);
 
-				// maxCoin 변경
 				maxCoin = Math.min(maxCoin, manager.getMemberGameInfo().getHaveCoin() + 1);
 			} else {
 				manager.getMemberGameInfo().setHaveCoin(0);
@@ -354,7 +313,8 @@ public class GameManager {
 		MemberManager manager = memberManagerMap.get(nickname);
 		this.leftMemberHaveCoin += manager.getMemberGameInfo().getHaveCoin();
 		this.leftMemberBettingCoin += manager.getMemberGameInfo().getBettingCoin();
-		memberManagerMap.remove(nickname);
+		manager.getMemberGameInfo().setIsState("DIE");
+		manager.getMemberGameInfo().setHaveCoin(0);
 	}
 
 	/**
@@ -380,5 +340,4 @@ public class GameManager {
 			.sorted(Comparator.comparing(MemberManager::getCreatedAt))
 			.toList();
 	}
-
 }
