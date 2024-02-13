@@ -12,7 +12,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="d-flex">
             <!-- 랭킹 -->
             <!-- <div> -->

@@ -30,9 +30,8 @@
     <div class="w-100 position-relative" style="height: 70%;">
       <!-- 결과표 -->
       <!-- 라운드 결과 -->
-      <div v-if="gameStore.roundState == false && gameStore.memberEndGameInfos.length==0 && gameStore.winnerNickname != ''" class="position-absolute top-50 start-50 translate-middle bg-modal
-       rounded-5 px-5 py-5" style="z-index: 998; width: 40%;">
-        <div class="d-flex flex-column justify-content-center align-items-center text-center">
+      <div v-if="gameStore.roundState == false && gameStore.memberEndGameInfos.length==0 && gameStore.winnerNickname != ''">
+        <!-- <div class="d-flex flex-column justify-content-center align-items-center text-center">
           <h2 class="fw-bold">라운드 결과</h2>
           <h3 class="m-3">{{ gameStore.winnerNickname }}님 승!!</h3>
           <div class="" v-for="playerResult in gameStore.gameMemberInfos" :key="playerResult.nickname">
@@ -43,7 +42,7 @@
             </div>
           </div>
           <p class="text-danger">※ 같은 숫자일 경우 : 스페이드 > 다이아몬드 > 하트 > 클로버</p>
-        </div>
+        </div> -->
       </div>
 
       <!-- 게임 결과 -->
@@ -81,7 +80,7 @@
 
       <!-- 컨트롤러 or 채팅 -->
       <div class="h-100 w-50">
-        <PlayControllerVue v-if="roomStore.isWatcher === false" />
+        <PlayControllerVue v-if="roomStore.isWatcher === false"/>
         <PlayTalkVue v-else />
         <!-- <PlayTalkVue /> -->
       </div>
@@ -109,6 +108,7 @@ import router from "@/router";
 const userStore = useUserStore()
 const roomStore = useRoomStore()
 const gameStore = useGameStore()
+
 // Join form
 const roomId = ref('')
 const myNickname = ref('')
@@ -168,7 +168,6 @@ const cardSetName = {
   3:'다이아몬드',
   4:'스페이드'
 }
-
 
 // 이전에 페이지가 새로고침된 횟수를 가져옵니다.
 let refreshCount = localStorage.getItem('refreshCount');

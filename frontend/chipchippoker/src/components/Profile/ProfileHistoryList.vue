@@ -47,7 +47,7 @@
       <!-- 최근 전적 -->
       <ul
         v-if="userStore?.profileInfo?.recentPlayList?.length > 0"
-        class="profile-outline-darkblue my-3 d-flex flex-column-reverse gap-1 overflow-y-auto"
+        class="profile-outline-darkblue my-3 d-flex flex-column gap-1 overflow-y-auto"
         style="max-height: 300px"
       >
         <!-- 게임 모드, 인원 -->
@@ -105,14 +105,6 @@ const userStore = useUserStore();
 
 onMounted(() => {
   profileInfo.value = userStore.profileInfo;
-
-  // 스크롤 최상단에 두기
-  const ulTag = document.querySelector('ul')
-  console.log(ulTag);
-  ulTag.scrollTop = ulTag.scrollHeight
-  console.log(ulTag.scrollHeight);
-  console.log(ulTag.scrollTop);
-
 });
 </script>
 

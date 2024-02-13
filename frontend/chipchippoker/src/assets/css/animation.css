@@ -3,13 +3,13 @@
     margin-bottom: -25px;
 }
 .list-overlap-small {
-    margin-left: -20px;
-    margin-bottom: -20px;
+    margin-left: -15px;
+    margin-bottom: -15px;
 }
 
 .flip-card {
-    width: 160px;
-    height: 224px;
+    width: 100px;
+    /* height: 224px; */
     perspective: 1000px;
 }
 
@@ -45,63 +45,55 @@
     transform: rotateY(180deg);
 }
 
+/* 카드, 코인 이동 */
 .card-devide-move1 {
-    transform: translate(200px, 200px);
+    transform: translate(-200px, -100px);
     transition: 1s;
 }
 
 .card-devide-move2 {
-    transform: translate(-200px, 200px);
+    transform: translate(200px, -100px);
     transition: 1s;
 }
 
 .card-devide-move3 {
-    transform: translate(200px, -200px);
+    transform: translate(-200px, 100px);
     transition: 1s;
 }
 
 .card-devide-move4 {
-    transform: translate(-200px, -200px);
+    transform: translate(200px, 100px);
+    transition: 1s;
+}
+
+/* 코인 나눠줌 애니메이션 */
+.coin-devide-move1 {
+    transform: translate(-100px, -100px);
+    transition: 1s;
+}
+
+.coin-devide-move2 {
+    transform: translate(100px, -100px);
+    transition: 1s;
+}
+
+.coin-devide-move3 {
+    transform: translate(-100px, 100px);
+    transition: 1s;
+}
+
+.coin-devide-move4 {
+    transform: translate(100px, 100px);
     transition: 1s;
 }
 
 
 
-.coin-unmove1 {
-    transform: translate(0, 0);
+.fade-in{
+    opacity: 1;
     transition: 1s;
 }
-
-.coin-unmove2 {
-    transform: translate(0, 0);
-    transition: 1s;
-}
-
-.coin-unmove3 {
-    transform: translate(0, 0);
-    transition: 1s;
-}
-
-.coin-unmove4 {
-    transform: translate(0, 0);
-    transition: 1s;
-}
-.coin-move1 {
-    transform: translate(50%, 50%);
-    transition: 1s;
-}
-
-.coin-move2 {
-    transform: translate(-50%, 50%);
-    transition: 1s;
-}
-
-.coin-move3 {
-    transform: translate(50%, -50%);
-    transition: 1s;
-}
-
-.coin-move4 {
-    transform: translate(-50%, -50%);
+.fade-out{
+    opacity: 0;
     transition: 1s;
 }

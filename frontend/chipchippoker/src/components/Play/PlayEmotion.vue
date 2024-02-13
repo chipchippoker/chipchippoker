@@ -1,9 +1,11 @@
 <template>
     <div class="border border-5 border-warning bg-lightyellow rounded-4 p-2">
         <div>{{gameStore?.showEmotionNickname}}님의 감정인식 결과</div>
-        <!-- <div v-for="key in Object.keys(gameStore?.playerEmotion[gameStore?.showEmotionNickname])">
-         <div>{{ korean[key] }}: {{ gameStore?.playerEmotion[gameStore?.showEmotionNickname][key]}}</div>
-        </div> -->
+        <div v-if='gameStore?.playerEmotion.length >= 0'>
+            <div v-for="key in Object.keys(gameStore?.playerEmotion[gameStore?.showEmotionNickname])" :key=key>
+                <div>{{ korean[key] }}: {{ gameStore?.playerEmotion[gameStore?.showEmotionNickname][key]}}</div>
+            </div>
+        </div>
     </div>
 </template>
 

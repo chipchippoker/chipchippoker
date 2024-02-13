@@ -353,6 +353,7 @@ export const useUserStore = defineStore('user', () => {
     .then(res => {
       console.log(res.data);
       profileInfo.value = res.data.data
+      profileInfo.value.recentPlayList.reverse()
     })
   }
 

@@ -107,11 +107,7 @@
 
   // 게임 준비 체크
   const isReady = computed(() => {
-    console.log(gameStore.player);
-    console.log(clientData);
     const memberInfo = gameStore.memberInfos.find(info => info.nickname === clientData.value);
-    console.log(memberInfo);
-    console.log(memberInfo.isReady);
     if (route.name === 'wait') {
       return memberInfo ? memberInfo.isReady : false;
     } else {
@@ -122,7 +118,7 @@
   // 죽은 상태 체크
   const isDie = computed(() => {
     const memberInfo = gameStore.memberInfos.find(info => info.nickname === clientData.value);
-    if (memberInfo.isState === 'Die') {
+    if (memberInfo.isState === 'DIE' || memberInfo.haveCoin + memberInfo.bettingCoin === 0) {
       return true
     } else {
       return false

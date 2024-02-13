@@ -10,7 +10,7 @@
                     <div class="d-flex flex-column gap-1">
                         <ModalNotificationItem v-for="item in friendStore.alarmList" :key="item"
                         :item="item"/>
-                        <div v-if="friendStore.alarmList.length===0">알림없음</div>
+                        <div class="text-center" v-if="friendStore.alarmList.length===0">알림없음</div>
                     </div>
                 </div>
             </div>
