@@ -27,6 +27,7 @@ public class MatchingServiceImpl implements MatchingService {
 	private final MemberRepository memberRepository;
 	private final GameRoomRepository gameRoomRepository;
 	private final MemberGameRoomBlackListRepository memberGameRoomBlackListRepository;
+	private int competitionMatchingIdx = 11;
 
 	@Override
 	public StartFriendlyMatchingResponse startFriendlyMatching(Long id, Integer totalParticipantCnt) {
@@ -72,12 +73,19 @@ public class MatchingServiceImpl implements MatchingService {
 		if (gameRoom != null) {
 			member.enterGameRoom(gameRoom);
 
+			if (gameRoom.getMembers().size() == 0) { // 방에 들어간 인원이 0명인 경우 방장 닉네임 업데이트
+				gameRoom.updateGameRoomManagerNickname(member.getNickname());
+			}
+
 			if (gameRoom.getMembers().size() == totalParticipantCnt - 1) { // 인원 수가 모두 충족되었다면
 				gameRoom.updateGameRoomState("진행");
 			}
 		} else { // 입장 가능한 게임방이 없다면
-			String title = "경쟁전 " + (gameRoomRepository.findAll().size() + 1);
-			gameRoom = GameRoom.createGameRoom(title, null, totalParticipantCnt, Boolean.FALSE, "경쟁", null);
+			String title = "경쟁전 " + (competitionMatchingIdx);
+			competitionMatchingIdx++;
+
+			gameRoom = GameRoom.createGameRoom(title, null, totalParticipantCnt, Boolean.FALSE, "경쟁",
+				member.getNickname());
 			gameRoomRepository.save(gameRoom);
 
 			member.enterGameRoom(gameRoom);
