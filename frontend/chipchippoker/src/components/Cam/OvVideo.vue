@@ -31,6 +31,8 @@ if (route.name === 'play') {
 }
 
 const startEmotionDetection = setInterval(async () => {
+  try {
+
   const detections = await faceAPI.detectSingleFace(videoEl.value,
     new faceAPI.TinyFaceDetectorOptions())
     .withFaceLandmarks().withFaceExpressions()
@@ -52,6 +54,10 @@ const startEmotionDetection = setInterval(async () => {
     }, Object.keys(emotion)[0]);
     emit('sendEmotion', maxEmotion,emotion)
   }
+}
+catch{
+  console.log('감정인식 안됨')
+}
 }, 1000)
 
 

@@ -11,7 +11,7 @@
                     비밀번호
                 </div>
                 <div>
-                    <input v-model="password" type="password" class="form-control" :id="`password${roomData?.roomId}`" autocomplete="off">
+                    <input v-model="password" type="password" class="form-control" :id="`password${roomData?.roomId}`" autocomplete="false">
                 </div>
                 <div >
                     <button @click="enterRoomPrivate()" class="btn-outline-yellow rounded-2" data-bs-dismiss="modal">입장하기</button>

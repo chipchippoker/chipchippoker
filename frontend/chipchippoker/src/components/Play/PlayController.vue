@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
 import { useGameStore } from '@/stores/game';
 import { useRoomStore } from '@/stores/room';
 import { useUserStore } from '@/stores/user';
@@ -125,6 +125,7 @@ const bet = function () {
     gameStore.bet(roomStore.title, "BET", bettingCoin.value)
     bettingCoin.value = 0
     isBetting.value = true
+    console.log('bettingEvent : ', gameStore.bettingEvent);
   }
 }
 
@@ -134,6 +135,8 @@ const call = function () {
   if (betValidation()) {
     gameStore.bet(roomStore.title, "BET", bettingCoin.value)
     bettingCoin.value = 0
+    console.log('bettingEvent : ', gameStore.bettingEvent);
+
   }
 }
 
@@ -143,10 +146,21 @@ const die = function () {
     bettingCoin.value = 0
     isBetting.value = true
     gameStore.bet(roomStore.title, "DIE", bettingCoin.value)
+    console.log('bettingEvent : ', gameStore.bettingEvent);
+
   } else {
     alert("본인 차례가 아닙니다.")
   }
 }
+
+// 내려고 하는 배팅 코인 감지
+watch(() => bettingCoin.value, (newValue, oldValue)=>{
+  console.log('낼 배팅 코인 감지');
+  gameStore.willBettingCoin = bettingCoin.value
+  console.log(gameStore.willBettingCoin);
+})
+
+
 
 // 타이머 실행함수
 // const timerSetting = function(){

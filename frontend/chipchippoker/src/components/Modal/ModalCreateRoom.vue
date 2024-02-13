@@ -39,7 +39,7 @@
               <label for="inputPassword6" class="col-form-label" >Password</label>
             </div>
             <div class="col-9">
-              <input :disabled="isPrivate==='false'" type="password" id="inputPassword6" class='form-control' aria-describedby="passwordHelpInline" v-model="password" autocomplete="on">
+              <input :disabled="isPrivate==='false'" type="password" id="inputPassword6" class='form-control' aria-describedby="passwordHelpInline" v-model="password" autocomplete="false">
             </div>
             <div v-if="password!=='' && (password.length !== 4 || isNaN(password))" class="fw-lgitighter x-little-text text-danger">방 비밀번호는 4자리의 숫자이어야 합니다.</div>
           </div>

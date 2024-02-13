@@ -18,7 +18,7 @@
     <div class="container row mt-5 h-100">
       <!-- 캠 -->
       <div class="col-9">
-        <!-- 본인이 플레이어면 -->
+        <!-- 플레이어 -->
         <!-- 모든 캠 -->
         <div v-if="roomStore.isWatcher===false" id="video-container">
           <div class="flex-container row g-1 p-0">
@@ -38,7 +38,6 @@
               <!-- 다른 유저 캠 -->
               <div 
                 v-else
-                
                 style="width: 400px; height: 300px;">
                 <UserVideo 
                 :stream-manager="findVideo(playersComputed, player.nickname)" 
@@ -51,7 +50,7 @@
           </div>
         </div>
 
-        <!-- 본인이 관전자면 -->
+        <!-- 관전자 -->
         <div v-if="roomStore.isWatcher===true" id="video-container">
           <div class="flex-container row g-1 p-0">
             <div
@@ -75,7 +74,7 @@
       <!-- 로고, 관전자 목록, 채팅창, 버튼 -->
       <div class="col-3">
         <!-- 로고 -->
-        <div class="m-3"><img class="logo" src="/src/assets/icons/Logo.png" alt=""></div>
+        <div class="m-4 mb-3"><img class="logo" src="/src/assets/icons/Logo.png" alt=""></div>
         
         <!-- 관전자 목록, 채팅창 -->
         <div>
@@ -364,7 +363,6 @@
           roomStore.leaveRoom()
       }
     })
-
   })
 
 </script>
@@ -391,18 +389,18 @@
  background-color: #8497c7;
  border-radius: 10px;
  margin-top: 10px;
- height: 320px;
+ height: 310px;
  box-shadow: inset;
 }
 
 #chat-window {
   padding: 5px;
   padding-top: 10px;
-  height: 267px !important;
+  height: 80%;
 }
 
 #messageList {
-  max-height: 267px;
+  max-height: 245px;
   margin: 10px;
   padding: 10px;
   padding-top: 20px;
@@ -424,7 +422,7 @@
 
 #watcher-container {
   width: 100%;
-  height: 150px;
+  height: 120px;
 }
 
 .box-btns {
