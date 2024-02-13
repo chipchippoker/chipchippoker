@@ -116,6 +116,7 @@ public class GameController {
 				broadcastAllSpectatorConnected(gameRoomTitle,
 					gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_DISAPPEAR, gameManager));
 				mapManager.getGameManagerMap().remove(gameRoomTitle);
+				mapManager.getSpectationManagerMap().remove(gameRoomTitle);
 				return;
 			}
 
@@ -141,6 +142,7 @@ public class GameController {
 							sendRandGameEndMessage(gameRoomTitle, memberManagers);
 						} else if (gameRoom.getType().equals("친선")) {
 							sendNormalGameEndMessage(gameRoomTitle, memberManagers);
+							mapManager.getSpectationManagerMap().remove(gameRoomTitle);
 						}
 						mapManager.getGameManagerMap().remove(gameRoomTitle);
 						return;
@@ -311,6 +313,7 @@ public class GameController {
 					sendRandGameEndMessage(gameRoomTitle, memberManagers);
 				} else if (gameRoom.getType().equals("친선")) {
 					sendNormalGameEndMessage(gameRoomTitle, memberManagers);
+					mapManager.getSpectationManagerMap().remove(gameRoomTitle);
 				}
 				mapManager.getGameManagerMap().remove(gameRoomTitle);
 				return;
