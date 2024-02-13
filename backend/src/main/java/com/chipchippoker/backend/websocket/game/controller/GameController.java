@@ -111,77 +111,50 @@ public class GameController {
 			mapManager.getSpectationManagerMap().put(gameRoomTitle, spectationManager);
 		}
 		try {
-			// 방장이 마지막으로 나가서 게임방이 종료상태로 전환된 경우
 			if (gameManager.getRoomManager().equals(nickname) &&
 				gameManager.getMemberManagerMap().size() == 1) {
 				broadcastAllSpectatorConnected(gameRoomTitle,
 					gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_DISAPPEAR, gameManager));
-				// 게임방 관리를 더 이상 하지 않는다.
 				mapManager.getGameManagerMap().remove(gameRoomTitle);
 				return;
 			}
 
-			// 게임방 가져오기 REST API 연결시
 			GameRoom gameRoom = gameRoomRepository.findByTitleAndState(gameRoomTitle);
 			if (gameRoom == null)
 				throw new NotFoundException(MessageBase.E404_CAN_NOT_FIND_GAME_ROOM);
 
-			// 게임 중간에 나가는 경우
 			if (gameManager.getGameState().equals("진행")) {
 				gameManager.deleteMemberInGameRoom(nickname);
-				// 본인의 턴 중간에 나가는 경우
-				/*
-				게임에서 내보내고 다음턴으로 넘겨주어야 한다.
-				1. 게임이 끝나는 경우
-				2. 게임이 지속되는 경우
-				 */
-				/*
-				본인의 턴이 아닌 데 나가는 경우
-				1. 이미 베팅을 한 상태이다.
 
-				2. 이미 다이를 한 상태이다.
-				 */
-				// 라운드가 종료되는 경우
 				if (gameManager.checkRoundEnd()) {
 					String winnerNickname = gameManager.roundEnd();
-					// 라운드 종료 메시지 출력
 					sendRoundEndMessage(gameRoomTitle, gameManager, memberManagers, winnerNickname);
 					try {
 						gameManager.newRoundSetting(gameManager.getCurrentRound());
 					} catch (RuntimeException e) {
-						// 1. Point 저장
 						for (MemberManager manager : memberManagers) {
 							pointService.saveGameResult(manager.getMemberInfo().getNickname(),
 								manager.getMemberGameInfo().getHaveCoin(), gameRoom.getType());
 						}
-						// 2. GameResult 저장
 						gameService.saveGameResult(memberManagers, gameRoom);
 						if (gameRoom.getType().equals("경쟁")) {
-							// 4. 랭크 게임종료 메시지 출력
 							sendRandGameEndMessage(gameRoomTitle, memberManagers);
 						} else if (gameRoom.getType().equals("친선")) {
-							// 4. 친선 게임종료 메시지 출력
 							sendNormalGameEndMessage(gameRoomTitle, memberManagers);
 						}
-						// 5. GameManager 제거
 						mapManager.getGameManagerMap().remove(gameRoomTitle);
 						return;
 					}
 					log.info("새로운 라운드가 시작되었습니다.");
-				}
-				// 라운드가 종료되지 않았고, 나간 사람의 턴이었다.
-				// 라운드가 종료되지 않았고, 나간 사람의 턴이 아니었다.
-				else if (gameManager.getOrder().get(gameManager.getTurnNumber()).equals(nickname)) {
+				} else if (gameManager.getOrder().get(gameManager.getTurnNumber()).equals(nickname)) {
 					gameManager.nextTurn();
 					log.info("새로운 배팅 차례입니다.");
 				}
 				deliveryAnotherMessage(gameRoomTitle, gameManager);
 				spectationService.deliveryGameInfoForSpectator(gameRoomTitle, gameManager, spectationManager);
-				gameManager.getOrder().remove(nickname);
 				return;
 			}
 
-			// 나가는 사람이 방장인 경우
 			if (nickname.equals(gameManager.getRoomManager())) {
 				String roomManagerNickname = gameRoom.getRoomManagerNickname();
 				gameManager.setRoomManager(roomManagerNickname);
@@ -192,9 +165,7 @@ public class GameController {
 
 				broadcastAllSpectatorConnected(gameRoomTitle,
 					gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_MANAGER_EXIT, gameManager));
-			}
-			// 방장이 아닌 경우
-			else {
+			} else {
 				gameManager.deleteMember(nickname);
 				broadcastAllConnected(gameRoomTitle,
 					gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_MEMBER_EXIT, gameManager));
@@ -203,9 +174,7 @@ public class GameController {
 					gameService.AllMemberInfoInReadyRoom(MessageBase.S200_GAME_ROOM_MEMBER_EXIT, gameManager));
 			}
 
-		}
-		// 방이 존재하지 않는 경우
-		catch (NotFoundException e) {
+		} catch (NotFoundException e) {
 			broadcastToMember(nickname, ResponseEntity.badRequest().body(ApiResponse.messageError(e.getMessageBase())));
 			return;
 		}
@@ -268,15 +237,12 @@ public class GameController {
 		}
 		if (gameManager.getRoomManager().equals(nickname)) {
 			try {
-				// 게임시작
 				gameManager.gameStart();
 				sendGameStartMessage(gameRoomTitle);
 				deliveryAnotherMessage(gameRoomTitle, gameManager);
 				spectationService.deliveryGameInfoForSpectator(gameRoomTitle, gameManager, spectationManager);
 				log.info("게임방 게임 시작 성공");
 			} catch (InvalidException e) {
-				// 모두 준비완료 상태가 아니라 시작 불가
-				// 이미 진행중인 게임방이라 시작 불가
 				broadcastToMember(gameManager.getRoomManager(),
 					ResponseEntity.badRequest().body(ApiResponse.messageError(e.getMessageBase())));
 				log.info(e.getMessage());
@@ -298,7 +264,6 @@ public class GameController {
 		log.info("베팅 로직 시작");
 		String nickname = jwtUtil.getNickname(accessToken);
 
-		// 게임 액션
 		GameManager gameManager = mapManager.getGameManagerMap().get(gameRoomTitle);
 		SpectationManager spectationManager = mapManager.getSpectationManagerMap().get(gameRoomTitle);
 		if (spectationManager == null) {
@@ -322,7 +287,6 @@ public class GameController {
 			return;
 		}
 
-		// 배팅 내용 확인하기
 		try {
 			gameManager.betting(bettingMessageRequest, memberManager);
 		} catch (InvalidException e) {
@@ -333,27 +297,21 @@ public class GameController {
 
 		if (gameManager.checkRoundEnd()) {
 			String winnerNickname = gameManager.roundEnd();
-			// 라운드 종료 메시지 출력
 			sendRoundEndMessage(gameRoomTitle, gameManager, memberManagers, winnerNickname);
 			try {
 				gameManager.newRoundSetting(gameManager.getCurrentRound());
 			} catch (RuntimeException e) {
 				GameRoom gameRoom = gameRoomRepository.findByTitleAndState(gameRoomTitle);
-				// 1. Point 저장
 				for (MemberManager manager : memberManagers) {
 					pointService.saveGameResult(manager.getMemberInfo().getNickname(),
 						manager.getMemberGameInfo().getHaveCoin(), gameRoom.getType());
 				}
-				// 2. GameResult 저장
 				gameService.saveGameResult(memberManagers, gameRoom);
 				if (gameRoom.getType().equals("경쟁")) {
-					// 4. 랭크 게임종료 메시지 출력
 					sendRandGameEndMessage(gameRoomTitle, memberManagers);
 				} else if (gameRoom.getType().equals("친선")) {
-					// 4. 친선 게임종료 메시지 출력
 					sendNormalGameEndMessage(gameRoomTitle, memberManagers);
 				}
-				// 5. GameManager 제거
 				mapManager.getGameManagerMap().remove(gameRoomTitle);
 				return;
 			}
