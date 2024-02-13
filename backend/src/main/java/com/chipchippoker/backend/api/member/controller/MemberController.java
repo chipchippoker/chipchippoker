@@ -19,6 +19,7 @@ import com.chipchippoker.backend.api.member.dto.model.UpdateIconRequest;
 import com.chipchippoker.backend.api.member.service.MemberService;
 import com.chipchippoker.backend.common.dto.ApiResponse;
 import com.chipchippoker.backend.common.dto.ErrorBase;
+import com.chipchippoker.backend.common.exception.DuplicateException;
 import com.chipchippoker.backend.common.exception.InvalidException;
 import com.chipchippoker.backend.common.util.jwt.dto.TokenResponse;
 
@@ -57,6 +58,9 @@ public class MemberController {
 			throw new InvalidException(ErrorBase.E400_INVALID_AUTH_TOKEN);
 		} else {
 			Long kakaoSocialId = authService.getKakaoSocialId(token.getAccess_token());
+			if (authService.validateExistsUser(kakaoSocialId)) {
+				throw new DuplicateException(ErrorBase.E409_DUPLICATE_SOCIAL_ID);
+			}
 			authService.socialConnection((Long)httpServletRequest.getAttribute("id"), kakaoSocialId);
 		}
 
