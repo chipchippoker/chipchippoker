@@ -18,10 +18,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GameMatchingMessageResponse {
 	private List<MemberInfo> memberInfos = new ArrayList<>();
+	private String roomManagerNickname;
 
 	public static GameMatchingMessageResponse create(GameManager gameManager) {
 		return GameMatchingMessageResponse.builder()
 			.memberInfos(gameManager.getMemberManagerMap().values().stream().map(MemberManager::getMemberInfo).toList())
+			.roomManagerNickname(gameManager.getRoomManager())
 			.build();
 	}
 }
