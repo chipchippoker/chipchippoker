@@ -190,7 +190,7 @@
   userStore.authorizationCode = authorizationCode.value
   
   // 인가코드 받으면
-  if (authorizationCode.value && userStore.isKakaoConnect){
+  if (authorizationCode.value && !userStore.isKakaoConnect){
     console.log('카카오 연동 요청');
     userStore.kakaoConnect(authorizationCode.value)
     .then(result => {
