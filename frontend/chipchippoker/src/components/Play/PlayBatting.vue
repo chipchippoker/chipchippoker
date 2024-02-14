@@ -243,7 +243,7 @@ const nextRoundState = computed(() => gameStore.nextRoundState); // 현재 라�
 const bettingEvent = computed(() => gameStore.bettingEvent) // 배팅 이벤트 감지
 const willBettingCoin = computed(() => gameStore.willBettingCoin) // 내려고 하는 배팅 코인 감지
 
-const cardPosition = [["20%", "20%"], ["20%", "50%"], ["50%", "20%"], ["50%", "50%"]]
+const cardPosition = [["20%", "20%"], ["20%", "50%"], ["80%", "20%"], ["80%", "50%"]]
 
 // 내 인덱스 구하기
 const getMyIndex = function () {
@@ -268,8 +268,8 @@ const totalBettingCoin = function(){
 
 // 배팅코인 초기화
 const updateTotalBettingCoin = function(){
-  gameStore.gameMemberInfos.forEach((info,index) =>{
-    gameStore.totalBettingCoin[index] = info.bettingCoin
+  gameStore?.totalBettingCoin?.forEach((info,index) =>{
+    gameStore.totalBettingCoin[index] = info
   })
 }
 
@@ -339,13 +339,8 @@ async function startRoundAnimation () {
     // 0. 코인 보여주기
     await gameStore.gameMemberInfos.forEach((info, index) => {
         const totalCoinId = document.getElementById('total-coin')
-        try {
-          totalCoinId.classList.remove(`coin-devide-move${index+1}`)
-        } catch (error) {
-        }
-        if (info.nickname === gameStore.winnerNickname) {
-          totalCoinId.classList.remove('fade-out')
-        }
+        totalCoinId.classList.remove(`coin-devide-move${index+1}`)
+        totalCoinId.classList.remove('fade-out')
     })
 
     // 1. 화면 가운데 카드 생성 애니메이션 (createCard)
@@ -387,37 +382,29 @@ watch(() => nextRoundState.value, (newValue, oldValue) => {
       if (gameStore.nextCurrentRound === 1) {
         // console.log('게임시작')
         // 게임 시작
-        try {
-          startGameAnimation()
-          updateData()
-        } catch (error) {
-          updateData()
-        }
+        startGameAnimation()
+        updateData()
+
       } else {
         // 라운드 시작
         // console.log('라운드시작')
-        try {
-          startRoundAnimation()
-          updateData()
-          updateTotalBettingCoin()
-        } catch (error) {
-          updateData()
-          updateTotalBettingCoin()
-        }
+
+        startRoundAnimation()
+        updateData()
+        updateTotalBettingCoin()
+
       }
     }
     else if (newValue === false && oldValue === true) {
       // 라운드 종료
-      // console.log('라운드종료')
+      console.log('라운드종료')
       updateEndData()
       updateTotalBettingCoin()
-      try {
-        setTimeList.value.forEach(time => {
-          clearTimeout(time)
-        })
-        endRoundAnimation()
-      } catch (error) {
-      }
+      // setTimeList.value.forEach(time => {
+      //   clearTimeout(time)
+      // })
+      endRoundAnimation()
+
     }
   }
   })
@@ -587,7 +574,7 @@ async function flipCardBack() {
   })
 }
 
-// 카드 모으기 (승패 판단)
+// 카드 모으기 (라운드 승패 판단)
 async function joinCard () {
   // console.log('카드 모으기')
 
@@ -611,10 +598,8 @@ async function joinCard () {
       winnerTag.style.fontWeight = 'bold'
       winnerTag.style.zIndex = '10001'
       winnerTag.style.backgroundColor = 'white'
-      // winnerTag.style.border = '2px solid black'
       winnerTag.style.borderRadius = '10px'
 
-      // winnerTag.classList.add('winner')
       winnerTag.innerText = '승'
       divTag.appendChild(winnerTag)
     } else {
@@ -623,9 +608,7 @@ async function joinCard () {
       LoserTag.style.fontWeight = 'bold'
       LoserTag.style.zIndex = '10001'
       LoserTag.style.backgroundColor = 'white'
-      // LoserTag.style.border = '2px solid black'
       LoserTag.style.borderRadius = '10px'
-      // LoserTag.classList.add('loser')
       LoserTag.innerText = "패"
       
       // 패널티 부여
@@ -677,15 +660,15 @@ async function joinCoin(){
 
   // 애니메이션 제거
   onBeforeUnmount(() => {
-    setTimeList.value.forEach(time => {
-      clearTimeout(time)
-    })
+    // setTimeList.value.forEach(time => {
+    //   clearTimeout(time)
+    // })
     gameStore.isAnimationRunning = false
   })
 
   
-  onMounted(() => {
-  })
+  // onMounted(() => {
+  // })
 
 </script>
 
