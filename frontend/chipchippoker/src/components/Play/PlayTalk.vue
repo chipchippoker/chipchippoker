@@ -1,13 +1,19 @@
 <template>
-  <div class="bg-lightblue rounded-4 w-100 h-100 d-flex flex-column justify-content-end">
-    <ul class="overflow-y-auto m-0 chat_ul p-1" style="list-style-type: none;">
-      <li class="my-2" v-for="(message, index) in messages.value" :key="index" >
-        <strong>{{message.username}}:</strong> {{message.message}}
-      </li>
-    </ul>
-    <div class="input-group">
+  <div id="chat-container" class="d-flex flex-column justify-content-between">
+
+    <!-- 1. 채팅 목록 -->
+    <div id="chat-window">
+      <ul id="messageList" class="m-0 chat_ul" style="list-style-type: none;">
+        <li class="my-2" v-for="(message, index) in messages.value" :key="index">
+          <strong>{{message.username}}:</strong> {{message.message}}
+        </li>
+      </ul>
+    </div>
+
+    <!-- 2. 입력창 -->
+    <div class="my-2" id="chat-input">
       <input class="form-control" type="text" placeholder="입력" v-model="inputMessage" @keyup.enter="sendMessage(inputMessage)">
-      <button class="btn btn-outline-secondary" @click="sendMessage(inputMessage)">전송</button>
+      <button id="chat-btn" class="btn btn-outline-secondary" @click="sendMessage(inputMessage)">전송</button>
     </div>
   </div>
 </template>
@@ -50,5 +56,38 @@
 </script>
 
 <style scoped>
+
+#chat-container {
+ background-color: #8497c7;
+ border-radius: 10px;
+ height: 150px;
+ box-shadow: inset;
+}
+
+#chat-window {
+  padding: 5px;
+  padding-top: 5px;
+  height: 80%;
+}
+
+#messageList {
+  max-height: 110px;
+  margin: 10px;
+  padding: 10px;
+  padding-top: 20px;
+  padding-bottom: 0;
+  overflow-y: auto;
+}
+
+#chat-input {
+  position: relative;
+  margin-top: 5px;
+}
+
+#chat-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
 
 </style>

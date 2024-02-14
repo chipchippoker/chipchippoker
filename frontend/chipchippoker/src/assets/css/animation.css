@@ -6,6 +6,10 @@
     margin-left: -15px;
     margin-bottom: -15px;
 }
+.list-overlap-middle {
+    margin-left: -15px;
+    margin-bottom: -20px;
+}
 
 .flip-card {
     width: 100px;

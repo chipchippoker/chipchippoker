@@ -8,6 +8,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useUserStore } from '@/stores/user'
 import { useFriendStore } from './stores/friend';
 import { useGameStore } from './stores/game';
+import { useSoundStore } from './stores/sound';
 
 // window.addEventListener("unload", (event) => {
 //     localStorage.removeItem('game')
@@ -15,6 +16,7 @@ import { useGameStore } from './stores/game';
 //     localStorage.removeItem('openvidu')
 //   })
   
+const soundStore = useSoundStore()
 const userStore = useUserStore()
 const friendStore = useFriendStore()
 const gameStore = useGameStore()
@@ -73,10 +75,16 @@ for (let i = 0; i < 100; i++) {
 
   // 마우스 커서 커스터마이징
  
+
+
+  onMounted(() => {
+   
+  })
+
 </script>
 
 <template>
-  <div class="maple bg-gradation-blue">
+  <div class="maple bg-gradation-blue" @click="soundStore.hoverSound">
     <!-- <div>
       <RouterLink to="/login">로그인</RouterLink> /
       <RouterLink to="/signup">회원가입</RouterLink> / 
@@ -143,6 +151,7 @@ for (let i = 0; i < 100; i++) {
 @import "@/assets/css/size.css";
 @import "@/assets/css/animation.css";
 @import "@/assets/css/button.scss";
+// @import "@/assets/normal.cur";
 
 html, body {
   margin: 0;
@@ -152,6 +161,7 @@ html, body {
 
 #app {
   height: 100vh; /* 화면 높이 100%로 설정 */
+  cursor: url('@/assets/normal.cur') auto;
 }
 
 @font-face {

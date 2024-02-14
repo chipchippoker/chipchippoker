@@ -16,9 +16,10 @@
 import { useRoomStore } from '@/stores/room';
 import MainRoomItem from './MainRoomItem.vue';
 import { ref } from 'vue';
+import { useSoundStore } from '@/stores/sound';
+
 const roomStore = useRoomStore()
-
-
+const soundStore = useSoundStore()
 
 </script>
 
