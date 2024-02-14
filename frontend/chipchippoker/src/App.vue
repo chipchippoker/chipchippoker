@@ -151,7 +151,6 @@ for (let i = 0; i < 100; i++) {
 @import "@/assets/css/size.css";
 @import "@/assets/css/animation.css";
 @import "@/assets/css/button.scss";
-// @import "@/assets/normal.cur";
 
 html, body {
   margin: 0;
@@ -161,7 +160,6 @@ html, body {
 
 #app {
   height: 100vh; /* 화면 높이 100%로 설정 */
-  cursor: url('@/assets/normal.cur') auto;
 }
 
 @font-face {
