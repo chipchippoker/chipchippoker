@@ -29,8 +29,12 @@
     <!-- players -->
     <div class="w-100 position-relative" style="height: 70%;">
       <!-- 결과표 -->
+      <!-- 라운드 결과 -->
+      <div v-if="gameStore.roundState == false && gameStore.memberEndGameInfos.length == 0 && gameStore.winnerNickname != ''">
+      </div>
+
       <!-- 게임 결과 -->
-      <div v-if="gameStore?.memberEndGameInfos?.length" class="position-absolute top-50 start-50 translate-middle bg-modal
+      <div v-else-if="gameStore.memberEndGameInfos.length" class="position-absolute top-50 start-50 translate-middle bg-modal
        rounded-5 px-5 pt-5" style="z-index: 999; width: 40%;">
         <div class="d-flex flex-column justify-content-center align-items-center text-center">
           <h2 class="fw-bold">게임 결과</h2>
