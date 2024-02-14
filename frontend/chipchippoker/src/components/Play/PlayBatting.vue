@@ -515,7 +515,7 @@ async function fadeOutCard() {
     const time = setTimeout(() => {
       // console.log('카드 페이드아웃 애니메이션 완료')
       resolve(); // 생성 완료
-    }, 3000)
+    }, 2000)
     setTimeList.value.push(time)
   })
 }

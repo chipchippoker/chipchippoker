@@ -36,7 +36,7 @@
           <h2 class="fw-bold">게임 결과</h2>
           <div class="" v-for="playerResult in gameStore.memberEndGameInfos" :key="playerResult.nickname">
             <h3 class="m-3">{{ playerResult.nickname }}님 <span
-                :class="[{ 'text-primary': playerResult.isResult == '승' }, { 'text-denger': playerResult.isResult == '패' }]">{{
+                :class="[{ 'text-primary': playerResult.isResult == '승' }, { 'text-danger': playerResult.isResult == '패' }]">{{
                   playerResult.isResult }}</span></h3>
             <p v-if="gameStore.kindGame==='경쟁'">pointChange: {{ playerResult.pointChange }}</p>
           </div>

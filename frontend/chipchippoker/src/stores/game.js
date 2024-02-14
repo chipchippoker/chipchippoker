@@ -195,7 +195,7 @@ export const useGameStore = defineStore('game', () => {
                   nextGameMemberInfos.value = response.data.gameMemberInfos
                   // console.log('라운드 저장 8초 미룸');
                 }
-              }, 11000)
+              }, 10000)
             } 
             else{
               // 배팅은 1초 미루기
