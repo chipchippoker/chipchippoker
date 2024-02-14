@@ -34,7 +34,7 @@
       </div>
 
       <!-- 게임 결과 -->
-      <div v-else-if="gameStore.memberEndGameInfos.length" class="position-absolute top-50 start-50 translate-middle bg-modal
+      <div v-else-if="gameStore.memberEndGameInfos.length && gameStore.winnerNickname != ''" class="position-absolute top-50 start-50 translate-middle bg-modal
        rounded-5 px-5 pt-5" style="z-index: 999; width: 40%;">
         <div class="d-flex flex-column justify-content-center align-items-center text-center">
           <h2 class="fw-bold">게임 결과</h2>
@@ -226,4 +226,6 @@ onUnmounted(() => {
 
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>

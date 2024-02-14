@@ -72,6 +72,7 @@ export const useUserStore = defineStore('user', () => {
       myIcon.value = res.data.icon
       myNickname.value = res.data.nickname
       router.push({ name: 'main' })
+      alert('회원가입 && 로그인 되었습니다.')
       return true
     } catch (err) {
       console.log(err)
