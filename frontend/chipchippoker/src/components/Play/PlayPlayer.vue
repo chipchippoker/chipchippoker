@@ -3,7 +3,7 @@
     <!-- 플레이어 감정, 동영상, 카드 -->
     <div class="w-100 h-100 position-relative">
       <!-- 플레이어 정보 -->
-      <div :class="classNameList[index]" :id="'player' + (index + 1)" v-for="(player, index) in gameStore.memberInfos"
+      <div :class="classNameList[index]" :id="'player' + (index + 1)" v-for="(player, index) in gameStore.nextGameMemberInfos"
         :key="index">
         <div class="text-white align-self-center ">{{ player.nickname }}
         </div>
@@ -11,14 +11,14 @@
         <!-- 1, 3번 플레이어 -->
         <div v-if="[0, 2].includes(index)" class="d-flex h-100 m-2 mt-0 position-relative" style="width: 460px;">
           <div class="m-2 position-absolute top-50 start-0 translate-middle-y">
-            <UserVideoVue :stream-manager="findVideo(playersComputed, player.nickname, index)" />
+            <UserVideoVue :stream-manager="findVideo(playersComputed, player.nickname)" />
           </div>
         </div>
         
         <!-- 2, 4번 플레이어 -->
         <div v-else class="d-flex flex-row-reverse h-100 m-2 mt-0 position-relative" style="width: 460px;">
           <div class="m-2 position-absolute top-50 end-0 translate-middle-y">
-            <UserVideoVue :stream-manager="findVideo(playersComputed, player.nickname, index)" />
+            <UserVideoVue :stream-manager="findVideo(playersComputed, player.nickname)" />
           </div>
         </div>
 
@@ -93,17 +93,14 @@ roomId.value = props.roomId
 myNickname.value = props.myNickname
 
 // ----------------------------------------------------------------------------------------------------------
-const findVideo = function (players, targetNickname, index) {
-  // if (players.length < gameMemberInfos.length) {
-  //   return undefined
-  // }
+const findVideo = function (players, targetNickname) {
   for (let i = 0; i < players.length; i++) {
     const player = players[i]
     if (player.nickname === targetNickname) {
       return player.player
     }
   }
-  return publisherComputed.value
+  return undefined
 }
 
 //-----------------------------------------------------------------------------------------------------------

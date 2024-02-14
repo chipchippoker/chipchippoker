@@ -56,7 +56,7 @@ const startEmotionDetection = setInterval(async () => {
   }
 }
 catch{
-  console.log('감정인식 안됨')
+  // console.log('감정인식 안됨')
 }
 }, 1000)
 
@@ -71,7 +71,7 @@ onMounted(async () => {
   ])
 
   // 모델 로딩 후 처리
-  console.log('Models loaded:', models)
+  // console.log('Models loaded:', models)
 
   startEmotionDetection()
 })

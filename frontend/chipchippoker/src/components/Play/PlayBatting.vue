@@ -20,16 +20,28 @@
           <div class="justify-content-center text-white text-center fw-bold">
             <p class="mb-1">총 배팅 코인: {{ totalBettingCoin() }}</p>
             <div id="total-coin" class="d-flex justify-content-center flex-wrap" style="width: 100px;">
-              <img style="width: 30px;" v-for="index in gameStore?.totalBettingCoin[0]" :key="index"
-                class="list-overlap-small" :src="getCoinUrl(1)" alt="">
-              <img style="width: 30px;" v-for="index in gameStore?.totalBettingCoin[1]" :key="index"
+              <span>
+                <img style="width: 30px;" v-for="index in gameStore?.totalBettingCoin[0]" :key="index"
+                  class="list-overlap-small" :src="getCoinUrl(1)" alt="">
+              </span>
+              <span v-if="gameStore?.gameMemberInfos?.length > 1">
+                <img style="width: 30px;" v-for="index in gameStore?.totalBettingCoin[1]" :key="index"
                 class="list-overlap-small" :src="getCoinUrl(2)" alt="">
-              <img style="width: 30px;" v-for="index in gameStore?.totalBettingCoin[2]" :key="index"
+              </span>
+              <span v-if="gameStore?.gameMemberInfos?.length > 2">
+                <img style="width: 30px;" v-for="index in gameStore?.totalBettingCoin[2]" :key="index"
                 class="list-overlap-small" :src="getCoinUrl(3)" alt="">
-              <img style="width: 30px;" v-for="index in gameStore?.totalBettingCoin[3]" :key="index"
+              </span>
+              <span v-if="gameStore?.gameMemberInfos?.length > 3">
+                <img style="width: 30px;" v-for="index in gameStore?.totalBettingCoin[3]" :key="index"
                 class="list-overlap-small" :src="getCoinUrl(4)" alt="">
-              <img style="width: 30px;" v-for="index in gameStore?.willBettingCoin" :key="index"
-                class="list-overlap-small opacity-50" :src="getCoinUrl(getMyIndex())" alt="">
+              </span>
+              <span>
+                <img style="width: 30px;" v-for="index in gameStore?.willBettingCoin" :key="index"
+                  class="list-overlap-small opacity-50" :src="getCoinUrl(getMyIndex())" alt="">
+              </span>
+
+
             </div>
           </div>
         </div>
@@ -61,14 +73,14 @@
               <p class="mb-1">보유코인 : {{ gameStore?.gameMemberInfos[0]?.haveCoin }}</p>
               <div v-if="gameStore?.gameMemberInfos[0]?.nickname === userStore.myNickname" class="d-flex justify-content-center flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[0]?.haveCoin - gameStore?.willBettingCoin" :key="index"
-                  class="list-overlap-small" :src="getCoinUrl(1)" alt="">
+                :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[0]?.haveCoin > 30, 'list-overlap-small': gameStore?.gameMemberInfos[0]?.haveCoin <= 30 }" :src="getCoinUrl(1)" alt="">
                 <!-- 내려고 하는 코인 -->
                 <img style="width: 30px;" v-for="index in gameStore?.willBettingCoin" :key="index"
                   class="list-overlap-small opacity-50" :src="getCoinUrl(1)" alt="">
               </div>
               <div v-else class="d-flex justify-content-center flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[0]?.haveCoin" :key="index"
-                  class="list-overlap-small" :src="getCoinUrl(1)" alt="">
+                :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[0]?.haveCoin > 30, 'list-overlap-small': gameStore?.gameMemberInfos[0]?.haveCoin <= 30 }" :src="getCoinUrl(1)" alt="">
               </div>
             </div>  
           </div>
@@ -91,13 +103,13 @@
               <p class="mb-1">보유코인: {{ gameStore?.gameMemberInfos[1]?.haveCoin }}</p>
               <div v-if="gameStore?.gameMemberInfos[1]?.nickname === userStore.myNickname" class="d-flex justify-content-center flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[1]?.haveCoin - gameStore?.willBettingCoin" :key="index"
-                  class="list-overlap-small" :src="getCoinUrl(2)" alt="">
+                :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[1]?.haveCoin > 30, 'list-overlap-small': gameStore?.gameMemberInfos[1]?.haveCoin <= 30 }" :src="getCoinUrl(2)" alt="">
                 <img style="width: 30px;" v-for="index in gameStore?.willBettingCoin" :key="index"
                   class="list-overlap-small opacity-50" :src="getCoinUrl(2)" alt="">
               </div>
               <div v-else class="d-flex justify-content-center flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[1]?.haveCoin" :key="index"
-                  class="list-overlap-small" :src="getCoinUrl(2)" alt="">
+                :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[1]?.haveCoin > 30, 'list-overlap-small': gameStore?.gameMemberInfos[1]?.haveCoin <= 30 }" :src="getCoinUrl(2)" alt="">
               </div>
             </div>
           </div>
@@ -144,7 +156,7 @@
               <p class="mb-1">보유코인: {{ gameStore?.gameMemberInfos[2]?.haveCoin }}</p>
               <div class="d-flex justify-content-center flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[2]?.haveCoin-gameStore?.willBettingCoin" :key="index"
-                  class="list-overlap-small" :src="getCoinUrl(3)" alt="">
+                  :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[2]?.haveCoin > 30, 'list-overlap-small': gameStore?.gameMemberInfos[2]?.haveCoin <= 30 }" :src="getCoinUrl(3)" alt="">
                 <img style="width: 30px;" v-for="index in gameStore?.willBettingCoin" :key="index"
                 class="list-overlap-small opacity-50" :src="getCoinUrl(3)" alt="">
               </div>
@@ -153,7 +165,7 @@
               <p class="mb-1">보유코인: {{ gameStore?.gameMemberInfos[2]?.haveCoin }}</p>
               <div class="d-flex justify-content-center flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[2]?.haveCoin" :key="index"
-                  class="list-overlap-small" :src="getCoinUrl(3)" alt="">
+                  :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[2]?.haveCoin > 30, 'list-overlap-small': gameStore?.gameMemberInfos[2]?.haveCoin <= 30 }" :src="getCoinUrl(3)" alt="">
               </div>
             </div>
           </div>
@@ -177,7 +189,7 @@
               <p class="mb-1">보유코인: {{ gameStore?.gameMemberInfos[3]?.haveCoin }}</p>
               <div class="d-flex justify-content-center flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[3]?.haveCoin - gameStore?.willBettingCoin" :key="index"
-                  class="list-overlap-small" :src="getCoinUrl(4)" alt="">
+                  :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[3]?.haveCoin > 30, 'list-overlap-small': gameStore?.gameMemberInfos[3]?.haveCoin <= 30 }" :src="getCoinUrl(4)" alt="">
                 <img style="width: 30px;" v-for="index in gameStore?.willBettingCoin" :key="index"
                 class="list-overlap-small opacity-75" :src="getCoinUrl(4)" alt="">
               </div>
@@ -186,7 +198,7 @@
               <p class="mb-1">보유코인: {{ gameStore?.gameMemberInfos[3]?.haveCoin }}</p>
               <div class="d-flex justify-content-center flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[3]?.haveCoin" :key="index"
-                  class="list-overlap-small" :src="getCoinUrl(4)" alt="">
+                  :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[3]?.haveCoin > 30, 'list-overlap-small': gameStore?.gameMemberInfos[3]?.haveCoin <= 30 }" :src="getCoinUrl(4)" alt="">
               </div>
             </div>
           </div>
@@ -207,26 +219,37 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
 
 <script setup>
+import { watch, computed, ref, onBeforeUnmount, onMounted } from 'vue';
 import { useGameStore } from '@/stores/game';
 import { useRoomStore } from '@/stores/room';
 import { useUserStore } from '@/stores/user';
-import { watch, computed, ref } from 'vue';
+import { useSoundStore } from '@/stores/sound';
 
 const userStore = useUserStore()
 const gameStore = useGameStore()
 const roomStore = useRoomStore()
+const soundStore = useSoundStore()
+
+const gameStart = ref(false)
+const setTimeList = ref([])
+
+const nextYourTurn = computed(() => gameStore.nextYourTurn) // 턴 변화
+const nextRoundState = computed(() => gameStore.nextRoundState); // 현재 라운드 상태 (ex. 진행중)
+const bettingEvent = computed(() => gameStore.bettingEvent) // 배팅 이벤트 감지
+const willBettingCoin = computed(() => gameStore.willBettingCoin) // 내려고 하는 배팅 코인 감지
+
+const cardPosition = [["20%", "20%"], ["20%", "50%"], ["50%", "20%"], ["50%", "50%"]]
 
 // 내 인덱스 구하기
 const getMyIndex = function () {
   const myindex = ref(0)
   gameStore?.gameMemberInfos?.forEach((info, index) => {
-    console.log(info, index);
+    // console.log(info, index);
     if (info.nickname === userStore.myNickname) {
       myindex.value = index + 1
     }
@@ -237,7 +260,6 @@ const getMyIndex = function () {
 // 총 배팅 코인 구하기
 const totalBettingCoin = function(){
   let coinCnt = 0
-  console.log(gameStore.totalBettingCoin);
   gameStore.totalBettingCoin.forEach(coin =>{
     coinCnt += coin
   })
@@ -251,7 +273,7 @@ const updateTotalBettingCoin = function(){
   })
 }
 
-
+// 코인 가져오기
 const getCoinUrl = function (num) {
   return new URL(`/src/assets/coins/coin${num}.svg`, import.meta.url).href;
 };
@@ -263,17 +285,17 @@ const getCardUrl = function (setnum, cardnum) {
 
 // 데이터 저장하기
 async function updateData () {
+  // console.log('데이터 새로 저장');
   gameStore.roundState = gameStore.nextRoundState
-  gameStore.currentRound = gameStore.nextCurrentRound
   gameStore.yourTurn = gameStore.nextYourTurn
+  gameStore.currentRound = gameStore.nextCurrentRound
   gameStore.gameMemberInfos = gameStore.nextGameMemberInfos
-  console.log('데이터 새로 저장');
   gameStore.penaltyInfos = gameStore.nextPenaltyInfos
 }
 
-
 // 배팅코인과 카드데이터만 받아옴
 async function updateEndData () {
+  // console.log('마지막데이터 새로 저장');
   gameStore.roundState = gameStore.nextRoundState
   gameStore.currentRound = gameStore.nextCurrentRound
   gameStore.yourTurn = gameStore.nextYourTurn
@@ -282,15 +304,8 @@ async function updateEndData () {
     gameStore.gameMemberInfos[index].bettingCoin = info.bettingCoin
     gameStore.gameMemberInfos[index].cardInfo = info.cardInfo
   })
-  console.log('마지막데이터 새로 저장');
   gameStore.penaltyInfos = gameStore.nextPenaltyInfos
 }
-
-const nextRoundState = computed(() => gameStore.nextRoundState); // 현재 라운드 상태 (ex. 진행중)
-const nextCurrentRound = computed(() => gameStore.nextCurrentRound) // 현재 라운드
-
-const gameStart = ref(false)
-
 
 // 비디오 요소에 스타일을 적용합니다.
 // const videoElement = document.createElement('video')
@@ -306,21 +321,30 @@ const gameStart = ref(false)
 // videoElement.addEventListener('ended', () => {
 //   gameStart.value = false
 //   videoElement.remove()
-//   console.log(gameStart.value)
-//   console.log('비디오 재생 완료!')
+  // console.log(gameStart.value)
+  // console.log('비디오 재생 완료!')
 //   startRoundAnimation()
 // })
 
+// 애니메이션 진행 상태 토글
+async function toggleAnimationState () {
+  console.log(gameStore.isAnimationRunning, !gameStore.isAnimationRunning);
+  gameStore.isAnimationRunning = !gameStore.isAnimationRunning
+}
 
 // 라운드 시작 콜백함수
 async function startRoundAnimation () {
-  
+    // -1. 애니메이션 상태 토글
+    await toggleAnimationState()
     // 0. 코인 보여주기
     await gameStore.gameMemberInfos.forEach((info, index) => {
         const totalCoinId = document.getElementById('total-coin')
+        try {
+          totalCoinId.classList.remove(`coin-devide-move${index+1}`)
+        } catch (error) {
+        }
         if (info.nickname === gameStore.winnerNickname) {
           totalCoinId.classList.remove('fade-out')
-          totalCoinId.classList.remove(`coin-devide-move${index+1}`)
         }
     })
 
@@ -331,77 +355,83 @@ async function startRoundAnimation () {
     await moveCard()
     await removeCard()
     await flipCard()
+    await toggleAnimationState()
 }
 
 // 게임 시작 애니메이션
-function startGameAnimation () {
+async function startGameAnimation () {
+  // 0. 애니메이션 상태 토글
+  await toggleAnimationState()
   // 1. 플레이페이지 진입하면 텍스트 애니메이션 (3초 정도)
   gameStart.value = true
-  console.log('게임 비디오 시작', gameStart.value)
+  // console.log('게임 비디오 시작', gameStart.value)
 
-  setTimeout(()=>{
+  const time = setTimeout(()=>{
     gameStart.value = false
-    console.log('비디오 끌거임');
+    // console.log('비디오 끌거임');
     // // const videoElement = document.getElementById('video')
     // videoElement.remove()
     startRoundAnimation()
   },5000)
+  setTimeList.value.push(time)
+  await toggleAnimationState()
 }
 
-// 라운드 상태 감지
+// 라운드 변경 이벤트
 watch(() => nextRoundState.value, (newValue, oldValue) => {
-  console.log('라운드 변경')
-  if (newValue === true && oldValue === false) {
-    if (gameStore.nextCurrentRound === 1) {
-      console.log('게임시작')
-      // 게임 시작
-      try {
-        startGameAnimation()
-        updateData()
-      } catch (error) {
-        updateData()
+  if ( newValue === 0){
+    // console.log('게임 종료했음')
+  } else{
+    // console.log('라운드 변경')
+    if (newValue === true && oldValue === false) {
+      if (gameStore.nextCurrentRound === 1) {
+        // console.log('게임시작')
+        // 게임 시작
+        try {
+          startGameAnimation()
+          updateData()
+        } catch (error) {
+          updateData()
+        }
+      } else {
+        // 라운드 시작
+        // console.log('라운드시작')
+        try {
+          startRoundAnimation()
+          updateData()
+          updateTotalBettingCoin()
+        } catch (error) {
+          updateData()
+          updateTotalBettingCoin()
+        }
       }
-      
-    } else {
-      // 라운드 시작
-      console.log('라운드시작')
+    }
+    else if (newValue === false && oldValue === true) {
+      // 라운드 종료
+      // console.log('라운드종료')
+      updateEndData()
+      updateTotalBettingCoin()
       try {
-        startRoundAnimation()
-        updateData()
-        updateTotalBettingCoin()
+        setTimeList.value.forEach(time => {
+          clearTimeout(time)
+        })
+        endRoundAnimation()
       } catch (error) {
-        updateData()
-        updateTotalBettingCoin()
-        
       }
     }
   }
-  else if (newValue === false && oldValue === true) {
-    // 라운드 종료
-    console.log('라운드종료')
-    updateEndData()
-    updateTotalBettingCoin()
-    try {
-      endRoundAnimation()
-    } catch (error) {
-    }
-  }
-})
+  })
 
-// 턴 변화
-const nextYourTurn = computed(() => gameStore.nextYourTurn)
-
+// 턴 변경 이벤트
 watch(() =>[ nextYourTurn.value, nextRoundState.value], (newValue, oldValue) => {
-  console.log('턴 변경')
-  // console.log(newValue, oldValue);
+  // console.log('턴 변경')
+  console.log(newValue, oldValue);
   // updateData()
 })
 
-// // 배팅 이벤트 감지
-const bettingEvent = computed(() => gameStore.bettingEvent)
-
+// 배팅 이벤트
 watch(() => bettingEvent.value, (newValue, oldValue) => {
-  console.log('배팅 관련 무언가 변화', newValue, oldValue);
+  // console.log('배팅 관련 무언가 변화', newValue, oldValue);
   if (newValue === true && oldValue === false) {
     console.log('배팅 이벤트 발생')
     updateData()
@@ -412,12 +442,10 @@ watch(() => bettingEvent.value, (newValue, oldValue) => {
   }
 })
 
-// 내려고 하는 배팅 코인 감지
-const willBettingCoin = computed(() => gameStore.willBettingCoin)
-
-
 // 라운드 종료 콜백함수
 async function endRoundAnimation () {
+  // 0. 애니메이션 상태 토글
+  await toggleAnimationState()
   // 1. 내 카드 뒤집기
   await filpMyCard()
   // 2. 모든 카드 뒤로 뒤집기
@@ -432,12 +460,13 @@ async function endRoundAnimation () {
   await joinCoin()
   // 7. 데이터 업데이트
   await updateData()
+  // 8. 애니메이션 상태 토글
+  await toggleAnimationState()
 }
 
 // 카드 생성 (가운데)
 async function createCard() {
-  console.log("카드 생성");
-
+  // console.log("카드 생성");
   const container = document.getElementById('bettingField')
   for (let i = 1; i < gameStore.memberInfos.length+1; i++) {
     const cardElement = document.createElement('img')
@@ -449,54 +478,60 @@ async function createCard() {
     container.appendChild(cardElement);
   } 
   return new Promise(resolve => {
-    setTimeout(() => {
-      console.log('카드 생성 애니메이션 완료');
+    const time = setTimeout(() => {
+      // console.log('카드 생성 애니메이션 완료');
       resolve() // 생성 완료
     }, 1000)
+    setTimeList.value.push(time)
   })
 }
 
 // 카드 분배
 async function moveCard() {
-  console.log("카드 분배")
+  // console.log("카드 분배")
   for (let i = 1; i < gameStore.memberInfos.length+1; i++) {
     const cardElement = document.getElementById(`card-deck${i}`)
     cardElement.classList.add(`card-devide-move${i}`)
     cardElement.classList.add(`fade-out`)
   }
   return new Promise(resolve => {
-    setTimeout(() => {
-      console.log('카드 분배 애니메이션 완료');
+    soundStore.cardshuffleSound()
+    const time = setTimeout(() => {
+      // console.log('카드 분배 애니메이션 완료');
       resolve(); // 생성 완료
-    }, 1000);
-  });
+    }, 1000)
+    setTimeList.value.push(time)
+  })
 }
+
 // 카드 페이드아웃
 async function fadeOutCard() {
-  console.log("카드 페이드아웃")
+  // console.log("카드 페이드아웃")
   for (let i = 1; i < gameStore.memberInfos.length+1; i++) {
     const cardElement = document.getElementById(`card-deck${i}`)
     cardElement.classList.add(`fade-out`)
   }
   return new Promise(resolve => {
-    setTimeout(() => {
-      console.log('카드 페이드아웃 애니메이션 완료');
+    const time = setTimeout(() => {
+      // console.log('카드 페이드아웃 애니메이션 완료')
       resolve(); // 생성 완료
-    }, 1000);
-  });
+    }, 3000)
+    setTimeList.value.push(time)
+  })
 }
 
 // 카드 제거
 async function removeCard() {
   return new Promise(resolve => {
-    setTimeout(() => {
+    const time = setTimeout(() => {
       for (let i = 1; i < gameStore.memberInfos.length+1; i++) {
         const cardElement = document.getElementById(`card-deck${i}`)
         cardElement.remove()
       }
-      console.log('카드 제거 애니메이션 완료')
+      // console.log('카드 제거 애니메이션 완료')
       resolve(); // 생성 완료
-    }, 1000);
+    }, 1000)
+    setTimeList.value.push(time)
   })
 }
 
@@ -508,10 +543,11 @@ async function filpMyCard() {
     cardElement.classList.add('flipped')
   
     return new Promise(resolve => {
-      setTimeout(() => {
-        console.log('카드 모으기 애니메이션 완료');
+      const time = setTimeout(() => {
+        // console.log('카드 모으기 애니메이션 완료');
         resolve(); // 생성 완료
-      }, 1000);
+      }, 1000)
+      setTimeList.value.push(time)
     })
   }
 }
@@ -528,10 +564,11 @@ async function flipCard() {
     cardElement.classList.add('flipped')
   }
   return new Promise(resolve => {
-    setTimeout(() => {
-      console.log('카드 모으기 애니메이션 완료')
+    const time = setTimeout(() => {
+      // console.log('카드 모으기 애니메이션 완료')
       resolve(); // 생성 완료
     }, 1000)
+    setTimeList.value.push(time)
   })
 }
 
@@ -542,18 +579,17 @@ async function flipCardBack() {
     cardElement.classList.remove('flipped')
     }
   return new Promise(resolve => {
-    setTimeout(() => {
-      console.log('카드 모으기 애니메이션 완료');
+    const time = setTimeout(() => {
+      // console.log('카드 모으기 애니메이션 완료');
       resolve(); // 생성 완료
-    }, 1000);
-  });
+    }, 1000)
+    setTimeList.value.push(time)
+  })
 }
-
-const cardPosition = [["20%", "20%"], ["20%", "50%"], ["50%", "20%"], ["50%", "50%"]]
 
 // 카드 모으기 (승패 판단)
 async function joinCard () {
-  console.log('카드 모으기')
+  // console.log('카드 모으기')
 
   const container = document.getElementById('bettingField');
 
@@ -562,27 +598,34 @@ async function joinCard () {
     divTag.id = `card-deck${index+1}`
     divTag.style.width = "165px"
     divTag.style.height = "230px"
-
     divTag.style.zIndex = "10000"
     divTag.style.position = "absolute"
+    divTag.style.margin = '20px'
     divTag.classList.add('text-center')
     divTag.style.top = cardPosition[index][0]
     divTag.style.left = cardPosition[index][1]
-
     
     if (gameStore.winnerNickname === data.nickname) {
-      const winnerTag = document.createElement('h5')
+      const winnerTag = document.createElement('h3')
       winnerTag.style.color = 'blue'
       winnerTag.style.fontWeight = 'bold'
       winnerTag.style.zIndex = '10001'
+      winnerTag.style.backgroundColor = 'white'
+      // winnerTag.style.border = '2px solid black'
+      winnerTag.style.borderRadius = '10px'
+
+      // winnerTag.classList.add('winner')
       winnerTag.innerText = '승'
       divTag.appendChild(winnerTag)
     } else {
-      const LoserTag = document.createElement('h5')
+      const LoserTag = document.createElement('h3')
       LoserTag.style.color = 'red'
       LoserTag.style.fontWeight = 'bold'
       LoserTag.style.zIndex = '10001'
-      
+      LoserTag.style.backgroundColor = 'white'
+      // LoserTag.style.border = '2px solid black'
+      LoserTag.style.borderRadius = '10px'
+      // LoserTag.classList.add('loser')
       LoserTag.innerText = "패"
       
       // 패널티 부여
@@ -599,23 +642,21 @@ async function joinCard () {
     divTag.appendChild(cardElement);
   });
   return new Promise(resolve => {
-    setTimeout(() => {
-      console.log('카드 모으기 애니메이션 완료');
-
+    const time = setTimeout(() => {
+      // console.log('카드 모으기 애니메이션 완료');
       resolve(); // 생성 완료
-    }, 1000);
+    }, 1000)
+    setTimeList.value.push(time)
   });
 }
 
-
 // 코인 배팅
 async function bettingCoin () {
-  
 }
 
 // 코인 이동 (승자에게)
 async function joinCoin(){
-  console.log("승자에게 코인 이동")
+  // console.log("승자에게 코인 이동")
   gameStore.gameMemberInfos.forEach((info, index) => {
     const totalCoinId = document.getElementById('total-coin')
     // 승자 
@@ -625,13 +666,26 @@ async function joinCoin(){
     }
   })
   return new Promise(resolve => {
-    setTimeout(() => {
-      console.log('승자에게 코인 이동 완료');
+    const time = setTimeout(() => {
+      // console.log('승자에게 코인 이동 완료');
       resolve(); // 생성 완료
       
-    }, 1000);
+    }, 1000)
+    setTimeList.value.push(time)
   })
 }
+
+  // 애니메이션 제거
+  onBeforeUnmount(() => {
+    setTimeList.value.forEach(time => {
+      clearTimeout(time)
+    })
+    gameStore.isAnimationRunning = false
+  })
+
+  
+  onMounted(() => {
+  })
 
 </script>
 
@@ -666,5 +720,23 @@ async function joinCoin(){
 
 }
 
+.winner {
+  background-color: white;
+  color: blue;
+  font-weight: bold;
+  font-size: 30px;
+  border: 2px solid black;
+  border-radius: 10px;
+  z-index: 10001;
+}
 
+.loser {
+  background-color: white;
+  color: red;
+  font-weight: bold;
+  font-size: 30px;
+  border: 2px solid black;
+  border-radius: 10px;
+  z-index: 10001;
+}
 </style>

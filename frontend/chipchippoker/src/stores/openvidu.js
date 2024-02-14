@@ -160,6 +160,9 @@ export const useOpenviduStore = defineStore('openvidu', () => {
           // Set the main video in the page to display our webcam and store our Publisher
           mainStreamManager.value = publisher_tmp
           publisher.value = publisher_tmp
+          if (!roomStore.isWatcher) {
+            players.value.push({player:publisher_tmp, nickname:userStore.myNickname})
+          }
   
           // --- Publish your stream ---
           session.value.publish(publisher.value)

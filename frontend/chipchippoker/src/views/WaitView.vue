@@ -24,20 +24,7 @@
           <div class="flex-container row g-1 p-0">
             <div class="col-6 mb-5 text-center"
             v-for="(player, index) in gameStore.memberInfos" :key="index">
-              <!-- 내 캠 -->
               <div 
-                v-if="player.nickname === userStore.myNickname"
-                style="width: 400px; height: 300px;">
-                <UserVideo 
-                :stream-manager="publisherComputed" 
-                :is-manager="isManager"
-                :room-manager-nickname="roomManagerNickname"
-                @force-disconnect="forceDisconnect"
-                />
-              </div>
-              <!-- 다른 유저 캠 -->
-              <div 
-                v-else
                 style="width: 400px; height: 300px;">
                 <UserVideo 
                 :stream-manager="findVideo(playersComputed, player.nickname)" 

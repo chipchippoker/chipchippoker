@@ -29,30 +29,14 @@
     <!-- players -->
     <div class="w-100 position-relative" style="height: 70%;">
       <!-- 결과표 -->
-      <!-- 라운드 결과 -->
-      <div v-if="gameStore.roundState == false && gameStore.memberEndGameInfos.length==0 && gameStore.winnerNickname != ''">
-        <!-- <div class="d-flex flex-column justify-content-center align-items-center text-center">
-          <h2 class="fw-bold">라운드 결과</h2>
-          <h3 class="m-3">{{ gameStore.winnerNickname }}님 승!!</h3>
-          <div class="" v-for="playerResult in gameStore.gameMemberInfos" :key="playerResult.nickname">
-            <div class="d-flex gap-2 fs-4">
-              <span><strong>{{ playerResult.nickname }}님 </strong> 카드</span>
-              <span>{{ cardSetName[playerResult.cardInfo.cardSet]}}</span>
-              <span>{{playerResult.cardInfo.cardNumber}}</span>
-            </div>
-          </div>
-          <p class="text-danger">※ 같은 숫자일 경우 : 스페이드 > 다이아몬드 > 하트 > 클로버</p>
-        </div> -->
-      </div>
-
       <!-- 게임 결과 -->
-      <div v-else-if="gameStore.memberEndGameInfos.length" class="position-absolute top-50 start-50 translate-middle bg-modal
+      <div v-if="gameStore?.memberEndGameInfos?.length" class="position-absolute top-50 start-50 translate-middle bg-modal
        rounded-5 px-5 pt-5" style="z-index: 999; width: 40%;">
         <div class="d-flex flex-column justify-content-center align-items-center text-center">
           <h2 class="fw-bold">게임 결과</h2>
           <div class="" v-for="playerResult in gameStore.memberEndGameInfos" :key="playerResult.nickname">
             <h3 class="m-3">{{ playerResult.nickname }}님 <span
-                :class="[{ 'text-danger': playerResult.isResult == '승' }, { 'text-primary': playerResult.isResult == '패' }]">{{
+                :class="[{ 'text-primary': playerResult.isResult == '승' }, { 'text-denger': playerResult.isResult == '패' }]">{{
                   playerResult.isResult }}</span></h3>
             <p v-if="gameStore.kindGame==='경쟁'">pointChange: {{ playerResult.pointChange }}</p>
           </div>
