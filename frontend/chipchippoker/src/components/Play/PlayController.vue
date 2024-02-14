@@ -18,7 +18,7 @@
           <button @click="minus1">
             <font-awesome-icon :icon="['fas', 'minus']" />
           </button>
-          <input v-model="bettingCoin" class="text-center" style="width: 40px; height: 40px" type="number" name="" id="">
+          <input v-model="bettingCoin" class="text-center" style="width: 40px; height: 40px; border-radius: 5px;" type="number">
           <button @click="plus1">
             <font-awesome-icon :icon="['fas', 'plus']" />
           </button>

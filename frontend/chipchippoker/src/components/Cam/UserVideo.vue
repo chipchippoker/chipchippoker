@@ -33,7 +33,7 @@
         <button class="btn-2-yellow-done" v-if="!muted" id="mute-activate" @click="handleMuteBtn()">Sound Off</button>
         <button class="btn-2-yellow" v-else id="mute-activate" @click="handleMuteBtn()">Sound On</button>
       </div>
-      <button class="m-1 btn-2-green" id="show-emotion" @click="showExpression()">감정 인식 표</button>
+      <!-- <button class="m-1 btn-2-green" id="show-emotion" @click="showExpression()">감정 인식 표</button> -->
       <!-- 방장일 때만 강퇴가 보이기 / 방장 자신은 안보이기 -->
       <button class="m-1 btn-2-red" v-if="isManager===true && clientData!==roomManagerNickname" @click="forceDisconnect()">강퇴</button>
     </div>
@@ -117,7 +117,7 @@
 
   // 죽은 상태 체크
   const isDie = computed(() => {
-    const memberInfo = gameStore.gameMemberInfos.find(info => info.nickname === clientData.value);
+    const memberInfo = gameStore.nextGameMemberInfos.find(info => info.nickname === clientData.value);
     if (memberInfo?.isState === 'DIE' || memberInfo?.haveCoin + memberInfo?.bettingCoin === 0) {
       return true
     } else {

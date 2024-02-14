@@ -5,12 +5,15 @@
     <video
       id="video"
       v-if="gameStart"
-      style="z-index: 2000;
+      style="z-index: 9999;
       position: fixed;
       width: 100vw;
       height: 100vh;"
       src="/src/assets/icons/chipchippoker.mp4" alt="비디오 없다" autoplay>
     </video>
+    <img v-for="index in gameStore.memberInfos.length" :key="index" src="/src/assets/cards/set0/card0.svg" alt=""
+    :id="`card-deck${index}`"
+    style="width: 100px; z-index: 2000; position: absolute;">
     <div class="row position-relative w-100 h-100 d-flex justify-content-center align-items-center">
 
 
@@ -40,8 +43,6 @@
                 <img style="width: 30px;" v-for="index in gameStore?.willBettingCoin" :key="index"
                   class="list-overlap-small opacity-50" :src="getCoinUrl(getMyIndex())" alt="">
               </span>
-
-
             </div>
           </div>
         </div>
@@ -73,14 +74,18 @@
               <p class="mb-1">보유코인 : {{ gameStore?.gameMemberInfos[0]?.haveCoin }}</p>
               <div v-if="gameStore?.gameMemberInfos[0]?.nickname === userStore.myNickname" class="d-flex justify-content-center flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[0]?.haveCoin - gameStore?.willBettingCoin" :key="index"
-                :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[0]?.haveCoin > 30, 'list-overlap-small': gameStore?.gameMemberInfos[0]?.haveCoin <= 30 }" :src="getCoinUrl(1)" alt="">
+                :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[0]?.haveCoin > 30 && gameStore?.gameMemberInfos[0]?.haveCoin <60, 
+                'list-overlap-small': gameStore?.gameMemberInfos[0]?.haveCoin <= 30,
+                'list-overlap-much':gameStore?.gameMemberInfos[0]?.haveCoin >=60 }" :src="getCoinUrl(1)" alt="">
                 <!-- 내려고 하는 코인 -->
                 <img style="width: 30px;" v-for="index in gameStore?.willBettingCoin" :key="index"
                   class="list-overlap-small opacity-50" :src="getCoinUrl(1)" alt="">
               </div>
               <div v-else class="d-flex justify-content-center flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[0]?.haveCoin" :key="index"
-                :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[0]?.haveCoin > 30, 'list-overlap-small': gameStore?.gameMemberInfos[0]?.haveCoin <= 30 }" :src="getCoinUrl(1)" alt="">
+                :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[0]?.haveCoin > 30 && gameStore?.gameMemberInfos[0]?.haveCoin <60, 
+                'list-overlap-small': gameStore?.gameMemberInfos[0]?.haveCoin <= 30,
+                'list-overlap-much':gameStore?.gameMemberInfos[0]?.haveCoin >=60 }" :src="getCoinUrl(1)" alt="">
               </div>
             </div>  
           </div>
@@ -103,13 +108,17 @@
               <p class="mb-1">보유코인: {{ gameStore?.gameMemberInfos[1]?.haveCoin }}</p>
               <div v-if="gameStore?.gameMemberInfos[1]?.nickname === userStore.myNickname" class="d-flex justify-content-center flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[1]?.haveCoin - gameStore?.willBettingCoin" :key="index"
-                :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[1]?.haveCoin > 30, 'list-overlap-small': gameStore?.gameMemberInfos[1]?.haveCoin <= 30 }" :src="getCoinUrl(2)" alt="">
+                :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[1]?.haveCoin > 30 && gameStore?.gameMemberInfos[1]?.haveCoin <60, 
+                'list-overlap-small': gameStore?.gameMemberInfos[1]?.haveCoin <= 30,
+                'list-overlap-much':gameStore?.gameMemberInfos[1]?.haveCoin >=60 }" :src="getCoinUrl(2)" alt="">
                 <img style="width: 30px;" v-for="index in gameStore?.willBettingCoin" :key="index"
                   class="list-overlap-small opacity-50" :src="getCoinUrl(2)" alt="">
               </div>
               <div v-else class="d-flex justify-content-center flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[1]?.haveCoin" :key="index"
-                :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[1]?.haveCoin > 30, 'list-overlap-small': gameStore?.gameMemberInfos[1]?.haveCoin <= 30 }" :src="getCoinUrl(2)" alt="">
+                :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[1]?.haveCoin > 30 && gameStore?.gameMemberInfos[1]?.haveCoin <60, 
+                'list-overlap-small': gameStore?.gameMemberInfos[1]?.haveCoin <= 30,
+                'list-overlap-much':gameStore?.gameMemberInfos[1]?.haveCoin >=60 }" :src="getCoinUrl(2)" alt="">
               </div>
             </div>
           </div>
@@ -156,7 +165,9 @@
               <p class="mb-1">보유코인: {{ gameStore?.gameMemberInfos[2]?.haveCoin }}</p>
               <div class="d-flex justify-content-center flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[2]?.haveCoin-gameStore?.willBettingCoin" :key="index"
-                  :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[2]?.haveCoin > 30, 'list-overlap-small': gameStore?.gameMemberInfos[2]?.haveCoin <= 30 }" :src="getCoinUrl(3)" alt="">
+                  :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[2]?.haveCoin > 30 && gameStore?.gameMemberInfos[2]?.haveCoin <60, 
+                  'list-overlap-small': gameStore?.gameMemberInfos[2]?.haveCoin <= 30,
+                  'list-overlap-much':gameStore?.gameMemberInfos[2]?.haveCoin >=60 }" :src="getCoinUrl(3)" alt="">
                 <img style="width: 30px;" v-for="index in gameStore?.willBettingCoin" :key="index"
                 class="list-overlap-small opacity-50" :src="getCoinUrl(3)" alt="">
               </div>
@@ -165,7 +176,9 @@
               <p class="mb-1">보유코인: {{ gameStore?.gameMemberInfos[2]?.haveCoin }}</p>
               <div class="d-flex justify-content-center flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[2]?.haveCoin" :key="index"
-                  :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[2]?.haveCoin > 30, 'list-overlap-small': gameStore?.gameMemberInfos[2]?.haveCoin <= 30 }" :src="getCoinUrl(3)" alt="">
+                  :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[2]?.haveCoin > 30 && gameStore?.gameMemberInfos[2]?.haveCoin <60, 
+                  'list-overlap-small': gameStore?.gameMemberInfos[2]?.haveCoin <= 30,
+                  'list-overlap-much':gameStore?.gameMemberInfos[2]?.haveCoin >=60 }" :src="getCoinUrl(3)" alt="">
               </div>
             </div>
           </div>
@@ -189,7 +202,9 @@
               <p class="mb-1">보유코인: {{ gameStore?.gameMemberInfos[3]?.haveCoin }}</p>
               <div class="d-flex justify-content-center flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[3]?.haveCoin - gameStore?.willBettingCoin" :key="index"
-                  :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[3]?.haveCoin > 30, 'list-overlap-small': gameStore?.gameMemberInfos[3]?.haveCoin <= 30 }" :src="getCoinUrl(4)" alt="">
+                  :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[3]?.haveCoin > 30 && gameStore?.gameMemberInfos[3]?.haveCoin <60, 
+                  'list-overlap-small': gameStore?.gameMemberInfos[3]?.haveCoin <= 30,
+                  'list-overlap-much':gameStore?.gameMemberInfos[3]?.haveCoin >=60 }" :src="getCoinUrl(4)" alt="">
                 <img style="width: 30px;" v-for="index in gameStore?.willBettingCoin" :key="index"
                 class="list-overlap-small opacity-75" :src="getCoinUrl(4)" alt="">
               </div>
@@ -198,7 +213,9 @@
               <p class="mb-1">보유코인: {{ gameStore?.gameMemberInfos[3]?.haveCoin }}</p>
               <div class="d-flex justify-content-center flex-wrap" style="width: 100px;">
                 <img style="width: 30px;" v-for="index in gameStore?.gameMemberInfos[3]?.haveCoin" :key="index"
-                  :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[3]?.haveCoin > 30, 'list-overlap-small': gameStore?.gameMemberInfos[3]?.haveCoin <= 30 }" :src="getCoinUrl(4)" alt="">
+                  :class="{ 'list-overlap-middle': gameStore?.gameMemberInfos[3]?.haveCoin > 30 && gameStore?.gameMemberInfos[3]?.haveCoin <60, 
+                  'list-overlap-small': gameStore?.gameMemberInfos[3]?.haveCoin <= 30,
+                  'list-overlap-much':gameStore?.gameMemberInfos[3]?.haveCoin >=60 }" :src="getCoinUrl(4)" alt="">
               </div>
             </div>
           </div>
@@ -243,7 +260,7 @@ const nextRoundState = computed(() => gameStore.nextRoundState); // 현재 라�
 const bettingEvent = computed(() => gameStore.bettingEvent) // 배팅 이벤트 감지
 const willBettingCoin = computed(() => gameStore.willBettingCoin) // 내려고 하는 배팅 코인 감지
 
-const cardPosition = [["20%", "20%"], ["20%", "50%"], ["80%", "20%"], ["80%", "50%"]]
+const cardPosition = [["-10%", "20%"], ["-10%", "50%"], ["80%", "20%"], ["80%", "50%"]]
 
 // 내 인덱스 구하기
 const getMyIndex = function () {
@@ -268,8 +285,8 @@ const totalBettingCoin = function(){
 
 // 배팅코인 초기화
 const updateTotalBettingCoin = function(){
-  gameStore?.totalBettingCoin?.forEach((info,index) =>{
-    gameStore.totalBettingCoin[index] = info
+  gameStore?.nextGameMemberInfos?.forEach((info,index) =>{
+    gameStore.totalBettingCoin[index] = info.bettingCoin
   })
 }
 
@@ -348,7 +365,7 @@ async function startRoundAnimation () {
     // 3. 분배 완료 후 카드 사라짐 (FadeoutCard)
     await createCard()
     await moveCard()
-    await removeCard()
+    // await removeCard()
     await flipCard()
     await toggleAnimationState()
 }
@@ -442,7 +459,7 @@ async function endRoundAnimation () {
   // 4. 카드 페이드아웃
   await fadeOutCard()
   // 5. 카드 없애기
-  await removeCard()
+  await removeCardEnd()
   // 6. 코인 회수
   await joinCoin()
   // 7. 데이터 업데이트
@@ -454,16 +471,12 @@ async function endRoundAnimation () {
 // 카드 생성 (가운데)
 async function createCard() {
   // console.log("카드 생성");
-  const container = document.getElementById('bettingField')
+
   for (let i = 1; i < gameStore.memberInfos.length+1; i++) {
-    const cardElement = document.createElement('img')
-    cardElement.id = `card-deck${i}`
-    cardElement.src = '/src/assets/cards/set0/card0.svg'
-    cardElement.style.width = "100px"
-    cardElement.style.zIndex = "9999"
-    cardElement.style.position = "absolute"
-    container.appendChild(cardElement);
-  } 
+    const cardElement = document.getElementById(`card-deck${i}`)
+    cardElement.classList.remove(`card-devide-move${i}`)
+    cardElement.classList.remove(`fade-out`)
+  }
   return new Promise(resolve => {
     const time = setTimeout(() => {
       // console.log('카드 생성 애니메이션 완료');
@@ -513,6 +526,19 @@ async function removeCard() {
     const time = setTimeout(() => {
       for (let i = 1; i < gameStore.memberInfos.length+1; i++) {
         const cardElement = document.getElementById(`card-deck${i}`)
+        cardElement.remove()
+      }
+      // console.log('카드 제거 애니메이션 완료')
+      resolve(); // 생성 완료
+    }, 1000)
+    setTimeList.value.push(time)
+  })
+}
+async function removeCardEnd() {
+  return new Promise(resolve => {
+    const time = setTimeout(() => {
+      for (let i = 1; i < gameStore.memberInfos.length+1; i++) {
+        const cardElement = document.getElementById(`end-card${i}`)
         cardElement.remove()
       }
       // console.log('카드 제거 애니메이션 완료')
@@ -582,8 +608,8 @@ async function joinCard () {
 
   gameStore.gameMemberInfos.forEach((data, index) => {
     const divTag = document.createElement('div')
-    divTag.id = `card-deck${index+1}`
-    divTag.style.width = "165px"
+    divTag.id = `end-card${index+1}`
+    divTag.style.width = "130px"
     divTag.style.height = "230px"
     divTag.style.zIndex = "10000"
     divTag.style.position = "absolute"
@@ -721,5 +747,11 @@ async function joinCoin(){
   border: 2px solid black;
   border-radius: 10px;
   z-index: 10001;
+}
+
+.end-round {
+  width: 100px;
+  z-index: 1999;
+  position: absolute
 }
 </style>
