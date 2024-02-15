@@ -18,14 +18,16 @@ public abstract class BaseEntity {
     private Long id;
 
     @CreatedDate
-    @Column(updatable = false)
+    @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     /**
      * 업데이트할 때 호출하여 업데이트 시간을 변경합니다.
+     *
      * @param updatedAt
      */
     public void updateUpdatedAt(@NotNull LocalDateTime updatedAt) {
