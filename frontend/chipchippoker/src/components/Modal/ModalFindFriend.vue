@@ -106,7 +106,6 @@ const dataRefresh = function () {
 }
 // 닉네임 검색
 const findNickname = function () {
-    console.log(`${nickname.value} 닉네임 검색`)
     friendStore.findFriendinAll(nickname.value)
     friendStore.isSent = false
     friendStore.isSearched = true
@@ -114,7 +113,6 @@ const findNickname = function () {
 
 // 페이지 이동
 const gotoProfile = function (nickname) {
-    console.log(`${nickname}의 페이지로 이동`);
     dataRefresh()
     router.push({ name: 'profile', params: { nickname: nickname } })
 }

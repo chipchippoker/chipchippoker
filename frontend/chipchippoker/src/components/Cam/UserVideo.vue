@@ -85,9 +85,7 @@
     })
     emit('clientData', clientData);
     return clientData;
-  });
-  // console.log(clientData)
-  
+  })
 
    // emit으로 올라온 감정 추출
   const maxEmotion = ref(null)

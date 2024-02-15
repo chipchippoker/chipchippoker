@@ -28,35 +28,6 @@
       <PlayBattingVue />
 
     </div>
-    <!-- 나가기 -->
-    <div class="position-absolute bottom-0 end-0">
-      <button
-        class="btn-2 btn-2-red"
-        data-bs-toggle="modal" data-bs-target="#roomOutModal">나가기</button>
-    </div>
-
-    <div data-bs-backdrop="static" class="modal fade" id="roomOutModal" tabindex="-1" aria-labelledby="IconModalLabel"
-      aria-hidden="true">
-      <!-- 나가기 모달 -->
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="background-color: #ffde76;">
-          <div class="modal-header border-0">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="text-center fw-bold fs-3 bg-modal-yellow">
-              정말 나가시겠습니까?
-            </div>
-            <div class="d-flex justify-content-evenly mt-4">
-              <button class="btn-2 btn-3-blue " data-bs-dismiss="modal"
-                >게임하기</button>
-              <button class="btn-2 btn-3-red" data-bs-dismiss="modal"
-                @click="leaveRoom()">나가기</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -87,8 +58,6 @@ const props = defineProps({
 // 클래스 부여하기
 const classNameList = ["position-absolute top-0 start-0 d-flex flex-column h-50", "position-absolute top-0 end-0 d-flex flex-column h-50", "position-absolute bottom-0 start-0 d-flex flex-column h-50", "position-absolute bottom-0 end-0 d-flex flex-column h-50"]
 
-console.log('게임방 멤버', gameStore.memberInfos);
-
 roomId.value = props.roomId
 myNickname.value = props.myNickname
 
@@ -113,7 +82,6 @@ const getCardUrl = function (setnum, cardnum) {
 // 카드 뒤집기
 const flip = () => {
   const flipCards = document.querySelectorAll('.flip-card')
-  console.log('카드 뒤집');
   flipCards.forEach(flipCard => {
     flipCard.classList.toggle('flipped')
   });
@@ -163,16 +131,7 @@ const roundState = computed(() => gameStore.roundState);
 //   }
 // })
 
-// 방 나가기
-const leaveRoom = function () {
-  // 관전자면
-  if (roomStore.isWatcher === true) {
-    roomStore.isWatcher = false
-    roomStore.leaveWatcher()
-  } else {
-    roomStore.leaveRoom()
-  }
-}
+
 
 onMounted(() => {
   navigator.mediaDevices.getUserMedia({ video: true, audio: true })
@@ -182,11 +141,9 @@ onMounted(() => {
     .catch((error) => {
       console.error('카메라 및 마이크 액세스 오류:', error);
     });
-    console.log('여긴 플레이플레이어!!');
     openviduStore.joinSession()
     const backdrop = document.querySelector('.modal-backdrop');
     if (backdrop) {
-        console.log('백드롭 제거');
         backdrop.remove();
     }
   })

@@ -90,9 +90,12 @@ export const useGameStore = defineStore(
     // 친구신청 알림
     const isAlarmArrive = ref(false);
 
+    // 웹소켓 디버그 제거
+    // stompClient.debug = null
+    stompClient.hasDebug = false
+    // console.log(stompClient);
     // 웹소켓 연결 성공 이벤트
     stompClient.ws.onopen = function (params) {
-      // console.log('===========================웹소켓 연결 성공 감지==================================')
     };
 
     // 웹소켓 연결 끊김 이벤트
@@ -119,42 +122,31 @@ export const useGameStore = defineStore(
       stompClient.connect(
         { "access-token": userStore.accessToken },
         (frame) => {
-          // console.log("Connect success", gameRoomTitle.value)
-          // stompClient.heartbeat.outgoing = 5000;
-          // stompClient.heartbeat.incoming = 0;
-          // console.log(stompClient);
           // 개인 메세지함 구독(기본구독)
           subscriptionPrivate.value = stompClient.subscribe(
             `/from/chipchippoker/member/${userStore.myNickname}`,
             (message) => {
-              // console.log('개인 메세지함 구독 성공')
-              const response = JSON.parse(message.body).body;
-              // console.log('============================================================',response,'======================================================================')
 
+              const response = JSON.parse(message.body).body;
               // 개인메세지함 구독 아이디
               myPrivateSubId.value = message.headers.subscription;
 
               switch (response.code) {
                 case "MB001": // 방장만 강제퇴장 요청 가능
-                  // console.log(response.message)
                   alert(response.message);
                   break;
                 case "MB002": // 모두 준비 상태가 아님
-                  // console.log(response.message)
                   alert(response.message);
                   notMatchRound.value = true;
                   break;
                 case "MB003": // 방장이 아니라 시작할 수 없음
-                  // console.log(response.message)
                   alert(response.message);
                   break;
                 case "MB004": // 현재 진행 중인 라운드와 일치하지 않음
-                  // console.log('현재 진행 중인 라운드와 일치하지 않습니다.')
                   alert(response.message);
                   notMatchRound.value = true;
                   break;
                 case "MB005": // 내 턴이 아님
-                  // console.log('본인의 차례가 아닙니다.')
                   alert(response.message);
                   notYourTurn.value = true;
                   break;
@@ -169,7 +161,6 @@ export const useGameStore = defineStore(
                   alert(response.message);
                   break;
                 case "MS005": // 강퇴 당함(본인)
-                  // console.log(response.message);
                   alert(response.message);
                   receiveBanMe(response.message);
                   break;
@@ -195,20 +186,20 @@ export const useGameStore = defineStore(
                     // 새로운 라운드 저장할때는 8초 미루기
                     setTimeout(() => {
                       if (subscriptionGame.value !== undefined) {
-                        // console.log(memberInfos.value, gameMemberInfos.value);
                         nextRoundState.value = response.data.roundState;
                         nextCurrentRound.value = response.data.currentRound;
                         nextYourTurn.value = response.data.yourTurn;
                         nextGameMemberInfos.value = response.data.gameMemberInfos;
-                        // console.log('라운드 저장 8초 미룸');
                       }
-                    }, 10000);
+                    }, 9500);
                   } else {
-                    // 배팅은 1초 미루기
+                    // 배팅은 0.5초 미루기
                     setTimeout(() => {
-                      // console.log('배팅 리시브 받아서 1초 미루기');
                       if (subscriptionGame.value !== undefined) {
-                        bettingEvent.value = true;
+                        if (bettingEvent.value === true) {
+                          bettingEvent.value = false
+                        }
+                        bettingEvent.value = true
                         nextRoundState.value = response.data.roundState;
                         nextCurrentRound.value = response.data.currentRound;
                         nextYourTurn.value = response.data.yourTurn;
@@ -227,11 +218,9 @@ export const useGameStore = defineStore(
                   isAlarmArrive.value = true;
                   break;
                 case "ME003": // 방장이 아닌사람이 start 한다면
-                  // console.log("님은 방장이 아님")
                   alert(response.message);
                   break;
                 case "MN001": // 찾을 수 없는 방
-                  // console.log(response.message)
                   break;
               }
             }
@@ -246,34 +235,25 @@ export const useGameStore = defineStore(
       subscriptionGame.value = stompClient.subscribe(
         `/from/chipchippoker/checkConnect/${gameRoomTitle}`,
         (message) => {
-          // console.log('방 구독하기');
-          // console.log("subscribe success")
-          // 내 구독 아이디 저장
 
+          // 내 구독 아이디 저장
           myGameSubId.value = message.headers.subscription;
-          // console.log(message.headers);
           const response = JSON.parse(message.body).body;
-          // console.log(response)
 
           switch (response.code) {
             case "MS001": // 방 생성
-              // console.log(response.message);
               receiveCreateRoom(response.data);
               break;
             case "MS002": // 방 입장
-              // console.log(response.message);
               receiveJoinRoom(response.data);
               break;
             case "MS003": // 방 나가기
-              // console.log(response.message);
               receiveExitRoom(response.data, response.code, response.message);
               break;
             case "MS004": // 강퇴(타인)
-              // console.log(response.message);
               receiveBanYou(response.data);
               break;
             case "MS006": // 게임 준비 완료
-              // console.log(response.message);
               receiveReady(response.data);
               break;
             case "MS008": // 라운드 종료
@@ -285,34 +265,20 @@ export const useGameStore = defineStore(
             case "MS009": // 경쟁 게임 종료
               receiveGameFinishRank(response.data);
               break;
-            case "MB002": // 모두 준비상태가 아님
-              // console.log('모두 준비 상태가 아닙니다.');
-              alert(response.message);
-              break;
-            case "MB003": // 방장이 아님
-
             case "MS016": // 게임방 시작
-              // console.log(response.message)
               receiveStartGame(response);
               break;
             case "MS011": // 매칭
-              // console.log(response.message)
               receiveMatching(response.data);
             case "MS013": // 관전자 입장
-              // console.log(response.message)
               receiveSpectaionRoom(response.data);
               break;
             case "MS014": // 관전자 퇴장
-              // console.log(response.message)
               receiveSpectaionExit(response.data);
               break;
             case "MS015": // 게임방 방장이 게임에서 나감
-              // console.log(response.message)
               receiveExitRoom(response.data, response.code, response.message);
               break;
-            case "MS017": // 매치 종료 이후 대기방 상태
-              // console.log(response.data)
-              receiveWaitRoom(response.data);
           }
         }
       );
@@ -322,7 +288,6 @@ export const useGameStore = defineStore(
     const sendMatching = function (title, countOfPeople) {
       gameRoomTitle.value = title;
       totalCountOfPeople.value = countOfPeople;
-      // console.log(title, countOfPeople)
       stompClient.send(
         `/to/game/matching/${title}`,
         JSON.stringify({ countOfPeople }),
@@ -345,21 +310,18 @@ export const useGameStore = defineStore(
               info.nickname === userStore.myNickname &&
               userStore.myNickname === roomManagerNickname.value
             ) {
-              // console.log('매치 성공!!')
               isMatchStart.value = true; // 매치로 인한 게임 시작
               roomStore.startGame(matchStore.title); // 게임 시작 send
             }
           });
         }, 3000);
       } else {
-        // console.log('매칭 중')
         matchStore.isSearching = true;
       }
     };
 
     // 방 생성 SEND
     const sendCreateRoom = function (title, countOfPeople) {
-      // console.log(title, countOfPeople)
       stompClient.send(
         `/to/game/create/${title}`,
         JSON.stringify({ countOfPeople }),
@@ -449,7 +411,6 @@ export const useGameStore = defineStore(
 
     // 게임 시작 RECEIVE
     const receiveStartGame = function (body) {
-      // console.log('receiveStartGame', body)
       // 새로고침 횟수를 삭제합니다.
       localStorage.removeItem("refreshCount");
 
@@ -462,7 +423,6 @@ export const useGameStore = defineStore(
 
     // 배팅
     const bet = function (gameRoomTitle, action, bettingCoin) {
-      // console.log('배팅하기!!!!!!!!!!!!!!!!!!!!!!!!!');
       const message = {
         currentRound: currentRound.value,
         action: action,
@@ -508,12 +468,6 @@ export const useGameStore = defineStore(
       nextGameMemberInfos.value = data?.gameMemberInfos;
       winnerNickname.value = data?.winnerNickname;
       nextPenaltyInfos.value = data?.penaltyInfos;
-
-      // console.log("roundState", roundState.value);
-      // console.log("currentRound", currentRound.value);
-      // console.log("yourTurn", yourTurn.value);
-      // console.log("gameMemberInfos", gameMemberInfos.value);
-      // console.log("nextPenaltyInfos", nextPenaltyInfos.value);
     };
 
     // 경쟁 게임 종료
@@ -565,7 +519,6 @@ export const useGameStore = defineStore(
 
     // 방 나가기 시 초기화 함수
     const resetGameStore = async function () {
-      // console.log('방나가기 데이터 청소')
       if (
         subscriptionGame.value !== undefined &&
         subscriptionGame.value.unsubscribe
@@ -627,45 +580,34 @@ export const useGameStore = defineStore(
       subscriptionSpectation.value = stompClient.subscribe(
         `/from/chipchippoker/spectation/checkConnect/${gameRoomTitle}`,
         (message) => {
-          // console.log('관전 구독하기');
-          // 내 구독 아이디 저장
 
+          // 내 구독 아이디 저장
           mySpectateSubId.value = message.headers.subscription;
-          // console.log(message.headers);
           const response = JSON.parse(message.body).body;
-          // console.log(response)
 
           switch (response.code) {
             case "MS013": // 관전자 입장
-              // console.log(response.message);
               receiveSpectaionRoom(response.data);
               break;
             case "MS014": // 관전자 퇴장
-              // console.log(response.message);
               receiveSpectaionExit(response.data);
               break;
             case "MS002": // 방 입장
-              // console.log(response.message);
               receiveJoinRoom(response.data);
               break;
             case "MS003": // 방 나가기
-              // console.log(response.message);
               receiveExitRoom(response.data, response.code, response.message);
               break;
             case "MS015": // 게임방 방장이 게임에서 나감
-              // console.log(response.message)
               receiveExitRoom(response.data, response.code, response.message);
               break;
             case "MS004": // 강퇴(타인)
-              // console.log(response.message);
               receiveBanYou(response.data);
               break;
             case "MS006": // 게임 준비 완료
-              // console.log(response.message);
               receiveReady(response.data);
               break;
             case "MS016": // 게임방 시작
-              // console.log(response.message)
               receiveStartGame(response);
               break;
             case "MS007": // 게임 진행
@@ -691,14 +633,15 @@ export const useGameStore = defineStore(
                     nextCurrentRound.value = response.data.currentRound;
                     nextYourTurn.value = response.data.yourTurn;
                     nextGameMemberInfos.value = response.data.gameMemberInfos;
-                    // console.log('라운드 저장 4초 미룸');
                   }
-                }, 10000);
+                }, 9500);
               } else {
                 // 배팅은 1초 미루기
                 setTimeout(() => {
                   if (subscriptionSpectation.value !== undefined) {
-                    console.log(bettingEvent.value);
+                    if (bettingEvent.value === true) {
+                      bettingEvent.value = false
+                    }
                     bettingEvent.value = true;
                     nextRoundState.value = response.data.roundState;
                     nextCurrentRound.value = response.data.currentRound;
@@ -708,7 +651,7 @@ export const useGameStore = defineStore(
                       totalBettingCoin.value[index] = info.bettingCoin;
                     });
                   }
-                }, 1000);
+                }, 500);
               }
               break;
             case "MS008": // 라운드 종료
@@ -718,7 +661,6 @@ export const useGameStore = defineStore(
               receiveGameFinishFriend(response.data);
               break;
             case "MS019": // 플레이어가 모두 나가고 아무도 없을 때
-              // console.log(response.message);
               receiveExitRoom(response.data, response.code, response.message);
               break;
           }

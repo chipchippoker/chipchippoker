@@ -84,7 +84,6 @@ const createRoom = function () {
       password: password.value,
       totalParticipantCnt: totalParticipantCnt.value
   }
-  console.log('방 생성하기!!');
 
   roomStore.createRoom(payload)
   title.value = ''

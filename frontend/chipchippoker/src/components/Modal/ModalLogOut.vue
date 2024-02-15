@@ -22,7 +22,6 @@ import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore()
 const logOut = function(){
-    console.log('로그아웃')
     userStore.logOut()
 }
 

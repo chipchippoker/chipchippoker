@@ -16,6 +16,7 @@ export const useRoomStore = defineStore('room', () => {
   const router = useRouter()
 
   const roomType = ref('친선')
+  const gameType = ref('친선전')
   const allRoomList = ref([])
 
   const pageData = ref(
@@ -59,7 +60,6 @@ export const useRoomStore = defineStore('room', () => {
   
   // 방 생성
   const createRoom = function(payload){
-    console.log('방 생성 요청!!');
     // 방 생성 API 호출
     axios({
       method: 'post',
@@ -69,7 +69,6 @@ export const useRoomStore = defineStore('room', () => {
     })
     // 방 생성 API 응답 & 방 구독 SEND
     .then(response => {
-      console.log('방 생성 성공')
       const res = response.data
       roomManagerNickname.value = res.data.roomManagerNickname
       roomId.value = res.data.roomId
@@ -85,16 +84,13 @@ export const useRoomStore = defineStore('room', () => {
       console.log(err)
       if (err.response.data.code === 'CF005') {
         isRoom.value = true
-        console.log(isRoom.value)
         alert('이미 등록된 방 제목입니다.')
       }
-      console.log(err);
     })
   }
 
   // 방 리스트
   const getRoomList = function(payload){
-    console.log('방 목록 요청');
     axios({
       method: 'get',
       url: `${ROOM_API}`,
@@ -141,10 +137,7 @@ export const useRoomStore = defineStore('room', () => {
     // 방 입장 API 응답 & 방 구독 SEND
     .then(response => {
       const res = response.data
-      console.log(res)
       if (res.code === "성공") {
-        console.log('성공 if문 안에 들어옴');
-        console.log(res.message)
         roomId.value = res.data.roomId
         title.value = res.data.title
         totalParticipantCnt.value = res.data.totalParticipantCnt
@@ -161,28 +154,23 @@ export const useRoomStore = defineStore('room', () => {
     .catch(err => {
       console.log(err)
       if (err.response.data.code === 'FB001') {
-        console.log(err.response.data.message)
         alert(err.response.data.message)
       } else if (err.response.data.code === 'FB002') {
-        console.log(err.response.data.message)        
         alert(err.response.data.message)
       } else if (err.response.data.code === 'FB003') {
-        console.log(err.response.data.message)        
         alert(err.response.data.message)
       } else if (err.response.data.code === 'FB000') {
-        console.log(err.response.data.message)
         alert(err.response.data.message)
       } else if (err.response.data.code === 'FB010') {
-        console.log(err.response.data.message)
         alert(err.response.data.message)
       }
+      window.location.reload();
     })
   }
 
 
   // 방 나가기
   const leaveRoom = function() {
-    console.log('방 나가기 API 호출하러 옴');
     axios({
       method: 'post',
       url: `${ROOM_API}/leave`,
@@ -192,8 +180,6 @@ export const useRoomStore = defineStore('room', () => {
       }
     })
     .then(res => {
-      console.log('방나가기 API 호출');
-      console.log(res.data)
       gameStore.sendExitRoom(title.value)
       roomId.value = ''
       title.value = ''
@@ -225,8 +211,6 @@ export const useRoomStore = defineStore('room', () => {
     })
     .then(response => {
       const res = response.data
-      console.log(res);
-      console.log('게임 시작 성공')
       gameStore.sendStartGame(title.value)
     })
     .catch(err => console.log(err))
@@ -241,8 +225,6 @@ export const useRoomStore = defineStore('room', () => {
       data: payload
     })
     .then(response => {
-      console.log(response.data);
-      console.log(payload.nickname);
       if (response.data.code === '성공') {
         gameStore.sendBan(title.value, payload.nickname)
       } else if (response.data.code === 'FB005') {
@@ -261,9 +243,7 @@ export const useRoomStore = defineStore('room', () => {
       data: payload
     })
     .then(res => {
-      console.log(res.data);
       if (res.data.code === '성공') {
-        console.log('관전 입장');
         roomId.value = res.data.data.roomId
         title.value = res.data.data.title
         roomState.value = res.data.data.state
@@ -287,12 +267,9 @@ export const useRoomStore = defineStore('room', () => {
     })
     .catch(err => {
       console.log(err)
-      console.log(err.response.data)
       if (err.response.data.code === 'FB001') {
-        console.log(err.response.data.message)
         alert(err.response.data.message)
       } else if (err.response.data.code === 'FB011') {
-        console.log(err.response.data.message)
         alert(err.response.data.message)
       }
     })
@@ -307,7 +284,6 @@ export const useRoomStore = defineStore('room', () => {
       headers: { 'access-token': userStore.accessToken },
     })
     .then(res => {
-      console.log('관전 나가기');
       gameStore.sendSpectationExit(title.value)
       roomId.value = ''
       title.value = ''

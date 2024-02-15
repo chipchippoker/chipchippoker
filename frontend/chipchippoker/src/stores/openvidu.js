@@ -39,13 +39,12 @@ export const useOpenviduStore = defineStore('openvidu', () => {
 
   function joinSession() {
     if (session.value !== undefined) {
-      console.log('세션 이미 존재. joinSession 함수를 실행하지 않습니다.');
       return;
     }
 
     OV.value = new OpenVidu()
+    console.log(OV);
     session.value = OV.value.initSession()
-    console.log('조인 세션!');
 
     session.value.on("streamCreated", ( {stream} )=> {
       // 이미 해당 스트림에 대한 구독이 이루어진 경우, 무시
@@ -54,8 +53,6 @@ export const useOpenviduStore = defineStore('openvidu', () => {
       }
       
       const subscriber = session.value.subscribe(stream)
-      console.log('세션 생성!!!!');
-      console.log(stream);
   
       // 닉네임과 watcher 얻기
       function getConnectionData() {
@@ -72,8 +69,6 @@ export const useOpenviduStore = defineStore('openvidu', () => {
       } else {
         watchers.value.push({watcher:subscriber, nickname:clientData})
       }
-      console.log(players);
-      console.log(watchers);
     })
   
     // On every Stream destroyed...
@@ -142,7 +137,6 @@ export const useOpenviduStore = defineStore('openvidu', () => {
       if (session.value === undefined) {
         return
       }
-      console.log("토큰 만들어지나");
       session.value.connect(token, {clientData: userStore.myNickname, isWatcher: roomStore.isWatcher})
       .then(() => {
           // Get your own camera stream with the desired properties ---
@@ -166,8 +160,6 @@ export const useOpenviduStore = defineStore('openvidu', () => {
   
           // --- Publish your stream ---
           session.value.publish(publisher.value)
-          console.log(publisher.value)
-          console.log(players);
         })
         .catch((error) => {
           console.log("There was an error connecting to the session:", error.code, error.message);
@@ -197,7 +189,6 @@ export const useOpenviduStore = defineStore('openvidu', () => {
   
     // Remove beforeunload listener
     // window.removeEventListener("beforeunload", leaveSession)
-    console.log('세션나가기')
   }
   
   /**
@@ -214,7 +205,6 @@ export const useOpenviduStore = defineStore('openvidu', () => {
     const response = await axios.post(APPLICATION_SERVER_URL + 'sessions', { customSessionId: sessionId, userNo: 53, endHour: 1, endMinute: 30, quota: 16, isPrivacy: false}, {
       headers: { 'Content-Type': 'application/json', },
     });
-    console.log('세션 생성 성공');
     return response.data; // The sessionId
   }
   
@@ -227,7 +217,6 @@ export const useOpenviduStore = defineStore('openvidu', () => {
   
   // 채팅창 구현을 위한 함수 제작
   function sendMessage(input) {
-    console.log(input);
     if(input.trim()){
       // 다른 참가원에게 메시지 전송하기
       session.value.signal({

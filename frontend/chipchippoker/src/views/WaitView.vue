@@ -18,14 +18,14 @@
     <div class="container row mt-5 h-100">
       <!-- 캠 -->
       <div class="col-9">
-        <!-- 플레이어 -->
         <!-- 모든 캠 -->
         <div v-if="roomStore.isWatcher===false" id="video-container">
           <div class="flex-container row g-1 p-0">
-            <div class="col-6 mb-5 text-center"
-            v-for="(player, index) in gameStore.memberInfos" :key="index">
+            <div class="col-6 mb-3 text-center align-self-center justify-content-center"
+              v-for="(player, index) in gameStore.memberInfos" :key="index">
+              <div class="text-white align-self-center justify-content-center">{{ player.nickname }}</div>
               <div 
-                style="width: 400px; height: 300px;">
+                style="width: 350px; height: 270px;">
                 <UserVideo 
                 :stream-manager="findVideo(playersComputed, player.nickname)" 
                 :is-manager="isManager"
@@ -203,7 +203,6 @@
       title: roomTitle.value,
       nickname: clientData
     }
-    console.log(payload);
     roomStore.forceMemberOut(payload)
   }
 
@@ -213,8 +212,6 @@
       for (let i = 0; i < players.length; i++) {
         const player = players[i]
         if (player.nickname === targetNickname) {
-          console.log(player)
-          console.log(targetNickname)
           return player.player
         }
       }
@@ -256,7 +253,6 @@
   localStorage.setItem('refreshCount', refreshCount);
 
   // 새로고침 횟수를 출력합니다.
-  console.log('새로고침 횟수:', refreshCount);
 
   // 새로고침 횟수가 2회가 넘어가면 새로고침을 했다는 것이므로
   if (refreshCount >= 2) {
@@ -326,7 +322,6 @@
     totalParticipantCnt.value = roomStore.totalParticipantCnt
     myNickname.value = userStore.myNickname
 
-    console.log('방 정보 가져오기 성공!!');
 
     window.removeEventListener("beforeunload", (event) => {
       event.preventDefault()

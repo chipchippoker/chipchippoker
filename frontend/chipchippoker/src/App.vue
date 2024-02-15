@@ -73,9 +73,10 @@ for (let i = 0; i < 100; i++) {
     gameStore.isAlarmArrive = false
   }
 
-  // 마우스 커서 커스터마이징
- 
 
+  const soundCallback = async function () {
+    await soundStore.hoverSound()
+  }
 
   onMounted(() => {
    
@@ -84,19 +85,7 @@ for (let i = 0; i < 100; i++) {
 </script>
 
 <template>
-  <div class="maple bg-gradation-blue" @click="soundStore.hoverSound">
-    <!-- <div>
-      <RouterLink to="/login">로그인</RouterLink> /
-      <RouterLink to="/signup">회원가입</RouterLink> / 
-      <RouterLink to="/kakaosignup">카카오 회원가입</RouterLink> /
-      <RouterLink :to="{ name: 'profile'}">프로필 나의정보</RouterLink> /
-      <RouterLink to="/main">메인페이지</RouterLink>  /
-      <RouterLink to="/play">플레이페이지</RouterLink> /
-      <RouterLink to="/wait">대기페이지</RouterLink> /
-      <RouterLink to="/game">소켓테스트</RouterLink> /
-      <RouterLink to="/animation">애니메이션</RouterLink> /
-    </div> -->
-    
+  <div class="maple bg-gradation-blue" @click="soundCallback()">
     <div class="position-relative container p-0 w-100" >   
       <!-- 별들 -->
       <!-- <div v-for="star in stars" :key="star" :class="star.className" :style="{ top: star.y + 'px', left: star.x + 'px' }"></div> -->
@@ -107,7 +96,6 @@ for (let i = 0; i < 100; i++) {
         <div class="d-flex flex-row justify-content-between" style="width: 10%;">
           <!-- 알림 모달 아이콘 -->
           <div class="mx-3 z-3 btn-transparency position-relative">
-            <!-- <p class="text-white">{{ gameStore.isAlarmArrive }}</p> -->
             <font-awesome-icon type="button" @click="checkAlarm()"  icon="bell" :class="{'fa-shake':gameStore.isAlarmArrive==true}"  size="lg" data-bs-toggle="modal" data-bs-target="#alarmModal" style="color: #ffffff;" />
             <div v-if="gameStore.isAlarmArrive" class="alarm-on"></div>
           </div>

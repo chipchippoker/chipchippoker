@@ -31,7 +31,7 @@
         
         <!-- 방검색 -->
         <div class="d-flex align-items-center gap-3">
-            <input v-model="title" type="text" class="form-control little-text" placeholder="방 이름" aria-label="Recipient's username" aria-describedby="button-addon2" autocomplete="false">
+            <input v-model="title" id="room-search" type="text" class="form-control little-text" placeholder="방 이름" aria-label="Recipient's username" aria-describedby="button-addon2" autocomplete="false">
             <font-awesome-icon type="button" @click="searchRoom" :icon="['fas', 'magnifying-glass']" style="color: #ffffff;" />
             <font-awesome-icon type="button" @click="refreshRoom" :icon="['fas', 'arrows-rotate']" style="color: #ffffff;" />
         </div>
@@ -108,7 +108,6 @@ const isEmpty = ref(false)
 
 // 방제 검색
 const searchRoom = function(){
-    console.log('방제 검색')
     const payload = {
         type:roomType.value,
         title:title.value,
@@ -119,13 +118,11 @@ const searchRoom = function(){
         page:0,
         size:8
     }
-    console.log(payload)
     roomStore.getRoomList(payload)
 }
 
 // 새로고침 검색
 const refreshRoom = function(){
-    console.log('새로고침 검색')
     const payload = {
         type:roomType.value,
         title: title.value, 
@@ -136,8 +133,6 @@ const refreshRoom = function(){
         page:0,
         size:8
     }
-    
-    console.log(payload)
     roomStore.getRoomList(payload)
 }
 
@@ -153,13 +148,11 @@ const updateRoomList = function () {
         page: 0,
         size: 8
     };
-    console.log(payload)
     roomStore.getRoomList(payload);
 }
     
 // 페이지네이션 검색
 const pageRoom = function(pagenum){
-    console.log('페이지네이션 검색')
     const payload = {
         type:roomType.value,
         title: title.value,
@@ -170,7 +163,6 @@ const pageRoom = function(pagenum){
         page:pagenum - 1,
         size:8
     }
-    console.log(payload)
     roomStore.getRoomList(payload)
     }
 
