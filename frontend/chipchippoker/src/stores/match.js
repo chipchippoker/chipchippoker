@@ -25,7 +25,6 @@ export const useMatchStore = defineStore('match', () => {
 
   // 경쟁전 빠른 시작
   const matchCompete = async function(payload) {
-    console.log(payload)
     try {
       const response = await axios({
         method: 'post',
@@ -33,9 +32,7 @@ export const useMatchStore = defineStore('match', () => {
         headers: { 'access-token': userStore.accessToken },
         data: payload
       })
-      console.log('경쟁전 매치 성공')
       const res = response.data
-      console.log(res)
       isSearching.value = true
       roomId.value = res.data.roomId
       title.value = res.data.title
@@ -65,12 +62,9 @@ export const useMatchStore = defineStore('match', () => {
       })
       const res = response.data
       if (Object.keys(res.data).length === 0) {
-        console.log('생성된 친선방 X')
         isNotExistRoom.value = true
         return false
       } else {
-        console.log('친선전 매치 성공')
-        console.log(res.data)
         roomId.value = res.data.roomId
         title.value = res.data.title
         totalParticipantCnt.value = res.data.totalParticipantCnt
@@ -99,9 +93,7 @@ export const useMatchStore = defineStore('match', () => {
       headers: { 'access-token': userStore.accessToken }
     })
     .then(response => {
-      console.log('게임 찾기 중단')
       const res = response.data
-      console.log(res);
       isSearching.value = false
       // 게임나가기 send
       gameStore.sendExitRoom(title.value)

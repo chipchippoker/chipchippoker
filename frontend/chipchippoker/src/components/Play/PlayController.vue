@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, computed } from 'vue';
+import { ref, watch } from 'vue';
 import { useGameStore } from '@/stores/game';
 import { useRoomStore } from '@/stores/room';
 import { useUserStore } from '@/stores/user';
@@ -75,15 +75,14 @@ const minBettingCoin = ref(0)
 
 // 타이머
 const timer = ref(20)
+const reduceTime = ref()
 
 // 배팅을 했는지 안했는지
 const isBetting = ref(false)
 
 // 웹소켓 메시지 수신 시 최대 배팅 코인 업데이트
 watch(() => gameStore.gameMemberInfos, () => {
-  console.log('턴 변화 감지')
   getGameInfo()
-  console.log(myGameInfo.value, maxBettingCoin.value, minBettingCoin.value);
   calculateMaxBettingCoin()
   calculateMinBettingCoin()
 })
@@ -125,7 +124,6 @@ const bet = function () {
     gameStore.bet(roomStore.title, "BET", bettingCoin.value)
     bettingCoin.value = 0
     isBetting.value = true
-    console.log('bettingEvent : ', gameStore.bettingEvent);
   }
 }
 
@@ -135,8 +133,6 @@ const call = function () {
   if (betValidation()) {
     gameStore.bet(roomStore.title, "BET", bettingCoin.value)
     bettingCoin.value = 0
-    console.log('bettingEvent : ', gameStore.bettingEvent);
-
   }
 }
 
@@ -146,7 +142,6 @@ const die = function () {
     bettingCoin.value = 0
     isBetting.value = true
     gameStore.bet(roomStore.title, "DIE", bettingCoin.value)
-    console.log('bettingEvent : ', gameStore.bettingEvent);
 
   } else {
     alert("본인 차례가 아닙니다.")
@@ -155,17 +150,14 @@ const die = function () {
 
 // 내려고 하는 배팅 코인 감지
 watch(() => bettingCoin.value, (newValue, oldValue)=>{
-  console.log('낼 배팅 코인 감지');
   gameStore.willBettingCoin = bettingCoin.value
-  console.log(gameStore.willBettingCoin);
 })
-
 
 
 // 타이머 실행함수
 // const timerSetting = function(){
 //       // 1초마다 한번씩 호출되는 함수
-//   const reduceTime = setInterval(()=>{
+//   reduceTime.value = setInterval(()=>{
 //       // 만약 timer의 시간이 있다면 1초씩 감소
 //     if (timer.value > 0){
 //       timer.value -= 1
@@ -176,14 +168,15 @@ watch(() => bettingCoin.value, (newValue, oldValue)=>{
 //       // 타이머가 0초이고 나의 턴이 아닐때는 멈추기
 //     } else{
 //       console.log("멈추기")
-//       clearInterval(reduceTime)
+//       clearInterval(reduceTime.value)
 //     }
 //   },1000)
 // }
+
 // watch(()=>gameStore.yourTurn,()=>{
 //   timer.value = 20
 //   isBetting.value = false
-//   timerSetting()
+//   // timerSetting()
 // })
 
 gameStore.bettingCoin = bettingCoin.value
@@ -217,21 +210,14 @@ const calculateMinBettingCoin = function(){
       minCoin = info.bettingCoin
     }
   })
-  console.log(minCoin, myGameInfo.value.bettingCoin);
   minBettingCoin.value = minCoin - myGameInfo.value.bettingCoin
 }
 
 
 // 베팅 Validation ===================================================
 const betValidation = function(){
-  // 애니메이션 중에는 배팅 안됨
-  if (gameStore.isAnimationRunning)
-  { 
-    alert("현재는 배팅할 수 없습니다.")
-    return false
-  }
   // 0 미만의 코인을 베팅하려고 하거나
-  else if (bettingCoin.value < 0)
+  if (bettingCoin.value < 0)
   {
     alert("코인을 베팅해주세요.")
     return false
@@ -245,7 +231,6 @@ const betValidation = function(){
   // 현재 필드에 나와있는 최대 베팅 금액보다 적은 금액을 베팅하려고 할 때 -> 첫 턴일 때 생각해봐야 함
   else if (bettingCoin.value + myGameInfo.value.bettingCoin < minBettingCoin.value)
   {
-    console.log(maxBettingCoin.value);
     alert("현재 최대 베팅 코인보다 적게 베팅할 수 없습니다.")
     return false
   }

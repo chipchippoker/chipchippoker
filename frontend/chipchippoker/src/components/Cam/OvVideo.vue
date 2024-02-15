@@ -23,7 +23,7 @@ const props = defineProps({
 
 const videoEl = ref(null);
 
-const videoStyle = ref({ width: "400px", height: "300px" });
+const videoStyle = ref({ width: "350px", height: "270px" });
 const emit = defineEmits(['sendEmotion'])
 
 if (route.name === 'play') {
@@ -47,7 +47,6 @@ const startEmotionDetection = setInterval(async () => {
       'sad': detections.expressions.sad,
       'surprised': detections.expressions.surprised * 100
     }
-    // console.log(emotion)
     // 가장 큰 감정 추출
     const maxEmotion = Object.keys(emotion).reduce((maxEmotion, key) => {
       return emotion[key] > emotion[maxEmotion] ? key : maxEmotion;
@@ -56,7 +55,6 @@ const startEmotionDetection = setInterval(async () => {
   }
 }
 catch{
-  // console.log('감정인식 안됨')
 }
 }, 1000)
 
@@ -71,9 +69,7 @@ onMounted(async () => {
   ])
 
   // 모델 로딩 후 처리
-  // console.log('Models loaded:', models)
-
-  startEmotionDetection()
+  // startEmotionDetection()
 })
 
 // 나갈때 중지

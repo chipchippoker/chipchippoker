@@ -24,7 +24,6 @@ import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
 const signOut = function(){
-    console.log('회원탈퇴')
     userStore.signOut()
 }
 

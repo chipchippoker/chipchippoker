@@ -93,10 +93,12 @@ import ModalIsPlayingRoomVue from '../../Modal/ModalIsPlayingRoom.vue';
 import ModalIsFullRoomVue from '../../Modal/ModalIsFullRoom.vue';
 import { useRoomStore } from '@/stores/room';
 import { useUserStore } from '@/stores/user'
+import { useGameStore } from '@/stores/game';
 import { ref } from "vue";
 
 const userStore = useUserStore()
 const roomStore = useRoomStore()
+const gameStore = useGameStore()
 
 const props = defineProps({
     item: Object
@@ -109,6 +111,7 @@ const enterRoomPublic = function (title, type) {
     }
     userType.value = type
     roomStore.roomState = props.item.state
+    gameStore.kindGame = '친선전'
     // 꽉찬 방이면
     if (type === '관전자' && props.item?.currentSpectatorCnt === 6) {
         const isFullModal = new bootstrap.Modal(document.getElementById(`IsFullModal${props.item?.roomId}`));
@@ -137,6 +140,7 @@ const enterRoomPublic = function (title, type) {
 const showEnterPWModal = function (type) {
     roomStore.roomState = props.item.state
     userType.value = type
+    gameStore.kindGame = '친선전'
     // 꽉찬 방이면
     if (type === '관전자' && props.item?.currentSpectatorCnt === 6) {
         const isFullModal = new bootstrap.Modal(document.getElementById(`IsFullModal${props.item?.roomId}`));

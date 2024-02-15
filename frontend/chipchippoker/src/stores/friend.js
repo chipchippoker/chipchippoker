@@ -17,15 +17,16 @@ export const useFriendStore = defineStore('friend', () => {
   const alarmList = ref([])
   const isSent = ref(false)
   const isSearched = ref(false)
+
   // 랭킹 aPI에서 사용되는 변수
   const isContainedinAll = ref(null)
   const isContainedinFriend = ref(null)
   const allRankList = ref([])
   const friendRankList = ref([])
   const myRank = ref([])
+
   // 친구 찾기 
   const findFriendinAll = function(nickname){
-    console.log(userStore.accessToken);
     axios({
       method: 'get',
       url: `${FRIEND_API}/search`,
@@ -33,7 +34,6 @@ export const useFriendStore = defineStore('friend', () => {
       headers: {"access-token": userStore.accessToken}
     })
     .then(res => {
-      console.log("res.data.data => ",res.data.data)
       searchedPerson.value = res.data.data
     })
     .catch(err => console.log(err))
@@ -48,7 +48,6 @@ export const useFriendStore = defineStore('friend', () => {
       headers: {"access-token": userStore.accessToken}
     })
     .then(res => {
-      // console.log("res.data.data => ",res.data.data)
       friendList.value = res.data.data
     })
     .catch(err => console.log(err))
@@ -62,8 +61,6 @@ export const useFriendStore = defineStore('friend', () => {
       headers: {"access-token": userStore.accessToken}
     })
     .then(res => {
-      // console.log(userStore.myNickname,"res => ",res)
-      // console.log(userStore.myNickname,"res.data.data => ",res.data.data)
       alarmList.value = res.data.data
     })
     .catch(err => console.log(err))
@@ -79,14 +76,12 @@ export const useFriendStore = defineStore('friend', () => {
     })
     .then(res => {
       gameStore.sendFriendRequest(nickname)
-      console.log("res.data => ",res.data)
     })
     .catch(err => console.log(err))
   }
 
   // 친구 신청 수락
   const acceptFriendRequest = function(nickname){
-    console.log(nickname)
     axios({
       method: 'post',
       url: `${FRIEND_API}/request/accept`,
@@ -94,7 +89,6 @@ export const useFriendStore = defineStore('friend', () => {
       headers: {"access-token": userStore.accessToken}
     })
     .then(res => {
-      console.log("res.data => ",res.data)
     })
     .catch(err => console.log(err))
     
@@ -109,10 +103,8 @@ export const useFriendStore = defineStore('friend', () => {
       headers: {"access-token": userStore.accessToken}
     })
     .then(res => {
-      console.log("res.data => ",res.data)
     })
     .catch(err => console.log(err))
-    
   }
   
   // 랭킹 -------------------------------------------------------------------------------------
@@ -128,12 +120,9 @@ export const useFriendStore = defineStore('friend', () => {
     })
     
     .then(res => {
-      // console.log(res);
       allRankList.value = res.data.data
       // 내가 전체 랭킹에 존재하는지 판단하는 함수
       isContainedinAll.value = allRankList.value.filter((rank) => rank.nickname === userStore.myNickname).length > 0
-      // console.log("res.data.data => ",res.data.data)
-      // console.log('isContainedinAll =>', isContainedinAll.value);
     })
     .catch(err => console.log(err))
   }
@@ -149,8 +138,6 @@ export const useFriendStore = defineStore('friend', () => {
       friendRankList.value = res.data.data
       // 내가 친구 랭킹에 존재하는지 판단하는 함수
       isContainedinFriend.value = friendRankList.value.filter((rank) => rank.nickname === userStore.myNickname).length > 0
-      // console.log("res.data.data => ",res.data.data)
-      // console.log('isContainedinFriend', isContainedinFriend.value);
     })
     .catch(err => console.log(err))
   }

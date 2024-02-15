@@ -24,6 +24,7 @@
     "pinia-plugin-persistedstate": "^3.2.1",
     "sockjs-client": "^1.6.1",
     "stomp-client": "^0.9.0",
+    "terser-webpack-plugin": "^5.3.10",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5",
     "webstomp-client": "^1.2.6"

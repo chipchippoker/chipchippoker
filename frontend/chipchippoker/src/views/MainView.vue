@@ -7,7 +7,7 @@
                 <div class="d-flex gap-3">
                     <button @click="changeType('경쟁전')" class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#FindRoomModal">경쟁 모드</button>
                     <button @click="changeType('친선전')" class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#FindRoomModal">친선 모드</button>
-                    <button class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#makeRoomModal">방 만들기</button>
+                    <button @click="changeType('친선전')" class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#makeRoomModal">방 만들기</button>
                     <button class="btn-outline-yellow p-1 rounded-2" data-bs-toggle="modal" data-bs-target="#FindFriendModal">친구 찾기</button>
                 </div>
             </div>
@@ -103,6 +103,7 @@ const gameType = ref('경쟁전')
 const changeType = function(type){
     roomStore.isWatcher = false
     gameType.value = type
+    gameStore.kindGame = type
 }
 
 // ===================== 게임 찾기 모달 감시=======================
@@ -110,19 +111,14 @@ const changeType = function(type){
 const isSearching = computed(() => matchStore.isSearching)
 watch(() => isSearching.value, (newVal, oldVal) => {
     const findGameModal = new bootstrap.Modal(document.getElementById('FindGameModal'))
-    console.log(matchStore.isSearching)
-    console.log(newVal);
     if (!newVal) {
-        console.log('모달 닫기');
         findGameModal.hide()
     } else {
-        console.log('모달 열기');
         findGameModal.show()
     }
 })
 
 const closeModalHandler = function () {
-    console.log('닫기 이벤트 발생!!');
     const findGameModal = new bootstrap.Modal(document.getElementById('FindGameModal'))
     findGameModal.hide()
 }
@@ -130,27 +126,23 @@ const closeModalHandler = function () {
 // ================================================================
 // -------------------모달 테스트-------------------
 const handleShowFindGame = function (payload) {
-    console.log('빠른 모드 탐색 시작');
     if (gameType.value === '경쟁전') {
         const modalInstance = new bootstrap.Modal(document.getElementById('FindGameModal'))
         matchStore.matchCompete(payload)
         .then(code => {
             if (code === '성공') {
                 // modalInstance.show()
-                console.log(matchStore.title, matchStore.totalParticipantCnt);
                 gameStore.sendMatching(matchStore.title, matchStore.totalParticipantCnt)
             }
         })
     } else {
         matchStore.matchFriend(payload)
         .then(result => {
-            console.log('친선전 매칭 결과', result);
             
             if (result === false) {
                 const notExistRoomModal = new bootstrap.Modal(document.getElementById('NotExistRoom'));
                 notExistRoomModal.show();
             } else if (result === 'FB010') {
-                console.log('이미 방 입장 중')
             }
         })
     }
@@ -160,7 +152,6 @@ const handleShowFindGame = function (payload) {
 
 // 방을 생성할 때 때 이미 있는 방제면
 watch(() => roomStore.isRoom, (newValue) => {
-    console.log(roomStore.isRoom)
     if (newValue) {
         // const IsExistRoomModal = new bootstrap.Modal(document.getElementById('IsExistRoomModal'));
         // IsExistRoomModal.show()
@@ -179,20 +170,25 @@ onBeforeRouteLeave((to, from, next) => {
     const modalInstance = new bootstrap.Modal(document.getElementById('FindGameModal'))
     modalInstance.hide()
     // 모달 백드랍 제거
-    console.log('메인페이지 떠나기 전에~~~~');
     const backdrop = document.querySelector('.modal-backdrop');
     if (backdrop) {
-        console.log('백드롭 제거');
         backdrop.remove();
     }
     next(); // 다음 라우터로 이동
 })
 
 onMounted(()=>{
-    gameStore.connectHandler()
-    friendStore.getAllRankList()
-    // friendStore.getMyRankList()
-    // soundStore.bgmOn()
+  gameStore.connectHandler()
+  friendStore.getAllRankList()
+  // soundStore.bgmOn()
+
+  if (roomStore.roomId !== '') {
+    if (roomStore.isWatcher === true) {
+        roomStore.leaveWatcher()
+      } else {
+          roomStore.leaveRoom()
+      }
+  }
 })
 
 </script>

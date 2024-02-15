@@ -32,12 +32,10 @@ const friendStore = useFriendStore()
 
 // 수락 거절
 const accept = function (nickname){
-    console.log(`${nickname}의 신청을 수락합니다`)
     isAccepted.value=true
     friendStore.acceptFriendRequest(nickname)
 }
 const reject = function (nickname){
-    console.log(`${nickname}의 신청을 거절합니다`)
     isRejected.value=true
     friendStore.rejectFriendRequest(nickname)
 }

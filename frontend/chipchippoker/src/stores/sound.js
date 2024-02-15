@@ -1,7 +1,12 @@
 import { ref, watch } from 'vue'
 import { defineStore } from 'pinia'
-import axios from 'axios'
-import { useRoute, useRouter } from 'vue-router'
+import bgm from '@/assets/bgm/bgm.mp3'
+import alarm from '@/assets/bgm/alarm.mp3'
+import cardshuffle from '@/assets/bgm/cardshuffle.mp3'
+import chipsound from '@/assets/bgm/chipsound.mp3'
+import hover from '@/assets/bgm/hover.mp3'
+import lose from '@/assets/bgm/lose.mp3'
+import win from '@/assets/bgm/win.mp3'
 
 export const useSoundStore = defineStore('sound', () => {
     // 설정 음향 사운드
@@ -10,70 +15,68 @@ export const useSoundStore = defineStore('sound', () => {
     const isBgmPlay = ref(false)
 
     //   음향 객체
-    const bgm = new Audio('src/assets/bgm/bgm.mp3')
+    const bgmAudio = new Audio(bgm)
     
     // 음향 실시간 적용
     watch([bgmSoundRange,effectSoundRange], () => {
-    bgm.volume = bgmSoundRange.value/100
+      bgmAudio.volume = bgmSoundRange.value/100
     })
 
-    const bgmOn = function(){
+    const bgmOn = async function(){
       // bgm.pause()
       isBgmPlay.value = true
-      bgm.play()
+      await bgmAudio.play()
     }
-    const bgmOff = function(){
-    bgm.pause()
-    isBgmPlay.value = false
-
+    const bgmOff = async function(){
+      bgmAudio.pause()
+      isBgmPlay.value = false
     }
     
     // 음향 플레이 함수
-    const alarm = new Audio('src/assets/bgm/alarm.mp3');
-    const alarmSound = function(){
-      alarm.volume = effectSoundRange.value/100
-      alarm.currentTime = 0;
-      alarm.play()
+    const alarmAudio = new Audio(alarm);
+    const alarmSound = async function(){
+      alarmAudio.volume = effectSoundRange.value/100
+      alarmAudio.currentTime = 0;
+      await alarmAudio.play()
     }
 
     // 카드 섞기
-    const cardshuffle = new Audio('src/assets/bgm/cardshuffle.mp3');
-    const cardshuffleSound = function(){
-      cardshuffle.currentTime = 0;
-      cardshuffle.volume = effectSoundRange.value/100
-      cardshuffle.play()
+    const cardshuffleAudio = new Audio(cardshuffle);
+    const cardshuffleSound = async function(){
+      cardshuffleAudio.currentTime = 0;
+      cardshuffleAudio.volume = effectSoundRange.value/100
+      await cardshuffleAudio.play()
     }
     // 코인 사운드
-    const chipsound = new Audio('src/assets/bgm/chipsound.mp3');
-    const chipsoundSound = function(){
-      chipsound.currentTime = 0 
-      chipsound.volume = effectSoundRange.value/100
-      chipsound.play()
+    const chipsoundAudio = new Audio(chipsound);
+    const chipsoundSound = async function(){
+      chipsoundAudio.currentTime = 0 
+      chipsoundAudio.volume = effectSoundRange.value/100
+      await chipsoundAudio.play()
     }
     
     // 패배 사운드
-    const lose = new Audio('src/assets/bgm/lose.mp3');
-    const loseSound = function(){
-      lose.currentTime = 0
-      lose.volume = effectSoundRange.value/100
-      lose.play()
+    const loseAudio = new Audio(lose);
+    const loseSound = async function(){
+      loseAudio.currentTime = 0
+      loseAudio.volume = effectSoundRange.value/100
+      await loseAudio.play()
     }
     
     // 승리 사운드
-    const win = new Audio('src/assets/bgm/win.mp3');
-    const winSound = function(){
-      win.currentTime = 0;
-      win.volume = effectSoundRange.value/100
-      win.play()
+    const winAudio = new Audio(win);
+    const winSound = async function(){
+      winAudio.currentTime = 0;
+      winAudio.volume = effectSoundRange.value/100
+      await winAudio.play()
     }
     
     // 호버 사운드
-    const hover = new Audio('src/assets/bgm/hover.mp3');
-    const hoverSound = function(){
-      // var hover = new Audio('src/assets/bgm/hover.mp3');
-      hover.currentTime = 0;
-      hover.volume = effectSoundRange.value/100
-      hover.play()
+    const hoverAudio = new Audio(hover);
+    const hoverSound = async function(){
+      hoverAudio.currentTime = 0;
+      hoverAudio.volume = effectSoundRange.value/100
+      await hoverAudio.play()
     }
 
   return {

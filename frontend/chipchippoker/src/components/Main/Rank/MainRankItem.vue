@@ -37,7 +37,6 @@ const router = useRouter()
 defineProps({item:Object})
 
 const goProfile = function(nickname){
-    console.log(`${nickname} 페이지로 이동`)
     userStore.profileNickname = nickname
     router.push({name:'profile'})
 }
