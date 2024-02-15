@@ -1,0 +1,167 @@
+/* 회원가입, 로그인, 카카오회원가입 폼 스타일 */
+.formstyle {
+    border-radius: 20px;
+    background-color: #99a5c1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.mainstyle {
+    border-radius: 20px;
+    background-color: #576fac;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+.battingstyle {
+    border-radius: 20px;
+    border: 10px solid #334A82;
+    background-color: #111D3C;
+}
+
+/* 로고 사이즈 정리 */
+.big-logo {
+    width: 300px;
+    margin: 20px;
+}
+.middle-logo {
+    width: 250px;
+    margin: 20px;
+}
+.small-logo {
+    width: 150px;
+    margin: 20px;
+}
+
+/* 작게 적히는 안내 글씨 */
+.xx-little-text {
+    font-size: xx-small;
+}
+
+.x-little-text {
+    font-size: x-small;
+}
+
+.little-text {
+    font-size: small;
+}
+
+
+.small-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+.small-icon:hover {
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+    transition: 0.1s;
+    border-radius: 50%;
+    /* position: absolute; */
+}
+
+/* 유저 프로필 아이콘 */
+.profile-icon-mine {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;  
+    
+}
+
+.profile-icon-other {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;  
+}
+
+.fade-in{
+    opacity: 1;
+  }
+.fade-in:hover{
+    opacity: 0.3;
+    transition: 0.3s;
+}
+
+
+.tier-icon {
+    width: 50px;
+    height: 50px;
+    margin: 0px;
+    border-radius: 50%;
+}
+
+.x-small-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;  
+}
+
+.xx-small-icon {
+    width: 20px;
+    height: 20px;
+ 
+}
+
+
+
+.profile-outline-darkblue {
+    border: 5px solid #334A82;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+/* 프로필 페이지 오른쪽 위 radius 조절 */
+.profile-box-radius {
+    border-top-right-radius: 0;
+}
+
+.text-overflow{
+    overflow: hidden;  
+    white-space: nowrap; 
+    text-overflow: ellipsis;
+}
+
+/* 랭크 스크롤 */
+.rank-scroll{
+    overflow-y: scroll;
+    height: 450px;
+}
+.rank-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+.myrank {
+    border: 2px solid #ddd;
+    background-color: #576fac;
+    color: #fff;
+}
+.myrank:hover {
+    background-color: #fff;
+    color: #000;
+}
+.otherrank {
+    background-color: #667db6;
+}
+.otherrank:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+.rainbow-box {
+    background-image: linear-gradient( 30deg, rgba(223,0,0,1) 2.7%, rgba(214,91,0,1) 15.1%, rgba(233,245,0,1) 29.5%, rgba(23,255,17,1) 45.8%, rgba(29,255,255,1) 61.5%, rgba(5,17,255,1) 76.4%, rgba(202,0,253,1) 92.4% );
+    color: #000;
+}
+.rainbow-box:hover {
+    background-image:none;
+    background-color: #fff;
+    color: #000;
+}
+    

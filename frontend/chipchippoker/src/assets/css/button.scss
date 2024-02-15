@@ -1,0 +1,579 @@
+/* 버튼 css */
+@property --btn-inner {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: rgba(50, 62, 55, 0.35);
+}
+@property --btn-outer {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: rgba(50, 62, 55, 0.25);
+}
+@property --btn-glow-inner {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: rgba(255, 255, 255, 0);
+}
+@property --btn-glow-outer {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: rgba(255, 255, 255, 0);
+}
+@property --btn-reflex-bottom-1 {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+@property --btn-reflex-bottom-2 {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+@property --btn-reflex-top-1 {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+@property --btn-reflex-top-2 {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+
+  //Colours
+  $green: #2ecc71;
+  $red: #e74c3c;
+  $red-done: #8e8c8c;
+  $blue: #3498db;
+  $blue-done: #8e8c8c;
+  $yellow: #f1c40f;
+  $yellow-done:#a3850d;
+  $purple: #8e44ad;
+  $turquoise: #1abc9c;
+  $indigo: #4160ea;
+
+  // Basic Button Style
+  .btn-2 {
+    box-sizing: border-box;
+    appearance: none;
+    background-color: transparent;
+    border: 2px solid $red;
+    border-radius: 0.6em;
+    color: $red;
+    cursor: pointer;
+    display: flex;
+    text-align: center;
+    align-self: center;
+    align-items: center;
+    margin-left: 10px;
+    font-size: 10pt;
+    text-decoration: none;
+    text-align: center;
+    font-weight: 700;
+
+    &:hover,
+    &:focus {
+      color: #fff;
+      outline: 0;
+    }
+  }
+
+  .btn-2-green {
+    border-color: $green;
+    color: #fff;
+    box-shadow: 0 0 40px 40px $green inset, 0 0 0 0 $green;
+    transition: all 150ms ease-in-out;
+    
+    &:hover {
+      box-shadow: 0 0 10px 0 $green inset, 0 0 10px 4px $green;
+      color: white;
+    }
+  }
+  .btn-2-red {
+    border-color: $red;
+    color: #fff;
+    box-shadow: 0 0 40px 40px $red inset, 0 0 0 0 $red;
+    transition: all 150ms ease-in-out;
+    
+    &:hover {
+      box-shadow: 0 0 10px 0 $red inset, 0 0 10px 4px $red;
+      color: white;
+    }
+  }
+  .btn-2-red-done {
+    border-color: $red-done;
+    color: #fff;
+    box-shadow: 0 0 40px 40px $red-done inset, 0 0 0 0 $red-done;
+    transition: all 150ms ease-in-out;
+    
+    &:hover {
+      box-shadow: 0 0 10px 0 $red-done inset, 0 0 10px 4px $red-done;
+      color: $red-done;
+    }
+  }
+  .btn-2-blue {
+    border-color: $blue;
+    color: #fff;
+    box-shadow: 0 0 40px 40px $blue inset, 0 0 0 0 $blue;
+    transition: all 150ms ease-in-out;
+    
+    &:hover {
+      box-shadow: 0 0 10px 0 $blue inset, 0 0 10px 4px $blue;
+      color: white;
+    }
+  }
+  .btn-2-blue-done {
+    border-color: $blue-done;
+    color: #fff;
+    box-shadow: 0 0 40px 40px $blue-done inset, 0 0 0 0 $blue-done;
+    transition: all 150ms ease-in-out;
+    
+    &:hover {
+      box-shadow: 0 0 10px 0 $blue-done inset, 0 0 10px 4px $blue-done;
+      color: $blue-done;
+    }
+  }
+  .btn-2-yellow {
+    border-color: $yellow;
+    color: #fff;
+    box-shadow: 0 0 40px 40px $yellow inset, 0 0 0 0 $yellow;
+    transition: all 150ms ease-in-out;
+    &:hover {
+      box-shadow: 0 0 10px 0 $yellow inset, 0 0 10px 4px $yellow;
+      color: $yellow;
+    }
+  }
+  .btn-2-yellow-done {
+    border-color: $yellow-done;
+    color: #fff;
+    box-shadow: 0 0 40px 40px $yellow-done inset, 0 0 0 0 $yellow-done;
+    transition: all 150ms ease-in-out;
+    &:hover {
+      box-shadow: 0 0 10px 0 $yellow-done inset, 0 0 10px 4px $yellow-done;
+      color: $yellow-done;
+    }
+  }
+
+  .btn-3-red {
+    @extend .btn-2;
+    border: 2px solid $red;
+    color: $red;
+    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+    &:hover {
+      box-shadow: 0 0 40px 40px $red inset;
+    }
+  }
+  .btn-3-blue {
+    @extend .btn-2;
+    border: 2px solid $blue;
+    color: $blue;
+    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+    &:hover {
+      box-shadow: 0 0 40px 40px $blue inset;
+    }
+  }
+
+  .btn-3-indigo {
+    @extend .btn-2;
+    border: 2px solid $indigo;
+    color: $indigo;
+    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+    &:hover {
+      box-shadow: 0 0 40px 40px $indigo inset;
+    }
+  }
+
+
+.btns {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 2em 1.8em;
+  border-radius: 3.9em;
+  box-shadow: -3px -10px 20px -16px rgba(255, 255, 255, 0.1), 3px 10px 20px -10px rgba(0, 0, 0, 0.2);
+}
+.btns:before {
+  /* 내용을 비워 놓음 (투명하게 만들지만 스타일 적용 가능) */
+  content: "";
+  
+  /* 블록 요소로 표시 (가로폭 전체 차지) */
+  display: block;
+  
+  /* 부모 요소 기준 절대 위치 지정 */
+  position: absolute;
+  
+  /* 가로 세로 길이 설정 (부모 요소 폭/높이에서 4px 감소) */
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
+  
+  /* 모서리 둥글게 설정 (3.9em 값 사용) */
+  border-radius: 3.9em;
+  
+  /* 그림자 설정 (여러 개의 그림자を重ねて表現) */
+  box-shadow: 
+    /* 밝은 초록색 그림자 (위쪽 왼쪽에 크게 떨어짐) */
+    -50px -102px 40px -120px #40bf73, 
+    /* 흰색 그림자 (내부, 왼쪽 아래에 약하게 떨어짐) */
+    -6px -40px 40px -40px rgba(255, 255, 255, 0.1), 
+    /* 흰색 그림자 (내부, 위쪽 왼쪽에 약하게 떨어짐) */
+    -3px -10px 20px -16px rgba(255, 255, 255, 0.1), 
+    /* 검은색 그림자 (오른쪽 아래에 떨어짐) */
+    6px 40px 40px -32px rgba(0, 0, 0, 0.4), 
+    /* 검은색 그림자 (내부, 위쪽 오른쪽에 약하게 떨어짐) */
+    3px 10px 20px -10px rgba(0, 0, 0, 0.2);
+  
+  /* 그림자를 약하게 흐리게 설정 */
+  filter: blur(2px);
+}
+
+.btn-1 {
+  /* 버튼의 내부 그림자 색상 및 투명도 변수 설정 */
+  --btn-inner: hsla(144deg 10% 22% / 35%);
+  /* 버튼의 외부 그림자 색상 및 투명도 변수 설정 */
+  --btn-outer: hsla(144deg 10% 22% / 25%);
+  /* 버튼의 내부 빛 효과 색상 변수 설정 */
+  --btn-glow-inner: hsla(144deg 83% 100% / 0%);
+  /* 버튼의 외부 빛 효과 색상 변수 설정 */
+  --btn-glow-outer: hsla(144deg 83% 100% / 0%);
+  /* 버튼 하단의 반사 효과 퍼센트 변수 설정 */
+  --btn-reflex-bottom-1: 0%;
+  --btn-reflex-bottom-2: 0%;
+  /* 버튼 상단의 반사 효과 퍼센트 변수 설정 */
+  --btn-reflex-top-1: 0%;
+  --btn-reflex-top-2: 0%;
+  /* 버튼 스타일 속성 설정 */
+  z-index: 1;
+  background:
+  radial-gradient(
+    ellipse 140% 70% at 50% 100%, hsla(144deg 100% 70%/var(--btn-reflex-bottom-1)) 0%, hsla(144deg 100% 70%/var(--btn-reflex-bottom-2)) 30%, rgba(102, 255, 163, 0) 100%
+    ),
+  radial-gradient(
+    ellipse 140% 70% at 50% 0%, hsla(144deg 100% 70%/var(--btn-reflex-top-1)) 0%, hsla(144deg 100% 70%/var(--btn-reflex-top-2)) 30%, rgba(102, 255, 163, 0) 100%
+    ),
+  radial-gradient(
+    ellipse at 50% 10%, var(--btn-glow-inner), var(--btn-glow-outer)
+    ),
+  radial-gradient(var(--btn-inner), var(--btn-outer));
+  border: none;
+  font-size: 18px;
+  width: 60px;
+  font-size: 20px;
+  height: 40px;
+  font-weight: 900;
+  // letter-spacing: 0.04em;
+  color: rgba(232, 247, 238, 0.7);
+  border-radius: 99em;
+  text-shadow: 0 -1px rgba(38, 115, 69, 0.4);
+  box-shadow: inset 0 4px 1px -3px rgba(255, 255, 255, 0.1), inset 0 17px 2px -16px rgba(153, 255, 194, 0), inset 0 4px 8px 5px rgba(9, 11, 10, 0.16), 0 2px 0 1px #1a1e1c, 0 3px 0 -1px rgba(102, 204, 143, 0), inset 0 -1px 2px 1px rgba(255, 255, 255, 0), 0 1px 2px rgba(255, 255, 255, 0), 0 2px 0 rgba(255, 255, 255, 0), 0 4px 0 0 rgba(0, 255, 102, 0), 0 2px 0 3px rgba(0, 0, 0, 0.9), 0 3px 0 3px rgba(255, 255, 255, 0.04);
+  transition: --btn-glow-inner 200ms, --btn-inner 200ms, --btn-outer 200ms, --btn-reflex-bottom-1 500ms, --btn-reflex-bottom-2 500ms, --btn-reflex-top-1 500ms, --btn-reflex-top-2 500ms, box-shadow 200ms, text-shadow 400ms, transform 200ms;
+}
+.btn-1:hover {
+  /* 버튼에 마우스 호버 시 내부 빛 효과 색상 및 투명도 변경 */
+  --btn-glow-inner: hsla(144deg 83% 100% / 20%);
+  /* 버튼에 마우스 호버 시 내부 그라데이션 색상 변경 */
+  --btn-inner: hsla(144deg 50% 50% / 100%);
+  /* 버튼에 마우스 호버 시 외부 그라데이션 색상 변경 */
+  --btn-outer: hsla(144deg 83% 50% / 100%);
+  cursor: pointer;
+  color: white;
+  /* 버튼에 마우스 호버 시 그림자 효과 변경 */
+  box-shadow: inset 0 -1px 2px 1px rgba(255, 255, 255, 0.3), inset 0 17px 2px -16px rgba(153, 255, 194, 0), inset 0 0 24px rgba(26, 77, 46, 0.3), 0 3px 0 1px rgba(68, 238, 136, 0.7), 0 3px 0 -1px rgba(102, 204, 143, 0), inset 0 -1px 2px 1px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(255, 255, 255, 0.8), 0 2px 16px rgba(255, 255, 255, 0.15), 0 4px 32px 2px rgba(0, 255, 102, 0.25), 0 3px 0 3px rgba(0, 0, 0, 0.8), 0 3px 0 4px rgba(38, 115, 69, 0.4);
+  /* 버튼에 마우스 호버 시 텍스트 그림자 효과 변경 */
+  text-shadow: 0 -1px rgba(38, 115, 69, 0.4), 0 0 4px rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+  transition: --btn-glow-inner 200ms, --btn-inner 200ms, --btn-outer 500ms, --btn-reflex-bottom-1 500ms, --btn-reflex-bottom-2 500ms, --btn-reflex-top-1 500ms, --btn-reflex-top-2 500ms, box-shadow 200ms, text-shadow 400ms, transform 200ms;
+}
+
+
+// 배팅 버튼 스타일
+.btn-bet {
+  @extend .btn-1;
+  background-color: #40bf73; // 배팅 버튼 색상
+}
+
+// 콜 버튼 스타일
+.btn-call {
+  @extend .btn-1;
+  background-color: #ffdd00; // 콜 버튼 색상
+}
+
+// 올인 버튼 스타일
+.btn-allin {
+  @extend .btn-1;
+  background-color: #ff9933; // 올인 버튼 색상
+}
+
+// 다이 버튼 스타일
+.btn-die {
+  @extend .btn-1;
+  background-color: #ff6666; // 다이 버튼 색상
+}
+
+
+
+
+.btn-call:hover {
+  /* 콜 버튼에 호버 시 내부 빛 효과 색상 및 투명도 변경 */
+  --btn-glow-inner: hsla(48deg 83% 100% / 20%);
+  /* 콜 버튼에 호버 시 내부 그라데이션 색상 변경 */
+  --btn-inner: hsla(48deg 50% 50% / 100%);
+  /* 콜 버튼에 호버 시 외부 그라데이션 색상 변경 */
+  --btn-outer: hsla(48deg 83% 50% / 100%);
+  /* 콜 버튼에 호버 시 그림자 효과 변경 */
+  box-shadow: inset 0 -1px 2px 1px rgba(255, 255, 255, 0.3), inset 0 17px 2px -16px rgba(255, 221, 0, 0), inset 0 0 24px rgba(26, 26, 26, 0.3), 0 3px 0 1px rgba(255, 221, 0, 0.7), 0 3px 0 -1px rgba(255, 204, 0, 0), inset 0 -1px 2px 1px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(255, 255, 255, 0.8), 0 2px 16px rgba(255, 255, 255, 0.15), 0 4px 32px 2px rgba(255, 221, 0, 0.25), 0 3px 0 3px rgba(0, 0, 0, 0.8), 0 3px 0 4px rgba(38, 38, 38, 0.4);
+  /* 콜 버튼에 호버 시 텍스트 그림자 효과 변경 */
+  text-shadow: 0 -1px rgba(38, 38, 38, 0.4), 0 0 4px rgba(255, 255, 255, 0.4);
+  /* 콜 버튼에 호버 시 위치 변경 */
+  transform: translateY(-1px);
+  /* 콜 버튼에 호버 시 트랜지션 효과 적용 */
+  transition: --btn-glow-inner 200ms, --btn-inner 200ms, --btn-outer 500ms, --btn-reflex-bottom-1 500ms, --btn-reflex-bottom-2 500ms, --btn-reflex-top-1 500ms, --btn-reflex-top-2 500ms, box-shadow 200ms, text-shadow 400ms, transform 200ms;
+}
+
+.btn-allin:hover {
+  /* 올인 버튼에 호버 시 내부 빛 효과 색상 및 투명도 변경 */
+  --btn-glow-inner: hsla(30deg, 83%, 100%, 20%);
+  /* 올인 버튼에 호버 시 내부 그라데이션 색상 변경 */
+  --btn-inner: hsla(30deg, 50%, 50%, 100%);
+  /* 올인 버튼에 호버 시 외부 그라데이션 색상 변경 */
+  --btn-outer: hsla(30deg, 83%, 50%, 100%);
+  /* 올인 버튼에 호버 시 그림자 효과 변경 */
+  box-shadow: inset 0 -1px 2px 1px rgba(255, 255, 255, 0.3), inset 0 17px 2px -16px rgba(255, 153, 51, 0), inset 0 0 24px rgba(26, 26, 26, 0.3), 0 3px 0 1px rgba(255, 153, 51, 0.7), 0 3px 0 -1px rgba(255, 102, 51, 0), inset 0 -1px 2px 1px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(255, 255, 255, 0.8), 0 2px 16px rgba(255, 255, 255, 0.15), 0 4px 32px 2px rgba(255, 153, 51, 0.25), 0 3px 0 3px rgba(0, 0, 0, 0.8), 0 3px 0 4px rgba(38, 38, 38, 0.4);
+  /* 올인 버튼에 호버 시 텍스트 그림자 효과 변경 */
+  text-shadow: 0 -1px rgba(38, 38, 38, 0.4), 0 0 4px rgba(255, 255, 255, 0.4);
+  /* 올인 버튼에 호버 시 위치 변경 */
+  transform: translateY(-1px);
+  /* 올인 버튼에 호버 시 트랜지션 효과 적용 */
+  transition: --btn-glow-inner 200ms, --btn-inner 200ms, --btn-outer 500ms, --btn-reflex-bottom-1 500ms, --btn-reflex-bottom-2 500ms, --btn-reflex-top-1 500ms, --btn-reflex-top-2 500ms, box-shadow 200ms, text-shadow 400ms, transform 200ms;
+}
+.btn-die:hover {
+  /* 다이 버튼에 호버 시 내부 빛 효과 색상 및 투명도 변경 */
+  --btn-glow-inner: hsla(0deg, 83%, 100%, 20%);
+  /* 다이 버튼에 호버 시 내부 그라데이션 색상 변경 */
+  --btn-inner: hsla(0deg, 50%, 50%, 100%);
+  /* 다이 버튼에 호버 시 외부 그라데이션 색상 변경 */
+  --btn-outer: hsla(0deg, 83%, 50%, 100%);
+  /* 다이 버튼에 호버 시 그림자 효과 변경 */
+  box-shadow: inset 0 -1px 2px 1px rgba(255, 255, 255, 0.3), inset 0 17px 2px -16px rgba(255, 102, 102, 0), inset 0 0 24px rgba(26, 26, 26, 0.3), 0 3px 0 1px rgba(255, 51, 51, 0.7), 0 3px 0 -1px rgba(204, 51, 51, 0), inset 0 -1px 2px 1px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(255, 255, 255, 0.8), 0 2px 16px rgba(255, 255, 255, 0.15), 0 4px 32px 2px rgba(255, 102, 102, 0.25), 0 3px 0 3px rgba(0, 0, 0, 0.8), 0 3px 0 4px rgba(38, 38, 38, 0.4);
+  /* 다이 버튼에 호버 시 텍스트 그림자 효과 변경 */
+  text-shadow: 0 -1px rgba(38, 38, 38, 0.4), 0 0 4px rgba(255, 255, 255, 0.4);
+  /* 다이 버튼에 호버 시 위치 변경 */
+  transform: translateY(-1px);
+  /* 다이 버튼에 호버 시 트랜지션 효과 적용 */
+  transition: --btn-glow-inner 200ms, --btn-inner 200ms, --btn-outer 500ms, --btn-reflex-bottom-1 500ms, --btn-reflex-bottom-2 500ms, --btn-reflex-top-1 500ms, --btn-reflex-top-2 500ms, box-shadow 200ms, text-shadow 400ms, transform 200ms;
+}
+
+.btn-1:active {
+  /* 활성화 상태일 때 버튼을 아래로 이동시키는 효과 */
+  transform: translateY(2px);
+  /* 버튼의 그림자 효과 설정 */
+  box-shadow:
+    inset 0 -1px 2px 1px rgba(255, 255, 255, 0.3),
+    inset 0 17px 2px -16px rgba(153, 255, 194, 0),
+    inset 0 0 24px rgba(26, 77, 46, 0.3), 0 0px 0 1px rgba(68, 238, 136, 0.7), 0 1px 0 -1px rgba(102, 204, 143, 0),
+    inset 0 -1px 2px 1px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(255, 255, 255, 0.8), 0 2px 16px rgba(255, 255, 255, 0.2), 0 4px 32px 2px rgba(0, 255, 102, 0.3), 0 0px 0 3px rgba(0, 0, 0, 0.5), 0 0px 1px 4px rgba(38, 115, 69, 0.4);
+  /* 애니메이션 효과 설정 */
+  transition: --btn-glow-inner 200ms, --btn-inner 200ms, --btn-outer 500ms, --btn-reflex-bottom-1 500ms, --btn-reflex-bottom-2 500ms, --btn-reflex-top-1 500ms, --btn-reflex-top-2 500ms, box-shadow 200ms, text-shadow 400ms, transform 200ms;
+}
+.btn-call:active {
+  /* 버튼을 아래로 이동시키는 효과 */
+  transform: translateY(2px);
+  /* 버튼의 그림자 효과 설정 */
+  box-shadow:
+    inset 0 -1px 2px 1px rgba(255, 255, 255, 0.3),
+    inset 0 17px 2px -16px rgba(255, 255, 194, 0),
+    inset 0 0 24px rgba(26, 77, 46, 0.3),
+    0 0px 0 1px rgba(255, 238, 136, 0.7),
+    0 1px 0 -1px rgba(255, 204, 143, 0),
+    inset 0 -1px 2px 1px rgba(255, 255, 255, 0.5),
+    0 1px 2px rgba(255, 255, 255, 0.8),
+    0 2px 16px rgba(255, 255, 255, 0.2),
+    0 4px 32px 2px rgba(0, 255, 102, 0.3),
+    0 0px 0 3px rgba(0, 0, 0, 0.5),
+    0 0px 1px 4px rgba(38, 115, 69, 0.4);
+  /* 애니메이션 효과 설정 */
+  transition:
+    --btn-glow-inner 200ms,
+    --btn-inner 200ms,
+    --btn-outer 500ms,
+    --btn-reflex-bottom-1 500ms,
+    --btn-reflex-bottom-2 500ms,
+    --btn-reflex-top-1 500ms,
+    --btn-reflex-top-2 500ms,
+    box-shadow 200ms,
+    text-shadow 400ms,
+    transform 200ms;
+}
+.btn-allin:active {
+  /* 버튼을 아래로 이동시키는 효과 */
+  transform: translateY(2px);
+  /* 버튼의 그림자 효과 설정 */
+  box-shadow:
+    inset 0 -1px 2px 1px rgba(255, 255, 255, 0.3),
+    inset 0 17px 2px -16px rgba(153, 255, 255, 0),
+    inset 0 0 24px rgba(26, 77, 46, 0.3),
+    0 0px 0 1px rgba(255, 238, 136, 0.7),
+    0 1px 0 -1px rgba(255, 204, 143, 0),
+    inset 0 -1px 2px 1px rgba(255, 255, 255, 0.5),
+    0 1px 2px rgba(255, 255, 255, 0.8),
+    0 2px 16px rgba(255, 255, 255, 0.2),
+    0 4px 32px 2px rgba(255, 102, 102, 0.3),
+    0 0px 0 3px rgba(0, 0, 0, 0.5),
+    0 0px 1px 4px rgba(38, 115, 69, 0.4);
+  /* 애니메이션 효과 설정 */
+  transition:
+    --btn-glow-inner 200ms,
+    --btn-inner 200ms,
+    --btn-outer 500ms,
+    --btn-reflex-bottom-1 500ms,
+    --btn-reflex-bottom-2 500ms,
+    --btn-reflex-top-1 500ms,
+    --btn-reflex-top-2 500ms,
+    box-shadow 200ms,
+    text-shadow 400ms,
+    transform 200ms;
+}
+.btn-die:active {
+  /* 버튼을 아래로 이동시키는 효과 */
+  transform: translateY(2px);
+  /* 버튼의 그림자 효과 설정 */
+  box-shadow:
+    inset 0 -1px 2px 1px rgba(255, 255, 255, 0.3),
+    inset 0 17px 2px -16px rgba(255, 102, 102, 0),
+    inset 0 0 24px rgba(26, 77, 46, 0.3),
+    0 0px 0 1px rgba(255, 238, 136, 0.7),
+    0 1px 0 -1px rgba(255, 204, 143, 0),
+    inset 0 -1px 2px 1px rgba(255, 255, 255, 0.5),
+     0 1px 2px rgba(255, 255, 255, 0.8),
+     0 2px 16px rgba(255, 255, 255, 0.2),
+     0 4px 32px 2px rgba(255, 102, 102, 0.3),
+     0 0px 0 3px rgba(0, 0, 0, 0.5),
+     0 0px 1px 4px rgba(38, 115, 69, 0.4);
+  /* 애니메이션 효과 설정 */
+  transition:
+    --btn-glow-inner 200ms,
+    --btn-inner 200ms,
+    --btn-outer 500ms,
+    --btn-reflex-bottom-1 500ms,
+    --btn-reflex-bottom-2 500ms,
+    --btn-reflex-top-1 500ms,
+    --btn-reflex-top-2 500ms,
+    box-shadow 200ms,
+    text-shadow 400ms,
+    transform 200ms;
+}
+
+/* 이 스타일은 현재 버튼의 직후에 호버 상태에 있는 버튼이 존재할 때 적용됩니다. */
+.btn-1:has(+ .btn-1:hover) {
+  /* 변수 정의 */
+  --btn-inner: hsla(144deg 10% 22% / 35%);   // 내부 그늘 색상
+  --btn-outer: hsla(144deg 10% 22% / 25%);   // 바깥 그늘 색상
+  --btn-glow-inner: hsla(144deg 83% 100% / 0%); // 내부 빛 효과 색상
+  --btn-glow-outer: hsla(144deg 83% 100% / 0%); // 바깥 빛 효과 색상
+  --btn-reflex-bottom-1: 15%;           // 아래쪽 반사 효과 강도 1
+  --btn-reflex-bottom-2: 7%;            // 아래쪽 반사 효과 강도 2
+
+  /* 다중 그림자 정의 */
+  box-shadow:
+    /* 1. 내부 하얀색 하이라이트 */
+    inset 0 4px 1px -3px rgba(255, 255, 255, 0.05),
+    /* 2. 아래쪽 녹색 그늘 */
+    inset 0 17px 2px -16px rgba(153, 255, 194, 0),
+    /* 3. 내부 검은색 그늘 */
+    inset 0 4px 8px 5px rgba(9, 11, 10, 0.12),
+    /* 4. 텍스트 그림자 */
+    0 2px 0 1px rgba(31, 51, 39, 0.7),
+    /* 5. 아래쪽 경계선 하이라이트 */
+    0 3px 0 -1px rgba(102, 204, 143, 0.5),
+    /* 6. 아래쪽 반사 효과 1 */
+    inset 0 -7px 2px -6px rgba(153, 255, 194, 0.5),
+    /* 7. 외부 흰 빛 효과 */
+    0 0 8px rgba(255, 255, 255, 0),
+    /* 8. 아래쪽 반사 효과 2 */
+    0 2px 2px -3px rgba(153, 255, 194, 0.5),
+    /* 9. 아래쪽 녹색 그늘 안쪽 빛 효과 */
+    0 8px 8px -6px rgba(0, 255, 102, 0.14),
+    /* 10. 내부 그림자 */
+    0 2px 0 3px rgba(0, 0, 0, 0.9),
+    /* 11. 아래쪽 녹색 그늘 가장자리 빛 효과 */
+    0 3px 0 3px rgba(22, 233, 106, 0.08);
+}
+/* 이 스타일은 현재 버튼이 호버 상태일 때, 현재 버튼 바로 다음 버튼에 적용됩니다. */
+.btn-1:hover + .btn-1 {
+  /* 변수 정의 */
+  --btn-inner: hsla(144deg 10% 22% / 35%);   // 내부 그늘 색상
+  --btn-outer: hsla(144deg 10% 22% / 25%);   // 바깥 그늘 색상
+  --btn-glow-inner: hsla(144deg 83% 100% / 0%); // 내부 빛 효과 색상
+  --btn-glow-outer: hsla(144deg 83% 100% / 0%); // 바깥 빛 효과 색상
+  --btn-reflex-top-1: 15%;                 // 위쪽 반사 효과 강도 1
+  --btn-reflex-top-2: 7%;                  // 위쪽 반사 효과 강도 2
+
+  /* 다중 그림자 정의 */
+  box-shadow:
+    /* 1. 내부 녹색 그늘 */
+    inset 0 3px 2px -3px rgba(153, 255, 194, 0.5),
+    /* 2. 아래쪽 녹색 그늘 */
+    inset 0 17px 2px -16px rgba(153, 255, 194, 0.2),
+    /* 3. 내부 검은색 그늘 */
+    inset 0 4px 8px 5px rgba(9, 11, 10, 0.06),
+    /* 4. 텍스트 색상 */
+    0 2px 0 1px #1a1e1c,
+    /* 5. 아래쪽 경계선 하이라이트 */
+    0 3px 0 -1px rgba(102, 204, 143, 0),
+    /* 6. 위쪽 하얀색 하이라이트 */
+    inset 0 -1px 2px 1px rgba(255, 255, 255, 0),
+    /* 7. 위쪽 얇은 하얀색 하이라이트 */
+    0 1px 2px rgba(255, 255, 255, 0),
+    /* 8. 얇은 하얀색 테두리 */
+    0 2px 0 rgba(255, 255, 255, 0),
+    /* 9. 얇은 녹색 테두리 */
+    0 4px 0 0 rgba(0, 255, 102, 0),
+    /* 10. 내부 그림자 */
+    0 2px 0 3px rgba(0, 0, 0, 0.9),
+    /* 11. 위쪽 녹색 그늘 가장자리 빛 효과 */
+    0 3px 0 3px rgba(255, 255, 255, 0.04);
+}
+
+
+// 텍스트
+$text-size: 60vmin;
+$text-color: $red;
+$shadow-colors: rgba($red, 0.4) rgba($red, 0.3) rgba($red, 0.2) rgba($red, 0.1);
+$animation-duration: 1200ms;
+$shadow-distance-step: 0.033333em;
+$background-color: #ff3700;
+
+@function layerize($state) {
+  $shadow: 0 0 transparent;
+  @for $i from 1 through length($shadow-colors) {
+    $shadow: #{$shadow}, #{$shadow-distance-step * $i * $state} #{$shadow-distance-step * $i * $state} #{nth($shadow-colors, $i)};
+  }
+  @return $shadow;
+}
+
+.ready-effect {
+  animation: layerize cubic-bezier(0.4, 0.0, 0.2, 1) $animation-duration 200ms infinite alternate;
+  opacity: 0;
+  width: 100%;
+  color: $text-color;
+  cursor: default;
+  user-select: none;
+  text-align: center;
+  font-style: italic; /* 폰트를 기울임 */
+  letter-spacing: 2px; /* 글자 간 간격을 늘림 */
+}
+
+@keyframes layerize {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+    text-shadow: layerize(0);
+  } 100% {
+    opacity: 1;
+    transform: translate($shadow-distance-step * length($shadow-colors) / -2, $shadow-distance-step * length($shadow-colors) / -2);
+    text-shadow: layerize(1);
+  }
+}

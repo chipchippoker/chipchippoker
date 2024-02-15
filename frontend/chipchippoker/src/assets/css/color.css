@@ -1,0 +1,143 @@
+
+/* 밤하늘 배경 -> App적용 */
+.bg-gradation-blue {
+    background-image: linear-gradient(to bottom, #000000, #334A82);
+    height: 100vh;
+}
+
+/* moredarkblue #111D3C */
+.bg-moredarkblue {
+    background-color: #111D3C;
+}
+
+
+/* darkblue #334A82 */
+
+.bg-darkblue {  
+    background-color: #334A82;
+}
+
+.darkblue {
+    color: #334A82;
+}
+.btn-outline-darkblue {
+    border: 2px solid #334A82;
+    /* border-radius: 20px; */
+}
+.btn-outline-darkblue:hover {
+    background: #334A82;
+}
+
+
+
+
+/* lightblue #8497c7 */
+.bg-lightblue {
+    background-color: #8497c7;
+}
+.lightblue {
+    color: #8497c7;
+}
+.btn-outline-lightblue {
+    border: 2px solid #8497c7;
+    /* border-radius: 20px; */
+}
+.btn-outline-lightblue:hover {
+    background: #8497c7;
+}
+
+
+
+/* yellow #ffc308 */
+.bg-yellow {
+    background-color: #ffc308;
+}
+.yellow {
+    color: #ffc308;
+}
+.btn-outline-yellow {
+    border: 2px solid #ffc308;
+    background-color: #ffde76;
+    /* border-radius: 5px; */
+}
+.btn-outline-yellow:hover {
+    background: #ffc308;
+}
+
+
+/* lightyellow #ffde76 */
+.bg-lightyellow {
+    background-color: #ffde76;
+}
+.lightyellow {
+    color: #ffde76;
+}
+.btn-outline-lightyellow {
+    border: 2px solid #ffde76;
+    
+    /* border-radius: 20px; */
+}
+
+.btn-outline-lightyellow:hover {
+    background: #ffde76;
+}
+
+
+/* 진한 노랑 버튼 / */
+.btn-outline-weightyellow {
+    border: 2px solid #e8b008;
+    background-color: #ffc308;
+    border-radius: 30px;
+}
+.btn-outline-weightyellow:hover {
+    background: #ffc100;
+}
+.bg-weightyellow {
+    background-color: #ffc100;
+
+}
+
+
+/* 빨간 버튼 */
+.btn-lightred {
+    background-color: #ff5d5d;
+}
+.btn-lightred:hover {
+    background-color: #ee1010;
+}
+
+/* 회색 버튼 */
+.btn-gray {
+    background-color: #aeaeae;
+}
+.btn-gray:hover {
+    background-color: #797979;
+}
+
+
+.online-color {
+    color: #0DA600;
+}
+
+/* a태그 밑줄 없에기 */
+a{
+    text-decoration-line: none;
+}
+
+/* 모달색 */
+.bg-modal {
+    background-color: #fff0c0;
+}
+/* 투명 버튼 */
+.btn-transparency {
+    background-color:transparent;
+    border: 0;
+}
+
+/* 친구목록 hover */
+.friend-list {
+    background-color: #fff;   
+}
+.friend-list:hover {
+    background-color: #ffd752;   
+}
